@@ -1,0 +1,194 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String              @id @default(uuid())
+  email           String              @unique
+  password        String
+  name            String
+  avatarUrl       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  playlists       Playlist[]
+  likedSongs      UserLikedSong[]
+  likedAlbums     UserLikedAlbum[]
+  likedPlaylists  UserLikedPlaylist[]
+  followedArtists UserFollowsArtist[]
+  playHistory     PlayHistory[]
+  comments        Comment[]
+  listens         Listen[]
+
+  @@index([email])
+}
+
+model Artist {
+  id        String              @id @default(uuid())
+  name      String
+  biography String?
+  avatarUrl String?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  albums    Album[]
+  songs     Song[]
+  followers UserFollowsArtist[]
+
+  @@index([name])
+}
+
+model Album {
+  id          String           @id @default(uuid())
+  title       String
+  releaseDate DateTime
+  coverUrl    String?
+  artistId    String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  songs       Song[]
+  artist      Artist           @relation(fields: [artistId], references: [id])
+  likedBy     UserLikedAlbum[]
+  comments    Comment[]
+}
+
+model Song {
+  id          String          @id @default(uuid())
+  title       String
+  duration    Int
+  fileUrl     String
+  albumId     String?
+  artistId    String
+  genreId     String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  album       Album?          @relation(fields: [albumId], references: [id])
+  artist      Artist          @relation(fields: [artistId], references: [id])
+  genre       Genre           @relation(fields: [genreId], references: [id])
+  playlists   SongPlaylist[]
+  likedBy     UserLikedSong[]
+  playHistory PlayHistory[]
+  comments    Comment[]
+  listens     Listen[]
+
+  @@index([title])
+}
+
+model Genre {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  songs     Song[]
+}
+
+model Playlist {
+  id          String              @id @default(uuid())
+  title       String
+  description String?
+  coverUrl    String?
+  isPublic    Boolean             @default(true)
+  userId      String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  user        User                @relation(fields: [userId], references: [id])
+  songs       SongPlaylist[]
+  likedBy     UserLikedPlaylist[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  songId    String?
+  albumId   String?
+  content   String
+  createdAt DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id])
+  song  Song?  @relation(fields: [songId], references: [id])
+  album Album? @relation(fields: [albumId], references: [id])
+
+  @@index([songId])
+  @@index([albumId])
+}
+
+model Listen {
+  id         String   @id @default(uuid())
+  userId     String
+  songId     String
+  listenedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  song Song @relation(fields: [songId], references: [id])
+
+  @@index([userId, songId])
+}
+
+model SongPlaylist {
+  songId     String
+  playlistId String
+  addedAt    DateTime @default(now())
+  song       Song     @relation(fields: [songId], references: [id])
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+
+  @@id([songId, playlistId])
+  @@index([playlistId, songId])
+}
+
+model UserLikedSong {
+  userId  String
+  songId  String
+  likedAt DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id])
+  song    Song     @relation(fields: [songId], references: [id])
+
+  @@id([userId, songId])
+}
+
+model UserLikedAlbum {
+  userId  String
+  albumId String
+  likedAt DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id])
+  album   Album    @relation(fields: [albumId], references: [id])
+
+  @@id([userId, albumId])
+}
+
+model UserLikedPlaylist {
+  userId     String
+  playlistId String
+  likedAt    DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+
+  @@id([userId, playlistId])
+}
+
+model UserFollowsArtist {
+  userId     String
+  artistId   String
+  followedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  artist     Artist   @relation(fields: [artistId], references: [id])
+
+  @@id([userId, artistId])
+}
+
+model PlayHistory {
+  id       String   @id @default(uuid())
+  userId   String
+  songId   String
+  playedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id])
+  song     Song     @relation(fields: [songId], references: [id])
+}
