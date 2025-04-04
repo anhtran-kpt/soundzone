@@ -8,27 +8,27 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@GetUser() user) {
-    return this.userService.findOne(user.id);
+    return this.usersService.findOne(user.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('me')
   updateProfile(@GetUser() user, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(user.id, updateUserDto);
+    return this.usersService.update(user.id, updateUserDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    return this.usersService.findOne(id);
   }
 }
