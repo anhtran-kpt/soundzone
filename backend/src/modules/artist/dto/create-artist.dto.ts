@@ -7,10 +7,12 @@ export class CreateArtistDto {
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   biography?: string;
 
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   avatarUrl?: string;
