@@ -1,7 +1,5 @@
-// middleware.ts
-import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -10,7 +8,6 @@ export async function middleware(req: NextRequest) {
 
   const { pathname } = req.nextUrl;
 
-  // Protect admin routes
   if (pathname.startsWith("/admin")) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL("/signin", req.url));
@@ -21,7 +18,6 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Protect authenticated user routes
   if (
     pathname.startsWith("/library") ||
     pathname.startsWith("/playlists") ||
@@ -32,7 +28,6 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Redirect authenticated users away from auth pages
   if (
     isAuthenticated &&
     (pathname.startsWith("/signin") || pathname.startsWith("/signup"))

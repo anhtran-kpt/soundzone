@@ -1,15 +1,27 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcryptjs";
+import { login } from "./api/auth";
+import { jwtDecode } from "jwt-decode";
+import { JWT } from "next-auth/jwt";
 
-const prisma = new PrismaClient();
+interface User {
+  id: string;
+  fullName: string;
+  email: string;
+  avatarUrl: string;
+  role: "user" | "admin";
+}
+
+interface CustomJWT extends JWT {
+  accessToken?: string;
+  user?: User;
+  expiresAt?: number;
+}
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
   },
   pages: {
     signIn: "/signin",
@@ -18,61 +30,67 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: {
-          label: "Password",
-          type: "password",
-        },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
+          const { accessToken, ...userData } = await login(
+            credentials?.email,
+            credentials?.password
+          );
+
+          if (accessToken) {
+            const decoded = jwtDecode(accessToken);
+            const expiresAt = decoded.exp;
+
+            return {
+              accessToken,
+              user: userData,
+              expiresAt,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("Authentication error:", error);
           return null;
         }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
-
-        if (!user) {
-          return null;
-        }
-
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        return {
+          ...token,
+          accessToken: user.accessToken,
+          user: user.user,
+          expiresAt: user.expiresAt,
+        };
       }
+
+      const customToken = token as CustomJWT;
+      if (customToken.expiresAt && Date.now() >= customToken.expiresAt * 1000) {
+        return {};
+      }
+
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-      }
-      return session;
+      const customToken = token as CustomJWT;
+      return {
+        ...session,
+        user: customToken.user || {},
+        accessToken: customToken.accessToken,
+        expires: session.expires,
+      };
     },
   },
 };
