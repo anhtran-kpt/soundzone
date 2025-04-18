@@ -7,20 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  USER
-  ADMIN
-}
-
 enum ArtistRole {
   PRIMARY
   FEATURING
 }
 
-enum ReleaseType {
+enum AlbumType {
   ALBUM
   EP
   SINGLE
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 model User {
@@ -32,14 +32,6 @@ model User {
   avatarUrl String?
   role      UserRole @default(USER)
 
-  /// Auth flows
-  emailVerified             Boolean        @default(false)
-  emailVerifiedAt           DateTime?
-  passwordResetToken        String?
-  passwordResetTokenExpires DateTime?
-  refreshTokens             RefreshToken[]
-
-  /// Relations
   playlists        Playlist[]
   favoredSongs     SongFavor[]
   favoredPlaylists PlaylistFavor[]
@@ -47,19 +39,20 @@ model User {
   followedArtists  ArtistFollow[]
   playHistory      PlayHistory[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
 
   @@index([email])
 }
 
 model RefreshToken {
   id        String   @id @default(cuid())
-  token     String   @unique
-  user      User     @relation(fields: [userId], references: [id])
+  token     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  expiresAt DateTime
   createdAt DateTime @default(now())
+  expiresAt DateTime
 
   @@index([userId])
 }
@@ -87,13 +80,13 @@ model Artist {
 }
 
 model Album {
-  id          String      @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  slug        String      @unique
+  slug        String    @unique
   description String?
   coverUrl    String?
   releaseDate DateTime
-  releaseType ReleaseType @default(SINGLE)
+  releaseType AlbumType @default(SINGLE)
 
   artist   Artist @relation(fields: [artistId], references: [id])
   artistId String

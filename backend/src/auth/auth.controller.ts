@@ -1,34 +1,60 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto, RefreshTokenDto } from './dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { SignInDto, SignUpDto } from './dto/auth.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { Roles } from './decorators/roles.decorator';
+import { RolesGuard } from './guards/roles.guard';
+import { UserRole } from '@prisma/client';
 
-@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signUp(@Body() dto: SignUpDto) {
-    return this.auth.signUp(dto);
+  async signUp(@Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(signUpDto);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async signIn(@Request() req) {
-    return this.auth.signIn(req.user);
+  @HttpCode(HttpStatus.OK)
+  async signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto);
   }
 
   @Post('refresh')
-  refresh(@Body() dto: RefreshTokenDto) {
-    return this.auth.refresh(dto.refreshToken);
+  @HttpCode(HttpStatus.OK)
+  async refreshToken(@Body() body: { refreshToken: string }) {
+    return this.authService.refreshTokens(body.refreshToken);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('signout')
-  logout(@Request() req) {
-    return this.auth.signOut(req.user.id);
+  @HttpCode(HttpStatus.OK)
+  async signOut(@CurrentUser() user, @Body() body: { refreshToken: string }) {
+    return this.authService.signOut(user.id, body.refreshToken);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Get('admin')
+  getAdminProfile(@CurrentUser() user) {
+    return { message: 'Admin access granted', user };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@CurrentUser() user) {
+    return user;
   }
 }
