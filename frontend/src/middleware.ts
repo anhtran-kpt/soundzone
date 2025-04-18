@@ -1,37 +1,31 @@
+import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isAuthenticated = !!token;
-  const isAdmin = token?.role === "ADMIN";
-
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/admin")) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(new URL("/signin", req.url));
-    }
+  // Public paths without logging in
+  const publicPaths = ["/signin", "/signup", "/"];
+  const isPublicPath = publicPaths.some(
+    (path) =>
+      pathname === path ||
+      pathname.startsWith("/api/auth") ||
+      pathname.startsWith("/_next")
+  );
 
-    if (!isAdmin) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+  // Paths for admin
+  const adminPaths = ["/admin"];
+  const isAdminPath = adminPaths.some((path) => pathname.startsWith(path));
+
+  // Navigate for users haven't logged in yet
+  if (!token && !isPublicPath) {
+    return NextResponse.redirect(new URL("/signin", req.url));
   }
 
-  if (
-    pathname.startsWith("/library") ||
-    pathname.startsWith("/playlists") ||
-    pathname.includes("/create")
-  ) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(new URL("/signin", req.url));
-    }
-  }
-
-  if (
-    isAuthenticated &&
-    (pathname.startsWith("/signin") || pathname.startsWith("/signup"))
-  ) {
+  // Navigate for users are not admin
+  if (token && isAdminPath && token.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -39,12 +33,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/admin/:path*",
-    "/library/:path*",
-    "/playlists/:path*",
-    "/create/:path*",
-    "/signin",
-    "/signup",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };

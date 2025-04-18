@@ -1,17 +1,32 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { AuthController } from './auth.controller';
+import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
-import { PrismaModule } from '../prisma/prisma.module';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Module({
-  imports: [PrismaModule, PassportModule.register({}), JwtModule.register({})],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+    }),
+  ],
+  providers: [
+    PrismaService,
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtAuthGuard,
+    LocalAuthGuard,
+    RolesGuard,
+  ],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, JwtStrategy, JwtRefreshStrategy],
-  exports: [AuthService],
+  exports: [AuthService, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

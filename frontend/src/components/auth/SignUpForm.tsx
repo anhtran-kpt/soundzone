@@ -14,20 +14,31 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, {
-    message: "Full name must be at least 2 characters.",
-  }),
-  email: z.string().email("Email is required."),
+  firstName: z
+    .string()
+    .min(2, {
+      message: "Full name must be at least 2 characters.",
+    })
+    .trim(),
+  lastName: z
+    .string()
+    .min(2, {
+      message: "Full name must be at least 2 characters.",
+    })
+    .trim(),
+  email: z.string().email("Email is required.").trim(),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
+    .min(6, { message: "Password must be at least 6 characters." })
+    .trim(),
 });
 
 export default function SignUpForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
     },
@@ -42,12 +53,25 @@ export default function SignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="fullName"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>First name</FormLabel>
               <FormControl>
-                <Input placeholder="Ex: John Doe" {...field} />
+                <Input placeholder="Ex: John" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last name</FormLabel>
+              <FormControl>
+                <Input placeholder="Ex: Doe" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
