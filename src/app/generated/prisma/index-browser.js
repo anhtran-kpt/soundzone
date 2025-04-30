@@ -128,9 +128,18 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   avatarUrl: 'avatarUrl',
-  refreshToken: 'refreshToken',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  hashedToken: 'hashedToken',
+  tokenId: 'tokenId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  userId: 'userId',
+  userAgent: 'userAgent'
 };
 
 exports.Prisma.SortOrder = {
@@ -153,7 +162,8 @@ exports.UserRole = exports.$Enums.UserRole = {
 };
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  RefreshToken: 'RefreshToken'
 };
 
 /**

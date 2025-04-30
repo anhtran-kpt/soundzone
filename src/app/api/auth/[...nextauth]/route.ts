@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@/app/generated/prisma/client";
 import bcrypt from "bcryptjs";
-import { generateRefreshToken } from "@/lib/token";
+import { createRefreshToken } from "@/lib/token";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password required");
         }
@@ -32,13 +32,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
         }
 
-        const { refreshToken, hashedRefreshToken } =
-          await generateRefreshToken();
+        const userAgent = req?.headers?.["user-agent"] || undefined;
 
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { refreshToken: hashedRefreshToken },
-        });
+        const refreshToken = await createRefreshToken(user.id, userAgent);
 
         return {
           id: user.id,
@@ -46,7 +42,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          refreshToken,
+          refreshToken: refreshToken,
         };
       },
     }),
