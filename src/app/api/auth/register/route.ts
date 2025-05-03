@@ -1,6 +1,5 @@
 import { PrismaClient } from "@/app/generated/prisma";
-import { SALT_ROUNDS } from "@/lib/constants";
-import bcrypt from "bcryptjs";
+import { generateTokens, hashValue } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -27,9 +26,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const hashedPassword = await hashValue(password);
 
-    const user = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         email,
         firstName,
@@ -38,8 +37,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    const { accessToken, refreshToken } = generateTokens(newUser);
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _, ...userWithoutPassword } = newUser;
 
     return NextResponse.json(
       { message: "User registered successfully", user: userWithoutPassword },

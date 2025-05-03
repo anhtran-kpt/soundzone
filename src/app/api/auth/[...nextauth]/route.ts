@@ -2,8 +2,11 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@/app/generated/prisma/client";
-import bcrypt from "bcryptjs";
-import { createRefreshToken } from "@/lib/token";
+import {
+  comparePasswords,
+  generateAccessToken,
+  generateRefreshToken,
+} from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password required");
         }
@@ -25,16 +28,12 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        if (
-          !user ||
-          !(await bcrypt.compare(credentials.password, user.password))
-        ) {
+        if (!user || !comparePasswords(credentials.password, user.password)) {
           throw new Error("Invalid email or password");
         }
 
-        const userAgent = req?.headers?.["user-agent"] || undefined;
-
-        const refreshToken = await createRefreshToken(user.id, userAgent);
+        const accessToken = generateAccessToken(user);
+        // const refreshToken = generateRefreshToken(user.id);
 
         return {
           id: user.id,
@@ -42,7 +41,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          refreshToken: refreshToken,
+          accessToken: accessToken,
         };
       },
     }),

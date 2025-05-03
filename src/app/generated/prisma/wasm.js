@@ -134,12 +134,13 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.RefreshTokenScalarFieldEnum = {
   id: 'id',
-  hashedToken: 'hashedToken',
-  tokenId: 'tokenId',
+  token: 'token',
+  jti: 'jti',
   createdAt: 'createdAt',
   expiresAt: 'expiresAt',
+  revoked: 'revoked',
   userId: 'userId',
-  userAgent: 'userAgent'
+  deviceType: 'deviceType'
 };
 
 exports.Prisma.SortOrder = {

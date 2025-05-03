@@ -1,11 +1,10 @@
-import { SALT_ROUNDS } from "@/lib/constants";
 import { PrismaClient, Prisma } from "../src/app/generated/prisma";
-import bcrypt from "bcryptjs";
+import { generateTokens, hashValue } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
 async function createAdminUser() {
-  const hashedPassword = await bcrypt.hash("admin123", SALT_ROUNDS);
+  const hashedPassword = await hashValue("admin123");
 
   const adminData: Prisma.UserCreateInput = {
     firstName: "SoundZone",
@@ -15,7 +14,9 @@ async function createAdminUser() {
     password: hashedPassword,
   };
 
-  await prisma.user.create({ data: adminData });
+  const newAdmin = await prisma.user.create({ data: adminData });
+
+  const { accessToken, refreshToken } = generateTokens(newAdmin);
 
   console.log("Admin created.");
 }

@@ -33,14 +33,15 @@ model User {
 }
 
 model RefreshToken {
-  id          String   @id @default(cuid())
-  hashedToken String
-  tokenId     String   @unique
-  createdAt   DateTime @default(now())
-  expiresAt   DateTime
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userAgent   String
+  id         String   @id @default(cuid())
+  token      String?
+  jti        String   @unique // JWT ID
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  revoked    Boolean  @default(false)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceType String
 
   @@index([userId])
 }
