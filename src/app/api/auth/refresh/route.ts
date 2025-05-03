@@ -1,90 +1,48 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@/app/generated/prisma";
-import jwt from "jsonwebtoken";
+import { authService } from "@/services/auth.service";
 import { cookies } from "next/headers";
-import { validateRefreshToken, rotateRefreshToken } from "@/lib/token";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 
-const prisma = new PrismaClient();
+const cookieStore = await cookies();
 
-export async function POST(request: NextRequest) {
+export default async function POST(request: NextRequest) {
   try {
-    const { refreshToken } = await request.json();
+    const refreshToken = request.cookies.get("refreshToken");
 
     if (!refreshToken) {
       return NextResponse.json(
-        { error: "Refresh token is required" },
-        { status: 400 }
-      );
-    }
-
-    const userAgent = request.headers.get("user-agent") || "unknown";
-
-    const userId = await validateRefreshToken(refreshToken);
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "Invalid or expired refresh token" },
+        {
+          error: "Refresh token not found",
+        },
         { status: 401 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-      },
+    const deviceType = userAgent(request).device.type || "desktop";
+
+    const tokens = await authService.refreshTokens({
+      oldRefreshToken: refreshToken.value,
+      deviceType,
     });
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Generate a new refresh token (this will invalidate the old one)
-    const newRefreshToken = await rotateRefreshToken(refreshToken, userAgent);
-
-    if (!newRefreshToken) {
-      return NextResponse.json(
-        { error: "Failed to refresh token" },
-        { status: 500 }
-      );
-    }
-
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-      },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
-    );
-
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: "next-auth.session-token",
-      value: accessToken,
-      httpOnly: true,
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24, // 1 day
+    cookieStore.set("accessToken", tokens.accessToken, { maxAge: 15 * 60 });
+    cookieStore.set("refreshToken", tokens.refreshToken, {
+      maxAge: 7 * 24 * 60 * 60,
     });
 
     return NextResponse.json({
-      message: "Token refreshed successfully",
-      accessToken,
-      refreshToken: newRefreshToken,
+      message: "Tokens refreshed successfully",
     });
   } catch (error) {
-    console.error("Refresh token error:", error);
+    console.error("Token refresh error:", error);
+
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+
     return NextResponse.json(
-      { error: "Error refreshing token" },
-      { status: 500 }
+      {
+        error: "Invalid refresh token",
+      },
+      { status: 401 }
     );
   }
 }
