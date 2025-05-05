@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { SignInForm } from "@/components/auth/signin-form";
+import { SignUpForm } from "@/components/auth/signup-form";
 
 export const metadata: Metadata = {
-  title: "Sign in | SoundZone",
-  description: "Sign in to SoundZone",
+  title: "Sign up | SoundZone",
+  description: "Sign up new account",
 };
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
@@ -15,7 +15,7 @@ export default function LoginPage() {
         <h1 className="text-xl font-bold">SoundZone</h1>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-        <SignInForm />
+        <SignUpForm />
       </div>
     </div>
   );

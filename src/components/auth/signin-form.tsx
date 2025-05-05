@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { signInInput, signInSchema } from "@/types/auth.type";
+import { signInSchema } from "@/schemas/auth-schema";
+import { SignInDto } from "@/dtos/auth-dto";
 
 export function SignInForm() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export function SignInForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<signInInput>({
+  const form = useForm<SignInDto>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -34,7 +35,7 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = async (values: signInInput) => {
+  const onSubmit = async (values: SignInDto) => {
     try {
       setIsLoading(true);
 
@@ -66,7 +67,7 @@ export function SignInForm() {
       <div className="text-center">
         <h2 className="text-2xl font-bold">Sign in</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Enter your information
+          Welcome back, SoundZoner
         </p>
       </div>
 

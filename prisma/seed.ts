@@ -1,4 +1,4 @@
-import { authService } from "@/services/auth.service";
+import { authService } from "@/services/server/auth-service";
 import { PrismaClient } from "../src/app/generated/prisma";
 import { generateRefreshToken } from "@/lib/auth/helpers";
 

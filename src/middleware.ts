@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
   if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
     const callbackUrl = encodeURIComponent(pathname);
     return NextResponse.redirect(
-      new URL(`/login?callbackUrl=${callbackUrl}`, req.url)
+      new URL(`/signin?callbackUrl=${callbackUrl}`, req.url)
     );
   }
 

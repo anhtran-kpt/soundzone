@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "./auth-options";
-import { AppError } from "@/lib/api/error-handler";
+import { ApiError } from "../server/api-error";
 
 export async function getSession() {
   return await getServerSession(authOptions);
@@ -21,7 +21,7 @@ export async function requireAuth() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    redirect("/login");
+    redirect("/signin");
   }
 
   return session;
@@ -41,9 +41,8 @@ export async function requireAuthApi() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    throw new AppError(
+    throw ApiError.unauthorized(
       "You need to sign in to perform this action",
-      401,
       "UNAUTHORIZED"
     );
   }
@@ -55,17 +54,15 @@ export async function requireAdminApi() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    throw new AppError(
+    throw ApiError.unauthorized(
       "You need to sign in to perform this action",
-      401,
       "UNAUTHORIZED"
     );
   }
 
   if (session.user.role !== "ADMIN") {
-    throw new AppError(
+    throw ApiError.forbidden(
       "You do not have permission to perform this action",
-      403,
       "FORBIDDEN"
     );
   }

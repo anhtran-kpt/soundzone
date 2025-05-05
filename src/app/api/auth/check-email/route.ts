@@ -1,16 +1,16 @@
 import { ApiResponse } from "@/lib/server/api-response";
 import { withErrorHandler } from "@/lib/server/error-handler";
 import { validateData } from "@/lib/server/validate-data";
-import { signUpSchema } from "@/schemas/auth-schema";
+import { emailSchema } from "@/schemas/common-schema";
 import { authService } from "@/services/server/auth-service";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req: Request) => {
   const body = await req.json();
 
-  const validatedData = validateData(signUpSchema, body);
+  const validatedData = validateData(emailSchema, body);
 
-  const newUser = await authService.signUp(validatedData);
+  const data = await authService.checkEmailExists(validatedData);
 
-  return NextResponse.json(ApiResponse.success(newUser), { status: 201 });
+  return NextResponse.json(ApiResponse.success(data), { status: 201 });
 });
