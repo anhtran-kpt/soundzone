@@ -1,22 +1,30 @@
-import { PrismaClient, Prisma } from "../src/app/generated/prisma";
-import { generateTokens, hashValue } from "@/lib/auth";
+import { authService } from "@/services/auth.service";
+import { PrismaClient } from "../src/app/generated/prisma";
+import { generateRefreshToken } from "@/lib/auth/helpers";
 
 const prisma = new PrismaClient();
 
 async function createAdminUser() {
-  const hashedPassword = await hashValue("admin123");
-
-  const adminData: Prisma.UserCreateInput = {
+  const adminData = {
     firstName: "SoundZone",
     lastName: "Admin",
     email: "admin@soundzone.com",
     role: "ADMIN",
-    password: hashedPassword,
+    password: "admin123",
   };
 
-  const newAdmin = await prisma.user.create({ data: adminData });
+  const admin = await authService.signUp(adminData);
 
-  const { accessToken, refreshToken } = generateTokens(newAdmin);
+  const deviceType = "desktop";
+
+  const { token: refreshToken, jti } = generateRefreshToken(admin);
+
+  await authService.createRefreshToken({
+    userId: admin.id,
+    jti,
+    token: refreshToken,
+    deviceType,
+  });
 
   console.log("Admin created.");
 }

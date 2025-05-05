@@ -1,42 +1,24 @@
-import { generateAccessToken, generateRefreshToken } from "@/lib/auth";
+import { errorHandler } from "@/lib/api/error-handler";
+import { createSuccessResponse } from "@/lib/api/response-handler";
 import { authService } from "@/services/auth.service";
-import { signUpSchema } from "@/types/auth";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse, userAgent } from "next/server";
+import { signUpSchema } from "@/types/auth.type";
+import { NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const result = signUpSchema.safeParse(request.json());
+    const body = await req.json();
+    const validatedData = signUpSchema.parse(body);
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.errors }, { status: 400 });
-    }
+    const user = authService.signUp(validatedData);
 
-    const user = await authService.signUp(result.data);
-
-    const deviceType = userAgent(request).device.type || "desktop";
-
-    const accessToken = generateAccessToken(user);
-    const { token: refreshToken, jti } = generateRefreshToken(user);
-
-    await authService.createRefreshToken({
-      userId: user.id,
-      jti,
-      token: refreshToken,
-      deviceType,
-    });
-
-    const cookieStore = await cookies();
-
-    cookieStore.set("accessToken", accessToken, { maxAge: 15 * 60 });
-    cookieStore.set("refreshToken", refreshToken, { maxAge: 7 * 24 * 60 * 60 });
-  } catch (error) {
-    console.error("Error signing up:", error);
-    return NextResponse.json(
+    return createSuccessResponse(
       {
-        message: "Error signing up",
+        message: "Signed up successfully",
+        user,
       },
-      { status: 500 }
+      201
     );
+  } catch (error) {
+    return errorHandler(error);
   }
 }
