@@ -1,11 +1,40 @@
 import { User, PrismaClient } from "@/app/generated/prisma";
-import { hashPassword } from "@/lib/auth/helpers";
+import { SignInDto, SignUpDto } from "@/dtos/auth-dto";
+import { comparePasswords, hashPassword } from "@/lib/auth/helpers";
 import { ApiError } from "@/lib/server/api-error";
-import { SignUpDto } from "@/types/auth-type";
 
 const prisma = new PrismaClient();
 
-export class AuthService {
+export const authService = {
+  async signIn(data: SignInDto): Promise<User> {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user) {
+      throw ApiError.badRequest(
+        "Incorrect email or password",
+        "INVALID_CREDENTIALS"
+      );
+    }
+
+    const isValidPassword = await comparePasswords(
+      data.password,
+      user.password
+    );
+
+    if (!isValidPassword) {
+      throw ApiError.badRequest(
+        "Incorrect email or password",
+        "INVALID_CREDENTIALS"
+      );
+    }
+
+    return user;
+  },
+
   async signUp(data: SignUpDto): Promise<User> {
     const existingUser = await prisma.user.findUnique({
       where: { email: data.email },
@@ -25,15 +54,14 @@ export class AuthService {
     });
 
     return newUser;
-  }
+  },
 
-  async checkEmailExists(email: string): Promise<{ exists: boolean }> {
-    const existingEmail = await prisma.user.findUnique({
+  async validateEmail(email: string): Promise<{ exists: boolean }> {
+    const existingUser = await prisma.user.findUnique({
       where: { email },
+      select: { id: true },
     });
 
-    return { exists: !!existingEmail };
-  }
-}
-
-export const authService = new AuthService();
+    return { exists: !!existingUser };
+  },
+};

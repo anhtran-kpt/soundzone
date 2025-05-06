@@ -1,7 +1,11 @@
+import { ValidateEmailDto } from "@/dtos/auth-dto";
+
 const API_ENDPOINTS = {
   auth: {
+    signin: "/auth/signin",
     signup: "/auth/signup",
-    checkEmailExists: "/auth/check-email",
+    validateEmail: (email: ValidateEmailDto) =>
+      `/auth/validate?email=${encodeURIComponent(email)}`,
   },
   songs: {
     list: "/songs",

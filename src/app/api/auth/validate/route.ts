@@ -5,12 +5,13 @@ import { emailSchema } from "@/schemas/common-schema";
 import { authService } from "@/services/server/auth-service";
 import { NextResponse } from "next/server";
 
-export const POST = withErrorHandler(async (req: Request) => {
-  const body = await req.json();
+export const GET = withErrorHandler(async (req: Request) => {
+  const url = new URL(req.url);
+  const email = url.searchParams.get("email");
 
-  const validatedData = validateData(emailSchema, body);
+  const validatedData = validateData(emailSchema, email);
 
-  const data = await authService.checkEmailExists(validatedData);
+  const data = await authService.validateEmail(validatedData);
 
-  return NextResponse.json(ApiResponse.success(data), { status: 201 });
+  return NextResponse.json(ApiResponse.success(data), { status: 200 });
 });

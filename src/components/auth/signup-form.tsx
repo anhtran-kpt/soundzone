@@ -19,10 +19,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { SignUpClientDto } from "@/dtos/auth-dto";
 import { signUpClientSchema } from "@/schemas/auth-schema";
+import { useSignUp } from "@/hooks/use-auth";
 
 export function SignUpForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { mutateAsync: signUpMutate } = useSignUp();
 
   const form = useForm<SignUpClientDto>({
     resolver: zodResolver(signUpClientSchema),
@@ -34,50 +37,13 @@ export function SignUpForm() {
     },
   });
 
-  const checkEmailExists = async (email: string) => {
-    try {
-      const response = await fetch("/api/auth/check-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      return data.exists;
-    } catch (error) {
-      return false;
-    }
-  };
-
   const onSubmit = async (values: SignUpClientDto) => {
     try {
       setIsLoading(true);
 
-      const emailExists = await checkEmailExists(values.email);
-      if (emailExists) {
-        form.setError("email", {
-          type: "manual",
-          message: "Email already in use",
-        });
-        setIsLoading(false);
-        return;
-      }
+      const response = await signUpMutate(values);
 
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Đăng ký thất bại");
-      }
+      console.log(response);
 
       toast.success("Signed up successfully");
 

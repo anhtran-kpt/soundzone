@@ -3,8 +3,10 @@ import {
   signUpClientSchema,
   signUpSchema,
 } from "@/schemas/auth-schema";
+import { emailSchema } from "@/schemas/common-schema";
 import { z } from "zod";
 
 export type SignUpDto = z.infer<typeof signUpSchema>;
 export type SignInDto = z.infer<typeof signInSchema>;
 export type SignUpClientDto = z.infer<typeof signUpClientSchema>;
+export type ValidateEmailDto = z.infer<typeof emailSchema>;
