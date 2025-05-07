@@ -19,13 +19,80 @@ enum UserRole {
   ADMIN
 }
 
+enum AlbumType {
+  ALBUM
+  SINGLE
+  EP
+}
+
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  image     String?
-  role      UserRole @default(USER)
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  password String
+  image    String?
+  role     UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Artist {
+  id    String  @id @default(cuid())
+  name  String
+  slug  String  @unique
+  bio   String? @db.Text
+  image String?
+  songs Song[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Song {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  lyrics      String?   @db.Text
+  duration    Int
+  releaseDate DateTime?
+
+  artist   Artist? @relation(fields: [artistId], references: [id])
+  artistId String?
+  album    Album?  @relation(fields: [albumId], references: [id])
+  albumId  String?
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Playlist   Playlist? @relation(fields: [playlistId], references: [id])
+  playlistId String?
+}
+
+model Album {
+  id          String    @id @default(cuid())
+  title       String
+  description String?   @db.Text
+  slug        String    @unique
+  type        AlbumType @default(EP)
+  duration    Int
+  releaseDate DateTime?
+
+  image String?
+  songs Song[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Playlist {
+  id          String  @id @default(cuid())
+  title       String
+  description String? @db.Text
+  slug        String  @unique
+  songs       Song[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

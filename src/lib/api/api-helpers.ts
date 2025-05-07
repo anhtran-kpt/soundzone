@@ -16,7 +16,8 @@ export function handleError(error: AxiosError): ApiResponse<never> {
       error: {
         code: error.response.status.toString(),
         message:
-          error.response.data?.message || "An error occurred from the server",
+          (error.response.data as { message?: string })?.message ||
+          "An error occurred from server",
       },
     };
   } else if (error.request) {

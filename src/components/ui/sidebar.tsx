@@ -3,17 +3,21 @@
 import Link from "next/link";
 import {
   AudioLinesIcon,
+  BookUserIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Disc3Icon,
   DiscAlbumIcon,
   LayoutDashboardIcon,
   UserRoundIcon,
+  UsersRoundIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const session = useSession();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -35,12 +39,10 @@ const Sidebar = () => {
           <ChevronRightIcon size={16} />
         )}
       </button>
-      {/* Sidebar header  */}
       <div className="h-20 py-4 flex items-center justify-center text-2xl font-bold">
         {sidebarOpen ? "SoundZone" : <AudioLinesIcon size={32} />}
       </div>
-      {/* Sidebar menu  */}
-      <nav className="flex-1 overflow-y-auto px-4">
+      <nav className="flex-1 overflow-y-auto px-6">
         <ul>
           <SidebarItem
             icon={<LayoutDashboardIcon size={20} />}
@@ -54,7 +56,7 @@ const Sidebar = () => {
             expanded={sidebarOpen}
           />
           <SidebarItem
-            icon={<UserRoundIcon size={20} />}
+            icon={<BookUserIcon size={20} />}
             text="Artists"
             expanded={sidebarOpen}
           />
@@ -63,13 +65,17 @@ const Sidebar = () => {
             text="Albums"
             expanded={sidebarOpen}
           />
+          <SidebarItem
+            icon={<UsersRoundIcon size={20} />}
+            text="Users"
+            expanded={sidebarOpen}
+          />
         </ul>
       </nav>
-      {/* Sidebar footer */}
       <div
         className={`${
           sidebarOpen ? "" : "flex justify-center"
-        } p-4 border-t border-primary-foreground`}
+        } py-4 px-6 border-t border-primary-foreground`}
       >
         <div className="flex items-center">
           <div className="size-8 border-primary-foreground bg-blue-900 rounded-full flex items-center justify-center">
@@ -77,8 +83,12 @@ const Sidebar = () => {
           </div>
           {sidebarOpen && (
             <div className="ml-3">
-              <div className="text-sm font-medium">SoundZone Admin</div>
-              <div className="text-xs text-blue-500">admin@soundzone.com</div>
+              <div className="text-sm font-medium">
+                {session.data?.user.name}
+              </div>
+              <div className="text-xs text-blue-500">
+                {session.data?.user.email}
+              </div>
             </div>
           )}
         </div>
@@ -94,7 +104,7 @@ const SidebarItem = ({ icon, text, active = false, expanded = true }) => {
     <li className="mb-1">
       <Link
         href="#"
-        className={`flex items-center py-3 px-4 rounded-lg ${
+        className={`flex items-center py-3 rounded-lg ${
           active ? "bg-primary" : "hover:bg-primary"
         }`}
       >
