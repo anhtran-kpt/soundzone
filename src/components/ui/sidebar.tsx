@@ -1,20 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import {
   AudioLinesIcon,
-  BookUserIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Disc3Icon,
-  DiscAlbumIcon,
-  LayoutDashboardIcon,
   UserRoundIcon,
-  UsersRoundIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-
+import SidebarItem from "./sidebar-item";
+import { navigationItems } from "./navigation";
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const session = useSession();
@@ -44,32 +39,12 @@ const Sidebar = () => {
       </div>
       <nav className="flex-1 overflow-y-auto px-6">
         <ul>
-          <SidebarItem
-            icon={<LayoutDashboardIcon size={20} />}
-            text="Dashboard"
-            active={true}
-            expanded={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<Disc3Icon size={20} />}
-            text="Songs"
-            expanded={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<BookUserIcon size={20} />}
-            text="Artists"
-            expanded={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<DiscAlbumIcon size={20} />}
-            text="Albums"
-            expanded={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<UsersRoundIcon size={20} />}
-            text="Users"
-            expanded={sidebarOpen}
-          />
+          <SidebarItem item={navigationItems[0]} expanded={sidebarOpen} />
+          <SidebarItem item={navigationItems[1]} expanded={sidebarOpen} />
+          <SidebarItem item={navigationItems[2]} expanded={sidebarOpen} />
+          <SidebarItem item={navigationItems[3]} expanded={sidebarOpen} />
+          <SidebarItem item={navigationItems[4]} expanded={sidebarOpen} />
+          <SidebarItem item={navigationItems[5]} expanded={sidebarOpen} />
         </ul>
       </nav>
       <div
@@ -98,19 +73,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-const SidebarItem = ({ icon, text, active = false, expanded = true }) => {
-  return (
-    <li className="mb-1">
-      <Link
-        href="#"
-        className={`flex items-center py-3 rounded-lg ${
-          active ? "bg-primary" : "hover:bg-primary"
-        }`}
-      >
-        <span className="text-primary-foreground">{icon}</span>
-        {expanded && <span className="ml-3">{text}</span>}
-      </Link>
-    </li>
-  );
-};

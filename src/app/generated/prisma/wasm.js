@@ -127,8 +127,104 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   image: 'image',
   role: 'role',
+  bio: 'bio',
+  lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ArtistScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  bio: 'bio',
+  coverImage: 'coverImage',
+  monthlyListeners: 'monthlyListeners',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SongScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  lyrics: 'lyrics',
+  duration: 'duration',
+  releaseDate: 'releaseDate',
+  playCount: 'playCount',
+  isExplicit: 'isExplicit',
+  audioUrl: 'audioUrl',
+  coverImage: 'coverImage',
+  albumId: 'albumId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AlbumScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  slug: 'slug',
+  type: 'type',
+  duration: 'duration',
+  releaseDate: 'releaseDate',
+  playCount: 'playCount',
+  coverImage: 'coverImage',
+  isExplicit: 'isExplicit',
+  artistId: 'artistId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlaylistScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  slug: 'slug',
+  duration: 'duration',
+  releaseDate: 'releaseDate',
+  type: 'type',
+  coverImage: 'coverImage',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GenreScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlayHistoryScalarFieldEnum = {
+  id: 'id',
+  songId: 'songId',
+  userId: 'userId',
+  playedAt: 'playedAt'
+};
+
+exports.Prisma.LikedSongScalarFieldEnum = {
+  id: 'id',
+  songId: 'songId',
+  userId: 'userId',
+  likedAt: 'likedAt'
+};
+
+exports.Prisma.LikedAlbumScalarFieldEnum = {
+  id: 'id',
+  albumId: 'albumId',
+  userId: 'userId',
+  likedAt: 'likedAt'
+};
+
+exports.Prisma.LikedPlaylistScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  userId: 'userId',
+  likedAt: 'likedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -150,8 +246,28 @@ exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN'
 };
 
+exports.AlbumType = exports.$Enums.AlbumType = {
+  ALBUM: 'ALBUM',
+  SINGLE: 'SINGLE',
+  EP: 'EP'
+};
+
+exports.PlaylistType = exports.$Enums.PlaylistType = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Artist: 'Artist',
+  Song: 'Song',
+  Album: 'Album',
+  Playlist: 'Playlist',
+  Genre: 'Genre',
+  PlayHistory: 'PlayHistory',
+  LikedSong: 'LikedSong',
+  LikedAlbum: 'LikedAlbum',
+  LikedPlaylist: 'LikedPlaylist'
 };
 
 /**

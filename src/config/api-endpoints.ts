@@ -25,6 +25,13 @@ const API_ENDPOINTS = {
     removeSong: (id: string, songId: string) =>
       `/playlists/${id}/songs/${songId}`,
   },
+  genres: {
+    list: "/genres",
+    detail: (slug: string) => `/genres/${slug}`,
+    create: "/genres",
+    update: (slug: string) => `/genres/${slug}`,
+    delete: (slug: string) => `/genres/${slug}`,
+  },
   user: {
     profile: "/user/profile",
     updateProfile: "/user/profile",

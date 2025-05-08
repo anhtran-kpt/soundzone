@@ -23,7 +23,6 @@ enum AlbumType {
   ALBUM
   SINGLE
   EP
-  COMPILATION
 }
 
 enum ArtistRole {
@@ -153,6 +152,7 @@ model Genre {
   description String?  @db.Text
   slug        String   @unique
   songs       Song[]
+  songCount   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
