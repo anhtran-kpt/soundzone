@@ -2061,7 +2061,6 @@ export namespace Prisma {
     password: string | null
     image: string | null
     role: $Enums.UserRole | null
-    bio: string | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2074,7 +2073,6 @@ export namespace Prisma {
     password: string | null
     image: string | null
     role: $Enums.UserRole | null
-    bio: string | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2087,7 +2085,6 @@ export namespace Prisma {
     password: number
     image: number
     role: number
-    bio: number
     lastLoginAt: number
     createdAt: number
     updatedAt: number
@@ -2102,7 +2099,6 @@ export namespace Prisma {
     password?: true
     image?: true
     role?: true
-    bio?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2115,7 +2111,6 @@ export namespace Prisma {
     password?: true
     image?: true
     role?: true
-    bio?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2128,7 +2123,6 @@ export namespace Prisma {
     password?: true
     image?: true
     role?: true
-    bio?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2214,7 +2208,6 @@ export namespace Prisma {
     password: string
     image: string | null
     role: $Enums.UserRole
-    bio: string | null
     lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -2244,7 +2237,6 @@ export namespace Prisma {
     password?: boolean
     image?: boolean
     role?: boolean
-    bio?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2264,7 +2256,6 @@ export namespace Prisma {
     password?: boolean
     image?: boolean
     role?: boolean
-    bio?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2277,7 +2268,6 @@ export namespace Prisma {
     password?: boolean
     image?: boolean
     role?: boolean
-    bio?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2290,13 +2280,12 @@ export namespace Prisma {
     password?: boolean
     image?: boolean
     role?: boolean
-    bio?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "image" | "role" | "bio" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "image" | "role" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     following?: boolean | User$followingArgs<ExtArgs>
     playlists?: boolean | User$playlistsArgs<ExtArgs>
@@ -2326,7 +2315,6 @@ export namespace Prisma {
       password: string
       image: string | null
       role: $Enums.UserRole
-      bio: string | null
       lastLoginAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -2765,7 +2753,6 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly image: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
-    readonly bio: FieldRef<"User", 'String'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -8390,8 +8377,18 @@ export namespace Prisma {
 
   export type AggregateGenre = {
     _count: GenreCountAggregateOutputType | null
+    _avg: GenreAvgAggregateOutputType | null
+    _sum: GenreSumAggregateOutputType | null
     _min: GenreMinAggregateOutputType | null
     _max: GenreMaxAggregateOutputType | null
+  }
+
+  export type GenreAvgAggregateOutputType = {
+    songCount: number | null
+  }
+
+  export type GenreSumAggregateOutputType = {
+    songCount: number | null
   }
 
   export type GenreMinAggregateOutputType = {
@@ -8399,6 +8396,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     slug: string | null
+    songCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8408,6 +8406,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     slug: string | null
+    songCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8417,17 +8416,27 @@ export namespace Prisma {
     name: number
     description: number
     slug: number
+    songCount: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type GenreAvgAggregateInputType = {
+    songCount?: true
+  }
+
+  export type GenreSumAggregateInputType = {
+    songCount?: true
+  }
+
   export type GenreMinAggregateInputType = {
     id?: true
     name?: true
     description?: true
     slug?: true
+    songCount?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8437,6 +8446,7 @@ export namespace Prisma {
     name?: true
     description?: true
     slug?: true
+    songCount?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8446,6 +8456,7 @@ export namespace Prisma {
     name?: true
     description?: true
     slug?: true
+    songCount?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8489,6 +8500,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: GenreAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GenreSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: GenreMinAggregateInputType
@@ -8519,6 +8542,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: GenreCountAggregateInputType | true
+    _avg?: GenreAvgAggregateInputType
+    _sum?: GenreSumAggregateInputType
     _min?: GenreMinAggregateInputType
     _max?: GenreMaxAggregateInputType
   }
@@ -8528,9 +8553,12 @@ export namespace Prisma {
     name: string
     description: string | null
     slug: string
+    songCount: number
     createdAt: Date
     updatedAt: Date
     _count: GenreCountAggregateOutputType | null
+    _avg: GenreAvgAggregateOutputType | null
+    _sum: GenreSumAggregateOutputType | null
     _min: GenreMinAggregateOutputType | null
     _max: GenreMaxAggregateOutputType | null
   }
@@ -8554,6 +8582,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     slug?: boolean
+    songCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     songs?: boolean | Genre$songsArgs<ExtArgs>
@@ -8565,6 +8594,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     slug?: boolean
+    songCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["genre"]>
@@ -8574,6 +8604,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     slug?: boolean
+    songCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["genre"]>
@@ -8583,11 +8614,12 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     slug?: boolean
+    songCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GenreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["genre"]>
+  export type GenreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "slug" | "songCount" | "createdAt" | "updatedAt", ExtArgs["result"]["genre"]>
   export type GenreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     songs?: boolean | Genre$songsArgs<ExtArgs>
     _count?: boolean | GenreCountOutputTypeDefaultArgs<ExtArgs>
@@ -8605,6 +8637,7 @@ export namespace Prisma {
       name: string
       description: string | null
       slug: string
+      songCount: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["genre"]>
@@ -9035,6 +9068,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Genre", 'String'>
     readonly description: FieldRef<"Genre", 'String'>
     readonly slug: FieldRef<"Genre", 'String'>
+    readonly songCount: FieldRef<"Genre", 'Int'>
     readonly createdAt: FieldRef<"Genre", 'DateTime'>
     readonly updatedAt: FieldRef<"Genre", 'DateTime'>
   }
@@ -13700,7 +13734,6 @@ export namespace Prisma {
     password: 'password',
     image: 'image',
     role: 'role',
-    bio: 'bio',
     lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13783,6 +13816,7 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     slug: 'slug',
+    songCount: 'songCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13977,7 +14011,6 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    bio?: StringNullableFilter<"User"> | string | null
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -13996,7 +14029,6 @@ export namespace Prisma {
     password?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    bio?: SortOrderInput | SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14018,7 +14050,6 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    bio?: StringNullableFilter<"User"> | string | null
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -14037,7 +14068,6 @@ export namespace Prisma {
     password?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    bio?: SortOrderInput | SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14056,7 +14086,6 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-    bio?: StringNullableWithAggregatesFilter<"User"> | string | null
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -14456,6 +14485,7 @@ export namespace Prisma {
     name?: StringFilter<"Genre"> | string
     description?: StringNullableFilter<"Genre"> | string | null
     slug?: StringFilter<"Genre"> | string
+    songCount?: IntFilter<"Genre"> | number
     createdAt?: DateTimeFilter<"Genre"> | Date | string
     updatedAt?: DateTimeFilter<"Genre"> | Date | string
     songs?: SongListRelationFilter
@@ -14466,6 +14496,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     slug?: SortOrder
+    songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     songs?: SongOrderByRelationAggregateInput
@@ -14479,6 +14510,7 @@ export namespace Prisma {
     OR?: GenreWhereInput[]
     NOT?: GenreWhereInput | GenreWhereInput[]
     description?: StringNullableFilter<"Genre"> | string | null
+    songCount?: IntFilter<"Genre"> | number
     createdAt?: DateTimeFilter<"Genre"> | Date | string
     updatedAt?: DateTimeFilter<"Genre"> | Date | string
     songs?: SongListRelationFilter
@@ -14489,11 +14521,14 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     slug?: SortOrder
+    songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GenreCountOrderByAggregateInput
+    _avg?: GenreAvgOrderByAggregateInput
     _max?: GenreMaxOrderByAggregateInput
     _min?: GenreMinOrderByAggregateInput
+    _sum?: GenreSumOrderByAggregateInput
   }
 
   export type GenreScalarWhereWithAggregatesInput = {
@@ -14504,6 +14539,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Genre"> | string
     description?: StringNullableWithAggregatesFilter<"Genre"> | string | null
     slug?: StringWithAggregatesFilter<"Genre"> | string
+    songCount?: IntWithAggregatesFilter<"Genre"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Genre"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Genre"> | Date | string
   }
@@ -14730,7 +14766,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14749,7 +14784,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14768,7 +14802,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14787,7 +14820,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14806,7 +14838,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14819,7 +14850,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14832,7 +14862,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15287,6 +15316,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     slug: string
+    songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     songs?: SongCreateNestedManyWithoutGenresInput
@@ -15297,6 +15327,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     slug: string
+    songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     songs?: SongUncheckedCreateNestedManyWithoutGenresInput
@@ -15307,6 +15338,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     songs?: SongUpdateManyWithoutGenresNestedInput
@@ -15317,6 +15349,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     songs?: SongUncheckedUpdateManyWithoutGenresNestedInput
@@ -15327,6 +15360,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     slug: string
+    songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15336,6 +15370,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15345,6 +15380,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15668,7 +15704,6 @@ export namespace Prisma {
     password?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    bio?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15681,7 +15716,6 @@ export namespace Prisma {
     password?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    bio?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15694,7 +15728,6 @@ export namespace Prisma {
     password?: SortOrder
     image?: SortOrder
     role?: SortOrder
-    bio?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16115,8 +16148,13 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     slug?: SortOrder
+    songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type GenreAvgOrderByAggregateInput = {
+    songCount?: SortOrder
   }
 
   export type GenreMaxOrderByAggregateInput = {
@@ -16124,6 +16162,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     slug?: SortOrder
+    songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16133,8 +16172,13 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     slug?: SortOrder
+    songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type GenreSumOrderByAggregateInput = {
+    songCount?: SortOrder
   }
 
   export type SongScalarRelationFilter = {
@@ -17862,7 +17906,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17880,7 +17923,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17992,7 +18034,6 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    bio?: StringNullableFilter<"User"> | string | null
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -18073,6 +18114,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     slug: string
+    songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18082,6 +18124,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     slug: string
+    songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18255,6 +18298,7 @@ export namespace Prisma {
     name?: StringFilter<"Genre"> | string
     description?: StringNullableFilter<"Genre"> | string | null
     slug?: StringFilter<"Genre"> | string
+    songCount?: IntFilter<"Genre"> | number
     createdAt?: DateTimeFilter<"Genre"> | Date | string
     updatedAt?: DateTimeFilter<"Genre"> | Date | string
   }
@@ -18531,7 +18575,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18549,7 +18592,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18621,7 +18663,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18639,7 +18680,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18779,7 +18819,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18797,7 +18836,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18882,7 +18920,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18900,7 +18937,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18963,7 +18999,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18981,7 +19016,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19066,7 +19100,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19084,7 +19117,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19141,7 +19173,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19159,7 +19190,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19238,7 +19268,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19256,7 +19285,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19309,7 +19337,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19327,7 +19354,6 @@ export namespace Prisma {
     password: string
     image?: string | null
     role?: $Enums.UserRole
-    bio?: string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19402,7 +19428,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19420,7 +19445,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19747,7 +19771,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19765,7 +19788,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19783,7 +19805,6 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19843,6 +19864,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19852,6 +19874,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19861,6 +19884,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     slug?: StringFieldUpdateOperationsInput | string
+    songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

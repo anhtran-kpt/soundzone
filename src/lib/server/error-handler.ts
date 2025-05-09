@@ -1,14 +1,17 @@
 import { ApiResponse } from "./api-response";
 import { ApiError } from "./api-error";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-type RouteHandler = (request: Request, ...args: any[]) => Promise<Response>;
+type RouteHandler = (
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string; id: string }> }
+) => Promise<NextResponse>;
 
 export function withErrorHandler(handler: RouteHandler): RouteHandler {
-  return async (request: Request, ...args) => {
+  return async (request: NextRequest, { params }) => {
     try {
-      return await handler(request, ...args);
-    } catch (error: any) {
+      return await handler(request, { params });
+    } catch (error: unknown) {
       console.error("API Error:", error);
 
       const statusCode = error instanceof ApiError ? error.statusCode : 500;

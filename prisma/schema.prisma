@@ -42,7 +42,6 @@ model User {
   password       String
   image          String?
   role           UserRole        @default(USER)
-  bio            String?         @db.Text
   lastLoginAt    DateTime?
   following      Artist[]        @relation("UserFollowing")
   playlists      Playlist[]

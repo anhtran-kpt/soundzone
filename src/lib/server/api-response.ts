@@ -14,14 +14,22 @@ export class ApiResponse<T> {
     };
   };
 
-  constructor(success: boolean, data?: T, error?: any, meta?: any) {
+  constructor(success: boolean, data?: T, error?: unknown, meta?: unknown) {
     this.success = success;
     if (data !== undefined) this.data = data;
-    if (error) this.error = error;
-    if (meta) this.meta = meta;
+    if (error) this.error = error as { code: string; message: string };
+    if (meta)
+      this.meta = meta as {
+        pagination?: {
+          page: number;
+          limit: number;
+          total: number;
+          totalPages: number;
+        };
+      };
   }
 
-  static success<T>(data: T, meta?: any): ApiResponse<T> {
+  static success<T>(data: T, meta?: unknown): ApiResponse<T> {
     return new ApiResponse<T>(true, data, undefined, meta);
   }
 

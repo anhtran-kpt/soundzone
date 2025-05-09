@@ -1,24 +1,15 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ApiResponse } from "@/types/api-type";
+import { ApiResponse } from "@/lib/server/api-response";
 
 export function handleSuccess<T>(response: AxiosResponse): ApiResponse<T> {
-  return {
-    success: true,
-    data: response.data,
-    meta: response.data.meta,
-  };
+  return response.data;
 }
 
 export function handleError(error: AxiosError): ApiResponse<never> {
   if (error.response) {
     return {
       success: false,
-      error: {
-        code: error.response.status.toString(),
-        message:
-          (error.response.data as { message?: string })?.message ||
-          "An error occurred from server",
-      },
+      error: error.response.data.error,
     };
   } else if (error.request) {
     return {

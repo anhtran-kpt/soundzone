@@ -6,19 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Genre } from "@/app/generated/prisma";
 
-export function GenreCard({ genre }: { genre: Genre }) {
-  const router = useRouter();
+interface GenreCardProps {
+  genre: Genre;
+  onDelete: () => void;
+}
 
-  const onDelete = async () => {
-    try {
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+export function GenreCard({ genre, onDelete }: GenreCardProps) {
   return (
     <Card>
       <CardHeader>

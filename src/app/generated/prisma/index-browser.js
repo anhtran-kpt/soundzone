@@ -127,7 +127,6 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   image: 'image',
   role: 'role',
-  bio: 'bio',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -195,6 +194,7 @@ exports.Prisma.GenreScalarFieldEnum = {
   name: 'name',
   description: 'description',
   slug: 'slug',
+  songCount: 'songCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -9,101 +9,105 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { z } from "zod";
 import { genreService } from "@/services/client/genre-service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-type GenreFormValues = z.infer<typeof genreSchema>;
+import { Genre } from "@/app/generated/prisma";
 
 interface GenreFormProps {
-  initialData?: GenreFormValues;
-  isEditing?: boolean;
+  genre?: Genre;
+  mode: "create" | "edit";
 }
 
-export default function GenreForm({
-  initialData,
-  isEditing = false,
-}: GenreFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<GenreFormValues>({
-    resolver: zodResolver(genreSchema),
-    defaultValues: initialData || {
+  const createMutation = useCreateBlogPost();
+  const updateMutation = useUpdateBlogPost(blogPost?.id || "");
+
+  const form = useForm<CreateGenreDto>({
+    resolver: zodResolver(createGenreSchema),
+    defaultValues: genre || {
       name: "",
       description: "",
     },
   });
 
-  const onSubmit = async (data: GenreFormValues) => {
+  const onSubmit = async (values: CreateGenreDto) => {
     try {
-      setIsLoading(true);
-      if (isEditing) {
-        // await genreService.updateGenre(data);
-        toast.success("Genre updated successfully");
+      setIsSubmitting(true);
+
+      if (mode === "create") {
+        await createMutation.mutateAsync(values);
       } else {
-        await genreService.createGenre(data);
-        toast.success("Genre created successfully");
+        await updateMutation.mutateAsync(values);
       }
-      router.push("/admin/genres");
+
+      // Navigate back to list on success
+      router.push("/genres");
       router.refresh();
-    } catch (error) {
-      console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter genre name"
-                  autoComplete="genre-name"
-                  disabled={isLoading}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="max-w-md mx-auto">
+      <h2 className="text-2xl font-bold mb-6">
+        {mode === "create" ? "Create New Genre" : "Edit Genre"}
+      </h2>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter genre name"
+                    autoComplete="genre-name"
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  {...field}
-                  placeholder="Enter genre description"
-                  autoComplete="genre-description"
-                  disabled={isLoading}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Enter genre description"
+                    autoComplete="genre-description"
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading
-            ? "Processing..."
-            : isEditing
-            ? "Update Genre"
-            : "Create Genre"}
-        </Button>
-      </form>
-    </Form>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting
+              ? mode === "create"
+                ? "Creating..."
+                : "Updating..."
+              : mode === "create"
+              ? "Create"
+              : "Update"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
