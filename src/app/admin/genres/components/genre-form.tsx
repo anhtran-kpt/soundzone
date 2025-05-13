@@ -3,16 +3,17 @@
 import { FormControl, FormMessage } from "@/components/ui/form";
 import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { genreSchema } from "@/schemas/genre-schema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { genreService } from "@/services/client/genre-service";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
 import { Genre } from "@/app/generated/prisma";
+import { CreateGenreDto, createGenreSchema } from "@/features/genre/schemas";
+import { useCreateGenre, useUpdateGenre } from "@/features/genre/hooks";
 
 interface GenreFormProps {
   genre?: Genre;
@@ -23,14 +24,14 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const createMutation = useCreateBlogPost();
-  const updateMutation = useUpdateBlogPost(blogPost?.id || "");
+  const createMutation = useCreateGenre();
+  const updateMutation = useUpdateGenre(genre?.slug || "");
 
   const form = useForm<CreateGenreDto>({
     resolver: zodResolver(createGenreSchema),
-    defaultValues: genre || {
-      name: "",
-      description: "",
+    defaultValues: {
+      name: genre?.name || "",
+      description: genre?.description || "",
     },
   });
 
@@ -45,7 +46,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
       }
 
       // Navigate back to list on success
-      router.push("/genres");
+      router.push("/admin/genres");
       router.refresh();
     } finally {
       setIsSubmitting(false);

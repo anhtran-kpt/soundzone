@@ -8552,7 +8552,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
-    slug: string
+    slug: string | null
     songCount: number
     createdAt: Date
     updatedAt: Date
@@ -8636,7 +8636,7 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
-      slug: string
+      slug: string | null
       songCount: number
       createdAt: Date
       updatedAt: Date
@@ -14484,7 +14484,7 @@ export namespace Prisma {
     id?: StringFilter<"Genre"> | string
     name?: StringFilter<"Genre"> | string
     description?: StringNullableFilter<"Genre"> | string | null
-    slug?: StringFilter<"Genre"> | string
+    slug?: StringNullableFilter<"Genre"> | string | null
     songCount?: IntFilter<"Genre"> | number
     createdAt?: DateTimeFilter<"Genre"> | Date | string
     updatedAt?: DateTimeFilter<"Genre"> | Date | string
@@ -14495,7 +14495,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    slug?: SortOrder
+    slug?: SortOrderInput | SortOrder
     songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14520,7 +14520,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    slug?: SortOrder
+    slug?: SortOrderInput | SortOrder
     songCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14538,7 +14538,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Genre"> | string
     name?: StringWithAggregatesFilter<"Genre"> | string
     description?: StringNullableWithAggregatesFilter<"Genre"> | string | null
-    slug?: StringWithAggregatesFilter<"Genre"> | string
+    slug?: StringNullableWithAggregatesFilter<"Genre"> | string | null
     songCount?: IntWithAggregatesFilter<"Genre"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Genre"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Genre"> | Date | string
@@ -15315,7 +15315,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slug: string
+    slug?: string | null
     songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15326,7 +15326,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slug: string
+    slug?: string | null
     songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15337,7 +15337,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15348,7 +15348,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15359,7 +15359,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slug: string
+    slug?: string | null
     songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15369,7 +15369,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15379,7 +15379,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18113,7 +18113,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slug: string
+    slug?: string | null
     songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18123,7 +18123,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slug: string
+    slug?: string | null
     songCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18297,7 +18297,7 @@ export namespace Prisma {
     id?: StringFilter<"Genre"> | string
     name?: StringFilter<"Genre"> | string
     description?: StringNullableFilter<"Genre"> | string | null
-    slug?: StringFilter<"Genre"> | string
+    slug?: StringNullableFilter<"Genre"> | string | null
     songCount?: IntFilter<"Genre"> | number
     createdAt?: DateTimeFilter<"Genre"> | Date | string
     updatedAt?: DateTimeFilter<"Genre"> | Date | string
@@ -19863,7 +19863,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19873,7 +19873,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19883,7 +19883,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     songCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { CreateGenreDto, createGenreSchema, Genre } from "../schemas";
+import { CreateGenreDto, createGenreSchema } from "../schemas";
 import { useCreateGenre, useUpdateGenre } from "../hooks";
+import { Genre } from "@/app/generated/prisma";
 
 type GenreFormProps = {
   genre?: Genre;
@@ -48,7 +49,7 @@ export function GenreForm({ genre, mode = "create" }: GenreFormProps) {
       }
 
       // Navigate back to list on success
-      router.push("/genres");
+      router.push("/admin/genres");
       router.refresh();
     } finally {
       setIsSubmitting(false);
@@ -76,8 +77,6 @@ export function GenreForm({ genre, mode = "create" }: GenreFormProps) {
               </FormItem>
             )}
           />
-
-          {/* Add more form fields here */}
 
           <div className="flex gap-3 justify-end">
             <Button

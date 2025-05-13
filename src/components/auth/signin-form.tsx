@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { signInSchema } from "@/schemas/auth-schema";
-import { SignInDto } from "@/dtos/auth-dto";
+import { SignInDto, signInSchema } from "@/features/auth/schemas";
 
 export function SignInForm() {
   const router = useRouter();

@@ -63,15 +63,15 @@ export function useCreateGenre() {
 }
 
 // Hook to update an genre
-export function useUpdateGenre(slug: string) {
+export function useUpdateGenre(id: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateGenreDto) => genreClientService.update(slug, data),
+    mutationFn: (data: UpdateGenreDto) => genreClientService.update(id, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Genre updated successfully");
-        queryClient.invalidateQueries({ queryKey: genreKeys.detail(slug) });
+        queryClient.invalidateQueries({ queryKey: genreKeys.detail(id) });
         queryClient.invalidateQueries({ queryKey: genreKeys.lists() });
       } else {
         toast.error(response.error?.message || "Failed to update genre");
@@ -88,12 +88,12 @@ export function useDeleteGenre() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => genreClientService.delete(slug),
-    onSuccess: (response, slug) => {
+    mutationFn: (id: string) => genreClientService.delete(id),
+    onSuccess: (response, id) => {
       if (response.success) {
         toast.success("Genre deleted successfully");
         queryClient.invalidateQueries({ queryKey: genreKeys.lists() });
-        queryClient.removeQueries({ queryKey: genreKeys.detail(slug) });
+        queryClient.removeQueries({ queryKey: genreKeys.detail(id) });
       } else {
         toast.error(response.error?.message || "Failed to delete genre");
       }

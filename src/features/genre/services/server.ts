@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { CreateGenreDto, UpdateGenreDto } from "../schemas";
-import { generateSlug } from "@/utils";
 
 export const genreService = {
   // Get all genres
@@ -22,26 +21,21 @@ export const genreService = {
 
   // Create a new genre
   async create(data: CreateGenreDto) {
-    return prisma.genre.create({
-      data: {
-        ...data,
-        slug: generateSlug(data.name),
-      },
-    });
+    return prisma.genre.create({ data });
   },
 
   // Update an genre
-  async update(slug: string, data: UpdateGenreDto) {
+  async update(id: string, data: UpdateGenreDto) {
     return prisma.genre.update({
-      where: { slug },
+      where: { id },
       data,
     });
   },
 
   // Delete an genre
-  async delete(slug: string) {
+  async delete(id: string) {
     return prisma.genre.delete({
-      where: { slug },
+      where: { id },
     });
   },
 };

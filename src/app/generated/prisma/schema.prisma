@@ -149,7 +149,7 @@ model Genre {
   id          String   @id @default(cuid())
   name        String   @unique
   description String?  @db.Text
-  slug        String   @unique
+  slug        String?  @unique
   songs       Song[]
   songCount   Int      @default(0)
   createdAt   DateTime @default(now())

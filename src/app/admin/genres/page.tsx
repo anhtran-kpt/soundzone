@@ -10,7 +10,7 @@ export default function GenresPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Genres</h1>
-        <Link href="/admin/genres/create">
+        <Link href="/admin/genres/new">
           <Button>
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Genre

@@ -1,30 +1,22 @@
-import { genreService } from "@/services/client/genre-service";
-import { notFound } from "next/navigation";
-import GenreForm from "../../components/genre-form";
+"use client";
 
-interface EditGenrePageProps {
-  params: {
-    slug: string;
-  };
-}
+import GenreForm from "@/app/admin/genres/components/genre-form";
+import { useGenre } from "@/features/genre/hooks";
+import { useParams } from "next/navigation";
 
-export default async function EditGenrePage({ params }: EditGenrePageProps) {
-  const response = await genreService.getGenre(params.slug);
+export default function EditBlogPostPage() {
+  const params = useParams();
+  const slug = params.slug as string;
 
-  if (!response.success || !response.data) {
-    notFound();
-  }
+  const { data: genre, isLoading, error } = useGenre(slug);
+
+  if (isLoading) return <div className="container py-10">Loading...</div>;
+  if (error) return <div className="container py-10">Error loading genre</div>;
+  if (!genre) return <div className="container py-10">Genre not found</div>;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Edit Genre</h1>
-        <p className="text-muted-foreground">Update genre information</p>
-      </div>
-
-      <div className="max-w-2xl">
-        <GenreForm initialData={response.data} isEditing />
-      </div>
+    <div className="container py-10">
+      <GenreForm mode="edit" genre={genre} />
     </div>
   );
 }
