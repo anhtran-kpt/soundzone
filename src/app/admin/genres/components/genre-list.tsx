@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useGenres } from "@/features/genre/hooks";
-import { useDeleteGenre } from "@/features/genre/hooks";
+import { useGenres, useDeleteGenre } from "@/hooks";
+
 import { EditIcon, TrashIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

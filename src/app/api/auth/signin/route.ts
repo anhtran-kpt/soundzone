@@ -1,5 +1,5 @@
-import { signInSchema } from "@/features/auth/schemas";
-import { authService } from "@/features/auth/services/server";
+import { signInSchema } from "@/schemas";
+import { authService } from "@/services/server";
 import { ApiResponse } from "@/lib/server/api-response";
 import { withErrorHandler } from "@/lib/server/error-handler";
 import { validateData } from "@/lib/server/validate-data";

@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { SignUpDto, signUpSchema } from "@/features/auth/schemas";
-import { useSignUp } from "@/features/auth/hooks";
+import { SignUpDto, signUpSchema } from "@/schemas";
+import { useSignUp } from "@/hooks";
 
 export function SignUpForm() {
   const router = useRouter();

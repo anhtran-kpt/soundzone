@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { Genre } from "@/app/generated/prisma";
-import { CreateGenreDto, createGenreSchema } from "@/features/genre/schemas";
-import { useCreateGenre, useUpdateGenre } from "@/features/genre/hooks";
+import { CreateGenreDto, createGenreSchema } from "@/schemas";
+import { useCreateGenre, useUpdateGenre } from "@/hooks";
 import { useRouter } from "next/navigation";
 
 interface GenreFormProps {

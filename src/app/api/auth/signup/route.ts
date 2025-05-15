@@ -1,8 +1,8 @@
 import { ApiResponse } from "@/lib/server/api-response";
 import { withErrorHandler } from "@/lib/server/error-handler";
 import { validateData } from "@/lib/server/validate-data";
-import { signUpSchema } from "@/features/auth/schemas";
-import { authService } from "@/features/auth/services/server";
+import { signUpSchema } from "@/schemas";
+import { authService } from "@/services/server";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req: Request) => {
