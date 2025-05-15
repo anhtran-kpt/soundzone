@@ -11,6 +11,14 @@ export const GENRE_ENDPOINTS = {
   delete: (slug: string) => `/genres/${slug}`,
 };
 
+export const ARTIST_ENDPOINTS = {
+  list: "/artists",
+  detail: (slug: string) => `/artists/${slug}`,
+  create: "/artists",
+  update: (slug: string) => `/artists/${slug}`,
+  delete: (slug: string) => `/artists/${slug}`,
+};
+
 export const USER_ENDPOINTS = {
   list: "/users",
   detail: (id: string) => `/users/${id}`,

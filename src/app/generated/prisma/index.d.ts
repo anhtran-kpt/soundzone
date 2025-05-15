@@ -3331,6 +3331,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     bio: string | null
+    dateOfBirth: Date | null
+    nationality: string | null
     coverImage: string | null
     monthlyListeners: number | null
     createdAt: Date | null
@@ -3342,6 +3344,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     bio: string | null
+    dateOfBirth: Date | null
+    nationality: string | null
     coverImage: string | null
     monthlyListeners: number | null
     createdAt: Date | null
@@ -3353,6 +3357,8 @@ export namespace Prisma {
     name: number
     slug: number
     bio: number
+    dateOfBirth: number
+    nationality: number
     coverImage: number
     monthlyListeners: number
     createdAt: number
@@ -3374,6 +3380,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     bio?: true
+    dateOfBirth?: true
+    nationality?: true
     coverImage?: true
     monthlyListeners?: true
     createdAt?: true
@@ -3385,6 +3393,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     bio?: true
+    dateOfBirth?: true
+    nationality?: true
     coverImage?: true
     monthlyListeners?: true
     createdAt?: true
@@ -3396,6 +3406,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     bio?: true
+    dateOfBirth?: true
+    nationality?: true
     coverImage?: true
     monthlyListeners?: true
     createdAt?: true
@@ -3494,6 +3506,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio: string | null
+    dateOfBirth: Date | null
+    nationality: string | null
     coverImage: string | null
     monthlyListeners: number
     createdAt: Date
@@ -3524,6 +3538,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     bio?: boolean
+    dateOfBirth?: boolean
+    nationality?: boolean
     coverImage?: boolean
     monthlyListeners?: boolean
     createdAt?: boolean
@@ -3539,6 +3555,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     bio?: boolean
+    dateOfBirth?: boolean
+    nationality?: boolean
     coverImage?: boolean
     monthlyListeners?: boolean
     createdAt?: boolean
@@ -3550,6 +3568,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     bio?: boolean
+    dateOfBirth?: boolean
+    nationality?: boolean
     coverImage?: boolean
     monthlyListeners?: boolean
     createdAt?: boolean
@@ -3561,13 +3581,15 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     bio?: boolean
+    dateOfBirth?: boolean
+    nationality?: boolean
     coverImage?: boolean
     monthlyListeners?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ArtistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "bio" | "coverImage" | "monthlyListeners" | "createdAt" | "updatedAt", ExtArgs["result"]["artist"]>
+  export type ArtistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "bio" | "dateOfBirth" | "nationality" | "coverImage" | "monthlyListeners" | "createdAt" | "updatedAt", ExtArgs["result"]["artist"]>
   export type ArtistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     songs?: boolean | Artist$songsArgs<ExtArgs>
     albums?: boolean | Artist$albumsArgs<ExtArgs>
@@ -3589,6 +3611,8 @@ export namespace Prisma {
       name: string
       slug: string
       bio: string | null
+      dateOfBirth: Date | null
+      nationality: string | null
       coverImage: string | null
       monthlyListeners: number
       createdAt: Date
@@ -4023,6 +4047,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Artist", 'String'>
     readonly slug: FieldRef<"Artist", 'String'>
     readonly bio: FieldRef<"Artist", 'String'>
+    readonly dateOfBirth: FieldRef<"Artist", 'DateTime'>
+    readonly nationality: FieldRef<"Artist", 'String'>
     readonly coverImage: FieldRef<"Artist", 'String'>
     readonly monthlyListeners: FieldRef<"Artist", 'Int'>
     readonly createdAt: FieldRef<"Artist", 'DateTime'>
@@ -4570,6 +4596,8 @@ export namespace Prisma {
     isExplicit: number
     audioUrl: number
     coverImage: number
+    writers: number
+    producers: number
     albumId: number
     createdAt: number
     updatedAt: number
@@ -4630,6 +4658,8 @@ export namespace Prisma {
     isExplicit?: true
     audioUrl?: true
     coverImage?: true
+    writers?: true
+    producers?: true
     albumId?: true
     createdAt?: true
     updatedAt?: true
@@ -4733,6 +4763,8 @@ export namespace Prisma {
     isExplicit: boolean
     audioUrl: string
     coverImage: string | null
+    writers: string[]
+    producers: string[]
     albumId: string
     createdAt: Date
     updatedAt: Date
@@ -4768,6 +4800,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl?: boolean
     coverImage?: boolean
+    writers?: boolean
+    producers?: boolean
     albumId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4791,6 +4825,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl?: boolean
     coverImage?: boolean
+    writers?: boolean
+    producers?: boolean
     albumId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4808,6 +4844,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl?: boolean
     coverImage?: boolean
+    writers?: boolean
+    producers?: boolean
     albumId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4825,12 +4863,14 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl?: boolean
     coverImage?: boolean
+    writers?: boolean
+    producers?: boolean
     albumId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SongOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "lyrics" | "duration" | "releaseDate" | "playCount" | "isExplicit" | "audioUrl" | "coverImage" | "albumId" | "createdAt" | "updatedAt", ExtArgs["result"]["song"]>
+  export type SongOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "lyrics" | "duration" | "releaseDate" | "playCount" | "isExplicit" | "audioUrl" | "coverImage" | "writers" | "producers" | "albumId" | "createdAt" | "updatedAt", ExtArgs["result"]["song"]>
   export type SongInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     artists?: boolean | Song$artistsArgs<ExtArgs>
     album?: boolean | AlbumDefaultArgs<ExtArgs>
@@ -4868,6 +4908,8 @@ export namespace Prisma {
       isExplicit: boolean
       audioUrl: string
       coverImage: string | null
+      writers: string[]
+      producers: string[]
       albumId: string
       createdAt: Date
       updatedAt: Date
@@ -5310,6 +5352,8 @@ export namespace Prisma {
     readonly isExplicit: FieldRef<"Song", 'Boolean'>
     readonly audioUrl: FieldRef<"Song", 'String'>
     readonly coverImage: FieldRef<"Song", 'String'>
+    readonly writers: FieldRef<"Song", 'String[]'>
+    readonly producers: FieldRef<"Song", 'String[]'>
     readonly albumId: FieldRef<"Song", 'String'>
     readonly createdAt: FieldRef<"Song", 'DateTime'>
     readonly updatedAt: FieldRef<"Song", 'DateTime'>
@@ -13747,6 +13791,8 @@ export namespace Prisma {
     name: 'name',
     slug: 'slug',
     bio: 'bio',
+    dateOfBirth: 'dateOfBirth',
+    nationality: 'nationality',
     coverImage: 'coverImage',
     monthlyListeners: 'monthlyListeners',
     createdAt: 'createdAt',
@@ -13767,6 +13813,8 @@ export namespace Prisma {
     isExplicit: 'isExplicit',
     audioUrl: 'audioUrl',
     coverImage: 'coverImage',
+    writers: 'writers',
+    producers: 'producers',
     albumId: 'albumId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -14099,6 +14147,8 @@ export namespace Prisma {
     name?: StringFilter<"Artist"> | string
     slug?: StringFilter<"Artist"> | string
     bio?: StringNullableFilter<"Artist"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Artist"> | Date | string | null
+    nationality?: StringNullableFilter<"Artist"> | string | null
     coverImage?: StringNullableFilter<"Artist"> | string | null
     monthlyListeners?: IntFilter<"Artist"> | number
     createdAt?: DateTimeFilter<"Artist"> | Date | string
@@ -14113,6 +14163,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     bio?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
     monthlyListeners?: SortOrder
     createdAt?: SortOrder
@@ -14130,6 +14182,8 @@ export namespace Prisma {
     NOT?: ArtistWhereInput | ArtistWhereInput[]
     name?: StringFilter<"Artist"> | string
     bio?: StringNullableFilter<"Artist"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Artist"> | Date | string | null
+    nationality?: StringNullableFilter<"Artist"> | string | null
     coverImage?: StringNullableFilter<"Artist"> | string | null
     monthlyListeners?: IntFilter<"Artist"> | number
     createdAt?: DateTimeFilter<"Artist"> | Date | string
@@ -14144,6 +14198,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     bio?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
     monthlyListeners?: SortOrder
     createdAt?: SortOrder
@@ -14163,6 +14219,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Artist"> | string
     slug?: StringWithAggregatesFilter<"Artist"> | string
     bio?: StringNullableWithAggregatesFilter<"Artist"> | string | null
+    dateOfBirth?: DateTimeNullableWithAggregatesFilter<"Artist"> | Date | string | null
+    nationality?: StringNullableWithAggregatesFilter<"Artist"> | string | null
     coverImage?: StringNullableWithAggregatesFilter<"Artist"> | string | null
     monthlyListeners?: IntWithAggregatesFilter<"Artist"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Artist"> | Date | string
@@ -14183,6 +14241,8 @@ export namespace Prisma {
     isExplicit?: BoolFilter<"Song"> | boolean
     audioUrl?: StringFilter<"Song"> | string
     coverImage?: StringNullableFilter<"Song"> | string | null
+    writers?: StringNullableListFilter<"Song">
+    producers?: StringNullableListFilter<"Song">
     albumId?: StringFilter<"Song"> | string
     createdAt?: DateTimeFilter<"Song"> | Date | string
     updatedAt?: DateTimeFilter<"Song"> | Date | string
@@ -14205,6 +14265,8 @@ export namespace Prisma {
     isExplicit?: SortOrder
     audioUrl?: SortOrder
     coverImage?: SortOrderInput | SortOrder
+    writers?: SortOrder
+    producers?: SortOrder
     albumId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14230,6 +14292,8 @@ export namespace Prisma {
     isExplicit?: BoolFilter<"Song"> | boolean
     audioUrl?: StringFilter<"Song"> | string
     coverImage?: StringNullableFilter<"Song"> | string | null
+    writers?: StringNullableListFilter<"Song">
+    producers?: StringNullableListFilter<"Song">
     albumId?: StringFilter<"Song"> | string
     createdAt?: DateTimeFilter<"Song"> | Date | string
     updatedAt?: DateTimeFilter<"Song"> | Date | string
@@ -14252,6 +14316,8 @@ export namespace Prisma {
     isExplicit?: SortOrder
     audioUrl?: SortOrder
     coverImage?: SortOrderInput | SortOrder
+    writers?: SortOrder
+    producers?: SortOrder
     albumId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14276,6 +14342,8 @@ export namespace Prisma {
     isExplicit?: BoolWithAggregatesFilter<"Song"> | boolean
     audioUrl?: StringWithAggregatesFilter<"Song"> | string
     coverImage?: StringNullableWithAggregatesFilter<"Song"> | string | null
+    writers?: StringNullableListFilter<"Song">
+    producers?: StringNullableListFilter<"Song">
     albumId?: StringWithAggregatesFilter<"Song"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Song"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Song"> | Date | string
@@ -14872,6 +14940,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -14886,6 +14956,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -14900,6 +14972,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14914,6 +14988,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14928,6 +15004,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -14939,6 +15017,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14950,6 +15030,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14967,6 +15049,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -14988,6 +15072,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15009,6 +15095,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -15030,6 +15118,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15051,6 +15141,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15067,6 +15159,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15082,6 +15176,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15853,6 +15949,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     bio?: SortOrder
+    dateOfBirth?: SortOrder
+    nationality?: SortOrder
     coverImage?: SortOrder
     monthlyListeners?: SortOrder
     createdAt?: SortOrder
@@ -15868,6 +15966,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     bio?: SortOrder
+    dateOfBirth?: SortOrder
+    nationality?: SortOrder
     coverImage?: SortOrder
     monthlyListeners?: SortOrder
     createdAt?: SortOrder
@@ -15879,6 +15979,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     bio?: SortOrder
+    dateOfBirth?: SortOrder
+    nationality?: SortOrder
     coverImage?: SortOrder
     monthlyListeners?: SortOrder
     createdAt?: SortOrder
@@ -15910,6 +16012,14 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type AlbumScalarRelationFilter = {
     is?: AlbumWhereInput
     isNot?: AlbumWhereInput
@@ -15936,6 +16046,8 @@ export namespace Prisma {
     isExplicit?: SortOrder
     audioUrl?: SortOrder
     coverImage?: SortOrder
+    writers?: SortOrder
+    producers?: SortOrder
     albumId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16689,6 +16801,14 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type SongCreatewritersInput = {
+    set: string[]
+  }
+
+  export type SongCreateproducersInput = {
+    set: string[]
+  }
+
   export type ArtistCreateNestedManyWithoutSongsInput = {
     create?: XOR<ArtistCreateWithoutSongsInput, ArtistUncheckedCreateWithoutSongsInput> | ArtistCreateWithoutSongsInput[] | ArtistUncheckedCreateWithoutSongsInput[]
     connectOrCreate?: ArtistCreateOrConnectWithoutSongsInput | ArtistCreateOrConnectWithoutSongsInput[]
@@ -16761,6 +16881,16 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type SongUpdatewritersInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type SongUpdateproducersInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type ArtistUpdateManyWithoutSongsNestedInput = {
@@ -17489,6 +17619,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -17502,6 +17634,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -17667,6 +17801,8 @@ export namespace Prisma {
     name?: StringFilter<"Artist"> | string
     slug?: StringFilter<"Artist"> | string
     bio?: StringNullableFilter<"Artist"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Artist"> | Date | string | null
+    nationality?: StringNullableFilter<"Artist"> | string | null
     coverImage?: StringNullableFilter<"Artist"> | string | null
     monthlyListeners?: IntFilter<"Artist"> | number
     createdAt?: DateTimeFilter<"Artist"> | Date | string
@@ -17821,6 +17957,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     album: AlbumCreateNestedOneWithoutSongsInput
@@ -17841,6 +17979,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17968,6 +18108,8 @@ export namespace Prisma {
     isExplicit?: BoolFilter<"Song"> | boolean
     audioUrl?: StringFilter<"Song"> | string
     coverImage?: StringNullableFilter<"Song"> | string | null
+    writers?: StringNullableListFilter<"Song">
+    producers?: StringNullableListFilter<"Song">
     albumId?: StringFilter<"Song"> | string
     createdAt?: DateTimeFilter<"Song"> | Date | string
     updatedAt?: DateTimeFilter<"Song"> | Date | string
@@ -18044,6 +18186,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -18057,6 +18201,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -18362,6 +18508,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -18382,6 +18530,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistUncheckedCreateNestedManyWithoutSongsInput
@@ -18406,6 +18556,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -18419,6 +18571,8 @@ export namespace Prisma {
     name: string
     slug: string
     bio?: string | null
+    dateOfBirth?: Date | string | null
+    nationality?: string | null
     coverImage?: string | null
     monthlyListeners?: number
     createdAt?: Date | string
@@ -18486,6 +18640,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18499,6 +18655,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18534,6 +18692,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -18554,6 +18714,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18717,6 +18879,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -18737,6 +18901,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18778,6 +18944,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -18798,6 +18966,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18873,6 +19043,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -18893,6 +19065,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18958,6 +19132,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     artists?: ArtistCreateNestedManyWithoutSongsInput
@@ -18978,6 +19154,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     albumId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19053,6 +19231,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -19073,6 +19253,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19497,6 +19679,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19510,6 +19694,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19523,6 +19709,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19670,6 +19858,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     album?: AlbumUpdateOneRequiredWithoutSongsNestedInput
@@ -19690,6 +19880,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19710,6 +19902,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19827,6 +20021,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19840,6 +20036,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19853,6 +20051,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     monthlyListeners?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19980,6 +20180,8 @@ export namespace Prisma {
     isExplicit?: boolean
     audioUrl: string
     coverImage?: string | null
+    writers?: SongCreatewritersInput | string[]
+    producers?: SongCreateproducersInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20001,6 +20203,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -20021,6 +20225,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUncheckedUpdateManyWithoutSongsNestedInput
@@ -20041,6 +20247,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20080,6 +20288,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -20100,6 +20310,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20120,6 +20332,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20154,6 +20368,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     artists?: ArtistUpdateManyWithoutSongsNestedInput
@@ -20174,6 +20390,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20194,6 +20412,8 @@ export namespace Prisma {
     isExplicit?: BoolFieldUpdateOperationsInput | boolean
     audioUrl?: StringFieldUpdateOperationsInput | string
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    writers?: SongUpdatewritersInput | string[]
+    producers?: SongUpdateproducersInput | string[]
     albumId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -137,6 +137,8 @@ exports.Prisma.ArtistScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   bio: 'bio',
+  dateOfBirth: 'dateOfBirth',
+  nationality: 'nationality',
   coverImage: 'coverImage',
   monthlyListeners: 'monthlyListeners',
   createdAt: 'createdAt',
@@ -154,6 +156,8 @@ exports.Prisma.SongScalarFieldEnum = {
   isExplicit: 'isExplicit',
   audioUrl: 'audioUrl',
   coverImage: 'coverImage',
+  writers: 'writers',
+  producers: 'producers',
   albumId: 'albumId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
