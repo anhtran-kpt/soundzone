@@ -27,12 +27,15 @@ export const genreClientService = {
   },
 
   // Update an genre
-  async update(id: string, data: UpdateGenreDto): Promise<ApiResponse<Genre>> {
-    return apiClient.put<Genre>(GENRE_ENDPOINTS.update(id), data);
+  async update(
+    slug: string,
+    data: UpdateGenreDto
+  ): Promise<ApiResponse<Genre>> {
+    return apiClient.patch<Genre>(GENRE_ENDPOINTS.update(slug), data);
   },
 
   // Delete an genre
-  async delete(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(GENRE_ENDPOINTS.delete(id));
+  async delete(slug: string): Promise<ApiResponse<void>> {
+    return apiClient.delete<void>(GENRE_ENDPOINTS.delete(slug));
   },
 };

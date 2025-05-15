@@ -9,11 +9,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
 
 import { Genre } from "@/app/generated/prisma";
 import { CreateGenreDto, createGenreSchema } from "@/features/genre/schemas";
 import { useCreateGenre, useUpdateGenre } from "@/features/genre/hooks";
+import { useRouter } from "next/navigation";
 
 interface GenreFormProps {
   genre?: Genre;
@@ -38,16 +38,18 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const onSubmit = async (values: CreateGenreDto) => {
     try {
       setIsSubmitting(true);
+      let response = null;
 
       if (mode === "create") {
-        await createMutation.mutateAsync(values);
+        response = await createMutation.mutateAsync(values);
       } else {
-        await updateMutation.mutateAsync(values);
+        response = await updateMutation.mutateAsync(values);
       }
 
-      // Navigate back to list on success
-      router.push("/admin/genres");
-      router.refresh();
+      if (response.success) {
+        router.push("/admin/genres");
+        router.refresh();
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -4,7 +4,7 @@ import GenreForm from "@/app/admin/genres/components/genre-form";
 import { useGenre } from "@/features/genre/hooks";
 import { useParams } from "next/navigation";
 
-export default function EditBlogPostPage() {
+export default function EditGenrePage() {
   const params = useParams();
   const slug = params.slug as string;
 

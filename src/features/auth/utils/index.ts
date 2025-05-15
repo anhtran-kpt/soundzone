@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ApiError } from "../../../lib/server/api-error";
 import bcrypt from "bcryptjs";
-import { SALT_ROUNDS } from "@/config/constants";
+import { SALT_ROUNDS } from "@/config";
 
 export const authOptions: NextAuthOptions = {
   session: {

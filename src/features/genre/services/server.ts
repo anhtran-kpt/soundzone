@@ -21,21 +21,29 @@ export const genreService = {
 
   // Create a new genre
   async create(data: CreateGenreDto) {
-    return prisma.genre.create({ data });
+    return prisma.genre.create({
+      data: {
+        ...data,
+        slug: await prisma.genre.generateSlug(data.name),
+      },
+    });
   },
 
   // Update an genre
-  async update(id: string, data: UpdateGenreDto) {
+  async update(slug: string, data: UpdateGenreDto) {
     return prisma.genre.update({
-      where: { id },
-      data,
+      where: { slug },
+      data: {
+        ...data,
+        slug: data.name ? await prisma.genre.generateSlug(data.name) : slug,
+      },
     });
   },
 
   // Delete an genre
-  async delete(id: string) {
+  async delete(slug: string) {
     return prisma.genre.delete({
-      where: { id },
+      where: { slug },
     });
   },
 };

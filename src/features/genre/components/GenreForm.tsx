@@ -28,13 +28,13 @@ export function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const createMutation = useCreateGenre();
-  const updateMutation = useUpdateGenre(genre?.id || "");
+  const updateMutation = useUpdateGenre(genre?.slug || "");
 
   const form = useForm<CreateGenreDto>({
     resolver: zodResolver(createGenreSchema),
     defaultValues: {
       name: genre?.name || "",
-      // Add more fields as needed
+      description: genre?.description || "",
     },
   });
 

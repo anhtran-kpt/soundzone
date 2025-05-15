@@ -5,9 +5,9 @@ import { useGenres } from "@/features/genre/hooks";
 import { useDeleteGenre } from "@/features/genre/hooks";
 import { EditIcon, TrashIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Genre } from "@/app/generated/prisma";
+import Link from "next/link";
 
 export function GenreList() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
