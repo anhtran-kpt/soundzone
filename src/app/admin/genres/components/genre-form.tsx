@@ -56,7 +56,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">
         {mode === "create" ? "Create New Genre" : "Edit Genre"}
       </h2>
@@ -99,8 +99,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
               </FormItem>
             )}
           />
-
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting
               ? mode === "create"
                 ? "Creating..."

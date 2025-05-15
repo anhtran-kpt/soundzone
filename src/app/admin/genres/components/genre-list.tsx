@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useGenres, useDeleteGenre } from "@/hooks";
-
 import { EditIcon, TrashIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,17 +9,17 @@ import { Genre } from "@/app/generated/prisma";
 import Link from "next/link";
 
 export function GenreList() {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
 
   const { data: genres, isLoading, error } = useGenres();
 
   const deleteMutation = useDeleteGenre();
 
-  const handleDelete = (id: string) => {
-    setDeletingId(id);
-    deleteMutation.mutate(id, {
+  const handleDelete = (slug: string) => {
+    setDeletingSlug(slug);
+    deleteMutation.mutate(slug, {
       onSettled: () => {
-        setDeletingId(null);
+        setDeletingSlug(null);
       },
     });
   };
@@ -43,21 +42,21 @@ export function GenreList() {
               <p className="text-sm text-muted-foreground">
                 {genre.description || "No description"}
               </p>
-              <div className="flex items-center gap-2 mt-4">
+              <div className="flex items-center gap-3 mt-4">
                 <Link href={`/admin/genres/${genre.slug}/edit`}>
                   <Button variant="outline" size="sm">
-                    <EditIcon className="h-4 w-4 mr-2" />
+                    <EditIcon className="h-4 w-4 mr-1" />
                     Edit
                   </Button>
                 </Link>
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => handleDelete(genre.id)}
-                  disabled={deletingId === genre.id}
+                  onClick={() => handleDelete(genre.slug)}
+                  disabled={deletingSlug === genre.slug}
                 >
-                  {deletingId === genre.id ? "Deleting..." : "Delete"}
-                  <TrashIcon className="h-4 w-4 mr-2" />
+                  <TrashIcon className="h-4 w-4 mr-1" />
+                  {deletingSlug === genre.slug ? "Deleting..." : "Delete"}
                 </Button>
               </div>
             </CardContent>

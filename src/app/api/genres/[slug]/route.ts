@@ -1,8 +1,8 @@
 import { ApiResponse } from "@/lib/server/api-response";
 import { withErrorHandler } from "@/lib/server/error-handler";
 import { validateData } from "@/lib/server/validate-data";
-import { genreSchema } from "@/features/genre/schemas";
-import { genreService } from "@/features/genre/services/server";
+import { genreSchema } from "@/schemas";
+import { genreService } from "@/services/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
@@ -43,6 +43,6 @@ export const DELETE = withErrorHandler(
 
     await genreService.delete(slug);
 
-    return NextResponse.json(ApiResponse.success(null), { status: 204 });
+    return NextResponse.json(ApiResponse.success(null), { status: 200 });
   }
 );

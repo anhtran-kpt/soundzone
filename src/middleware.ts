@@ -3,7 +3,7 @@ import { getToken } from "next-auth/jwt";
 
 const protectedRoutes = ["/profile", "/favorites", "/playlists", "/settings"];
 
-const adminRoutes = ["/admin", "/admin/users", "/admin/songs"];
+const adminRoutes = ["/admin", "/admin/users", "/admin/songs", "/admin/genres"];
 
 const authRoutes = ["/signin", "/signup"];
 

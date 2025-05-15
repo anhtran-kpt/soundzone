@@ -5,7 +5,7 @@ export default function Dashboard() {
         <div key={item} className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold mb-4">Card {item}</h2>
           <div className="h-32 bg-gray-100 rounded flex items-center justify-center">
-            <span className="text-gray-500">Nội dung</span>
+            <span className="text-gray-500">Content</span>
           </div>
         </div>
       ))}
