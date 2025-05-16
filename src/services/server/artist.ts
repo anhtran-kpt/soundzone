@@ -12,7 +12,7 @@ export const artistService = {
   },
 
   async getBySlug(slug: string) {
-    return prisma.genre.findUnique({
+    return prisma.artist.findUnique({
       where: { slug },
     });
   },
@@ -21,7 +21,7 @@ export const artistService = {
     return prisma.artist.create({
       data: {
         ...data,
-        slug: await prisma.genre.generateSlug(data.name),
+        slug: await prisma.artist.generateSlug(data.name),
       },
     });
   },
@@ -31,13 +31,13 @@ export const artistService = {
       where: { slug },
       data: {
         ...data,
-        slug: data.name ? await prisma.genre.generateSlug(data.name) : slug,
+        slug: data.name ? await prisma.artist.generateSlug(data.name) : slug,
       },
     });
   },
 
   async delete(slug: string) {
-    return prisma.genre.delete({
+    return prisma.artist.delete({
       where: { slug },
     });
   },

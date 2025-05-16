@@ -3,7 +3,7 @@ import { z } from "zod";
 export const artistSchema = z.object({
   name: z.string().min(1, "Artist name is required"),
   bio: z.string().optional(),
-  dateOfBirth: z.string().optional(),
+  dateOfBirth: z.coerce.date().optional(),
   nationality: z.string().optional(),
   coverImage: z.string().url("Cover image must be a valid URL").optional(),
 });

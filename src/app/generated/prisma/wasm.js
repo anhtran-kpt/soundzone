@@ -156,7 +156,7 @@ exports.Prisma.SongScalarFieldEnum = {
   isExplicit: 'isExplicit',
   audioUrl: 'audioUrl',
   coverImage: 'coverImage',
-  writers: 'writers',
+  composers: 'composers',
   producers: 'producers',
   albumId: 'albumId',
   createdAt: 'createdAt',

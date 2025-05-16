@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Artist } from "@/app/generated/prisma";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function ArtistList() {
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
@@ -36,31 +37,39 @@ export default function ArtistList() {
       {artists?.map((artist: Artist) => (
         <div key={artist.id}>
           <Card>
-            <CardHeader>
-              <CardTitle>{artist.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {artist.bio || "No bio"}
-              </p>
-              <div className="flex items-center gap-3 mt-4">
-                <Link href={`/admin/artists/${artist.slug}/edit`}>
-                  <Button variant="outline" size="sm">
-                    <EditIcon className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(artist.slug)}
-                  disabled={deletingSlug === artist.slug}
-                >
-                  <TrashIcon className="h-4 w-4 mr-1" />
-                  {deletingSlug === artist.slug ? "Deleting..." : "Delete"}
-                </Button>
+            <div className="flex items-center">
+              <Avatar className="size-20">
+                <AvatarImage src={artist.coverImage || ""} />
+                <AvatarFallback>{artist.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <CardHeader>
+                  <CardTitle>{artist.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    {artist.bio || "No bio"}
+                  </p>
+                  <div className="flex items-center gap-3 mt-4">
+                    <Link href={`/admin/artists/${artist.slug}/edit`}>
+                      <Button variant="outline" size="sm">
+                        <EditIcon className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(artist.slug)}
+                      disabled={deletingSlug === artist.slug}
+                    >
+                      <TrashIcon className="h-4 w-4 mr-1" />
+                      {deletingSlug === artist.slug ? "Deleting..." : "Delete"}
+                    </Button>
+                  </div>
+                </CardContent>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       ))}

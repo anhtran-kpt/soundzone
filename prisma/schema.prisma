@@ -88,8 +88,9 @@ model Song {
   coverImage String?
 
   artists     Artist[]
-  writers     String[]
+  composers   String[]
   producers   String[]
+  lyricists   String[]
   album       Album         @relation(fields: [albumId], references: [id])
   albumId     String
   genres      Genre[]
