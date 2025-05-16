@@ -111,7 +111,7 @@ model Album {
   description String?   @db.Text
   slug        String    @unique
   type        AlbumType @default(ALBUM)
-  duration    Int
+  duration    Int       @default(0)
   releaseDate DateTime?
   playCount   Int       @default(0)
   coverImage  String?

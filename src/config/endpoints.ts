@@ -19,13 +19,13 @@ export const ARTIST_ENDPOINTS = {
   delete: (slug: string) => `/artists/${slug}`,
 };
 
-// export const ALBUM_ENDPOINTS = {
-//   list: "/albums",
-//   detail: (slug: string) => `/albums/${slug}`,
-//   create: "/albums",
-//   update: (slug: string) => `/albums/${slug}`,
-//   delete: (slug: string) => `/albums/${slug}`,
-// };
+export const ALBUM_ENDPOINTS = {
+  list: "/albums",
+  detail: (slug: string) => `/albums/${slug}`,
+  create: "/albums",
+  update: (slug: string) => `/albums/${slug}`,
+  delete: (slug: string) => `/albums/${slug}`,
+};
 
 export const USER_ENDPOINTS = {
   list: "/users",
