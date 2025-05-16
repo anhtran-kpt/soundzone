@@ -19,38 +19,35 @@ enum UserRole {
   ADMIN
 }
 
-enum AlbumType {
-  ALBUM
+enum ReleaseType {
   SINGLE
+  ALBUM
   EP
+  COMPILATION
 }
 
 enum ArtistRole {
-  OWNER
+  PRIMARY
   FEATURED
-}
-
-enum PlaylistType {
-  PUBLIC
-  PRIVATE
+  COMPILATION
 }
 
 model User {
-  id             String          @id @default(cuid())
-  name           String
-  email          String          @unique
-  password       String
-  image          String?
-  role           UserRole        @default(USER)
-  lastLoginAt    DateTime?
-  following      Artist[]        @relation("UserFollowing")
-  playlists      Playlist[]
-  playHistory    PlayHistory[]
-  likedSongs     LikedSong[]
-  likedAlbums    LikedAlbum[]
-  likedPlaylists LikedPlaylist[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatarUrl String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  playlists       Playlist[]
+  playHistory     PlayHistory[]
+  likedSongs      UserLikedSong[]
+  likedAlbums     UserLikedAlbum[]
+  likedPlaylists  UserLikedPlaylist[]
+  followedArtists UserFollowedArtist[]
 
   @@index([email])
 }
@@ -62,154 +59,244 @@ model Artist {
   bio              String?   @db.Text
   dateOfBirth      DateTime?
   nationality      String?
-  coverImage       String?
+  avatarUrl        String?
+  bannerUrl        String?
   monthlyListeners Int       @default(0)
-  songs            Song[]
-  albums           Album[]
-  followers        User[]    @relation("UserFollowing")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  songs     SongArtist[]
+  albums    AlbumArtist[]
+  genres    ArtistGenre[]
+  followers UserFollowedArtist[]
 
   @@index([slug])
 }
 
 model Song {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
-  slug        String    @unique
-  lyrics      String?   @db.Text
+  slug        String   @unique
+  lyrics      String?  @db.Text
   duration    Int
-  releaseDate DateTime?
-  playCount   Int       @default(0)
-
-  isExplicit Boolean @default(false)
-  audioUrl   String
-  coverImage String?
-
-  artists     Artist[]
+  playCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isExplicit  Boolean  @default(false)
+  audioUrl    String
   composers   String[]
   producers   String[]
   lyricists   String[]
-  album       Album         @relation(fields: [albumId], references: [id])
-  albumId     String
-  genres      Genre[]
-  playlists   Playlist[]
-  playHistory PlayHistory[]
-  likedBy     LikedSong[]
+  trackNumber Int      @default(1) // Position in the album
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  album        Album           @relation(fields: [albumId], references: [id])
+  albumId      String
+  genres       SongGenre[]
+  playlists    PlaylistSong[]
+  playHistory  PlayHistory[]
+  likedByUsers UserLikedSong[]
+  artists      SongArtist[]
 
   @@index([slug])
   @@index([albumId])
 }
 
 model Album {
-  id          String    @id @default(cuid())
-  title       String
-  description String?   @db.Text
-  slug        String    @unique
-  type        AlbumType @default(ALBUM)
-  duration    Int       @default(0)
-  releaseDate DateTime?
-  playCount   Int       @default(0)
-  coverImage  String?
-  isExplicit  Boolean   @default(false)
+  id            String      @id @default(cuid())
+  title         String
+  description   String?     @db.Text
+  slug          String      @unique
+  releaseType   ReleaseType @default(ALBUM)
+  releaseDate   DateTime?
+  playCount     Int         @default(0)
+  totalDuration Int         @default(0)
+  coverUrl      String?
+  isExplicit    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
-  songs    Song[]
-  artist   Artist       @relation(fields: [artistId], references: [id])
-  artistId String
-  likedBy  LikedAlbum[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  songs        Song[]
+  artists      AlbumArtist[]
+  genres       AlbumGenre[]
+  likedByUsers UserLikedAlbum[]
 
   @@index([slug])
-  @@index([artistId])
 }
 
 model Playlist {
-  id          String          @id @default(cuid())
-  title       String
-  description String?         @db.Text
-  slug        String          @unique
-  duration    Int             @default(0)
-  releaseDate DateTime?
-  type        PlaylistType    @default(PUBLIC)
-  coverImage  String?
-  songs       Song[]
-  user        User?           @relation(fields: [userId], references: [id])
-  userId      String?
-  likedBy     LikedPlaylist[]
+  id            String   @id @default(cuid())
+  title         String
+  description   String?  @db.Text
+  slug          String   @unique
+  isPublic      Boolean  @default(true)
+  totalDuration Int      @default(0)
+  coverUrl      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user         User?               @relation(fields: [userId], references: [id])
+  userId       String?
+  likedByUsers UserLikedPlaylist[]
+  songs        PlaylistSong[]
 
   @@index([slug])
   @@index([userId])
 }
 
 model Genre {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?  @db.Text
-  slug        String   @unique
-  songs       Song[]
-  songCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String        @id @default(cuid())
+  name        String        @unique
+  description String?       @db.Text
+  slug        String        @unique
+  songCount   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  albums      AlbumGenre[]
+  artists     ArtistGenre[]
+  songs       SongGenre[]
 
   @@index([slug])
 }
 
 model PlayHistory {
-  id       String   @id @default(cuid())
-  song     Song     @relation(fields: [songId], references: [id])
-  songId   String
-  user     User     @relation(fields: [userId], references: [id])
-  userId   String
-  playedAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  playedAt      DateTime @default(now())
+  playDuration  Int      @default(0)
+  completedPlay Boolean  @default(false)
+  sourceType    String? // Source of the play: Search, Playlist, Radio, Album...
+  sourceId      String?
+  deviceType    String?
 
-  @@index([userId])
+  song   Song   @relation(fields: [songId], references: [id])
+  songId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@index([userId, playedAt])
   @@index([songId])
 }
 
-model LikedSong {
-  id      String   @id @default(cuid())
-  song    Song     @relation(fields: [songId], references: [id])
+model SongArtist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  song     Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId   String
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String
+
+  role  ArtistRole @default(PRIMARY)
+  order Int        @default(1)
+
+  @@unique([songId, artistId])
+}
+
+model PlaylistSong {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  playlistId String
+  song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId     String
+  order      Int
+
+  @@unique([playlistId, songId])
+}
+
+model AlbumArtist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  album    Album      @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId  String
+  artist   Artist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String
+  role     ArtistRole @default(PRIMARY)
+
+  @@unique([albumId, artistId])
+}
+
+model SongGenre {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  song    Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
   songId  String
-  user    User     @relation(fields: [userId], references: [id])
-  userId  String
-  likedAt DateTime @default(now())
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  genreId String
+
+  @@unique([songId, genreId])
+}
+
+model AlbumGenre {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId String
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  genreId String
+
+  @@unique([albumId, genreId])
+}
+
+model ArtistGenre {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String
+  genre    Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  genreId  String
+
+  @@unique([artistId, genreId])
+}
+
+model UserLikedSong {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  song   Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId String
 
   @@unique([userId, songId])
-  @@index([userId])
-  @@index([songId])
 }
 
-model LikedAlbum {
-  id      String   @id @default(cuid())
-  album   Album    @relation(fields: [albumId], references: [id])
-  albumId String
-  user    User     @relation(fields: [userId], references: [id])
+model UserLikedAlbum {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
-  likedAt DateTime @default(now())
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId String
 
   @@unique([userId, albumId])
-  @@index([userId])
-  @@index([albumId])
 }
 
-model LikedPlaylist {
-  id         String   @id @default(cuid())
-  playlist   Playlist @relation(fields: [playlistId], references: [id])
-  playlistId String
-  user       User     @relation(fields: [userId], references: [id])
+model UserLikedPlaylist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  likedAt    DateTime @default(now())
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  playlistId String
 
   @@unique([userId, playlistId])
-  @@index([userId])
-  @@index([playlistId])
+}
+
+model UserFollowedArtist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String
+
+  @@unique([userId, artistId])
 }

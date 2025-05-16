@@ -8,6 +8,7 @@ export const albumSchema = z.object({
   releaseDate: z.coerce.date().optional(),
   coverImage: z.string().url("Cover image must be a valid URL").optional(),
   artistId: z.string().cuid("Artist is required"),
+  isExplicit: z.boolean().optional(),
   // songs: z.array(z.string().cuid("Song is required")).optional(),
 });
 
