@@ -118,8 +118,8 @@ model Album {
   isExplicit  Boolean   @default(false)
 
   songs    Song[]
-  artist   Artist?      @relation(fields: [artistId], references: [id])
-  artistId String?
+  artist   Artist       @relation(fields: [artistId], references: [id])
+  artistId String
   likedBy  LikedAlbum[]
 
   createdAt DateTime @default(now())

@@ -10,14 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Album, AlbumType } from "@/app/generated/prisma";
 import { CreateAlbumDto, createAlbumSchema } from "@/schemas";
-import { useCreateAlbum, useUpdateAlbum } from "@/hooks";
+import { useArtists, useCreateAlbum, useUpdateAlbum } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { PopoverContent } from "@/components/ui/popover";
 import { Popover } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { format } from "date-fns";
 import {
   Select,
@@ -26,6 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 
 interface AlbumFormProps {
   album?: Album;
@@ -38,6 +46,7 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
 
   const createMutation = useCreateAlbum();
   const updateMutation = useUpdateAlbum(album?.slug || "");
+  const { data: artists } = useArtists();
 
   const form = useForm<CreateAlbumDto>({
     resolver: zodResolver(createAlbumSchema),
@@ -47,6 +56,7 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
       coverImage: album?.coverImage || "",
       releaseDate: album?.releaseDate || new Date(),
       type: album?.type || AlbumType.ALBUM,
+      artistId: album?.artistId || "",
     },
   });
 
@@ -185,6 +195,69 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
                     </FormItem>
                   </Select>
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="artistId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Artist</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? artists?.find((artist) => artist.id === field.value)
+                              ?.name
+                          : "Select artist"}
+                        <ChevronsUpDownIcon className="opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search artist..."
+                        className="h-9"
+                      />
+                      <CommandList>
+                        <CommandEmpty>No artist found.</CommandEmpty>
+                        <CommandGroup>
+                          {artists?.map((artist) => (
+                            <CommandItem
+                              value={artist.name}
+                              key={artist.id}
+                              onSelect={() => {
+                                form.setValue("artistId", artist.id);
+                              }}
+                            >
+                              {artist.name}
+                              <CheckIcon
+                                className={cn(
+                                  "ml-auto",
+                                  artist.id === form.getValues("artistId")
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}

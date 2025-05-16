@@ -7,6 +7,8 @@ export const albumSchema = z.object({
   type: z.nativeEnum(AlbumType),
   releaseDate: z.coerce.date().optional(),
   coverImage: z.string().url("Cover image must be a valid URL").optional(),
+  artistId: z.string().cuid("Artist is required"),
+  // songs: z.array(z.string().cuid("Song is required")).optional(),
 });
 
 export const createAlbumSchema = albumSchema;

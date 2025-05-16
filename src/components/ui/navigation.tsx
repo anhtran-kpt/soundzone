@@ -1,8 +1,8 @@
 import {
-  BookUserIcon,
   Disc3Icon,
   DiscAlbumIcon,
   LayoutDashboardIcon,
+  MicVocalIcon,
   MusicIcon,
   UsersRoundIcon,
 } from "lucide-react";
@@ -28,7 +28,7 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "Artists",
     href: "/admin/artists",
-    icon: <BookUserIcon size={20} />,
+    icon: <MicVocalIcon size={20} />,
   },
   {
     title: "Albums",
