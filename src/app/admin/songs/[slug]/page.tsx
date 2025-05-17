@@ -1,7 +1,7 @@
-export default function ArtistPage() {
+export default function SongPage() {
   return (
     <div className="flex flex-col">
-      <h1>Artist</h1>
+      <h1>Song</h1>
     </div>
   );
 }

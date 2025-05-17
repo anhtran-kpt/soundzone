@@ -1,22 +1,22 @@
 "use client";
 
-import AlbumForm from "@/app/admin/albums/components/album-form";
-import { useAlbum } from "@/hooks";
+import { useSong } from "@/hooks";
 import { useParams } from "next/navigation";
+import SongForm from "../../components/song-form";
 
-export default function EditAlbumPage() {
+export default function EditSongPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data: album, isLoading, error } = useAlbum(slug);
+  const { data: song, isLoading, error } = useSong(slug);
 
   if (isLoading) return <div className="container py-10">Loading...</div>;
-  if (error) return <div className="container py-10">Error loading album</div>;
-  if (!album) return <div className="container py-10">Album not found</div>;
+  if (error) return <div className="container py-10">Error loading song</div>;
+  if (!song) return <div className="container py-10">Song not found</div>;
 
   return (
     <div className="container py-10">
-      <AlbumForm mode="edit" album={album} />
+      <SongForm mode="edit" song={song} />
     </div>
   );
 }

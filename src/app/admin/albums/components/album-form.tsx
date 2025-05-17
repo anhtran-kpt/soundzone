@@ -1,6 +1,10 @@
 "use client";
 
-import { FormControl, FormMessage } from "@/components/ui/form";
+import {
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
 import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +38,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 
 interface AlbumFormProps {
   album?: Album;
@@ -58,6 +63,7 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
       releaseDate: album?.releaseDate || new Date(),
       releaseType: album?.releaseType || ReleaseType.ALBUM,
       artistId: album?.artistId || "",
+      isExplicit: album?.isExplicit || false,
       genreIds: album?.genres?.map((genre) => genre.genreId) || [],
     },
   });
@@ -123,6 +129,27 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
                   />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isExplicit"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-2">
+                  <FormLabel>Explicit</FormLabel>
+                  <FormDescription>
+                    This album contains explicit content.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

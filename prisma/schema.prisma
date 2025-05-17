@@ -23,11 +23,24 @@ enum ReleaseType {
   SINGLE
   ALBUM
   EP
+  COMPILATION
 }
 
 enum ArtistRole {
-  PRIMARY
+  MAIN
   FEATURED
+}
+
+enum CreditRole {
+  COMPOSER
+  LYRICIST
+  PRODUCER
+  MIXER
+  MASTERING
+  VOCALIST
+  INSTRUMENTALIST
+  ARRANGER
+  ENGINEER
 }
 
 model User {
@@ -51,24 +64,42 @@ model User {
 }
 
 model Artist {
-  id               String    @id @default(cuid())
+  id               String   @id @default(cuid())
   name             String
-  slug             String    @unique
-  bio              String?   @db.Text
-  dateOfBirth      DateTime?
+  slug             String   @unique
+  bio              String?  @db.Text
   nationality      String?
   avatarUrl        String?
   bannerUrl        String?
-  monthlyListeners Int       @default(0)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  followerCount    Int      @default(0)
+  monthlyListeners Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   songs     SongArtist[]
-  albums    Album[]
+  albums    AlbumArtist[]
   genres    ArtistGenre[]
   followers UserFollowedArtist[]
+  credits   Credit[]
 
   @@index([slug])
+}
+
+model Credit {
+  id        String     @id @default(cuid())
+  name      String
+  role      CreditRole
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  songId   String
+  song     Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
+  artistId String?
+  artist   Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
+
+  @@unique([songId, name, role])
+  @@index([songId])
+  @@index([artistId])
 }
 
 model Song {
@@ -78,15 +109,14 @@ model Song {
   lyrics      String?  @db.Text
   duration    Int
   playCount   Int      @default(0)
+  likeCount   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   isExplicit  Boolean  @default(false)
   audioUrl    String
-  composers   String[]
-  producers   String[]
-  lyricists   String[]
   trackNumber Int      @default(1) // Position in the album
 
+  credits      Credit[]
   album        Album           @relation(fields: [albumId], references: [id])
   albumId      String
   genres       SongGenre[]
@@ -108,14 +138,15 @@ model Album {
   releaseDate   DateTime?
   playCount     Int         @default(0)
   totalDuration Int         @default(0)
+  songCount     Int         @default(0)
+  likeCount     Int         @default(0)
   coverUrl      String?
   isExplicit    Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   songs        Song[]
-  artist       Artist           @relation(fields: [artistId], references: [id])
-  artistId     String
+  artists      AlbumArtist[]
   genres       AlbumGenre[]
   likedByUsers UserLikedAlbum[]
 
@@ -129,6 +160,9 @@ model Playlist {
   slug          String   @unique
   isPublic      Boolean  @default(true)
   totalDuration Int      @default(0)
+  playCount     Int      @default(0)
+  songCount     Int      @default(0)
+  likeCount     Int      @default(0)
   coverUrl      String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -143,15 +177,19 @@ model Playlist {
 }
 
 model Genre {
-  id          String        @id @default(cuid())
-  name        String        @unique
-  description String?       @db.Text
-  slug        String        @unique
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  albums      AlbumGenre[]
-  artists     ArtistGenre[]
-  songs       SongGenre[]
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?  @db.Text
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  songCount   Int      @default(0)
+  artistCount Int      @default(0)
+  albumCount  Int      @default(0)
+
+  albums  AlbumGenre[]
+  artists ArtistGenre[]
+  songs   SongGenre[]
 
   @@index([slug])
 }
@@ -174,6 +212,18 @@ model PlayHistory {
   @@index([songId])
 }
 
+model AlbumArtist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  album    Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId  String
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String
+
+  @@unique([albumId, artistId])
+}
+
 model SongArtist {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
@@ -183,7 +233,7 @@ model SongArtist {
   artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
   artistId String
 
-  role  ArtistRole @default(PRIMARY)
+  role  ArtistRole @default(MAIN)
   order Int        @default(1)
 
   @@unique([songId, artistId])

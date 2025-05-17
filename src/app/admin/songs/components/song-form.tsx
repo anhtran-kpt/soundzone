@@ -10,22 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Song } from "@/app/generated/prisma";
 import { CreateSongDto, createSongSchema } from "@/schemas";
-import { useArtists, useCreateSong, useUpdateSong } from "@/hooks";
+import { useAlbums, useCreateSong, useUpdateSong } from "@/hooks";
 import { useRouter } from "next/navigation";
-import { Calendar } from "@/components/ui/calendar";
 import { PopoverContent } from "@/components/ui/popover";
 import { Popover } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { format } from "date-fns";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import {
   Command,
   CommandInput,
@@ -46,19 +37,16 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
 
   const createMutation = useCreateSong();
   const updateMutation = useUpdateSong(song?.slug || "");
-  const { data: artists } = useArtists();
+  const { data: albums } = useAlbums();
 
   const form = useForm<CreateSongDto>({
     resolver: zodResolver(createSongSchema),
     defaultValues: {
       title: song?.title || "",
       lyrics: song?.lyrics || "",
-      releaseDate: song?.releaseDate || new Date(),
       isExplicit: song?.isExplicit || false,
       audioUrl: song?.audioUrl || "",
-      artistId: song?.artistId || "",
       albumId: song?.albumId || "",
-      genres: song?.genres || [],
       composers: song?.composers || [],
       producers: song?.producers || [],
       lyricists: song?.lyricists || [],
@@ -101,8 +89,8 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter Song title"
-                    autoComplete="Song-title"
+                    placeholder="Enter song title"
+                    autoComplete="song-title"
                     disabled={isSubmitting}
                   />
                 </FormControl>
@@ -121,7 +109,7 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                   <Textarea
                     {...field}
                     placeholder="Enter song lyrics"
-                    autoComplete="Song-lyrics"
+                    autoComplete="song-lyrics"
                     disabled={isSubmitting}
                   />
                 </FormControl>
@@ -132,85 +120,10 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
 
           <FormField
             control={form.control}
-            name="releaseDate"
+            name="albumId"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Release Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    // defaultValue={field.value}
-                    disabled={isSubmitting}
-                  >
-                    <FormItem>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Song type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(SongType).map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </FormItem>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="artistId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Artist</FormLabel>
+                <FormLabel>Album</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -223,9 +136,9 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                         )}
                       >
                         {field.value
-                          ? artists?.find((artist) => artist.id === field.value)
-                              ?.name
-                          : "Select artist"}
+                          ? albums?.find((album) => album.id === field.value)
+                              ?.title
+                          : "Select album"}
                         <ChevronsUpDownIcon className="opacity-50" />
                       </Button>
                     </FormControl>
@@ -233,25 +146,25 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                   <PopoverContent className="w-[200px] p-0">
                     <Command>
                       <CommandInput
-                        placeholder="Search artist..."
+                        placeholder="Search album..."
                         className="h-9"
                       />
                       <CommandList>
-                        <CommandEmpty>No artist found.</CommandEmpty>
+                        <CommandEmpty>No album found.</CommandEmpty>
                         <CommandGroup>
-                          {artists?.map((artist) => (
+                          {albums?.map((album) => (
                             <CommandItem
-                              value={artist.name}
-                              key={artist.id}
+                              value={album.title}
+                              key={album.id}
                               onSelect={() => {
-                                form.setValue("artistId", artist.id);
+                                form.setValue("albumId", album.id);
                               }}
                             >
-                              {artist.name}
+                              {album.title}
                               <CheckIcon
                                 className={cn(
                                   "ml-auto",
-                                  artist.id === form.getValues("artistId")
+                                  album.id === form.getValues("albumId")
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
@@ -270,15 +183,15 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
 
           <FormField
             control={form.control}
-            name="coverImage"
+            name="audioUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cover Image</FormLabel>
+                <FormLabel>Audio URL</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter Song cover image"
-                    autoComplete="Song-cover-image"
+                    placeholder="Enter song audio url"
+                    autoComplete="song-audio-url"
                     disabled={isSubmitting}
                   />
                 </FormControl>

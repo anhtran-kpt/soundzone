@@ -17,12 +17,63 @@ export const songService = {
     });
   },
 
-  async create(data: CreateSongDto) {
-    return prisma.song.create({
-      data: {
-        ...data,
-        slug: await prisma.song.generateSlug(data.title),
-      },
+  async create(songData: CreateSongDto) {
+    return await prisma.$transaction(async (tx) => {
+      const newSong = await tx.song.create({
+        data: {
+          title: songData.title,
+          slug: await prisma.song.generateSlug(songData.title),
+          duration: songData.duration,
+          audioUrl: songData.audioUrl,
+          isExplicit: songData.isExplicit,
+          trackNumber: songData.trackNumber,
+          lyrics: songData.lyrics,
+          composers: songData.composers,
+          producers: songData.producers,
+          lyricists: songData.lyricists,
+          album: {
+            connect: { id: songData.albumId },
+          },
+        },
+      });
+
+      if (songData.artists && songData.artists.length > 0) {
+        await Promise.all(
+          songData.artists.map((artistData) =>
+            tx.songArtist.create({
+              data: {
+                song: { connect: { id: newSong.id } },
+                artist: { connect: { id: artistData.artistId } },
+                role: artistData.role,
+                order: artistData.order,
+              },
+            })
+          )
+        );
+      }
+
+      if (songData.genreIds && songData.genreIds.length > 0) {
+        await Promise.all(
+          songData.genreIds.map((genreId) =>
+            tx.songGenre.create({
+              data: {
+                song: { connect: { id: newSong.id } },
+                genre: { connect: { id: genreId } },
+              },
+            })
+          )
+        );
+        await Promise.all(
+          songData.genreIds.map((genreId) =>
+            tx.genre.update({
+              where: { id: genreId },
+              data: { songCount: { increment: 1 } },
+            })
+          )
+        );
+      }
+
+      return newSong;
     });
   },
 
