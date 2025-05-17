@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Genre" ADD COLUMN     "songCount" INTEGER NOT NULL DEFAULT 0;

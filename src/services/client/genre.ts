@@ -5,7 +5,6 @@ import { GENRE_ENDPOINTS } from "@/config/endpoints";
 import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
 
 export const genreClientService = {
-  // Get all genres
   async getAll(params?: { limit?: number }): Promise<ApiResponse<Genre[]>> {
     const queryParams = new URLSearchParams();
     if (params?.limit) {
@@ -16,17 +15,14 @@ export const genreClientService = {
     return apiClient.get<Genre[]>(url);
   },
 
-  // Get a single genre by slug
   async getBySlug(slug: string): Promise<ApiResponse<Genre>> {
     return apiClient.get<Genre>(GENRE_ENDPOINTS.detail(slug));
   },
 
-  // Create a new genre
   async create(data: CreateGenreDto): Promise<ApiResponse<Genre>> {
     return apiClient.post<Genre>(GENRE_ENDPOINTS.create, data);
   },
 
-  // Update an genre
   async update(
     slug: string,
     data: UpdateGenreDto
@@ -34,7 +30,6 @@ export const genreClientService = {
     return apiClient.patch<Genre>(GENRE_ENDPOINTS.update(slug), data);
   },
 
-  // Delete an genre
   async delete(slug: string): Promise<ApiResponse<void>> {
     return apiClient.delete<void>(GENRE_ENDPOINTS.delete(slug));
   },

@@ -8,13 +8,12 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Album, AlbumType } from "@/app/generated/prisma";
+import { Album, ReleaseType } from "@/app/generated/prisma";
 import { CreateAlbumDto, createAlbumSchema } from "@/schemas";
-import { useArtists, useCreateAlbum, useUpdateAlbum } from "@/hooks";
+import { useArtists, useCreateAlbum, useGenres, useUpdateAlbum } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
-import { PopoverContent } from "@/components/ui/popover";
-import { Popover } from "@/components/ui/popover";
+import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
@@ -34,6 +33,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AlbumFormProps {
   album?: Album;
@@ -47,16 +47,18 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
   const createMutation = useCreateAlbum();
   const updateMutation = useUpdateAlbum(album?.slug || "");
   const { data: artists } = useArtists();
+  const { data: genres } = useGenres();
 
   const form = useForm<CreateAlbumDto>({
     resolver: zodResolver(createAlbumSchema),
     defaultValues: {
       title: album?.title || "",
       description: album?.description || "",
-      coverImage: album?.coverImage || "",
+      coverUrl: album?.coverUrl || "",
       releaseDate: album?.releaseDate || new Date(),
-      type: album?.type || AlbumType.ALBUM,
+      releaseType: album?.releaseType || ReleaseType.ALBUM,
       artistId: album?.artistId || "",
+      genreIds: album?.genres?.map((genre) => genre.genreId) || [],
     },
   });
 
@@ -169,14 +171,14 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
 
           <FormField
             control={form.control}
-            name="type"
+            name="releaseType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Type</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
-                    // defaultValue={field.value}
+                    defaultValue={field.value}
                     disabled={isSubmitting}
                   >
                     <FormItem>
@@ -186,7 +188,7 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Object.values(AlbumType).map((type) => (
+                        {Object.values(ReleaseType).map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -265,15 +267,61 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
 
           <FormField
             control={form.control}
-            name="coverImage"
+            name="genreIds"
+            render={() => (
+              <FormItem>
+                <div className="mb-4">
+                  <FormLabel className="text-base">Genres</FormLabel>
+                </div>
+                {genres?.map((genre) => (
+                  <FormField
+                    key={genre.id}
+                    control={form.control}
+                    name="genreIds"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={genre.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(genre.id)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, genre.id])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== genre.id
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {genre.name}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="coverUrl"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter album cover image"
-                    autoComplete="album-cover-image"
+                    placeholder="Enter album cover url"
+                    autoComplete="album-cover-url"
                     disabled={isSubmitting}
                   />
                 </FormControl>

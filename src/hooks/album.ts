@@ -46,7 +46,7 @@ export function useCreateAlbum() {
     mutationFn: (data: CreateAlbumDto) => albumClientService.create(data),
     onSuccess: (response) => {
       if (response.success) {
-        toast.success("album created successfully");
+        toast.success("Album created successfully");
         queryClient.invalidateQueries({ queryKey: albumKeys.lists() });
       } else {
         toast.error(response.error?.message || "Failed to create album");
@@ -65,7 +65,7 @@ export function useUpdateAlbum(slug: string) {
     mutationFn: (data: UpdateAlbumDto) => albumClientService.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
-        toast.success("album updated successfully");
+        toast.success("Album updated successfully");
         queryClient.invalidateQueries({ queryKey: albumKeys.detail(slug) });
         queryClient.invalidateQueries({ queryKey: albumKeys.lists() });
       } else {
@@ -85,7 +85,7 @@ export function useDeleteAlbum() {
     mutationFn: (slug: string) => albumClientService.delete(slug),
     onSuccess: (response, slug) => {
       if (response.success) {
-        toast.success("album deleted successfully");
+        toast.success("Album deleted successfully");
         queryClient.invalidateQueries({ queryKey: albumKeys.lists() });
         queryClient.removeQueries({ queryKey: albumKeys.detail(slug) });
       } else {

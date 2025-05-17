@@ -5,7 +5,8 @@ export const artistSchema = z.object({
   bio: z.string().optional(),
   dateOfBirth: z.coerce.date().optional(),
   nationality: z.string().optional(),
-  coverImage: z.string().url("Cover image must be a valid URL").optional(),
+  avatarUrl: z.string().optional(),
+  bannerUrl: z.string().optional(),
 });
 
 export const createArtistSchema = artistSchema;

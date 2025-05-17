@@ -38,7 +38,7 @@ export default function AlbumList() {
           <Card>
             <div className="flex items-center">
               <Avatar className="size-20">
-                <AvatarImage src={album.coverImage || ""} />
+                <AvatarImage src={album.coverUrl || ""} />
                 <AvatarFallback>{album.title.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>

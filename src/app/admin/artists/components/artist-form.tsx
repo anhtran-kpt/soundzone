@@ -40,7 +40,8 @@ export default function ArtistForm({
     defaultValues: {
       name: artist?.name || "",
       bio: artist?.bio || "",
-      coverImage: artist?.coverImage || "",
+      avatarUrl: artist?.avatarUrl || "",
+      bannerUrl: artist?.bannerUrl || "",
       dateOfBirth: artist?.dateOfBirth || new Date(),
       nationality: artist?.nationality || "",
     },
@@ -174,15 +175,34 @@ export default function ArtistForm({
 
           <FormField
             control={form.control}
-            name="coverImage"
+            name="avatarUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cover Image</FormLabel>
+                <FormLabel>Avatar</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter artist cover image"
-                    autoComplete="artist-cover-image"
+                    placeholder="Enter artist avatar url"
+                    autoComplete="artist-avatar"
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="bannerUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Banner</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter artist banner url"
+                    autoComplete="artist-banner"
                     disabled={isSubmitting}
                   />
                 </FormControl>

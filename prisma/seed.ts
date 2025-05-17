@@ -1,11 +1,9 @@
 import { authService } from "@/services/server";
-import { PrismaClient } from "../src/app/generated/prisma";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 async function createAdminUser() {
   const adminData = {
-    name: "Soundzone Admin",
+    name: "SoundZone Admin",
     email: "admin@soundzone.com",
     role: "ADMIN",
     password: "admin123",

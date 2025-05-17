@@ -8,21 +8,60 @@ export const albumService = {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        genres: {
+          select: {
+            genreId: true,
+          },
+        },
+      },
     });
   },
 
   async getBySlug(slug: string) {
     return prisma.album.findUnique({
       where: { slug },
+      include: {
+        genres: {
+          select: {
+            genreId: true,
+          },
+        },
+      },
     });
   },
 
-  async create(data: CreateAlbumDto) {
-    return prisma.album.create({
-      data: {
-        ...data,
-        slug: await prisma.album.generateSlug(data.title),
-      },
+  async create(albumData: CreateAlbumDto) {
+    return await prisma.$transaction(async (tx) => {
+      const newAlbum = await tx.album.create({
+        data: {
+          title: albumData.title,
+          description: albumData.description,
+          slug: await prisma.album.generateSlug(albumData.title),
+          releaseType: albumData.releaseType,
+          releaseDate: albumData.releaseDate,
+          coverUrl: albumData.coverUrl,
+          isExplicit: albumData.isExplicit,
+          artist: {
+            connect: { id: albumData.artistId },
+          },
+        },
+      });
+
+      if (albumData.genreIds && albumData.genreIds.length > 0) {
+        await Promise.all(
+          albumData.genreIds.map((genreId) =>
+            tx.albumGenre.create({
+              data: {
+                album: { connect: { id: newAlbum.id } },
+                genre: { connect: { id: genreId } },
+              },
+            })
+          )
+        );
+      }
+
+      return newAlbum;
     });
   },
 

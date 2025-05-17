@@ -4,7 +4,6 @@ import { comparePasswords, hashPassword } from "@/utils";
 import { ApiError } from "@/lib/server/api-error";
 
 export const authService = {
-  // Sign up a new user
   async signUp(data: SignUpDto) {
     const existingUser = await prisma.user.findUnique({
       where: { email: data.email },
@@ -24,7 +23,6 @@ export const authService = {
     });
   },
 
-  // Sign in a user
   async signIn(data: SignInDto) {
     const user = await prisma.user.findUnique({
       where: { email: data.email },

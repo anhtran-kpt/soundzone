@@ -39,7 +39,7 @@ export default function ArtistList() {
           <Card>
             <div className="flex items-center">
               <Avatar className="size-20">
-                <AvatarImage src={artist.coverImage || ""} />
+                <AvatarImage src={artist.avatarUrl || ""} />
                 <AvatarFallback>{artist.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
