@@ -23,7 +23,6 @@ enum ReleaseType {
   SINGLE
   ALBUM
   EP
-  COMPILATION
 }
 
 enum ArtistRole {
@@ -77,7 +76,7 @@ model Artist {
   updatedAt        DateTime @updatedAt
 
   songs     SongArtist[]
-  albums    AlbumArtist[]
+  albums    Album[]
   genres    ArtistGenre[]
   followers UserFollowedArtist[]
   credits   Credit[]
@@ -146,7 +145,8 @@ model Album {
   updatedAt     DateTime    @updatedAt
 
   songs        Song[]
-  artists      AlbumArtist[]
+  artist       Artist           @relation(fields: [artistId], references: [id])
+  artistId     String
   genres       AlbumGenre[]
   likedByUsers UserLikedAlbum[]
 
@@ -210,18 +210,6 @@ model PlayHistory {
 
   @@index([userId, playedAt])
   @@index([songId])
-}
-
-model AlbumArtist {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-
-  album    Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  albumId  String
-  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
-  artistId String
-
-  @@unique([albumId, artistId])
 }
 
 model SongArtist {

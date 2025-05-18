@@ -1,6 +1,6 @@
 "use client";
 
-import AlbumForm from "@/app/admin/albums/components/album-form";
+import AlbumForm from "@/app/admin/artists/components/album-form";
 import { useAlbum } from "@/hooks";
 import { useParams } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import AlbumForm from "../components/album-form";
+import AlbumForm from "../../artists/components/album-form";
 
 export default function CreateAlbumPage() {
   return (
