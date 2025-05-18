@@ -6,9 +6,7 @@ export const songSchema = z.object({
   audioUrl: z.string().url("Audio URL must be a valid URL").optional(),
   isExplicit: z.boolean().optional(),
   albumId: z.string().cuid("Album is required"),
-  composers: z.array(z.string()).optional(),
-  producers: z.array(z.string()).optional(),
-  lyricists: z.array(z.string()).optional(),
+  trackNumber: z.number(),
 });
 
 export const createSongSchema = songSchema;

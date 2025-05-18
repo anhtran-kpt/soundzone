@@ -20,7 +20,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import {
   Select,
@@ -29,14 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 
@@ -62,9 +54,9 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
       coverUrl: album?.coverUrl || "",
       releaseDate: album?.releaseDate || new Date(),
       releaseType: album?.releaseType || ReleaseType.ALBUM,
-      artistId: album?.artistId || "",
-      isExplicit: album?.isExplicit || false,
+      artistIds: album?.artists?.map((artist) => artist.artistId) || [],
       genreIds: album?.genres?.map((genre) => genre.genreId) || [],
+      isExplicit: album?.isExplicit || false,
     },
   });
 
@@ -231,62 +223,45 @@ export default function AlbumForm({ album, mode = "create" }: AlbumFormProps) {
 
           <FormField
             control={form.control}
-            name="artistId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Artist</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value
-                          ? artists?.find((artist) => artist.id === field.value)
-                              ?.name
-                          : "Select artist"}
-                        <ChevronsUpDownIcon className="opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search artist..."
-                        className="h-9"
-                      />
-                      <CommandList>
-                        <CommandEmpty>No artist found.</CommandEmpty>
-                        <CommandGroup>
-                          {artists?.map((artist) => (
-                            <CommandItem
-                              value={artist.name}
-                              key={artist.id}
-                              onSelect={() => {
-                                form.setValue("artistId", artist.id);
+            name="artistIds"
+            render={() => (
+              <FormItem>
+                <div className="mb-4">
+                  <FormLabel className="text-base">Artists</FormLabel>
+                </div>
+                {artists?.map((artist) => (
+                  <FormField
+                    key={artist.id}
+                    control={form.control}
+                    name="artistIds"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={artist.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(artist.id)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, artist.id])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== artist.id
+                                      )
+                                    );
                               }}
-                            >
-                              {artist.name}
-                              <CheckIcon
-                                className={cn(
-                                  "ml-auto",
-                                  artist.id === form.getValues("artistId")
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {artist.name}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
                 <FormMessage />
               </FormItem>
             )}

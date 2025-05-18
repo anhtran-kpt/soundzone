@@ -1,6 +1,10 @@
 "use client";
 
-import { FormControl, FormMessage } from "@/components/ui/form";
+import {
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
 import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +29,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { Switch } from "@/components/ui/switch";
 
 interface SongFormProps {
   song?: Song;
@@ -47,9 +52,7 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
       isExplicit: song?.isExplicit || false,
       audioUrl: song?.audioUrl || "",
       albumId: song?.albumId || "",
-      composers: song?.composers || [],
-      producers: song?.producers || [],
-      lyricists: song?.lyricists || [],
+      trackNumber: song?.trackNumber || 1,
     },
   });
 
@@ -114,6 +117,27 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                   />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isExplicit"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-2">
+                  <FormLabel>Explicit</FormLabel>
+                  <FormDescription>
+                    This song contains explicit content.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

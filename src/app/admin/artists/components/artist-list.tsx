@@ -40,7 +40,10 @@ export default function ArtistList() {
             <div className="flex items-center">
               <Avatar className="size-20">
                 <AvatarImage src={artist.avatarUrl || ""} />
-                <AvatarFallback>{artist.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>
+                  {artist.name.split(" ")[0].charAt(0)}
+                  {artist.name.split(" ")[1]?.charAt(0)}
+                </AvatarFallback>
               </Avatar>
               <div>
                 <CardHeader>

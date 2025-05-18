@@ -1,11 +1,22 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
-import ArtistList from "./components/artist-list";
-import ArtistListSkeleton from "./components/artist-list-skeleton";
+import { DataTable } from "./components/tables/data-table";
+import { columns } from "./components/tables/columns";
+import { useArtists } from "@/hooks/artist";
 
 export default function ArtistsPage() {
+  const { data: artists, isLoading, error } = useArtists();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -17,10 +28,9 @@ export default function ArtistsPage() {
           </Button>
         </Link>
       </div>
-
-      <Suspense fallback={<ArtistListSkeleton />}>
-        <ArtistList />
-      </Suspense>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={artists} />
+      </div>
     </div>
   );
 }

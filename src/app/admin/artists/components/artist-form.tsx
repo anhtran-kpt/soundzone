@@ -12,13 +12,6 @@ import { Artist } from "@/app/generated/prisma";
 import { CreateArtistDto, createArtistSchema } from "@/schemas";
 import { useCreateArtist, useUpdateArtist } from "@/hooks";
 import { useRouter } from "next/navigation";
-import { Calendar } from "@/components/ui/calendar";
-import { PopoverContent } from "@/components/ui/popover";
-import { Popover } from "@/components/ui/popover";
-import { PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 
 interface ArtistFormProps {
   artist?: Artist;
@@ -42,7 +35,6 @@ export default function ArtistForm({
       bio: artist?.bio || "",
       avatarUrl: artist?.avatarUrl || "",
       bannerUrl: artist?.bannerUrl || "",
-      dateOfBirth: artist?.dateOfBirth || new Date(),
       nationality: artist?.nationality || "",
     },
   });
@@ -107,48 +99,6 @@ export default function ArtistForm({
                     disabled={isSubmitting}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="dateOfBirth"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date of Birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
                 <FormMessage />
               </FormItem>
             )}

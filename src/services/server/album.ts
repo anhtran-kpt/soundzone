@@ -9,6 +9,11 @@ export const albumService = {
         createdAt: "desc",
       },
       include: {
+        artists: {
+          select: {
+            artistId: true,
+          },
+        },
         genres: {
           select: {
             genreId: true,
@@ -42,11 +47,21 @@ export const albumService = {
           releaseDate: albumData.releaseDate,
           coverUrl: albumData.coverUrl,
           isExplicit: albumData.isExplicit,
-          artist: {
-            connect: { id: albumData.artistId },
-          },
         },
       });
+
+      if (albumData.artistIds && albumData.artistIds.length > 0) {
+        await Promise.all(
+          albumData.artistIds.map((artistId) =>
+            tx.albumArtist.create({
+              data: {
+                album: { connect: { id: newAlbum.id } },
+                artist: { connect: { id: artistId } },
+              },
+            })
+          )
+        );
+      }
 
       if (albumData.genreIds && albumData.genreIds.length > 0) {
         await Promise.all(

@@ -28,9 +28,6 @@ export const songService = {
           isExplicit: songData.isExplicit,
           trackNumber: songData.trackNumber,
           lyrics: songData.lyrics,
-          composers: songData.composers,
-          producers: songData.producers,
-          lyricists: songData.lyricists,
           album: {
             connect: { id: songData.albumId },
           },

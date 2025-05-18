@@ -7,7 +7,7 @@ export const albumSchema = z.object({
   releaseType: z.nativeEnum(ReleaseType),
   releaseDate: z.coerce.date().optional(),
   coverUrl: z.string().optional(),
-  artistId: z.string().cuid("Artist is required"),
+  artistIds: z.array(z.string().cuid("Artist is required")),
   genreIds: z.array(z.string().cuid("Genre is required")),
   isExplicit: z.boolean().optional(),
 });
