@@ -4,21 +4,21 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, Music, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CLOUDINARY } from "@/config/cloudinary";
+import axios from "axios";
 
-interface AudioUploadProps {
+interface AudioUploaderProps {
   onChange: (value: { url: string; duration: string }) => void;
   value: string;
   disabled?: boolean;
   className?: string;
 }
 
-export const AudioUpload = ({
+export const AudioUploader = ({
   onChange,
   value,
   disabled,
   className,
-}: AudioUploadProps) => {
+}: AudioUploaderProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -46,22 +46,18 @@ export const AudioUpload = ({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY.uploadPreset);
-      formData.append("folder", CLOUDINARY.folder);
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY.cloudName}/${CLOUDINARY.resourceType}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await axios.post("/api/upload/audio", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Upload failed");
       }
 
-      const data = await response.json();
+      const data = response.data.data;
       const uploadedUrl = data.secure_url;
       const audioDuration = data.duration;
       const formattedDuration = formatDuration(audioDuration);
@@ -142,3 +138,5 @@ export const AudioUpload = ({
     </div>
   );
 };
+
+export default AudioUploader;

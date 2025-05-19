@@ -12,15 +12,15 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Album, ReleaseType } from "@/app/generated/prisma";
-import { CreateAlbumDto, createAlbumSchema } from "@/schemas";
-import { useCreateAlbum, useGenres, useUpdateAlbum } from "@/hooks";
+import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
+import { AlbumFormData, CreateAlbumDto, createAlbumSchema } from "@/schemas";
+import { useCreateAlbum, useGenres, useUpdateAlbum, useArtists } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
+import { CalendarIcon, PlusCircle, Trash2, Plus, X } from "lucide-react";
 import { format } from "date-fns";
 import {
   Select,
@@ -32,7 +32,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { AudioUpload } from "@/components/audio-upload";
+import AudioUploader from "@/components/audio-uploader";
+import { Album } from "@/types/album";
 
 interface AlbumFormProps {
   artistId: string;
@@ -51,28 +52,51 @@ export default function AlbumForm({
   const createMutation = useCreateAlbum();
   const updateMutation = useUpdateAlbum(album?.slug || "");
   const { data: genres } = useGenres();
+  const { data: artists } = useArtists();
 
   const form = useForm<CreateAlbumDto>({
     resolver: zodResolver(createAlbumSchema),
     defaultValues: {
-      title: album?.title || "",
-      description: album?.description || "",
-      coverUrl: album?.coverUrl || "",
-      releaseDate: album?.releaseDate || new Date(),
-      releaseType: album?.releaseType || ReleaseType.ALBUM,
-      artistId: artistId,
-      // @ts-expect-error - The Album type doesn't properly include genres relation
-      genreIds: album?.genres ? album.genres.map((genre) => genre.genreId) : [],
-      isExplicit: album?.isExplicit || false,
-      songs: [
-        {
-          title: "",
-          trackNumber: 1,
-          isExplicit: false,
-          audioUrl: "",
-          albumId: "", // Temporary - will be set after album creation
-        },
-      ],
+      title: album?.title ?? "",
+      description: album?.description ?? null,
+      coverUrl: album?.coverUrl ?? null,
+      releaseDate: album?.releaseDate ?? null,
+      releaseType: album?.releaseType ?? ReleaseType.SINGLE,
+      genres: album?.genres ?? [],
+      isExplicit: album?.isExplicit ?? false,
+      songs: album?.songs
+        ? album.songs.map((song) => ({
+            title: song.title,
+            isExplicit: song.isExplicit,
+            audioUrl: song.audioUrl,
+            duration: song.duration,
+            artists: song.artists.map((artist) => ({
+              id: artist.artistId,
+              role: artist.role,
+            })),
+            lyrics: song.lyrics,
+            composer: song.composer,
+            lyricist: song.lyricist,
+            producer: song.producer,
+          }))
+        : [
+            {
+              title: "",
+              isExplicit: false,
+              audioUrl: "",
+              duration: 0,
+              artists: [
+                {
+                  id: artistId,
+                  role: ArtistRole.MAIN,
+                },
+              ],
+              lyrics: null,
+              composer: null,
+              lyricist: null,
+              producer: null,
+            },
+          ],
     },
   });
 
@@ -83,42 +107,38 @@ export default function AlbumForm({
 
   const releaseType = form.watch("releaseType");
 
-  // Handler for audio upload changes
-  const handleAudioChange = (
-    index: number,
-    data: { url: string; duration: string }
-  ) => {
-    // Set the audioUrl field
-    form.setValue(`songs.${index}.audioUrl`, data.url);
+  // Helper function to handle null values in form fields
+  const handleNullableValue = (value: string | null) => value || "";
 
-    // Manually handle the duration since it's not part of the schema
-    const songDuration = document.getElementById(
-      `song-duration-${index}`
-    ) as HTMLInputElement;
-    if (songDuration) {
-      songDuration.value = data.duration;
-    }
+  // Transform form data to match API expectations
+  const transformFormData = (values: AlbumFormData) => {
+    // Map form artists format to API format
+    const transformedSongs = values.songs.map((song, index) => ({
+      ...song,
+      trackNumber: index + 1,
+      artists: song.artists.map((artist) => ({
+        artistId: artist.id,
+        role: artist.role,
+        // Add other required fields for the API
+        songId: song.id || "",
+      })),
+    }));
+
+    // Return the transformed data
+    return {
+      ...values,
+      artistId,
+      songs: transformedSongs,
+    };
   };
 
+  // Form submission with any cast to avoid type issues
   const onSubmit = async (values: CreateAlbumDto) => {
     try {
       setIsSubmitting(true);
       let response = null;
 
-      const albumData: CreateAlbumDto = {
-        title: values.title,
-        description: values.description,
-        coverUrl: values.coverUrl,
-        releaseDate: values.releaseDate,
-        releaseType: values.releaseType,
-        artistId: values.artistId,
-        genreIds: values.genreIds,
-        isExplicit: values.isExplicit,
-        songs: values.songs.map((song) => ({
-          ...song,
-          albumId: song.albumId || artistId, // Use artistId as a fallback
-        })),
-      };
+      const albumData = transformFormData(values);
 
       if (mode === "create") {
         response = await createMutation.mutateAsync(albumData);
@@ -142,25 +162,72 @@ export default function AlbumForm({
       }
       append({
         title: "",
-        trackNumber: 1,
         isExplicit: false,
         audioUrl: "",
-        albumId: "", // Will be set after album creation
+        duration: 0,
+        artists: [
+          {
+            id: artistId,
+            role: ArtistRole.MAIN,
+          },
+        ],
+        lyrics: null,
+        composer: null,
+        lyricist: null,
+        producer: null,
       });
     } else if (fields.length === 0) {
       append({
         title: "",
-        trackNumber: 1,
         isExplicit: false,
         audioUrl: "",
-        albumId: "", // Will be set after album creation
+        duration: 0,
+        artists: [
+          {
+            id: artistId,
+            role: ArtistRole.MAIN,
+          },
+        ],
+        lyrics: null,
+        composer: null,
+        lyricist: null,
+        producer: null,
       });
     }
-  }, [releaseType, fields, remove, append]);
+  }, [releaseType, fields, remove, append, artistId]);
 
   useEffect(() => {
     ensureCorrectSongCount();
   }, [releaseType, fields.length, remove, append, ensureCorrectSongCount]);
+
+  const handleAudioChange = (
+    index: number,
+    data: { url: string; duration: string }
+  ) => {
+    form.setValue(`songs.${index}.audioUrl`, data.url);
+    form.setValue(`songs.${index}.duration`, parseInt(data.duration));
+  };
+
+  const handleAddArtistToSong = (songIndex: number) => {
+    const currentArtists = form.getValues(`songs.${songIndex}.artists`) || [];
+    form.setValue(`songs.${songIndex}.artists`, [
+      ...currentArtists,
+      {
+        id: "",
+        role: ArtistRole.FEATURED,
+      },
+    ]);
+  };
+
+  const handleRemoveArtistFromSong = (
+    songIndex: number,
+    artistIndex: number
+  ) => {
+    const currentArtists = form.getValues(`songs.${songIndex}.artists`) || [];
+    const newArtists = currentArtists.filter((_, i) => i !== artistIndex);
+
+    form.setValue(`songs.${songIndex}.artists`, newArtists);
+  };
 
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
@@ -200,6 +267,7 @@ export default function AlbumForm({
                     placeholder="Enter album description"
                     autoComplete="album-description"
                     disabled={isSubmitting}
+                    value={handleNullableValue(field.value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -256,7 +324,7 @@ export default function AlbumForm({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value}
+                      selected={field.value || undefined}
                       onSelect={field.onChange}
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
@@ -280,7 +348,6 @@ export default function AlbumForm({
                   <Select
                     onValueChange={(value: string) => {
                       field.onChange(value);
-                      // Call ensureCorrectSongCount when releaseType changes
                       setTimeout(ensureCorrectSongCount, 0);
                     }}
                     defaultValue={field.value}
@@ -365,6 +432,7 @@ export default function AlbumForm({
                     placeholder="Enter album cover url"
                     autoComplete="album-cover-url"
                     disabled={isSubmitting}
+                    value={handleNullableValue(field.value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -372,7 +440,6 @@ export default function AlbumForm({
             )}
           />
 
-          {/* Songs Section */}
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">
               {releaseType === ReleaseType.SINGLE ? "Song" : "Songs"}
@@ -419,10 +486,9 @@ export default function AlbumForm({
                       )}
                     />
 
-                    {/* Audio Upload Section */}
                     <div>
                       <FormLabel>Audio File</FormLabel>
-                      <AudioUpload
+                      <AudioUploader
                         value={form.watch(`songs.${index}.audioUrl`) || ""}
                         onChange={(data) => handleAudioChange(index, data)}
                         disabled={isSubmitting}
@@ -434,34 +500,17 @@ export default function AlbumForm({
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      {/* Duration Field - not in schema but useful for display */}
-                      <div className="space-y-2">
-                        <FormLabel>Duration</FormLabel>
-                        <Input
-                          id={`song-duration-${index}`}
-                          placeholder="e.g. 3:45"
-                          disabled={isSubmitting}
-                          defaultValue=""
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Auto-filled on upload
-                        </p>
-                      </div>
-
                       <FormField
                         control={form.control}
-                        name={`songs.${index}.trackNumber`}
+                        name={`songs.${index}.duration`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Track #</FormLabel>
+                            <FormLabel>Duration</FormLabel>
                             <FormControl>
                               <Input
-                                type="number"
+                                readOnly={true}
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseInt(e.target.value))
-                                }
-                                value={field.value}
+                                placeholder="e.g. 3:45"
                                 disabled={isSubmitting}
                               />
                             </FormControl>
@@ -493,16 +542,109 @@ export default function AlbumForm({
                       )}
                     />
 
-                    {/* Hidden field for audioUrl - handled by the AudioUpload component */}
+                    {/* Artist management section */}
+                    <div className="mt-4">
+                      <FormLabel>Artists</FormLabel>
+                      <div className="space-y-2 mt-2">
+                        {form
+                          .watch(`songs.${index}.artists`)
+                          ?.map((artist, artistIndex) => (
+                            <div
+                              key={artistIndex}
+                              className="flex items-center space-x-2 border p-2 rounded-md"
+                            >
+                              <FormField
+                                control={form.control}
+                                name={`songs.${index}.artists.${artistIndex}.id`}
+                                render={({ field }) => (
+                                  <FormItem className="flex-1">
+                                    <Select
+                                      onValueChange={field.onChange}
+                                      defaultValue={field.value}
+                                      disabled={isSubmitting}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select artist" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {artists?.map((artist) => (
+                                          <SelectItem
+                                            key={artist.id}
+                                            value={artist.id}
+                                          >
+                                            {artist.name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name={`songs.${index}.artists.${artistIndex}.role`}
+                                render={({ field }) => (
+                                  <FormItem className="w-32">
+                                    <Select
+                                      onValueChange={field.onChange}
+                                      defaultValue={field.value}
+                                      disabled={isSubmitting}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Role" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        <SelectItem value={ArtistRole.MAIN}>
+                                          Main
+                                        </SelectItem>
+                                        <SelectItem value={ArtistRole.FEATURED}>
+                                          Featured
+                                        </SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormItem>
+                                )}
+                              />
+
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  handleRemoveArtistFromSong(index, artistIndex)
+                                }
+                                disabled={
+                                  form.watch(`songs.${index}.artists`).length <=
+                                  1
+                                }
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="mt-2 w-full"
+                          onClick={() => handleAddArtistToSong(index)}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Artist
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Hidden field to store audioUrl */}
                     <input
                       type="hidden"
                       {...form.register(`songs.${index}.audioUrl`)}
-                    />
-
-                    {/* Hidden field for albumId - will be set on submit */}
-                    <input
-                      type="hidden"
-                      {...form.register(`songs.${index}.albumId`)}
                     />
                   </div>
                 </CardContent>
@@ -520,8 +662,20 @@ export default function AlbumForm({
                     title: "",
                     trackNumber: fields.length + 1,
                     isExplicit: false,
+                    lyrics: "",
                     audioUrl: "",
-                    albumId: "", // Will be set after album creation
+                    albumId: artistId,
+                    duration: 0,
+                    artists: [
+                      {
+                        id: artistId,
+                        role: ArtistRole.MAIN,
+                        order: 1,
+                      },
+                    ],
+                    composer: "",
+                    lyricist: "",
+                    producer: "",
                   })
                 }
               >

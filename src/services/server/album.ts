@@ -9,9 +9,11 @@ export const albumService = {
         createdAt: "desc",
       },
       include: {
-        artists: {
+        artist: {
           select: {
-            artistId: true,
+            id: true,
+            name: true,
+            slug: true,
           },
         },
         genres: {
@@ -37,38 +39,75 @@ export const albumService = {
   },
 
   async create(albumData: CreateAlbumDto) {
+    const {
+      title,
+      description,
+      releaseType,
+      releaseDate,
+      coverUrl,
+      isExplicit,
+      artistId,
+      genreIds,
+      songs,
+    } = albumData;
+
     return await prisma.$transaction(async (tx) => {
-      const newAlbum = await tx.album.create({
+      const albumSlug = await tx.album.generateSlug(title);
+
+      const album = await tx.album.create({
         data: {
-          title: albumData.title,
-          description: albumData.description,
-          slug: await prisma.album.generateSlug(albumData.title),
-          releaseType: albumData.releaseType,
-          releaseDate: albumData.releaseDate,
-          coverUrl: albumData.coverUrl,
-          isExplicit: albumData.isExplicit,
+          title,
+          slug: albumSlug,
+          description,
+          releaseType,
+          releaseDate,
+          coverUrl,
+          isExplicit,
+          artist: {
+            connect: { id: artistId },
+          },
         },
       });
 
-      if (albumData.artistIds && albumData.artistIds.length > 0) {
+      for (const songData of songs) {
+        const songSlug = await tx.song.generateSlug(songData.title);
+
+        const song = await tx.song.create({
+          data: {
+            title: songData.title,
+            slug: songSlug,
+            duration: songData.duration,
+            audioUrl: songData.audioUrl,
+            trackNumber: songData.trackNumber,
+            isExplicit: songData.isExplicit,
+            lyrics: songData.lyrics,
+            album: { connect: { id: album.id } },
+            composer: songData.composer,
+            lyricist: songData.lyricist,
+            producer: songData.producer,
+          },
+        });
+
         await Promise.all(
-          albumData.artistIds.map((artistId) =>
-            tx.albumArtist.create({
+          songData.artists.map((artistInput) =>
+            tx.songArtist.create({
               data: {
-                album: { connect: { id: newAlbum.id } },
-                artist: { connect: { id: artistId } },
+                song: { connect: { id: song.id } },
+                artist: { connect: { id: artistInput.id } },
+                role: artistInput.role,
+                order: artistInput.order,
               },
             })
           )
         );
       }
 
-      if (albumData.genreIds && albumData.genreIds.length > 0) {
+      if (genreIds.length > 0) {
         await Promise.all(
-          albumData.genreIds.map((genreId) =>
+          genreIds.map((genreId) =>
             tx.albumGenre.create({
               data: {
-                album: { connect: { id: newAlbum.id } },
+                album: { connect: { id: album.id } },
                 genre: { connect: { id: genreId } },
               },
             })
@@ -76,7 +115,32 @@ export const albumService = {
         );
       }
 
-      return newAlbum;
+      return await tx.album.findUnique({
+        where: { id: album.id },
+        include: {
+          songs: {
+            include: {
+              artists: {
+                include: {
+                  artist: true,
+                },
+                orderBy: {
+                  order: "asc",
+                },
+              },
+            },
+            orderBy: {
+              trackNumber: "asc",
+            },
+          },
+          artist: true,
+          genres: {
+            include: {
+              genre: true,
+            },
+          },
+        },
+      });
     });
   },
 

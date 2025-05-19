@@ -30,18 +30,6 @@ enum ArtistRole {
   FEATURED
 }
 
-enum CreditRole {
-  COMPOSER
-  LYRICIST
-  PRODUCER
-  MIXER
-  MASTERING
-  VOCALIST
-  INSTRUMENTALIST
-  ARRANGER
-  ENGINEER
-}
-
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -79,46 +67,28 @@ model Artist {
   albums    Album[]
   genres    ArtistGenre[]
   followers UserFollowedArtist[]
-  credits   Credit[]
 
   @@index([slug])
 }
 
-model Credit {
-  id        String     @id @default(cuid())
-  name      String
-  role      CreditRole
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  songId   String
-  song     Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
-  artistId String?
-  artist   Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
-
-  @@unique([songId, name, role])
-  @@index([songId])
-  @@index([artistId])
-}
-
 model Song {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  lyrics      String?  @db.Text
-  duration    Int
-  playCount   Int      @default(0)
-  likeCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isExplicit  Boolean  @default(false)
-  audioUrl    String
-  trackNumber Int      @default(1) // Position in the album
-
-  credits      Credit[]
+  id           String          @id @default(cuid())
+  title        String
+  slug         String          @unique
+  lyrics       String?         @db.Text
+  duration     Int // In seconds
+  playCount    Int             @default(0)
+  likeCount    Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  isExplicit   Boolean         @default(false)
+  audioUrl     String
+  trackNumber  Int             @default(1) // Position in the album
+  composer     String?
+  lyricist     String?
+  producer     String?
   album        Album           @relation(fields: [albumId], references: [id])
   albumId      String
-  genres       SongGenre[]
   playlists    PlaylistSong[]
   playHistory  PlayHistory[]
   likedByUsers UserLikedSong[]
@@ -133,7 +103,7 @@ model Album {
   title         String
   description   String?     @db.Text
   slug          String      @unique
-  releaseType   ReleaseType @default(ALBUM)
+  releaseType   ReleaseType @default(SINGLE)
   releaseDate   DateTime?
   playCount     Int         @default(0)
   totalDuration Int         @default(0)
@@ -189,7 +159,6 @@ model Genre {
 
   albums  AlbumGenre[]
   artists ArtistGenre[]
-  songs   SongGenre[]
 
   @@index([slug])
 }
@@ -238,18 +207,6 @@ model PlaylistSong {
   order      Int
 
   @@unique([playlistId, songId])
-}
-
-model SongGenre {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-
-  song    Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
-  songId  String
-  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  genreId String
-
-  @@unique([songId, genreId])
 }
 
 model AlbumGenre {
