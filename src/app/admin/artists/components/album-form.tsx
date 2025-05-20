@@ -13,7 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
-import { CreateAlbumDto, createAlbumSchema } from "@/schemas";
+import { albumFormSchema, Album, AlbumFormDto } from "@/schemas";
 import { useCreateAlbum, useGenres, useUpdateAlbum, useArtists } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
@@ -33,7 +33,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import AudioUploader from "@/components/audio-uploader";
-import { Album } from "@/schemas";
 
 interface AlbumFormProps {
   artistId: string;
@@ -54,8 +53,8 @@ export default function AlbumForm({
   const { data: genres } = useGenres();
   const { data: artists } = useArtists();
 
-  const form = useForm<CreateAlbumDto>({
-    resolver: zodResolver(createAlbumSchema),
+  const form = useForm<AlbumFormDto>({
+    resolver: zodResolver(albumFormSchema),
     defaultValues: {
       title: album?.title ?? "",
       description: album?.description ?? "",
@@ -107,7 +106,7 @@ export default function AlbumForm({
 
   const releaseType = form.watch("releaseType");
 
-  const onSubmit = async (values: CreateAlbumDto) => {
+  const onSubmit = async (values: AlbumFormDto) => {
     try {
       setIsSubmitting(true);
 
@@ -119,6 +118,7 @@ export default function AlbumForm({
         coverUrl: values.coverUrl,
         isExplicit: values.isExplicit,
         genreIds: values.genreIds,
+        artistId: artistId,
         songs: values.songs.map((song, index) => ({
           title: song.title,
           lyrics: song.lyrics,

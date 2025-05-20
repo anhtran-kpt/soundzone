@@ -93,7 +93,7 @@ export const albumService = {
             tx.songArtist.create({
               data: {
                 song: { connect: { id: song.id } },
-                artist: { connect: { id: artistInput.id } },
+                artist: { connect: { id: artistInput.artistId } },
                 role: artistInput.role,
                 order: artistInput.order,
               },

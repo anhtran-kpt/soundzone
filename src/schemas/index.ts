@@ -1,6 +1,9 @@
-export * from "./auth";
-// export * from "./genre";
-export * from "./user";
-// export * from "./artist";
-export * from "./album";
-// export * from "./song";
+export * from "./auth.schema";
+export * from "./genre.schema";
+export * from "./user.schema";
+export * from "./artist.schema";
+export * from "./album.schema";
+export * from "./song.schema";
+export * from "./albumGenre.schema";
+export * from "./songArtist.schema";
+export * from "./artistGenre.schema";
