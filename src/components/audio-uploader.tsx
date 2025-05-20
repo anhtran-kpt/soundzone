@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 
 interface AudioUploaderProps {
-  onChange: (value: { url: string; duration: string }) => void;
+  onChange: (value: { url: string; duration: number }) => void;
   value: string;
   disabled?: boolean;
   className?: string;
@@ -23,12 +23,6 @@ export const AudioUploader = ({
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const formatDuration = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -59,10 +53,9 @@ export const AudioUploader = ({
 
       const data = response.data.data;
       const uploadedUrl = data.secure_url;
-      const audioDuration = data.duration;
-      const formattedDuration = formatDuration(audioDuration);
+      const duration = data.duration;
 
-      onChange({ url: uploadedUrl, duration: formattedDuration });
+      onChange({ url: uploadedUrl, duration: duration });
     } catch (err) {
       console.error("Error uploading file:", err);
       setError("Error uploading file. Please try again.");
@@ -75,7 +68,7 @@ export const AudioUploader = ({
   };
 
   const handleReset = () => {
-    onChange({ url: "", duration: "" });
+    onChange({ url: "", duration: 0 });
     setFileName(null);
     setError(null);
     if (inputRef.current) {

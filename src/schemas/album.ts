@@ -16,18 +16,18 @@ export const songSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Song title is required"),
   slug: z.string(),
-  lyrics: z.string().nullable(),
+  lyrics: z.string().optional(),
   duration: z.number().min(1, "Duration is required"),
-  playCount: z.number().default(0),
-  likeCount: z.number().default(0),
+  playCount: z.number(),
+  likeCount: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  isExplicit: z.boolean().default(false),
+  isExplicit: z.boolean(),
   audioUrl: z.string().min(1, "Audio URL is required"),
   trackNumber: z.number(),
-  composer: z.string().nullable(),
-  lyricist: z.string().nullable(),
-  producer: z.string().nullable(),
+  composer: z.string().optional(),
+  lyricist: z.string().optional(),
+  producer: z.string().optional(),
   albumId: z.string(),
   artists: z.array(songArtistSchema),
 });
@@ -44,16 +44,16 @@ export const albumGenreSchema = z.object({
 export const albumSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Album title is required"),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   slug: z.string(),
   releaseType: z.nativeEnum(ReleaseType),
-  releaseDate: z.date().nullable(),
-  playCount: z.number().default(0),
-  totalDuration: z.number().default(0),
-  songCount: z.number().default(0),
-  likeCount: z.number().default(0),
-  coverUrl: z.string().nullable(),
-  isExplicit: z.boolean().default(false),
+  releaseDate: z.coerce.date().optional(),
+  playCount: z.number(),
+  totalDuration: z.number(),
+  songCount: z.number(),
+  likeCount: z.number(),
+  coverUrl: z.string().optional(),
+  isExplicit: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
   artistId: z.string(),
@@ -73,13 +73,13 @@ export const artistGenreSchema = z.object({
 export const genreSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Genre name is required"),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   slug: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  songCount: z.number().default(0),
-  artistCount: z.number().default(0),
-  albumCount: z.number().default(0),
+  songCount: z.number(),
+  artistCount: z.number(),
+  albumCount: z.number(),
 });
 
 // Artist Schema
@@ -87,12 +87,12 @@ export const artistSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Artist name is required"),
   slug: z.string(),
-  bio: z.string().nullable(),
-  nationality: z.string().nullable(),
-  avatarUrl: z.string().nullable(),
-  bannerUrl: z.string().nullable(),
-  followerCount: z.number().default(0),
-  monthlyListeners: z.number().default(0),
+  bio: z.string().optional(),
+  nationality: z.string().optional(),
+  avatarUrl: z.string().optional(),
+  bannerUrl: z.string().optional(),
+  followerCount: z.number(),
+  monthlyListeners: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -100,25 +100,25 @@ export const artistSchema = z.object({
 // Schema for album form submission
 export const albumFormSchema = z.object({
   title: z.string().min(1, "Album title is required"),
-  description: z.string().nullable(),
-  releaseType: z.nativeEnum(ReleaseType).default(ReleaseType.SINGLE),
-  releaseDate: z.coerce.date().nullable(),
-  coverUrl: z.string().nullable(),
-  isExplicit: z.boolean().default(false),
+  description: z.string().optional(),
+  releaseType: z.nativeEnum(ReleaseType),
+  releaseDate: z.coerce.date().optional(),
+  coverUrl: z.string().optional(),
+  isExplicit: z.boolean(),
   artistId: z.string().optional(), // Optional in form, required when submitting
-  genreIds: z.array(z.string()).default([]),
+  genreIds: z.array(z.string()),
   songs: z
     .array(
       z.object({
         id: z.string().optional(),
         title: z.string().min(1, "Song title is required"),
-        lyrics: z.string().nullable(),
+        lyrics: z.string().optional(),
         duration: z.number().min(0, "Duration is required"),
         audioUrl: z.string().min(1, "Audio URL is required"),
-        isExplicit: z.boolean().default(false),
-        composer: z.string().nullable(),
-        lyricist: z.string().nullable(),
-        producer: z.string().nullable(),
+        isExplicit: z.boolean(),
+        composer: z.string().optional(),
+        lyricist: z.string().optional(),
+        producer: z.string().optional(),
         trackNumber: z.number().optional(),
         artists: z
           .array(
@@ -134,33 +134,77 @@ export const albumFormSchema = z.object({
 });
 
 // Create schemas - for creating new records
-export const createAlbumSchema = albumSchema
-  .omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    playCount: true,
-    likeCount: true,
-    totalDuration: true,
-    songCount: true,
-    slug: true,
-    songs: true,
-  })
-  .extend({
-    songs: z
-      .array(
-        songSchema.omit({
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          playCount: true,
-          likeCount: true,
-          slug: true,
-          albumId: true,
-        })
-      )
-      .min(1, "Album must have at least one song"),
-  });
+// export const createAlbumSchema = albumSchema
+//   .omit({
+//     id: true,
+//     createdAt: true,
+//     updatedAt: true,
+//     playCount: true,
+//     likeCount: true,
+//     totalDuration: true,
+//     songCount: true,
+//     slug: true,
+//     songs: true,
+//   })
+//   .extend({
+//     genreIds: z.array(z.string()),
+//   })
+//   .extend({
+//     songs: z
+//       .array(
+//         songSchema
+//           .omit({
+//             id: true,
+//             createdAt: true,
+//             updatedAt: true,
+//             playCount: true,
+//             trackNumber: true,
+//             likeCount: true,
+//             slug: true,
+//             albumId: true,
+//             artists: true,
+//           })
+//           .extend({
+//             artists: z.array(
+//               z.object({
+//                 artistId: z.string().min(1, "Artist is required"),
+//                 role: z.nativeEnum(ArtistRole),
+//               })
+//             ),
+//           })
+//       )
+//       .min(1, "Album must have at least one song"),
+//   });
+
+export const createAlbumSchema = z.object({
+  title: z.string().min(1, "Album title is required"),
+  description: z.string().optional(),
+  releaseType: z.nativeEnum(ReleaseType),
+  releaseDate: z.coerce.date().optional(),
+  coverUrl: z.string().optional(),
+  isExplicit: z.boolean(),
+  genreIds: z.array(z.string()),
+  songs: z
+    .array(
+      z.object({
+        title: z.string().min(1, "Song title is required"),
+        lyrics: z.string().optional(),
+        duration: z.number().min(0, "Duration is required"),
+        audioUrl: z.string().min(1, "Audio URL is required"),
+        isExplicit: z.boolean(),
+        composer: z.string().optional(),
+        lyricist: z.string().optional(),
+        producer: z.string().optional(),
+        artists: z.array(
+          z.object({
+            artistId: z.string().min(1, "Artist is required"),
+            role: z.nativeEnum(ArtistRole),
+          })
+        ),
+      })
+    )
+    .min(1, "Album must have at least one song"),
+});
 
 export const createSongSchema = songSchema.omit({
   id: true,
@@ -206,3 +250,4 @@ export type CreateArtistDto = z.infer<typeof createArtistSchema>;
 export type UpdateArtistDto = z.infer<typeof updateArtistSchema>;
 export type CreateGenreDto = z.infer<typeof createGenreSchema>;
 export type UpdateGenreDto = z.infer<typeof updateGenreSchema>;
+export type Album = z.infer<typeof albumSchema>;

@@ -3,15 +3,15 @@ import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
 export type Album = {
   id: string;
   title: string;
-  description: string | null;
+  description: string | undefined;
   slug: string;
   releaseType: ReleaseType;
-  releaseDate: Date | null;
+  releaseDate: Date | undefined;
   playCount: number;
   totalDuration: number;
   songCount: number;
   likeCount: number;
-  coverUrl: string | null;
+  coverUrl: string | undefined;
   isExplicit: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +26,7 @@ export type Song = {
   id: string;
   title: string;
   slug: string;
-  lyrics: string | null;
+  lyrics: string | undefined;
   duration: number;
   playCount: number;
   likeCount: number;
@@ -35,9 +35,9 @@ export type Song = {
   isExplicit: boolean;
   audioUrl: string;
   trackNumber: number;
-  composer: string | null;
-  lyricist: string | null;
-  producer: string | null;
+  composer: string | undefined;
+  lyricist: string | undefined;
+  producer: string | undefined;
   album: Album;
   albumId: string;
   // playlists: PlaylistSong[];
@@ -50,10 +50,10 @@ export type Artist = {
   id: string;
   name: string;
   slug: string;
-  bio: string | null;
-  nationality: string | null;
-  avatarUrl: string | null;
-  bannerUrl: string | null;
+  bio: string | undefined;
+  nationality: string | undefined;
+  avatarUrl: string | undefined;
+  bannerUrl: string | undefined;
   followerCount: number;
   monthlyListeners: number;
   createdAt: Date;
@@ -87,7 +87,7 @@ export type AlbumGenre = {
 export type Genre = {
   id: string;
   name: string;
-  description: string | null;
+  description: string | undefined;
   slug: string;
   createdAt: Date;
   updatedAt: Date;
