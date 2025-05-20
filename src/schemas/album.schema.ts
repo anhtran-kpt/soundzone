@@ -5,8 +5,8 @@ import { songSchema } from "./song.schema";
 
 export const albumSchema = z.object({
   id: z.string(),
-  title: z.string().min(1, "Album title is required"),
-  description: z.string().optional(),
+  title: z.string().min(1, "Album title is required").trim(),
+  description: z.string().trim().optional(),
   slug: z.string(),
   releaseType: z.nativeEnum(ReleaseType),
   releaseDate: z.coerce.date().optional(),
@@ -42,14 +42,14 @@ export const albumFormSchema = albumSchema
     songs: z
       .array(
         z.object({
-          title: z.string().min(1, "Song title is required"),
-          lyrics: z.string().optional(),
+          title: z.string().min(1, "Song title is required").trim(),
+          lyrics: z.string().trim().optional(),
           duration: z.number().min(0, "Duration is required"),
           audioUrl: z.string().min(1, "Audio URL is required"),
           isExplicit: z.boolean(),
-          composer: z.string().optional(),
-          lyricist: z.string().optional(),
-          producer: z.string().optional(),
+          composer: z.string().trim().optional(),
+          lyricist: z.string().trim().optional(),
+          producer: z.string().trim().optional(),
           artists: z.array(
             z.object({
               artistId: z.string().min(1, "Artist is required"),
@@ -79,15 +79,15 @@ export const createAlbumSchema = albumSchema
     songs: z
       .array(
         z.object({
-          title: z.string().min(1, "Song title is required"),
-          lyrics: z.string().optional(),
+          title: z.string().min(1, "Song title is required").trim(),
+          lyrics: z.string().trim().optional(),
           duration: z.number().min(0, "Duration is required"),
           audioUrl: z.string().min(1, "Audio URL is required"),
           isExplicit: z.boolean(),
-          composer: z.string().optional(),
+          composer: z.string().trim().optional(),
           trackNumber: z.number().min(1, "Track number is required"),
-          lyricist: z.string().optional(),
-          producer: z.string().optional(),
+          lyricist: z.string().trim().optional(),
+          producer: z.string().trim().optional(),
           artists: z.array(
             z.object({
               artistId: z.string().min(1, "Artist is required"),

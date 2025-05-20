@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
+import { emptyToNull } from "@/utils";
 
 export const albumService = {
   async getAll(params?: { limit?: number }) {
@@ -53,13 +54,16 @@ export const albumService = {
 
     return await prisma.$transaction(async (tx) => {
       const albumSlug = await tx.album.generateSlug(title);
+      const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
       const album = await tx.album.create({
         data: {
           title,
           slug: albumSlug,
-          description,
+          description: emptyToNull(description),
           releaseType,
+          totalDuration,
+          songCount: songs.length,
           releaseDate,
           coverUrl,
           isExplicit,
@@ -80,11 +84,11 @@ export const albumService = {
             audioUrl: songData.audioUrl,
             trackNumber: songData.trackNumber,
             isExplicit: songData.isExplicit,
-            lyrics: songData.lyrics,
+            lyrics: emptyToNull(songData.lyrics),
             album: { connect: { id: album.id } },
-            composer: songData.composer,
-            lyricist: songData.lyricist,
-            producer: songData.producer,
+            composer: emptyToNull(songData.composer),
+            lyricist: emptyToNull(songData.lyricist),
+            producer: emptyToNull(songData.producer),
           },
         });
 

@@ -35,7 +35,7 @@ model User {
   name      String
   email     String   @unique
   password  String
-  avatarUrl String?
+  image     String?
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -76,13 +76,15 @@ model Song {
   title        String
   slug         String          @unique
   lyrics       String?         @db.Text
-  duration     Int // In seconds
+  duration     Int             @default(0) // In seconds
   playCount    Int             @default(0)
   likeCount    Int             @default(0)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   isExplicit   Boolean         @default(false)
   audioUrl     String
+  coverUrl     String?
+  genres       SongGenre[]
   trackNumber  Int             @default(1) // Position in the album
   composer     String?
   lyricist     String?
@@ -159,6 +161,7 @@ model Genre {
 
   albums  AlbumGenre[]
   artists ArtistGenre[]
+  songs   SongGenre[]
 
   @@index([slug])
 }
@@ -179,6 +182,16 @@ model PlayHistory {
 
   @@index([userId, playedAt])
   @@index([songId])
+}
+
+model SongGenre {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  song    Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId  String
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  genreId String
 }
 
 model SongArtist {
