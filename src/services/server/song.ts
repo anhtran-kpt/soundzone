@@ -1,4 +1,4 @@
-import prisma from "../../../prisma/basePrisma";
+import prisma from "../../lib/basePrisma";
 import { CreateSongDto, UpdateSongDto } from "@/schemas";
 
 export const songService = {

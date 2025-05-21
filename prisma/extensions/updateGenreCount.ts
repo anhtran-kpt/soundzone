@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import basePrisma from "../basePrisma";
+import basePrisma from "../../src/lib/basePrisma";
 
 export const updateGenreCount = Prisma.defineExtension({
   name: "updateGenreCount",

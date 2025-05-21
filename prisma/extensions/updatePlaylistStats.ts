@@ -1,4 +1,4 @@
-import basePrisma from "../basePrisma";
+import basePrisma from "../../src/lib/basePrisma";
 import { Prisma } from "@prisma/client";
 
 export const updatePlaylistStats = Prisma.defineExtension({

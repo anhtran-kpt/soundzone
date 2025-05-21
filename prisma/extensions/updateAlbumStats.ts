@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import basePrisma from "../basePrisma";
+import basePrisma from "../../src/lib/basePrisma";
 
 export const updateAlbumStats = Prisma.defineExtension({
   name: "updateAlbumStats",
@@ -20,6 +20,7 @@ export const updateAlbumStats = Prisma.defineExtension({
               0
             );
             const songCount = songs.length;
+
             await tx.album.update({
               where: { id: albumId },
               data: {

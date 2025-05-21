@@ -1,4 +1,4 @@
-import prisma from "../../../prisma/basePrisma";
+import { prisma } from "@/lib/prisma";
 import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { emptyToNull } from "@/utils";
 
@@ -54,6 +54,8 @@ export const albumService = {
 
     return await prisma.$transaction(async (tx) => {
       const albumSlug = await tx.album.generateSlug(title);
+      const totalDuration = songs.reduce((sum, song) => sum + song.duration, 0);
+      const songCount = songs.length;
 
       const album = await tx.album.create({
         data: {
@@ -64,84 +66,57 @@ export const albumService = {
           releaseDate,
           coverUrl,
           isExplicit,
-          artist: {
-            connect: { id: artistId },
-          },
+          artistId,
+          totalDuration,
+          songCount,
         },
       });
 
-      for (const songData of songs) {
-        const songSlug = await tx.song.generateSlug(songData.title);
+      await Promise.all(
+        songs.map(async (songData) => {
+          const songSlug = await tx.song.generateSlug(songData.title);
 
-        const song = await tx.song.create({
-          data: {
-            title: songData.title,
-            slug: songSlug,
-            duration: songData.duration,
-            audioUrl: songData.audioUrl,
-            trackNumber: songData.trackNumber,
-            isExplicit: songData.isExplicit,
-            lyrics: emptyToNull(songData.lyrics),
-            album: { connect: { id: album.id } },
-            composer: emptyToNull(songData.composer),
-            lyricist: emptyToNull(songData.lyricist),
-            producer: emptyToNull(songData.producer),
-          },
-        });
+          const song = await tx.song.create({
+            data: {
+              title: songData.title,
+              slug: songSlug,
+              duration: songData.duration,
+              audioUrl: songData.audioUrl,
+              trackNumber: songData.trackNumber,
+              isExplicit: songData.isExplicit,
+              lyrics: emptyToNull(songData.lyrics),
+              albumId: album.id,
+              composer: emptyToNull(songData.composer),
+              lyricist: emptyToNull(songData.lyricist),
+              producer: emptyToNull(songData.producer),
+            },
+          });
 
-        await Promise.all(
-          songData.artists.map((artistInput) =>
-            tx.songArtist.create({
-              data: {
-                song: { connect: { id: song.id } },
-                artist: { connect: { id: artistInput.artistId } },
+          if (songData.artists.length > 0) {
+            await tx.songArtist.createMany({
+              data: songData.artists.map((artistInput) => ({
+                songId: song.id,
+                artistId: artistInput.artistId,
                 role: artistInput.role,
                 order: artistInput.order,
-              },
-            })
-          )
-        );
-      }
+              })),
+            });
+          }
+
+          return song;
+        })
+      );
 
       if (genreIds.length > 0) {
-        await Promise.all(
-          genreIds.map((genreId) =>
-            tx.albumGenre.create({
-              data: {
-                album: { connect: { id: album.id } },
-                genre: { connect: { id: genreId } },
-              },
-            })
-          )
-        );
+        await tx.albumGenre.createMany({
+          data: genreIds.map((genreId) => ({
+            albumId: album.id,
+            genreId,
+          })),
+        });
       }
 
-      return await tx.album.findUnique({
-        where: { id: album.id },
-        include: {
-          songs: {
-            include: {
-              artists: {
-                include: {
-                  artist: true,
-                },
-                orderBy: {
-                  order: "asc",
-                },
-              },
-            },
-            orderBy: {
-              trackNumber: "asc",
-            },
-          },
-          artist: true,
-          genres: {
-            include: {
-              genre: true,
-            },
-          },
-        },
-      });
+      return album;
     });
   },
 

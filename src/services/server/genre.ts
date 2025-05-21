@@ -1,4 +1,4 @@
-import prisma from "../../../prisma/basePrisma";
+import prisma from "../../lib/basePrisma";
 import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
 
 export const genreService = {

@@ -1,8 +1,9 @@
 import { SLUG_OPTIONS } from "@/config/constants";
-import { Prisma } from "@prisma/client/scripts/default-index.js";
+import { Prisma } from "@prisma/client";
 import slugify from "slugify";
 
-export const slugExtension = {
+export const generateSlug = Prisma.defineExtension({
+  name: "generateSlug",
   model: {
     $allModels: {
       async generateSlug<T>(this: T, title: string): Promise<string> {
@@ -25,4 +26,4 @@ export const slugExtension = {
       },
     },
   },
-};
+});
