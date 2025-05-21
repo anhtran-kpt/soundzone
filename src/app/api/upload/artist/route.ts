@@ -12,22 +12,22 @@ cloudinary.config({
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const formData = await req.formData();
-  const audioFile = formData.get("file") as File;
+  const imageFile = formData.get("file") as File;
+  const type = formData.get("type") as "avatar" | "cover";
 
-  const arrayBuffer = await audioFile.arrayBuffer();
+  const arrayBuffer = await imageFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const stream = Readable.from(buffer);
 
   const uploadResult = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: "audio",
-        resource_type: "video",
-        format: "mp3",
+        folder: `artist/${type}`,
+        resource_type: "image",
+        format: "webp",
         overwrite: true,
-        use_filename: true,
         unique_filename: true,
-        public_id: `${Date.now()}-${audioFile.name.split(".")[0]}`,
+        quality: "auto",
       },
       (error, result) => {
         if (error) reject(error);

@@ -5,7 +5,7 @@ CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
 CREATE TYPE "ReleaseType" AS ENUM ('SINGLE', 'ALBUM', 'EP');
 
 -- CreateEnum
-CREATE TYPE "ArtistRole" AS ENUM ('PRIMARY', 'FEATURED');
+CREATE TYPE "ArtistRole" AS ENUM ('MAIN', 'FEATURED');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -27,10 +27,10 @@ CREATE TABLE "Artist" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "bio" TEXT,
-    "dateOfBirth" TIMESTAMP(3),
     "nationality" TEXT,
     "avatarUrl" TEXT,
-    "bannerUrl" TEXT,
+    "coverUrl" TEXT,
+    "followerCount" INTEGER NOT NULL DEFAULT 0,
     "monthlyListeners" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -44,16 +44,18 @@ CREATE TABLE "Song" (
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "lyrics" TEXT,
-    "duration" INTEGER NOT NULL,
+    "duration" INTEGER NOT NULL DEFAULT 0,
     "playCount" INTEGER NOT NULL DEFAULT 0,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "isExplicit" BOOLEAN NOT NULL DEFAULT false,
     "audioUrl" TEXT NOT NULL,
-    "composers" TEXT[],
-    "producers" TEXT[],
-    "lyricists" TEXT[],
+    "coverUrl" TEXT,
     "trackNumber" INTEGER NOT NULL DEFAULT 1,
+    "composer" TEXT,
+    "lyricist" TEXT,
+    "producer" TEXT,
     "albumId" TEXT NOT NULL,
 
     CONSTRAINT "Song_pkey" PRIMARY KEY ("id")
@@ -65,10 +67,12 @@ CREATE TABLE "Album" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "slug" TEXT NOT NULL,
-    "releaseType" "ReleaseType" NOT NULL DEFAULT 'ALBUM',
+    "releaseType" "ReleaseType" NOT NULL DEFAULT 'SINGLE',
     "releaseDate" TIMESTAMP(3),
     "playCount" INTEGER NOT NULL DEFAULT 0,
     "totalDuration" INTEGER NOT NULL DEFAULT 0,
+    "songCount" INTEGER NOT NULL DEFAULT 0,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
     "coverUrl" TEXT,
     "isExplicit" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -86,6 +90,9 @@ CREATE TABLE "Playlist" (
     "slug" TEXT NOT NULL,
     "isPublic" BOOLEAN NOT NULL DEFAULT true,
     "totalDuration" INTEGER NOT NULL DEFAULT 0,
+    "playCount" INTEGER NOT NULL DEFAULT 0,
+    "songCount" INTEGER NOT NULL DEFAULT 0,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
     "coverUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -102,6 +109,10 @@ CREATE TABLE "Genre" (
     "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "songCount" INTEGER NOT NULL DEFAULT 0,
+    "artistCount" INTEGER NOT NULL DEFAULT 0,
+    "albumCount" INTEGER NOT NULL DEFAULT 0,
+    "playlistCount" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Genre_pkey" PRIMARY KEY ("id")
 );
@@ -122,12 +133,32 @@ CREATE TABLE "PlayHistory" (
 );
 
 -- CreateTable
+CREATE TABLE "PlaylistGenre" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "playlistId" TEXT NOT NULL,
+    "genreId" TEXT NOT NULL,
+
+    CONSTRAINT "PlaylistGenre_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SongGenre" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "songId" TEXT NOT NULL,
+    "genreId" TEXT NOT NULL,
+
+    CONSTRAINT "SongGenre_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "SongArtist" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "songId" TEXT NOT NULL,
     "artistId" TEXT NOT NULL,
-    "role" "ArtistRole" NOT NULL DEFAULT 'PRIMARY',
+    "role" "ArtistRole" NOT NULL DEFAULT 'MAIN',
     "order" INTEGER NOT NULL DEFAULT 1,
 
     CONSTRAINT "SongArtist_pkey" PRIMARY KEY ("id")
@@ -142,16 +173,6 @@ CREATE TABLE "PlaylistSong" (
     "order" INTEGER NOT NULL,
 
     CONSTRAINT "PlaylistSong_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "SongGenre" (
-    "id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "songId" TEXT NOT NULL,
-    "genreId" TEXT NOT NULL,
-
-    CONSTRAINT "SongGenre_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -266,13 +287,13 @@ CREATE INDEX "PlayHistory_userId_playedAt_idx" ON "PlayHistory"("userId", "playe
 CREATE INDEX "PlayHistory_songId_idx" ON "PlayHistory"("songId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PlaylistGenre_playlistId_genreId_key" ON "PlaylistGenre"("playlistId", "genreId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "SongArtist_songId_artistId_key" ON "SongArtist"("songId", "artistId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlaylistSong_playlistId_songId_key" ON "PlaylistSong"("playlistId", "songId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "SongGenre_songId_genreId_key" ON "SongGenre"("songId", "genreId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "AlbumGenre_albumId_genreId_key" ON "AlbumGenre"("albumId", "genreId");
@@ -308,6 +329,18 @@ ALTER TABLE "PlayHistory" ADD CONSTRAINT "PlayHistory_songId_fkey" FOREIGN KEY (
 ALTER TABLE "PlayHistory" ADD CONSTRAINT "PlayHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "PlaylistGenre" ADD CONSTRAINT "PlaylistGenre_playlistId_fkey" FOREIGN KEY ("playlistId") REFERENCES "Playlist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PlaylistGenre" ADD CONSTRAINT "PlaylistGenre_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SongGenre" ADD CONSTRAINT "SongGenre_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SongGenre" ADD CONSTRAINT "SongGenre_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "SongArtist" ADD CONSTRAINT "SongArtist_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -318,12 +351,6 @@ ALTER TABLE "PlaylistSong" ADD CONSTRAINT "PlaylistSong_playlistId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "PlaylistSong" ADD CONSTRAINT "PlaylistSong_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SongGenre" ADD CONSTRAINT "SongGenre_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SongGenre" ADD CONSTRAINT "SongGenre_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AlbumGenre" ADD CONSTRAINT "AlbumGenre_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;

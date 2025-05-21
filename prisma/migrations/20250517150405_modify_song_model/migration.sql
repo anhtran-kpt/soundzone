@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "Song" ALTER COLUMN "composers" SET DEFAULT ARRAY[]::TEXT[],
-ALTER COLUMN "producers" SET DEFAULT ARRAY[]::TEXT[],
-ALTER COLUMN "lyricists" SET DEFAULT ARRAY[]::TEXT[];

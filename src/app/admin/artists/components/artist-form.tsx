@@ -24,6 +24,8 @@ export default function ArtistForm({
 }: ArtistFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const createMutation = useCreateArtist();
   const updateMutation = useUpdateArtist(artist?.slug || "");
@@ -31,17 +33,40 @@ export default function ArtistForm({
   const form = useForm<CreateArtistDto>({
     resolver: zodResolver(createArtistSchema),
     defaultValues: {
-      name: artist?.name || "",
-      bio: artist?.bio || "",
-      avatarUrl: artist?.avatarUrl || "",
-      bannerUrl: artist?.bannerUrl || "",
-      nationality: artist?.nationality || "",
+      name: artist?.name ?? "",
+      bio: artist?.bio ?? "",
+      avatarUrl: artist?.avatarUrl ?? "",
+      coverUrl: artist?.coverUrl ?? "",
+      nationality: artist?.nationality ?? "",
     },
   });
+
+  const uploadImage = async (file: File, type: "avatar" | "cover") => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", type);
+
+    const response = await fetch("/api/upload/artist", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    return data.data.secure_url;
+  };
 
   const onSubmit = async (values: CreateArtistDto) => {
     try {
       setIsSubmitting(true);
+
+      if (avatarFile) {
+        values.avatarUrl = await uploadImage(avatarFile, "avatar");
+      }
+      if (coverFile) {
+        values.coverUrl = await uploadImage(coverFile, "cover");
+      }
+
       let response = null;
 
       if (mode === "create") {
@@ -123,43 +148,35 @@ export default function ArtistForm({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="avatarUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Avatar</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter artist avatar url"
-                    autoComplete="artist-avatar"
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormItem>
+            <FormLabel>Avatar</FormLabel>
+            <FormControl>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
+                placeholder="Upload artist avatar"
+                autoComplete="artist-avatar"
+                disabled={isSubmitting}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
-          <FormField
-            control={form.control}
-            name="bannerUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Banner</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter artist banner url"
-                    autoComplete="artist-banner"
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormItem>
+            <FormLabel>cover</FormLabel>
+            <FormControl>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
+                placeholder="Upload artist cover"
+                autoComplete="artist-cover"
+                disabled={isSubmitting}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting

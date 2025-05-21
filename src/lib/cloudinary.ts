@@ -1,8 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-import { withErrorHandler } from "@/lib/server/error-handler";
-import { ApiResponse } from "@/lib/server/api-response";
 import { Readable } from "stream";
+import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
@@ -10,7 +7,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export const POST = withErrorHandler(async (req: NextRequest) => {
+interface UploadArtistImageOptions {
+  file: File;
+  artistSlug: string;
+  type: "avatar" | "cover";
+}
+
+export const uploadArtistImage = async ({
+  file,
+  artistSlug,
+  type,
+}: UploadArtistImageOptions) => {
   const formData = await req.formData();
   const audioFile = formData.get("file") as File;
 
@@ -37,6 +44,4 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
 
     stream.pipe(uploadStream);
   });
-
-  return NextResponse.json(ApiResponse.success(uploadResult), { status: 200 });
-});
+};
