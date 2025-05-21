@@ -1,5 +1,5 @@
 import { authService } from "@/services/server";
-import prisma from "@/lib/prisma";
+import prisma from "./basePrisma";
 
 async function createAdminUser() {
   const adminData = {

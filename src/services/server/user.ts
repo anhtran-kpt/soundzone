@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../../../prisma/basePrisma";
 import { UpdateUserDto } from "@/schemas";
 
 export const userService = {

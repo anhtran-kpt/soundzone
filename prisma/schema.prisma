@@ -143,6 +143,7 @@ model Playlist {
   userId       String
   likedByUsers UserLikedPlaylist[]
   songs        PlaylistSong[]
+  genres       PlaylistGenre[]
 
   @@index([slug])
   @@index([userId])
@@ -155,13 +156,16 @@ model Genre {
   slug        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  songCount   Int      @default(0)
-  artistCount Int      @default(0)
-  albumCount  Int      @default(0)
 
-  albums  AlbumGenre[]
-  artists ArtistGenre[]
-  songs   SongGenre[]
+  songCount     Int @default(0)
+  artistCount   Int @default(0)
+  albumCount    Int @default(0)
+  playlistCount Int @default(0)
+
+  albums    AlbumGenre[]
+  artists   ArtistGenre[]
+  songs     SongGenre[]
+  playlists PlaylistGenre[]
 
   @@index([slug])
 }
@@ -182,6 +186,18 @@ model PlayHistory {
 
   @@index([userId, playedAt])
   @@index([songId])
+}
+
+model PlaylistGenre {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  playlistId String
+  genre      Genre    @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  genreId    String
+
+  @@unique([playlistId, genreId])
 }
 
 model SongGenre {

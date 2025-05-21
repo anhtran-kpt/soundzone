@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../../../prisma/basePrisma";
 import { SignInDto, SignUpDto } from "@/schemas";
 import { comparePasswords, hashPassword } from "@/utils";
 import { ApiError } from "@/lib/server/api-error";

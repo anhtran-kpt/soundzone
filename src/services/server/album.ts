@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../../../prisma/basePrisma";
 import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { emptyToNull } from "@/utils";
 
@@ -54,7 +54,6 @@ export const albumService = {
 
     return await prisma.$transaction(async (tx) => {
       const albumSlug = await tx.album.generateSlug(title);
-      const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
       const album = await tx.album.create({
         data: {
@@ -62,8 +61,6 @@ export const albumService = {
           slug: albumSlug,
           description: emptyToNull(description),
           releaseType,
-          totalDuration,
-          songCount: songs.length,
           releaseDate,
           coverUrl,
           isExplicit,
