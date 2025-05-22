@@ -48,6 +48,8 @@ export default function AlbumForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log(album);
+
   const createMutation = useCreateAlbum();
   const updateMutation = useUpdateAlbum(album?.slug || "");
   const { data: genres } = useGenres();
@@ -66,13 +68,13 @@ export default function AlbumForm({
       songs: album?.songs
         ? album.songs.map((song) => ({
             title: song.title,
-            lyrics: song.lyrics,
+            lyrics: song.lyrics ?? "",
             duration: song.duration,
             audioUrl: song.audioUrl,
             isExplicit: song.isExplicit,
-            composer: song.composer,
-            lyricist: song.lyricist,
-            producer: song.producer,
+            composer: song.composer ?? "",
+            lyricist: song.lyricist ?? "",
+            producer: song.producer ?? "",
             artists: song.artists.map((artist) => ({
               artistId: artist.artistId,
               role: artist.role,
@@ -286,6 +288,7 @@ export default function AlbumForm({
                 </div>
                 <FormControl>
                   <Switch
+                    defaultChecked={field.value}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -348,6 +351,7 @@ export default function AlbumForm({
                       field.onChange(value);
                       setTimeout(ensureCorrectSongCount, 0);
                     }}
+                    defaultValue={field.value}
                     disabled={isSubmitting}
                   >
                     <FormItem>
@@ -499,6 +503,7 @@ export default function AlbumForm({
                           <FormControl>
                             <Checkbox
                               checked={field.value}
+                              defaultChecked={field.value}
                               onCheckedChange={field.onChange}
                               id={`song-explicit-${index}`}
                             />

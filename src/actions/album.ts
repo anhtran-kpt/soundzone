@@ -21,6 +21,26 @@ const albumActions = {
       include: {
         artist: true,
         genres: true,
+        songs: {
+          include: {
+            artists: true,
+          },
+        },
+      },
+    });
+  },
+
+  getByArtistSlug: async (artistSlug: string) => {
+    return await prisma.album.findMany({
+      where: { artist: { slug: artistSlug } },
+      include: {
+        artist: true,
+        genres: true,
+        songs: {
+          include: {
+            artists: true,
+          },
+        },
       },
     });
   },

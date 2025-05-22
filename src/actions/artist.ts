@@ -5,12 +5,18 @@ const artistActions = {
   getAll: async () => {
     return await prisma.artist.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        albums: true,
+      },
     });
   },
 
   getBySlug: async (slug: string) => {
     return await prisma.artist.findUnique({
       where: { slug },
+      include: {
+        albums: true,
+      },
     });
   },
 

@@ -1,0 +1,68 @@
+{
+  "genres": [
+    {
+      "name": "Pop",
+      "description": "Popular music with catchy melodies and simple song structures, appealing to a wide audience."
+    },
+    {
+      "name": "Rock",
+      "description": "Energetic and powerful music with strong rhythms and guitar-driven sound."
+    },
+    {
+      "name": "Hip Hop",
+      "description": "Rap and hip-hop music with rhythmic beats and often spoken word lyrics."
+    },
+    {
+      "name": "Country",
+      "description": "Country music with traditional country themes and instrumentation."
+    },
+    {
+      "name": "Jazz",
+      "description": "Jazz music with its unique blend of blues, swing, and bebop rhythms."
+    },
+    {
+      "name": "Electronic",
+      "description": "Electronic music with its unique blend of electronic beats and electronic rhythms."
+    },
+    {
+      "name": "R&B",
+      "description": "R&B music with its unique blend of R&B beats and R&B rhythms."
+    },
+    {
+      "name": "Blues",
+      "description": "Blues music with its unique blend of blues beats and blues rhythms."
+    },
+    {
+      "name": "Funk",
+      "description": "Funk music with its unique blend of funk beats and funk rhythms."
+    },
+    {
+      "name": "Soul",
+      "description": "Soul music with its unique blend of soul beats and soul rhythms."
+    },
+    {
+      "name": "Reggae",
+      "description": "Reggae music with its unique blend of reggae beats and reggae rhythms."
+    },
+    {
+      "name": "Latin",
+      "description": "Latin music with its unique blend of latin beats and latin rhythms."
+    },
+    {
+      "name": "Dance",
+      "description": "Dance music with its unique blend of dance beats and dance rhythms."
+    },
+    {
+      "name": "Metal",
+      "description": "Metal music with its unique blend of metal beats and metal rhythms."
+    },
+    {
+      "name": "Punk",
+      "description": "Punk music with its unique blend of punk beats and punk rhythms."
+    },
+    {
+      "name": "Alternative",
+      "description": "Alternative music with its unique blend of alternative beats and alternative rhythms."
+    }
+  ]
+}

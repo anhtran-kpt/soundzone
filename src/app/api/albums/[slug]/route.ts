@@ -1,4 +1,4 @@
-import { getAlbumBySlug } from "@/actions";
+import { albumActions } from "@/actions";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
 // import { validateData } from "@/lib/api/server/validate-data";
@@ -12,7 +12,7 @@ export const GET = withErrorHandler(
   ) => {
     const { slug } = await params;
 
-    const album = await getAlbumBySlug(slug);
+    const album = await albumActions.getBySlug(slug);
 
     return NextResponse.json(ApiResponse.success(album), { status: 200 });
   }

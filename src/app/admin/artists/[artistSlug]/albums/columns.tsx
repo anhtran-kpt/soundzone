@@ -13,54 +13,62 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatName, formatDuration } from "@/helpers";
+import { format } from "date-fns";
 
-export type ArtistInfo = {
+export type AlbumInfo = {
   slug: string;
-  name: string;
-  nationality: string;
-  avatarUrl: string;
-  followerCount: number;
-  monthlyListeners: number;
-  albums: [];
+  title: string;
+  releaseType: string;
+  releaseDate: string;
+  coverUrl: string;
+  totalDuration: number;
+  songs: [];
+  artist: {
+    slug: string;
+  };
 };
 
-export const columns: ColumnDef<ArtistInfo>[] = [
+export const columns: ColumnDef<AlbumInfo>[] = [
   {
-    header: "Avatar",
-    accessorKey: "avatarUrl",
+    header: "Cover Image",
+    accessorKey: "coverUrl",
     cell: ({ row }) => {
       return (
         <Avatar>
-          <AvatarImage src={row.original.avatarUrl} />
-          <AvatarFallback>
-            {row.original.name.split(" ")[0].charAt(0)}
-            {row.original.name.split(" ")[1]?.charAt(0)}
-          </AvatarFallback>
+          <AvatarImage src={row.original.coverUrl} />
+          <AvatarFallback>{formatName(row.original.title)}</AvatarFallback>
         </Avatar>
       );
     },
   },
   {
-    header: "Name",
-    accessorKey: "name",
+    header: "Title",
+    accessorKey: "title",
   },
   {
-    header: "Nationality",
-    accessorKey: "nationality",
-  },
-  {
-    header: "Followers",
-    accessorKey: "followerCount",
-  },
-  {
-    header: "Monthly Listeners",
-    accessorKey: "monthlyListeners",
-  },
-  {
-    header: "Albums",
-    accessorKey: "albums",
+    header: "Total Duration",
+    accessorKey: "totalDuration",
     cell: ({ row }) => {
-      return <div>{row.original.albums.length}</div>;
+      return <div>{formatDuration(row.original.totalDuration)}</div>;
+    },
+  },
+  {
+    header: "Release Type",
+    accessorKey: "releaseType",
+  },
+  {
+    header: "Release Date",
+    accessorKey: "releaseDate",
+    cell: ({ row }) => {
+      return <div>{format(row.original.releaseDate, "MMM d, yyyy")}</div>;
+    },
+  },
+  {
+    header: "Songs",
+    accessorKey: "songs",
+    cell: ({ row }) => {
+      return <div>{row.original.songs.length}</div>;
     },
   },
   {
@@ -78,13 +86,17 @@ export const columns: ColumnDef<ArtistInfo>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/admin/artists/${row.original.slug}`}>
-                View Artist
+              <Link
+                href={`/admin/artists/${row.original.artist.slug}/albums/${row.original.slug}`}
+              >
+                View Album
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/admin/artists/${row.original.slug}/edit`}>
-                Edit Artist
+              <Link
+                href={`/admin/artists/${row.original.artist.slug}/albums/${row.original.slug}/edit`}
+              >
+                Edit Album
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
