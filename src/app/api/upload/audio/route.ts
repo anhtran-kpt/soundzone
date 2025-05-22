@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-import { withErrorHandler } from "@/lib/api-config/server/error-handler";
-import { ApiResponse } from "@/lib/api-config/server/api-response";
+import cloudinary from "@/config/cloudinary";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { ApiResponse } from "@/lib/api/server/api-response";
 import { Readable } from "stream";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
-});
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const formData = await req.formData();
@@ -16,6 +10,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
 
   const arrayBuffer = await audioFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
   const stream = Readable.from(buffer);
 
   const uploadResult = await new Promise((resolve, reject) => {
@@ -25,9 +20,9 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
         resource_type: "video",
         format: "mp3",
         overwrite: true,
-        use_filename: true,
+        use_filename: false,
         unique_filename: true,
-        public_id: `${Date.now()}-${audioFile.name.split(".")[0]}`,
+        quality: "auto",
       },
       (error, result) => {
         if (error) reject(error);

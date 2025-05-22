@@ -1,7 +1,7 @@
 import { getAlbumBySlug } from "@/actions";
-import { ApiResponse } from "@/lib/api-config/server/api-response";
-import { withErrorHandler } from "@/lib/api-config/server/error-handler";
-// import { validateData } from "@/lib/api/config/server/validate-data";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
+// import { validateData } from "@/lib/api/server/validate-data";
 // import { albumSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 

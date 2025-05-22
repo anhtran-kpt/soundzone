@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { artistGenreSchema } from "./artistGenre.schema";
+import { artistGenreSchema } from "./artist-genre";
 
 export const artistSchema = z.object({
   id: z.string(),

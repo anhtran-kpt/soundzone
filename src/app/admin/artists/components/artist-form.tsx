@@ -13,6 +13,7 @@ import { CreateArtistDto, createArtistSchema } from "@/schemas";
 import { useCreateArtist, useGenres, useUpdateArtist } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
+import uploadQueries from "@/queries/upload";
 
 interface ArtistFormProps {
   artist?: Artist;
@@ -44,30 +45,23 @@ export default function ArtistForm({
     },
   });
 
-  const uploadImage = async (file: File, type: "avatar" | "cover") => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", type);
-
-    const response = await fetch("/api/upload/artist", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-
-    return data.data.secure_url;
-  };
-
   const onSubmit = async (values: CreateArtistDto) => {
     try {
       setIsSubmitting(true);
 
       if (avatarFile) {
-        values.avatarUrl = await uploadImage(avatarFile, "avatar");
+        values.avatarUrl = await uploadQueries.uploadImage(
+          avatarFile,
+          "artist",
+          "avatar"
+        );
       }
       if (coverFile) {
-        values.coverUrl = await uploadImage(coverFile, "cover");
+        values.coverUrl = await uploadQueries.uploadImage(
+          coverFile,
+          "artist",
+          "cover"
+        );
       }
 
       let response = null;

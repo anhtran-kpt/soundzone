@@ -1,6 +1,6 @@
-import { getGenreBySlug } from "@/actions";
-import { ApiResponse } from "@/lib/api-config/server/api-response";
-import { withErrorHandler } from "@/lib/api-config/server/error-handler";
+import { genreActions } from "@/actions";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
@@ -10,9 +10,9 @@ export const GET = withErrorHandler(
   ) => {
     const { slug } = await params;
 
-    await getGenreBySlug(slug);
+    const genre = await genreActions.getBySlug(slug);
 
-    return NextResponse.json(ApiResponse.success(null), { status: 200 });
+    return NextResponse.json(ApiResponse.success(genre), { status: 200 });
   }
 );
 

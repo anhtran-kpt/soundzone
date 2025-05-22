@@ -1,5 +1,5 @@
-import { ApiResponse } from "@/lib/api/config/server/api-response";
-import { apiClient } from "@/lib/api/config/client/api-client";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { apiClient } from "@/lib/api/client/api-client";
 import { Artist } from "@/schemas";
 import { ARTIST_ENDPOINTS } from "@/config/endpoints";
 import { CreateArtistDto, UpdateArtistDto } from "@/schemas";

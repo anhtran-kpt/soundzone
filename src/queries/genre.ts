@@ -1,5 +1,5 @@
-import { ApiResponse } from "@/lib/api/config/server/api-response";
-import { apiClient } from "@/lib/api/config/client/api-client";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { apiClient } from "@/lib/api/client/api-client";
 import { Genre } from "@/schemas";
 import { GENRE_ENDPOINTS } from "@/config/endpoints";
 import { CreateGenreDto, UpdateGenreDto } from "@/schemas";

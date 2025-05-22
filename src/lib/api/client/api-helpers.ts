@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ApiResponse } from "@/lib/server/api-response";
+import { ApiResponse } from "@/lib/api/server/api-response";
 
 export function handleSuccess<T>(response: AxiosResponse): ApiResponse<T> {
   return response.data;

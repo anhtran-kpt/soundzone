@@ -1,31 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-import { withErrorHandler } from "@/lib/api-config/server/error-handler";
-import { ApiResponse } from "@/lib/api-config/server/api-response";
+import cloudinary from "@/config/cloudinary";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { ApiResponse } from "@/lib/api/server/api-response";
 import { Readable } from "stream";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
-});
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const formData = await req.formData();
+
   const imageFile = formData.get("file") as File;
-  const type = formData.get("type") as "avatar" | "cover";
+  const model = formData.get("model") as string;
+  const type = formData.get("type") as string;
 
   const arrayBuffer = await imageFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
   const stream = Readable.from(buffer);
 
   const uploadResult = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: `artist/${type}`,
+        folder: `${model}s/${type}`,
         resource_type: "image",
         format: "webp",
         overwrite: true,
+        use_filename: false,
         unique_filename: true,
         quality: "auto",
       },

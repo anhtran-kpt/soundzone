@@ -1,7 +1,7 @@
 import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
 import { z } from "zod";
-import { albumGenreSchema } from "./albumGenre.schema";
-import { songSchema } from "./song.schema";
+import { albumGenreSchema } from "./album-genre";
+import { songSchema } from "./song";
 
 export const albumSchema = z.object({
   id: z.string(),

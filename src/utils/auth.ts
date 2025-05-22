@@ -1,9 +1,9 @@
-import { signIn } from "@/actions";
+import { authActions } from "@/actions";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ApiError } from "@/lib/api/config/server/api-error";
+import { ApiError } from "@/lib/api/server/api-error";
 import bcrypt from "bcryptjs";
 import { SALT_ROUNDS } from "@/config";
 
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await signIn({
+        const user = await authActions.signIn({
           email: credentials.email,
           password: credentials.password,
         });

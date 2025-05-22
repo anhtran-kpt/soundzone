@@ -1,8 +1,9 @@
-export const CLOUDINARY = {
-  cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "YOUR_CLOUD_NAME",
-  apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || "YOUR_API_KEY",
-  uploadPreset:
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "soundzone_uploads",
-  folder: "/audio",
-  resourceType: "video",
-};
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
+
+export default cloudinary;

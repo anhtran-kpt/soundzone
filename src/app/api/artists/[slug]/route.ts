@@ -1,6 +1,6 @@
-import { ApiResponse } from "@/lib/api-config/server/api-response";
-import { withErrorHandler } from "@/lib/api-config/server/error-handler";
-import { getArtistBySlug } from "@/actions";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { artistActions } from "@/actions";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
@@ -10,7 +10,7 @@ export const GET = withErrorHandler(
   ) => {
     const { slug } = await params;
 
-    const artist = await getArtistBySlug(slug);
+    const artist = await artistActions.getBySlug(slug);
 
     return NextResponse.json(ApiResponse.success(artist), { status: 200 });
   }
