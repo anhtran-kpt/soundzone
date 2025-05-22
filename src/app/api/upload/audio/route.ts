@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
-import { withErrorHandler } from "@/lib/server/error-handler";
-import { ApiResponse } from "@/lib/server/api-response";
+import { withErrorHandler } from "@/lib/api-config/server/error-handler";
+import { ApiResponse } from "@/lib/api-config/server/api-response";
 import { Readable } from "stream";
 
 cloudinary.config({

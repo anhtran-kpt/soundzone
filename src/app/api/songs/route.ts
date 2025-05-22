@@ -1,22 +1,22 @@
-import { createSongSchema } from "@/schemas";
-import { ApiResponse } from "@/lib/server/api-response";
-import { withErrorHandler } from "@/lib/server/error-handler";
-import { validateData } from "@/lib/server/validate-data";
-import { NextRequest, NextResponse } from "next/server";
-import { songService } from "@/services/server";
+// import { createSongSchema } from "@/schemas";
+// import { ApiResponse } from "@/lib/api/config/server/api-response";
+// import { withErrorHandler } from "@/lib/api/config/server/error-handler";
+// import { validateData } from "@/lib/api/config/server/validate-data";
+// import { NextRequest, NextResponse } from "next/server";
+// import { createSong, getAllSongs } from "@/actions";
 
-export const POST = withErrorHandler(async (req: NextRequest) => {
-  const body = await req.json();
+// export const POST = withErrorHandler(async (req: NextRequest) => {
+//   const body = await req.json();
 
-  const validatedData = validateData(createSongSchema, body);
+//   const validatedData = validateData(createSongSchema, body);
 
-  const newSong = await songService.create(validatedData);
+//   const newSong = await createSong(validatedData);
 
-  return NextResponse.json(ApiResponse.success(newSong), { status: 200 });
-});
+//   return NextResponse.json(ApiResponse.success(newSong), { status: 200 });
+// });
 
-export const GET = withErrorHandler(async () => {
-  const songs = await songService.getAll();
+// export const GET = withErrorHandler(async () => {
+//   const songs = await getAllSongs();
 
-  return NextResponse.json(ApiResponse.success(songs), { status: 200 });
-});
+//   return NextResponse.json(ApiResponse.success(songs), { status: 200 });
+// });

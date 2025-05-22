@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { genreClientService } from "@/services";
 import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
 import { toast } from "sonner";
+import { genreQueries } from "@/queries";
 
-// Define query keys for this genre
 export const genreKeys = {
   all: ["genres"] as const,
   lists: () => [...genreKeys.all, "list"] as const,
@@ -13,11 +12,10 @@ export const genreKeys = {
   detail: (slug: string) => [...genreKeys.details(), slug] as const,
 };
 
-// Hook to fetch all genres
 export function useGenres(params?: { limit?: number }) {
   return useQuery({
     queryKey: genreKeys.lists(),
-    queryFn: () => genreClientService.getAll(params),
+    queryFn: () => genreQueries.getAll(params),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch genres");
@@ -27,27 +25,25 @@ export function useGenres(params?: { limit?: number }) {
   });
 }
 
-// Hook to fetch a single genre
 export function useGenre(slug: string) {
   return useQuery({
     queryKey: genreKeys.detail(slug),
-    queryFn: () => genreClientService.getBySlug(slug),
+    queryFn: () => genreQueries.getBySlug(slug),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch genre");
       }
       return response.data;
     },
-    enabled: !!slug, // Only run if slug exists
+    enabled: !!slug,
   });
 }
 
-// Hook to create an genre
 export function useCreateGenre() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateGenreDto) => genreClientService.create(data),
+    mutationFn: (data: CreateGenreDto) => genreQueries.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Genre created successfully");
@@ -62,12 +58,11 @@ export function useCreateGenre() {
   });
 }
 
-// Hook to update an genre
 export function useUpdateGenre(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateGenreDto) => genreClientService.update(slug, data),
+    mutationFn: (data: UpdateGenreDto) => genreQueries.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Genre updated successfully");
@@ -83,12 +78,11 @@ export function useUpdateGenre(slug: string) {
   });
 }
 
-// Hook to delete an genre
 export function useDeleteGenre() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => genreClientService.delete(slug),
+    mutationFn: (slug: string) => genreQueries.delete(slug),
     onSuccess: (response, slug) => {
       if (response.success) {
         toast.success("Genre deleted successfully");

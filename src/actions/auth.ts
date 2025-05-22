@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma/prisma";
-import { ApiError } from "@/lib/api/config/server/api-error";
+import { ApiError } from "@/lib/api-config/server/api-error";
 import { SignInDto, SignUpDto } from "@/schemas";
 import { comparePasswords, hashPassword } from "@/utils";
 

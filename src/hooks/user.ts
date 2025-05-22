@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { userClientService } from "@/services";
+import { userQueries } from "@/queries";
 import { UpdateUserDto } from "@/schemas";
 import { toast } from "sonner";
 
-// Define query keys for this user
 export const userKeys = {
   all: ["users"] as const,
   lists: () => [...userKeys.all, "list"] as const,
@@ -13,11 +12,10 @@ export const userKeys = {
   detail: (id: string) => [...userKeys.details(), id] as const,
 };
 
-// Hook to fetch all users
 export function useUsers(params?: { limit?: number }) {
   return useQuery({
     queryKey: userKeys.lists(),
-    queryFn: () => userClientService.getAll(params),
+    queryFn: () => userQueries.getAll(params),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch users");
@@ -27,31 +25,29 @@ export function useUsers(params?: { limit?: number }) {
   });
 }
 
-// Hook to fetch a single user
-export function useUser(id: string) {
+export function useUser(slug: string) {
   return useQuery({
-    queryKey: userKeys.detail(id),
-    queryFn: () => userClientService.getById(id),
+    queryKey: userKeys.detail(slug),
+    queryFn: () => userQueries.getBySlug(slug),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch user");
       }
       return response.data;
     },
-    enabled: !!id, // Only run if id exists
+    enabled: !!slug,
   });
 }
 
-// Hook to update an user
-export function useUpdateUser(id: string) {
+export function useUpdateUser(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateUserDto) => userClientService.update(id, data),
+    mutationFn: (data: UpdateUserDto) => userQueries.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("User updated successfully");
-        queryClient.invalidateQueries({ queryKey: userKeys.detail(id) });
+        queryClient.invalidateQueries({ queryKey: userKeys.detail(slug) });
         queryClient.invalidateQueries({ queryKey: userKeys.lists() });
       } else {
         toast.error(response.error?.message || "Failed to update user");
@@ -63,17 +59,16 @@ export function useUpdateUser(id: string) {
   });
 }
 
-// Hook to delete an user
 export function useDeleteUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => userClientService.delete(id),
-    onSuccess: (response, id) => {
+    mutationFn: (slug: string) => userQueries.delete(slug),
+    onSuccess: (response, slug) => {
       if (response.success) {
         toast.success("User deleted successfully");
         queryClient.invalidateQueries({ queryKey: userKeys.lists() });
-        queryClient.removeQueries({ queryKey: userKeys.detail(id) });
+        queryClient.removeQueries({ queryKey: userKeys.detail(slug) });
       } else {
         toast.error(response.error?.message || "Failed to delete user");
       }

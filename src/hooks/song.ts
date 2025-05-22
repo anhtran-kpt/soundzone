@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { songClientService } from "@/services";
+import { songQueries } from "@/queries";
 import { CreateSongDto, UpdateSongDto } from "@/schemas";
 import { toast } from "sonner";
 
@@ -15,7 +15,7 @@ export const songKeys = {
 export function useSongs(params?: { limit?: number }) {
   return useQuery({
     queryKey: songKeys.lists(),
-    queryFn: () => songClientService.getAll(params),
+    queryFn: () => songQueries.getAll(params),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch songs");
@@ -28,7 +28,7 @@ export function useSongs(params?: { limit?: number }) {
 export function useSong(slug: string) {
   return useQuery({
     queryKey: songKeys.detail(slug),
-    queryFn: () => songClientService.getBySlug(slug),
+    queryFn: () => songQueries.getBySlug(slug),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch song");
@@ -43,7 +43,7 @@ export function useCreateSong() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateSongDto) => songClientService.create(data),
+    mutationFn: (data: CreateSongDto) => songQueries.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Song created successfully");
@@ -62,7 +62,7 @@ export function useUpdateSong(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateSongDto) => songClientService.update(slug, data),
+    mutationFn: (data: UpdateSongDto) => songQueries.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Song updated successfully");
@@ -82,7 +82,7 @@ export function useDeleteSong() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => songClientService.delete(slug),
+    mutationFn: (slug: string) => songQueries.delete(slug),
     onSuccess: (response, slug) => {
       if (response.success) {
         toast.success("Song deleted successfully");

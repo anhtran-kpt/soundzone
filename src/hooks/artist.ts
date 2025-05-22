@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { artistClientService } from "@/services";
 import { CreateArtistDto, UpdateArtistDto } from "@/schemas";
 import { toast } from "sonner";
+import { artistQueries } from "@/queries";
 
 export const artistKeys = {
   all: ["artists"] as const,
@@ -15,7 +15,7 @@ export const artistKeys = {
 export function useArtists(params?: { limit?: number }) {
   return useQuery({
     queryKey: artistKeys.lists(),
-    queryFn: () => artistClientService.getAll(params),
+    queryFn: () => artistQueries.getAll(params),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch artists");
@@ -28,7 +28,7 @@ export function useArtists(params?: { limit?: number }) {
 export function useArtist(slug: string) {
   return useQuery({
     queryKey: artistKeys.detail(slug),
-    queryFn: () => artistClientService.getBySlug(slug),
+    queryFn: () => artistQueries.getBySlug(slug),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch artist");
@@ -43,7 +43,7 @@ export function useCreateArtist() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateArtistDto) => artistClientService.create(data),
+    mutationFn: (data: CreateArtistDto) => artistQueries.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Artist created successfully");
@@ -62,8 +62,7 @@ export function useUpdateArtist(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateArtistDto) =>
-      artistClientService.update(slug, data),
+    mutationFn: (data: UpdateArtistDto) => artistQueries.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Artist updated successfully");
@@ -83,7 +82,7 @@ export function useDeleteArtist() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => artistClientService.delete(slug),
+    mutationFn: (slug: string) => artistQueries.delete(slug),
     onSuccess: (response, slug) => {
       if (response.success) {
         toast.success("Artist deleted successfully");

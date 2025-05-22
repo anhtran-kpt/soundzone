@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { albumClientService } from "@/services";
 import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { toast } from "sonner";
+import { albumQueries } from "@/queries";
 
 export const albumKeys = {
   all: ["albums"] as const,
@@ -15,7 +15,7 @@ export const albumKeys = {
 export function useAlbums(params?: { limit?: number }) {
   return useQuery({
     queryKey: albumKeys.lists(),
-    queryFn: () => albumClientService.getAll(params),
+    queryFn: () => albumQueries.getAll(params),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch albums");
@@ -28,7 +28,7 @@ export function useAlbums(params?: { limit?: number }) {
 export function useAlbum(slug: string) {
   return useQuery({
     queryKey: albumKeys.detail(slug),
-    queryFn: () => albumClientService.getBySlug(slug),
+    queryFn: () => albumQueries.getBySlug(slug),
     select: (response) => {
       if (!response.success) {
         throw new Error(response.error?.message || "Failed to fetch album");
@@ -43,7 +43,7 @@ export function useCreateAlbum() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateAlbumDto) => albumClientService.create(data),
+    mutationFn: (data: CreateAlbumDto) => albumQueries.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Album created successfully");
@@ -62,7 +62,7 @@ export function useUpdateAlbum(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateAlbumDto) => albumClientService.update(slug, data),
+    mutationFn: (data: UpdateAlbumDto) => albumQueries.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Album updated successfully");
@@ -82,7 +82,7 @@ export function useDeleteAlbum() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => albumClientService.delete(slug),
+    mutationFn: (slug: string) => albumQueries.delete(slug),
     onSuccess: (response, slug) => {
       if (response.success) {
         toast.success("Album deleted successfully");
