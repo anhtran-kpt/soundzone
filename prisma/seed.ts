@@ -1,5 +1,5 @@
-import { authService } from "@/services/server";
-import prisma from "../src/lib/basePrisma";
+import { signUp } from "@/actions";
+import prisma from "../src/lib/prisma/prisma";
 
 async function createAdminUser() {
   const adminData = {
@@ -9,7 +9,7 @@ async function createAdminUser() {
     password: "admin123",
   };
 
-  await authService.signUp(adminData);
+  await signUp(adminData);
 
   console.log("Admin created.");
 }

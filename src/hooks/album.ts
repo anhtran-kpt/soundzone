@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { albumClientService } from "@/services/client";
+import { albumClientService } from "@/services";
 import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { toast } from "sonner";
 

@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Genre } from "@/app/generated/prisma";
+import { Genre } from "@/schemas";
 import { CreateGenreDto, createGenreSchema } from "@/schemas";
 import { useCreateGenre, useUpdateGenre } from "@/hooks";
 import { useRouter } from "next/navigation";
@@ -30,8 +30,8 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const form = useForm<CreateGenreDto>({
     resolver: zodResolver(createGenreSchema),
     defaultValues: {
-      name: genre?.name || "",
-      description: genre?.description || "",
+      name: genre?.name ?? "",
+      description: genre?.description ?? "",
     },
   });
 

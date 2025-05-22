@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { artistGenreSchema } from "./artistGenre.schema";
 
 export const artistSchema = z.object({
   id: z.string(),
@@ -12,16 +13,22 @@ export const artistSchema = z.object({
   monthlyListeners: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  genres: z.array(artistGenreSchema),
 });
 
-export const createArtistSchema = artistSchema.omit({
-  id: true,
-  slug: true,
-  followerCount: true,
-  monthlyListeners: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const createArtistSchema = artistSchema
+  .omit({
+    id: true,
+    slug: true,
+    followerCount: true,
+    monthlyListeners: true,
+    createdAt: true,
+    updatedAt: true,
+    genres: true,
+  })
+  .extend({
+    genreIds: z.array(z.string()),
+  });
 
 export const updateArtistSchema = artistSchema.partial();
 

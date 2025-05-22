@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { ApiResponse } from "@/lib/server/api-response";
+import { ApiResponse } from "../server/api-response";
 import { handleSuccess, handleError } from "./api-helpers";
 
 class ApiClient {

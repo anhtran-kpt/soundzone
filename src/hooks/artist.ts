@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { artistClientService } from "@/services/client";
+import { artistClientService } from "@/services";
 import { CreateArtistDto, UpdateArtistDto } from "@/schemas";
 import { toast } from "sonner";
 

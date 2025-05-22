@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { genreClientService } from "@/services/client";
+import { genreClientService } from "@/services";
 import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
 import { toast } from "sonner";
 

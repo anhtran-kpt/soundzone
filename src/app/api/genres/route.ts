@@ -1,22 +1,22 @@
 import { createGenreSchema } from "@/schemas";
-import { genreService } from "@/services/server";
 import { ApiResponse } from "@/lib/server/api-response";
 import { withErrorHandler } from "@/lib/server/error-handler";
 import { validateData } from "@/lib/server/validate-data";
 import { NextRequest, NextResponse } from "next/server";
+import { createGenre, getAllGenres } from "@/actions";
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json();
 
   const validatedData = validateData(createGenreSchema, body);
 
-  const newGenre = await genreService.create(validatedData);
+  await createGenre(validatedData);
 
-  return NextResponse.json(ApiResponse.success(newGenre), { status: 200 });
+  return NextResponse.json(ApiResponse.success(null), { status: 200 });
 });
 
 export const GET = withErrorHandler(async () => {
-  const genres = await genreService.getAll();
+  const genres = await getAllGenres();
 
   return NextResponse.json(ApiResponse.success(genres), { status: 200 });
 });

@@ -1,9 +1,9 @@
-import { authClientService } from "@/services/client";
+import { signIn } from "@/actions";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ApiError } from "@/lib/server/api-error";
+import { ApiError } from "@/lib/api/config/server/api-error";
 import bcrypt from "bcryptjs";
 import { SALT_ROUNDS } from "@/config";
 
@@ -34,22 +34,20 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const response = await authClientService.signIn({
+        const user = await signIn({
           email: credentials.email,
           password: credentials.password,
         });
 
-        if (!response.success || !response.data) {
+        if (!user) {
           return null;
         }
-
-        const user = response.data;
 
         return {
           id: user.id,
           name: user.name,
           email: user.email,
-          image: user.image,
+          image: user.avatarUrl,
           role: user.role,
         };
       },

@@ -8,10 +8,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Artist } from "@/app/generated/prisma";
+import { Artist } from "@/schemas";
 import { CreateArtistDto, createArtistSchema } from "@/schemas";
-import { useCreateArtist, useUpdateArtist } from "@/hooks";
+import { useCreateArtist, useGenres, useUpdateArtist } from "@/hooks";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ArtistFormProps {
   artist?: Artist;
@@ -29,6 +30,7 @@ export default function ArtistForm({
 
   const createMutation = useCreateArtist();
   const updateMutation = useUpdateArtist(artist?.slug || "");
+  const { data: genres } = useGenres();
 
   const form = useForm<CreateArtistDto>({
     resolver: zodResolver(createArtistSchema),
@@ -38,6 +40,7 @@ export default function ArtistForm({
       avatarUrl: artist?.avatarUrl ?? "",
       coverUrl: artist?.coverUrl ?? "",
       nationality: artist?.nationality ?? "",
+      genreIds: artist?.genres.map((genre) => genre.genreId) ?? [],
     },
   });
 
@@ -148,6 +151,52 @@ export default function ArtistForm({
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="genreIds"
+            render={() => (
+              <FormItem>
+                <div className="mb-2">
+                  <FormLabel className="">Genres</FormLabel>
+                </div>
+                {genres?.map((genre) => (
+                  <FormField
+                    key={genre.id}
+                    control={form.control}
+                    name="genreIds"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={genre.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(genre.id)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, genre.id])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== genre.id
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {genre.name}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormItem>
             <FormLabel>Avatar</FormLabel>
             <FormControl>
@@ -164,7 +213,7 @@ export default function ArtistForm({
           </FormItem>
 
           <FormItem>
-            <FormLabel>cover</FormLabel>
+            <FormLabel>Cover</FormLabel>
             <FormControl>
               <Input
                 type="file"

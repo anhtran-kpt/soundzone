@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { authClientService } from "@/services/client";
+import { authClientService } from "@/services";
 import { SignInDto, SignUpDto } from "@/schemas";
 import { toast } from "sonner";
 
