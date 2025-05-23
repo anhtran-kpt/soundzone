@@ -33,6 +33,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import AudioUploader from "@/components/audio-uploader";
+import uploadQueries from "@/queries/upload";
 
 interface AlbumFormProps {
   artistId: string;
@@ -47,8 +48,7 @@ export default function AlbumForm({
 }: AlbumFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  console.log(album);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
 
   const createMutation = useCreateAlbum();
   const updateMutation = useUpdateAlbum(album?.slug || "");
@@ -71,7 +71,7 @@ export default function AlbumForm({
             lyrics: song.lyrics ?? "",
             duration: song.duration,
             audioUrl: song.audioUrl,
-            isExplicit: song.isExplicit,
+            isExplicit: song.isExplicit ?? false,
             composer: song.composer ?? "",
             lyricist: song.lyricist ?? "",
             producer: song.producer ?? "",
@@ -107,17 +107,34 @@ export default function AlbumForm({
   });
 
   const releaseType = form.watch("releaseType");
+  const albumTitle = form.watch("title");
+  const albumExplicit = form.watch("isExplicit");
+
+  useEffect(() => {
+    if (releaseType === ReleaseType.SINGLE) {
+      form.setValue("songs.0.title", albumTitle);
+      form.setValue("songs.0.isExplicit", albumExplicit);
+    }
+  }, [releaseType, albumTitle, albumExplicit, form]);
 
   const onSubmit = async (values: AlbumFormDto) => {
     try {
       setIsSubmitting(true);
+
+      if (coverFile) {
+        values.coverUrl = await uploadQueries.uploadImage(
+          coverFile,
+          "album",
+          "cover"
+        );
+      }
 
       const albumData = {
         title: values.title,
         description: values.description,
         releaseType: values.releaseType,
         releaseDate: values.releaseDate,
-        coverUrl: values.coverUrl,
+        coverUrl: values.coverUrl || album?.coverUrl,
         isExplicit: values.isExplicit,
         genreIds: values.genreIds,
         artistId: artistId,
@@ -288,7 +305,6 @@ export default function AlbumForm({
                 </div>
                 <FormControl>
                   <Switch
-                    defaultChecked={field.value}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -351,7 +367,7 @@ export default function AlbumForm({
                       field.onChange(value);
                       setTimeout(ensureCorrectSongCount, 0);
                     }}
-                    defaultValue={field.value}
+                    value={field.value}
                     disabled={isSubmitting}
                   >
                     <FormItem>
@@ -421,24 +437,20 @@ export default function AlbumForm({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="coverUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cover Image</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter album cover url"
-                    autoComplete="album-cover-url"
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormItem>
+            <FormLabel>Cover Image</FormLabel>
+            <FormControl>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
+                placeholder="Upload album cover"
+                autoComplete="album-cover"
+                disabled={isSubmitting}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">
@@ -478,7 +490,10 @@ export default function AlbumForm({
                             <Input
                               {...field}
                               placeholder="Enter song title"
-                              disabled={isSubmitting}
+                              disabled={
+                                isSubmitting ||
+                                releaseType === ReleaseType.SINGLE
+                              }
                             />
                           </FormControl>
                           <FormMessage />
@@ -503,9 +518,12 @@ export default function AlbumForm({
                           <FormControl>
                             <Checkbox
                               checked={field.value}
-                              defaultChecked={field.value}
                               onCheckedChange={field.onChange}
                               id={`song-explicit-${index}`}
+                              disabled={
+                                isSubmitting ||
+                                releaseType === ReleaseType.SINGLE
+                              }
                             />
                           </FormControl>
                           <FormLabel
@@ -532,30 +550,41 @@ export default function AlbumForm({
                               <FormField
                                 control={form.control}
                                 name={`songs.${index}.artists.${artistIndex}.artistId`}
-                                render={({ field }) => (
-                                  <FormItem className="flex-1">
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      disabled={isSubmitting}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Select artist" />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {artists?.map((artist) => (
-                                          <SelectItem
-                                            key={artist.id}
-                                            value={artist.id}
-                                          >
-                                            {artist.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                  </FormItem>
-                                )}
+                                render={({ field }) => {
+                                  const selectedArtist = artists?.find(
+                                    (a) => a.id === field.value
+                                  );
+
+                                  return (
+                                    <FormItem className="flex-1">
+                                      <Select
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                        disabled={isSubmitting}
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Select artist">
+                                              {selectedArtist
+                                                ? selectedArtist.name
+                                                : "Select artist"}
+                                            </SelectValue>
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          {artists?.map((artist) => (
+                                            <SelectItem
+                                              key={artist.id}
+                                              value={artist.id}
+                                            >
+                                              {artist.name}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </FormItem>
+                                  );
+                                }}
                               />
 
                               <FormField
@@ -565,7 +594,7 @@ export default function AlbumForm({
                                   <FormItem className="w-32">
                                     <Select
                                       onValueChange={field.onChange}
-                                      defaultValue={field.value}
+                                      value={field.value}
                                       disabled={isSubmitting}
                                     >
                                       <FormControl>

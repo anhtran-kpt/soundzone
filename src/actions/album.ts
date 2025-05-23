@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma/prisma";
 import { CreateAlbumDto } from "@/schemas";
-import { emptyToNull } from "@/utils";
+import { emptyToNull } from "@/helpers";
 
 const albumActions = {
   getAll: async () => {
