@@ -1,7 +1,7 @@
 import { BellIcon, SearchIcon } from "lucide-react";
-import UserMenu from "./user-menu";
+import UserMenu from "@/components/layout/user-menu";
 import { Input } from "@/components/ui/input";
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle } from "@/components/layout/mode-toggle";
 
 const Header = () => {
   return (

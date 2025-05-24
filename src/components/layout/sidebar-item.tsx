@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NavigationItem } from "../layout/navigation";
+import { NavigationItem } from "@/components/layout/navigation";
 import { usePathname } from "next/navigation";
 
 interface SidebarItemProps {

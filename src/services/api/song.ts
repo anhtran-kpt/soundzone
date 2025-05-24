@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
 import { SONG_ENDPOINTS } from "@/lib/endpoints";
-import { Song, CreateSongDto, UpdateSongDto } from "@/lib/validations";
+import { Song, CreateSongDto, UpdateSongDto } from "@/schemas";
 
 export const songApi = {
   async getAll(params?: { limit?: number }): Promise<ApiResponse<Song[]>> {

@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Genre, CreateGenreDto, UpdateGenreDto } from "@/lib/validations";
+import { Genre, CreateGenreDto, UpdateGenreDto } from "@/schemas";
 import { GENRE_ENDPOINTS } from "@/lib/endpoints";
 
 export const genreApi = {

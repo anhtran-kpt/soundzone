@@ -4,8 +4,11 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
+  FormItem,
+  FormLabel,
+  FormField,
+  Form,
 } from "@/components/ui/form";
-import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -34,7 +37,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import AudioUploader from "@/components/audio-uploader";
+import AudioUploader from "@/components/features/song/audio-uploader";
 import uploadQueries from "@/services/queries/upload";
 
 interface AlbumFormProps {

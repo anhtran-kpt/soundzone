@@ -1,14 +1,20 @@
 "use client";
 
-import { FormControl, FormMessage } from "@/components/ui/form";
-import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
+import {
+  FormControl,
+  FormMessage,
+  FormItem,
+  FormLabel,
+  FormField,
+  Form,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CreateArtistDto, createArtistSchema, Artist } from "@/lib/validations";
+import { CreateArtistDto, createArtistSchema, Artist } from "@/schemas";
 import { useCreateArtist, useUpdateArtist } from "@/services/queries/artist";
 import { useGenres } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";

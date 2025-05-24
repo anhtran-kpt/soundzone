@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Artist, CreateArtistDto, UpdateArtistDto } from "@/lib/validations";
+import { Artist, CreateArtistDto, UpdateArtistDto } from "@/schemas";
 import { ARTIST_ENDPOINTS } from "@/lib/endpoints";
 
 export const artistApi = {

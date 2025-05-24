@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { genreApi } from "@/services/api";
-import { CreateGenreDto, UpdateGenreDto } from "@/lib/validations";
+import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
 import { genreKeys } from "./keys";
 
 export function useGenres(params?: { limit?: number }) {

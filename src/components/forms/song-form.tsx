@@ -4,8 +4,11 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
+  FormItem,
+  FormLabel,
+  FormField,
+  Form,
 } from "@/components/ui/form";
-import { FormItem, FormLabel, FormField, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,16 +16,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Song } from "@/app/generated/prisma";
-import { CreateSongDto, createSongSchema } from "@/lib/validations";
-import {
-  useAlbums,
-  useCreateSong,
-  useUpdateSong,
-} from "@/services/queries/song";
+import { CreateSongDto, createSongSchema } from "@/schemas";
+import { useCreateSong, useUpdateSong } from "@/services/queries/song";
 import { useRouter } from "next/navigation";
-import { PopoverContent } from "@/components/ui/popover";
-import { Popover } from "@/components/ui/popover";
-import { PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import {
@@ -34,6 +35,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Switch } from "@/components/ui/switch";
+import { useAlbums } from "@/services/queries/album";
 
 interface SongFormProps {
   song?: Song;

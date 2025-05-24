@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Genre, CreateGenreDto, createGenreSchema } from "@/lib/validations";
+import { Genre, CreateGenreDto, createGenreSchema } from "@/schemas";
 import { useCreateGenre, useUpdateGenre } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";
 

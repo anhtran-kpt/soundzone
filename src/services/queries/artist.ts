@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { artistApi } from "@/services/api";
-import { CreateArtistDto, UpdateArtistDto } from "@/lib/validations";
+import { CreateArtistDto, UpdateArtistDto } from "@/schemas";
 import { artistKeys } from "./keys";
 
 export function useArtists(params?: { limit?: number }) {

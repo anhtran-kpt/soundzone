@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { songApi } from "@/services/api";
-import { CreateSongDto, UpdateSongDto } from "@/lib/validations";
+import { CreateSongDto, UpdateSongDto } from "@/schemas";
 import { songKeys } from "./keys";
 
 export function useSongs(params?: { limit?: number }) {

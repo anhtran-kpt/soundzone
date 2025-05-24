@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/common/data-table";
 import { columns } from "@/components/features/album/columns";
 import albumActions from "@/actions/album";
 
