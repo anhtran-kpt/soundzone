@@ -1,11 +1,11 @@
-import prisma from "@/lib/prisma/prisma";
+import db from "@/lib/db";
 import { ApiError } from "@/lib/api/server/api-error";
-import { SignInDto, SignUpDto } from "@/schemas";
-import { comparePasswords, hashPassword } from "@/utils";
+import { SignInDto, SignUpDto } from "@/lib/validations";
+import { comparePasswords, hashPassword } from "@/lib/helpers";
 
 const authActions = {
   signUp: async (data: SignUpDto) => {
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { email: data.email },
     });
 
@@ -15,17 +15,17 @@ const authActions = {
 
     const hashedPassword = await hashPassword(data.password);
 
-    return prisma.user.create({
+    return db.user.create({
       data: {
         ...data,
         password: hashedPassword,
-        slug: await prisma.user.generateSlug(data.name),
+        slug: await db.user.generateSlug(data.name),
       },
     });
   },
 
   signIn: async (data: SignInDto) => {
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { email: data.email },
     });
 
@@ -48,7 +48,7 @@ const authActions = {
       );
     }
 
-    return prisma.user.findUnique({
+    return db.user.findUnique({
       where: { email: data.email },
     });
   },

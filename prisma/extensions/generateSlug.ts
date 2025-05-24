@@ -1,4 +1,4 @@
-import { SLUG_OPTIONS } from "@/config/constants";
+import { SLUG_OPTIONS } from "@/lib/constants";
 import { Prisma } from "@prisma/client";
 import slugify from "slugify";
 

@@ -1,5 +1,5 @@
-import Header from "@/components/ui/header";
-import Sidebar from "@/components/ui/sidebar";
+import Header from "@/components/layout/header";
+import Sidebar from "@/components/layout/sidebar";
 
 export default function Home() {
   return (

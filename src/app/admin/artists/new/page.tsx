@@ -1,4 +1,4 @@
-import ArtistForm from "../components/artist-form";
+import ArtistForm from "@/components/forms/artist-form";
 
 export default function CreateArtistPage() {
   return (

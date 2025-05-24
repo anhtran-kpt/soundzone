@@ -1,18 +1,19 @@
-import prisma from "@/lib/prisma/prisma";
-import { CreateArtistDto } from "@/schemas";
+import db from "@/lib/db";
+import { CreateArtistDto } from "@/lib/validations";
 
 const artistActions = {
   getAll: async () => {
-    return await prisma.artist.findMany({
+    return await db.artist.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         albums: true,
+        songs: true,
       },
     });
   },
 
   getBySlug: async (slug: string) => {
-    return await prisma.artist.findUnique({
+    return await db.artist.findUnique({
       where: { slug },
       include: {
         albums: true,
@@ -23,7 +24,7 @@ const artistActions = {
   create: async (data: CreateArtistDto) => {
     const { genreIds, ...rest } = data;
 
-    await prisma.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       const slug = await tx.artist.generateSlug(rest.name);
 
       const artist = await tx.artist.create({

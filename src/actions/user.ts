@@ -1,8 +1,8 @@
-import prisma from "@/lib/prisma/prisma";
+import db from "@/lib/db";
 
 const userActions = {
   getAll: async () => {
-    const users = await prisma.user.findMany({
+    const users = await db.user.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -11,7 +11,7 @@ const userActions = {
   },
 
   getBySlug: async (slug: string) => {
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { slug },
     });
     return user;

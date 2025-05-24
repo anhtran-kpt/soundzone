@@ -1,7 +1,7 @@
 import { albumActions } from "@/actions";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import AlbumForm from "../../../../components/album-form";
+import AlbumForm from "@/components/forms/album-form";
 
 type Props = {
   params: Promise<{ artistSlug: string; albumSlug: string }>;

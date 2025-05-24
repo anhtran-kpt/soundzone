@@ -1,10 +1,10 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useArtist } from "@/hooks";
+import { useArtist } from "@/services/queries/artist";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { formatName } from "@/helpers";
+import { formatName } from "@/lib/helpers";
 
 export default function ArtistPage() {
   const { artistSlug } = useParams();

@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import basePrisma from "../../src/lib/prisma/basePrisma";
+import basePrisma from "../../src/lib/prisma";
 
 export const updateArtistFollowerCount = Prisma.defineExtension({
   name: "updateArtistFollowerCount",

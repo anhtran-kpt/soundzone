@@ -1,7 +1,7 @@
-import { signInSchema } from "@/schemas";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { validateData } from "@/lib/api/server/validate-data";
+import { signInSchema } from "@/lib/validations";
+import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { authActions } from "@/actions";
 

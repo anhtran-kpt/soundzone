@@ -1,10 +1,10 @@
-import prisma from "@/lib/prisma/prisma";
-import { CreateAlbumDto } from "@/schemas";
-import { emptyToNull } from "@/helpers";
+import db from "@/lib/db";
+import { emptyToNull } from "@/lib/helpers";
+import { CreateAlbumDto } from "@/lib/validations";
 
 const albumActions = {
   getAll: async () => {
-    return await prisma.album.findMany({
+    return await db.album.findMany({
       include: {
         artist: true,
         genres: true,
@@ -16,7 +16,7 @@ const albumActions = {
   },
 
   getBySlug: async (slug: string) => {
-    return await prisma.album.findUnique({
+    return await db.album.findUnique({
       where: { slug },
       include: {
         artist: true,
@@ -31,7 +31,7 @@ const albumActions = {
   },
 
   getByArtistSlug: async (artistSlug: string) => {
-    return await prisma.album.findMany({
+    return await db.album.findMany({
       where: { artist: { slug: artistSlug } },
       include: {
         artist: true,
@@ -58,7 +58,7 @@ const albumActions = {
       songs,
     } = data;
 
-    return await prisma.$transaction(async (tx) => {
+    return await db.$transaction(async (tx) => {
       const albumSlug = await tx.album.generateSlug(title);
       const totalDuration = songs.reduce((sum, song) => sum + song.duration, 0);
       const songCount = songs.length;

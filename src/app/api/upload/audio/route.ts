@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import cloudinary from "@/config/cloudinary";
+import cloudinary from "@/lib/cloudinary";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { Readable } from "stream";

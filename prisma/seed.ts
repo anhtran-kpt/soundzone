@@ -1,5 +1,5 @@
 import { authActions } from "@/actions";
-import prisma from "../src/lib/prisma/prisma";
+import prisma from "../src/lib/db";
 import data from "./data/genres.json";
 async function createAdminUser() {
   const adminData = {

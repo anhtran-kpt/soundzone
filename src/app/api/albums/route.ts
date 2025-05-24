@@ -1,7 +1,7 @@
-import { createAlbumSchema } from "@/schemas";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { validateData } from "@/lib/api/server/validate-data";
+import { createAlbumSchema } from "@/lib/validations";
+import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { albumActions } from "@/actions";
 

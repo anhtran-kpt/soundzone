@@ -1,4 +1,4 @@
-import AlbumForm from "@/app/admin/artists/components/album-form";
+import AlbumForm from "@/components/forms/album-form";
 import { notFound } from "next/navigation";
 import { artistActions } from "@/actions";
 import { Metadata } from "next";

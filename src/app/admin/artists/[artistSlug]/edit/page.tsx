@@ -1,7 +1,7 @@
 "use client";
 
-import ArtistForm from "@/app/admin/artists/components/artist-form";
-import { useArtist } from "@/hooks";
+import ArtistForm from "@/components/forms/artist-form";
+import { useArtist } from "@/services/queries/artist";
 import { useParams } from "next/navigation";
 
 export default function EditArtistPage() {

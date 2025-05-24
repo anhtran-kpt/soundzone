@@ -1,7 +1,7 @@
 "use client";
 
-import GenreForm from "@/app/admin/genres/components/genre-form";
-import { useGenre } from "@/hooks";
+import GenreForm from "@/components/forms/genre-form";
+import { useGenre } from "@/services/queries/genre";
 import { useParams } from "next/navigation";
 
 export default function EditGenrePage() {

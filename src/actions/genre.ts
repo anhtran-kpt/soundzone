@@ -1,9 +1,9 @@
-import prisma from "@/lib/prisma/prisma";
-import { CreateGenreDto } from "@/schemas";
+import db from "@/lib/db";
+import { CreateGenreDto } from "@/lib/validations";
 
 const genreActions = {
   getAll: async () => {
-    return await prisma.genre.findMany({
+    return await db.genre.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -11,13 +11,13 @@ const genreActions = {
   },
 
   getBySlug: async (slug: string) => {
-    return await prisma.genre.findUnique({
+    return await db.genre.findUnique({
       where: { slug },
     });
   },
 
   create: async (data: CreateGenreDto) => {
-    await prisma.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       const slug = await tx.genre.generateSlug(data.name);
 
       const genre = await tx.genre.create({

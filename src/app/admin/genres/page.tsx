@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import GenreList from "./components/genre-list";
-import GenreListSkeleton from "./components/genre-list-skeleton";
+import GenreList from "../../../components/features/genre/genre-list";
+import GenreListSkeleton from "../../../components/features/genre/genre-list-skeleton";
 
 export default function GenresPage() {
   return (

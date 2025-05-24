@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
-import { columns } from "./columns";
-import { albumActions } from "@/actions";
+import { columns } from "@/components/features/album/columns";
+import albumActions from "@/actions/album";
 
 export default async function ArtistAlbumsPage({
   params,
