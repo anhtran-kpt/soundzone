@@ -32,6 +32,8 @@ export const ALBUM_ENDPOINTS = {
 
 export const USER_ENDPOINTS = {
   list: "/users",
+  signIn: "/auth/sign-in",
+  signUp: "/auth/sign-up",
   detail: (slug: string) => `/users/${slug}`,
   update: (slug: string) => `/users/${slug}`,
   delete: (slug: string) => `/users/${slug}`,

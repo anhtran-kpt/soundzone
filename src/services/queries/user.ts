@@ -1,8 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { userApi } from "@/services/api";
-import { UpdateUserDto } from "@/lib/validations";
 import { userKeys } from "./keys";
+import { SignUpDto } from "@/schemas";
+
+export function useSignUp() {
+  return useMutation({
+    mutationFn: (data: SignUpDto) => userApi.signUp(data),
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success("Signed up successfully");
+      } else {
+        toast.error(response.error?.message || "Failed to sign up");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Error signing up: ${error.message}`);
+    },
+  });
+}
 
 export function useUsers(params?: { limit?: number }) {
   return useQuery({
@@ -31,25 +47,25 @@ export function useUser(slug: string) {
   });
 }
 
-export function useUpdateUser(slug: string) {
-  const queryClient = useQueryClient();
+// export function useUpdateUser(slug: string) {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: UpdateUserDto) => userApi.update(slug, data),
-    onSuccess: (response) => {
-      if (response.success) {
-        toast.success("User updated successfully");
-        queryClient.invalidateQueries({ queryKey: userKeys.detail(slug) });
-        queryClient.invalidateQueries({ queryKey: userKeys.lists() });
-      } else {
-        toast.error(response.error?.message || "Failed to update user");
-      }
-    },
-    onError: (error: Error) => {
-      toast.error(`Error updating user: ${error.message}`);
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: (data: UpdateUserDto) => userApi.update(slug, data),
+//     onSuccess: (response) => {
+//       if (response.success) {
+//         toast.success("User updated successfully");
+//         queryClient.invalidateQueries({ queryKey: userKeys.detail(slug) });
+//         queryClient.invalidateQueries({ queryKey: userKeys.lists() });
+//       } else {
+//         toast.error(response.error?.message || "Failed to update user");
+//       }
+//     },
+//     onError: (error: Error) => {
+//       toast.error(`Error updating user: ${error.message}`);
+//     },
+//   });
+// }
 
 export function useDeleteUser() {
   const queryClient = useQueryClient();

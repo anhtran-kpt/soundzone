@@ -5,7 +5,7 @@ const protectedRoutes = ["/profile", "/favorites", "/playlists", "/settings"];
 
 const adminRoutes = ["/admin", "/admin/users", "/admin/songs", "/admin/genres"];
 
-const authRoutes = ["/signin", "/signup"];
+const authRoutes = ["/sign-in", "/sign-up"];
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -43,8 +43,8 @@ export const config = {
     "/playlists/:path*",
     "/settings/:path*",
     "/admin/:path*",
-    "/signin",
-    "/signup",
+    "/sign-in",
+    "/sign-up",
     "/api/:path*",
   ],
 };

@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { CreateGenreDto } from "@/lib/validations";
+import { CreateGenreDto } from "@/schemas";
 
 const genreActions = {
   getAll: async () => {

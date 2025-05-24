@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { SignUpForm } from "@/components/forms/signup-form";
+import { SignUpForm } from "@/components/forms/sign-up-form";
 
 export const metadata: Metadata = {
   title: "Sign up | SoundZone",

@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { ApiError } from "@/lib/api/server/api-error";
-import { SignInDto, SignUpDto } from "@/lib/validations";
+import { SignInDto, SignUpDto } from "@/schemas";
 import { comparePasswords, hashPassword } from "@/lib/helpers";
 
 const authActions = {

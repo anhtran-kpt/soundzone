@@ -13,7 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
-import { albumFormSchema, Album, AlbumFormDto } from "@/lib/validations";
+import { albumFormSchema, Album, AlbumFormDto } from "@/schemas";
 import { useCreateAlbum, useUpdateAlbum } from "@/services/queries/album";
 import { useGenres } from "@/services/queries/genre";
 import { useArtists } from "@/services/queries/artist";

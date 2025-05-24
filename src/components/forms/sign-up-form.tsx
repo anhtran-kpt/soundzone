@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,44 +17,44 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { SignInDto, signInSchema } from "@/lib/validations";
+import { SignUpFormDto, signUpFormSchema } from "@/schemas";
+import { useSignUp } from "@/services/queries";
 
-export function SignInForm() {
+export function SignUpForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<SignInDto>({
-    resolver: zodResolver(signInSchema),
+  const { mutateAsync: signUpMutate } = useSignUp();
+
+  const form = useForm<SignUpFormDto>({
+    resolver: zodResolver(signUpFormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (values: SignInDto) => {
+  const onSubmit = async (values: SignUpFormDto) => {
     try {
       setIsLoading(true);
 
-      const response = await signIn("credentials", {
+      const { confirmPassword, ...rest } = values;
+
+      await signUpMutate(rest);
+
+      await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
 
-      if (response?.error) {
-        toast.error("Incorrect email or password");
-        return;
-      }
-
-      toast.success("Signed in successfully");
-
-      router.push(callbackUrl);
+      router.push("/");
       router.refresh();
     } catch (error) {
-      console.error(error);
-      toast.error("An error has occurred");
+      console.error("Sign up failed:", error);
+      toast.error("Sign up failed");
     } finally {
       setIsLoading(false);
     }
@@ -64,14 +63,33 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md space-y-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold">Sign in</h2>
+        <h2 className="text-2xl font-bold">Sign up</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Welcome back, SoundZoner
+          Create an account to start listening to music
         </p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Display name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="John Doe"
+                    autoComplete="name"
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -97,21 +115,33 @@ export function SignInForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="••••••••"
                     type="password"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="••••••••"
+                    type="password"
+                    autoComplete="new-password"
                     disabled={isLoading}
                   />
                 </FormControl>
@@ -121,15 +151,15 @@ export function SignInForm() {
           />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Sign in"}
+            {isLoading ? "Processing..." : "Sign up"}
           </Button>
         </form>
       </Form>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
-        Don&apos;t have an account yet?{" "}
-        <Link href="/signup" className="text-primary hover:underline">
-          Sign up
+        Already have an account?{" "}
+        <Link href="/signin" className="text-primary hover:underline">
+          Sign in
         </Link>
       </p>
     </div>

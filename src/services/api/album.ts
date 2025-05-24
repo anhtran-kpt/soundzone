@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Album, CreateAlbumDto, UpdateAlbumDto } from "@/lib/validations";
+import { Album, CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { ALBUM_ENDPOINTS } from "@/lib/endpoints";
 
 export const albumApi = {

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { albumApi } from "@/services/api";
-import { CreateAlbumDto, UpdateAlbumDto } from "@/lib/validations";
+import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
 import { albumKeys } from "./keys";
 
 export function useAlbums(params?: { limit?: number }) {
