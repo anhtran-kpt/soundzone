@@ -7,7 +7,7 @@ const artistActions = {
       orderBy: { createdAt: "desc" },
       include: {
         albums: true,
-        songs: true,
+        tracks: true,
       },
     });
   },

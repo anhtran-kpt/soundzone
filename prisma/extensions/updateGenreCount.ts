@@ -4,7 +4,7 @@ import basePrisma from "../../src/lib/prisma";
 export const updateGenreCount = Prisma.defineExtension({
   name: "updateGenreCount",
   query: {
-    songGenre: {
+    trackGenre: {
       async create({ args, query }) {
         const result = await query(args);
 
@@ -12,13 +12,13 @@ export const updateGenreCount = Prisma.defineExtension({
 
         if (genreId) {
           await basePrisma.$transaction(async (tx) => {
-            const songCount = await tx.songGenre.count({
+            const trackCount = await tx.trackGenre.count({
               where: { genreId },
             });
 
             await tx.genre.update({
               where: { id: genreId },
-              data: { songCount },
+              data: { trackCount },
             });
           });
         }
@@ -29,7 +29,7 @@ export const updateGenreCount = Prisma.defineExtension({
       async delete({ args, query }) {
         const result = await query(args);
 
-        const relation = await basePrisma.songGenre.findUnique({
+        const relation = await basePrisma.trackGenre.findUnique({
           where: { id: args.where?.id },
           select: { genreId: true },
         });
@@ -37,13 +37,13 @@ export const updateGenreCount = Prisma.defineExtension({
 
         if (genreId) {
           await basePrisma.$transaction(async (tx) => {
-            const songCount = await tx.songGenre.count({
+            const trackCount = await tx.trackGenre.count({
               where: { genreId },
             });
 
             await tx.genre.update({
               where: { id: genreId },
-              data: { songCount },
+              data: { trackCount },
             });
           });
         }

@@ -1,12 +1,12 @@
-import { Song, Playlist } from "@/app/generated/prisma/client";
+import { Track, Playlist } from "@/schemas";
 import { RepeatMode } from "./types";
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
 
 interface AudioState {
-  currentSong: Song | null;
+  currentTrack: Track | null;
   currentPlaylist: Playlist | null;
-  currentSongIndex: number;
+  currentTrackIndex: number;
   isPlaying: boolean;
   isLoading: boolean;
   currentTime: number;
@@ -16,8 +16,8 @@ interface AudioState {
   isShuffled: boolean;
   repeatMode: RepeatMode;
   playlists: Playlist[];
-  queue: Song[];
-  originalQueue: Song[];
+  queue: Track[];
+  originalQueue: Track[];
   queueIndex: number;
   error: string | null;
 }
@@ -48,18 +48,18 @@ interface AudioActions {
   toggleRepeat: () => void;
 
   // Track/Playlist management
-  setCurrentSong: (song: Song, playlist?: Playlist) => void;
+  setCurrentTrack: (track: Track, playlist?: Playlist) => void;
   loadPlaylist: (playlist: Playlist, startIndex?: number) => void;
-  addToQueue: (song: Song) => void;
+  addToQueue: (track: Track) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
 
   // Playlist management
-  createPlaylist: (name: string, songs?: Song[]) => Playlist;
+  createPlaylist: (name: string, tracks?: Track[]) => Playlist;
   updatePlaylist: (id: string, updates: Partial<Playlist>) => void;
   deletePlaylist: (id: string) => void;
-  addSongToPlaylist: (playlistId: string, song: Song) => void;
-  removeSongFromPlaylist: (playlistId: string, songId: string) => void;
+  addTrackToPlaylist: (playlistId: string, track: Track) => void;
+  removeTrackFromPlaylist: (playlistId: string, trackId: string) => void;
 
   // Internal state management
   setCurrentTime: (time: number) => void;
@@ -80,9 +80,9 @@ export const useAudioStore = create<AudioStore>()(
   devtools(
     persist(
       subscribeWithSelector((set, get) => ({
-        currentSong: null,
+        currentTrack: null,
         currentPlaylist: null,
-        currentSongIndex: 0,
+        currentTrackIndex: 0,
 
         isPlaying: false,
         isLoading: false,
@@ -102,9 +102,9 @@ export const useAudioStore = create<AudioStore>()(
         setAudioElement: (audio) => set({ audioElement: audio }),
 
         play: async () => {
-          const { audioElement, currentSong, setLoading, setError } = get();
+          const { audioElement, currentTrack, setLoading, setError } = get();
 
-          if (!audioElement || !currentSong) return;
+          if (!audioElement || !currentTrack) return;
 
           try {
             setLoading(true);
@@ -189,13 +189,13 @@ export const useAudioStore = create<AudioStore>()(
         },
 
         skipTo: async (index) => {
-          const { queue, setCurrentSong } = get();
+          const { queue, setCurrentTrack } = get();
 
           if (index < 0 || index >= queue.length) return;
 
-          const song = queue[index];
+          const track = queue[index];
           set({ queueIndex: index });
-          setCurrentSong(song);
+          setCurrentTrack(track);
 
           if (get().isPlaying) {
             await get().play();
@@ -246,12 +246,12 @@ export const useAudioStore = create<AudioStore>()(
         },
 
         toggleShuffle: () => {
-          const { isShuffled, queue, originalQueue, currentSong, queueIndex } =
+          const { isShuffled, queue, originalQueue, currentTrack, queueIndex } =
             get();
 
           if (!isShuffled) {
             const shuffled = [...queue];
-            const currentSongItem = shuffled[queueIndex];
+            const currentTrackItem = shuffled[queueIndex];
 
             shuffled.splice(queueIndex, 1);
 
@@ -260,7 +260,7 @@ export const useAudioStore = create<AudioStore>()(
               [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
 
-            shuffled.unshift(currentSongItem);
+            shuffled.unshift(currentTrackItem);
 
             set({
               isShuffled: true,
@@ -269,9 +269,9 @@ export const useAudioStore = create<AudioStore>()(
               queueIndex: 0,
             });
           } else {
-            const currentSongId = currentSong?.id;
+            const currentTrackId = currentTrack?.id;
             const originalIndex = originalQueue.findIndex(
-              (song) => song.id === currentSongId
+              (track) => track.id === currentTrackId
             );
             set({
               isShuffled: false,
@@ -294,16 +294,16 @@ export const useAudioStore = create<AudioStore>()(
           set({ repeatMode: nextMode });
         },
 
-        setCurrentSong: (song, playlist) => {
+        setCurrentTrack: (track, playlist) => {
           const { audioElement } = get();
 
           if (audioElement) {
-            audioElement.src = song.audioUrl;
+            audioElement.src = track.audioUrl;
             audioElement.load();
           }
 
           set({
-            currentSong: song,
+            currentTrack: track,
             currentPlaylist: playlist || null,
             currentTime: 0,
             error: null,
@@ -311,23 +311,23 @@ export const useAudioStore = create<AudioStore>()(
         },
 
         loadPlaylist: (playlist, startIndex = 0) => {
-          const { setCurrentSong } = get();
+          const { setCurrentTrack } = get();
 
           set({
-            queue: playlist.songs,
-            originalQueue: playlist.songs,
+            queue: playlist.tracks,
+            originalQueue: playlist.tracks,
             queueIndex: startIndex,
             currentPlaylist: playlist,
           });
 
-          if (playlist.songs[startIndex]) {
-            setCurrentTrack(playlist.songs[startIndex], playlist);
+          if (playlist.tracks[startIndex]) {
+            setCurrentTrack(playlist.tracks[startIndex], playlist);
           }
         },
 
-        addToQueue: (song) => {
+        addToQueue: (track) => {
           const { queue } = get();
-          set({ queue: [...queue, song] });
+          set({ queue: [...queue, track] });
         },
 
         removeFromQueue: (index) => {
@@ -353,17 +353,17 @@ export const useAudioStore = create<AudioStore>()(
             originalQueue: [],
             queueIndex: 0,
             currentPlaylist: null,
-            currentSong: null,
+            currentTrack: null,
             isPlaying: false,
           });
         },
 
-        createPlaylist: (name, songs = []) => {
+        createPlaylist: (name, tracks = []) => {
           const { playlists } = get();
           const newPlaylist: Playlist = {
             id: Date.now().toString(),
             name,
-            songs,
+            tracks,
           };
 
           set({
@@ -388,29 +388,29 @@ export const useAudioStore = create<AudioStore>()(
           });
         },
 
-        addSongToPlaylist: (playlistId, song) => {
+        addTrackToPlaylist: (playlistId, track) => {
           const { playlists, updatePlaylist } = get();
           const playlist = playlists.find(
             (playlist) => playlist.id === playlistId
           );
 
           if (playlist) {
-            const updatedSongs = [...playlist.songs, song];
-            updatePlaylist(playlistId, { songs: updatedSongs });
+            const updatedTracks = [...playlist.tracks, track];
+            updatePlaylist(playlistId, { tracks: updatedTracks });
           }
         },
 
-        removeSongFromPlaylist: (playlistId, songId) => {
+        removeTrackFromPlaylist: (playlistId, trackId) => {
           const { playlists, updatePlaylist } = get();
           const playlist = playlists.find(
             (playlist) => playlist.id === playlistId
           );
 
           if (playlist) {
-            const updatedSongs = playlist.songs.filter(
-              (song) => song.id !== songId
+            const updatedTracks = playlist.tracks.filter(
+              (track) => track.id !== trackId
             );
-            updatePlaylist(playlistId, { songs: updatedSongs });
+            updatePlaylist(playlistId, { tracks: updatedTracks });
           }
         },
 
@@ -455,7 +455,7 @@ useAudioStore.subscribe(
   (state) => state.audioElement,
   (audioElement, previousAudioElement) => {
     if (previousAudioElement) {
-      previousAudioElement.removeEventListener("ended", handleSongEnd);
+      previousAudioElement.removeEventListener("ended", handleTrackEnd);
       previousAudioElement.removeEventListener("timeupdate", handleTimeUpdate);
       previousAudioElement.removeEventListener(
         "loadedmetadata",
@@ -465,7 +465,7 @@ useAudioStore.subscribe(
     }
 
     if (audioElement) {
-      audioElement.addEventListener("ended", handleSongEnd);
+      audioElement.addEventListener("ended", handleTrackEnd);
       audioElement.addEventListener("timeupdate", handleTimeUpdate);
       audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
       audioElement.addEventListener("error", handleError);
@@ -474,7 +474,7 @@ useAudioStore.subscribe(
 );
 
 // Event handlers
-const handleSongEnd = () => {
+const handleTrackEnd = () => {
   const { repeatMode, next, play } = useAudioStore.getState();
 
   if (repeatMode === "one") {

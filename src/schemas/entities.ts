@@ -22,14 +22,30 @@ export const artistGenreSchema = createJunctionSchema({
   genreId: relationFields.genreId,
 });
 
-export const songArtistSchema = createJunctionSchema({
-  songId: relationFields.songId,
+export const trackArtistSchema = createJunctionSchema({
+  trackId: relationFields.trackId,
   artistId: relationFields.artistId,
   role: z.nativeEnum(ArtistRole),
   order: z.number(),
 });
 
-export const songSchema = z.object({
+export const playlistTrackSchema = createJunctionSchema({
+  playlistId: relationFields.playlistId,
+  trackId: relationFields.trackId,
+  order: z.number(),
+});
+
+export const playlistGenreSchema = createJunctionSchema({
+  playlistId: relationFields.playlistId,
+  genreId: relationFields.genreId,
+});
+
+export const userLikedPlaylistSchema = createJunctionSchema({
+  userId: relationFields.userId,
+  playlistId: relationFields.playlistId,
+});
+
+export const trackSchema = z.object({
   id: baseFields.id,
   title: baseFields.title,
   slug: baseFields.slug,
@@ -44,7 +60,7 @@ export const songSchema = z.object({
   lyricist: z.string().optional(),
   producer: z.string().optional(),
   albumId: relationFields.albumId,
-  artists: z.array(songArtistSchema),
+  artists: z.array(trackArtistSchema),
   ...timestampFields,
 });
 
@@ -57,13 +73,13 @@ export const albumSchema = z.object({
   releaseDate: z.coerce.date().optional(),
   playCount: z.number(),
   totalDuration: z.number(),
-  songCount: z.number(),
+  trackCount: z.number(),
   likeCount: z.number(),
   coverUrl: z.string().optional(),
   isExplicit: z.boolean(),
   artistId: relationFields.artistId,
   genres: z.array(albumGenreSchema),
-  songs: z.array(songSchema),
+  tracks: z.array(trackSchema),
   ...timestampFields,
 });
 
@@ -86,9 +102,26 @@ export const genreSchema = z.object({
   name: z.string().min(1, "Genre name is required"),
   description: baseFields.description,
   slug: baseFields.slug,
-  songCount: z.number(),
+  trackCount: z.number(),
   artistCount: z.number(),
   albumCount: z.number(),
+  ...timestampFields,
+});
+
+export const playlistSchema = z.object({
+  id: baseFields.id,
+  title: baseFields.title,
+  description: baseFields.description,
+  slug: baseFields.slug,
+  isPublic: z.boolean(),
+  totalDuration: z.number(),
+  trackCount: z.number(),
+  likeCount: z.number(),
+  coverUrl: z.string().optional(),
+  userId: relationFields.userId,
+  tracks: z.array(playlistTrackSchema),
+  genres: z.array(playlistGenreSchema),
+  likedByUsers: z.array(userLikedPlaylistSchema),
   ...timestampFields,
 });
 
@@ -105,9 +138,13 @@ export const userSchema = z.object({
 
 export type AlbumGenre = z.infer<typeof albumGenreSchema>;
 export type ArtistGenre = z.infer<typeof artistGenreSchema>;
-export type SongArtist = z.infer<typeof songArtistSchema>;
+export type TrackArtist = z.infer<typeof trackArtistSchema>;
+export type PlaylistTrack = z.infer<typeof playlistTrackSchema>;
+export type PlaylistGenre = z.infer<typeof playlistGenreSchema>;
+export type UserLikedPlaylist = z.infer<typeof userLikedPlaylistSchema>;
+export type Playlist = z.infer<typeof playlistSchema>;
 export type Album = z.infer<typeof albumSchema>;
 export type Artist = z.infer<typeof artistSchema>;
-export type Song = z.infer<typeof songSchema>;
+export type Track = z.infer<typeof trackSchema>;
 export type Genre = z.infer<typeof genreSchema>;
 export type User = z.infer<typeof userSchema>;

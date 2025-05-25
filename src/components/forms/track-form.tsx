@@ -15,9 +15,9 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Song } from "@/app/generated/prisma";
-import { CreateSongDto, createSongSchema } from "@/schemas";
-import { useCreateSong, useUpdateSong } from "@/services/queries/song";
+import { Track } from "@/app/generated/prisma";
+import { CreateTrackDto, createTrackSchema } from "@/schemas";
+import { useCreateTrack, useUpdateTrack } from "@/services/queries/track";
 import { useRouter } from "next/navigation";
 import {
   Popover,
@@ -37,32 +37,32 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useAlbums } from "@/services/queries/album";
 
-interface SongFormProps {
-  song?: Song;
+interface TrackFormProps {
+  track?: Track;
   mode: "create" | "edit";
 }
 
-export default function SongForm({ song, mode = "create" }: SongFormProps) {
+export default function TrackForm({ track, mode = "create" }: TrackFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const createMutation = useCreateSong();
-  const updateMutation = useUpdateSong(song?.slug || "");
+  const createMutation = useCreateTrack();
+  const updateMutation = useUpdateTrack(track?.slug || "");
   const { data: albums } = useAlbums();
 
-  const form = useForm<CreateSongDto>({
-    resolver: zodResolver(createSongSchema),
+  const form = useForm<CreateTrackDto>({
+    resolver: zodResolver(createTrackSchema),
     defaultValues: {
-      title: song?.title || "",
-      lyrics: song?.lyrics || "",
-      isExplicit: song?.isExplicit || false,
-      audioUrl: song?.audioUrl || "",
-      albumId: song?.albumId || "",
-      trackNumber: song?.trackNumber || 1,
+      title: track?.title || "",
+      lyrics: track?.lyrics || "",
+      isExplicit: track?.isExplicit || false,
+      audioUrl: track?.audioUrl || "",
+      albumId: track?.albumId || "",
+      trackNumber: track?.trackNumber || 1,
     },
   });
 
-  const onSubmit = async (values: CreateSongDto) => {
+  const onSubmit = async (values: CreateTrackDto) => {
     try {
       setIsSubmitting(true);
       let response = null;
@@ -74,7 +74,7 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
       }
 
       if (response.success) {
-        router.push("/admin/songs");
+        router.push("/admin/tracks");
         router.refresh();
       }
     } finally {
@@ -85,7 +85,7 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">
-        {mode === "create" ? "Create New Song" : "Edit Song"}
+        {mode === "create" ? "Create New Track" : "Edit Track"}
       </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -98,8 +98,8 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter song title"
-                    autoComplete="song-title"
+                    placeholder="Enter track title"
+                    autoComplete="track-title"
                     disabled={isSubmitting}
                   />
                 </FormControl>
@@ -117,8 +117,8 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Enter song lyrics"
-                    autoComplete="song-lyrics"
+                    placeholder="Enter track lyrics"
+                    autoComplete="track-lyrics"
                     disabled={isSubmitting}
                   />
                 </FormControl>
@@ -135,7 +135,7 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                 <div className="space-y-2">
                   <FormLabel>Explicit</FormLabel>
                   <FormDescription>
-                    This song contains explicit content.
+                    This track contains explicit content.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -220,8 +220,8 @@ export default function SongForm({ song, mode = "create" }: SongFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter song audio url"
-                    autoComplete="song-audio-url"
+                    placeholder="Enter track audio url"
+                    autoComplete="track-audio-url"
                     disabled={isSubmitting}
                   />
                 </FormControl>

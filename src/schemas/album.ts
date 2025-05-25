@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { albumSchema, songSchema } from "./entities";
+import { albumSchema, trackSchema } from "./entities";
 import { ArtistRole } from "@/app/generated/prisma";
 
 export const albumFormSchema = albumSchema
@@ -11,14 +11,14 @@ export const albumFormSchema = albumSchema
     playCount: true,
     likeCount: true,
     totalDuration: true,
-    songCount: true,
+    trackCount: true,
     genres: true,
-    songs: true,
+    tracks: true,
   })
   .extend({
     genreIds: z.array(z.string().uuid()),
-    songs: z.array(
-      songSchema
+    tracks: z.array(
+      trackSchema
         .omit({
           id: true,
           slug: true,
@@ -49,12 +49,12 @@ export const createAlbumSchema = albumSchema
     playCount: true,
     likeCount: true,
     genres: true,
-    songs: true,
+    tracks: true,
   })
   .extend({
     genreIds: z.array(z.string().uuid()),
-    songs: z.array(
-      songSchema.omit({
+    tracks: z.array(
+      trackSchema.omit({
         id: true,
         slug: true,
         createdAt: true,

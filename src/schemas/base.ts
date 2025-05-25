@@ -20,5 +20,7 @@ export const relationFields = {
   albumId: baseFields.id,
   artistId: baseFields.id,
   genreId: baseFields.id,
-  songId: baseFields.id,
+  trackId: baseFields.id,
+  userId: baseFields.id,
+  playlistId: baseFields.id,
 } as const;

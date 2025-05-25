@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -17,22 +19,27 @@ import {
   Volume2Icon,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { useTrack } from "@/services/queries/track";
 
 function AudioPlayer() {
+  const { data: track, isLoading } = useTrack("thuan-theo-y-troi");
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-primary-foreground z-50 px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="size-16 rounded-sm overflow-hidden">
             <Image
-              src="/images/song-thumb.jpg"
-              alt="song-thumb"
+              src={track?.album?.coverUrl ?? null}
+              alt="track-thumb"
               width={64}
               height={64}
             />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium">Thuận Theo Ý Trời</h3>
+            <h3 className="text-sm font-medium">{track?.title}</h3>
             <Link
               href="/artists/bui-anh-tuan"
               className="text-xs text-gray-500"
@@ -68,6 +75,7 @@ function AudioPlayer() {
             </Button>
           </div>
           <Progress value={50} className="h-1 w-96" />
+          <audio src={track?.audioUrl} />
         </div>
         <div className="flex items-center">
           <div className="flex items-center space-x-2">

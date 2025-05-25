@@ -21,8 +21,8 @@ export const navigationItems: NavigationItem[] = [
     icon: <LayoutDashboardIcon size={20} />,
   },
   {
-    title: "Songs",
-    href: "/admin/songs",
+    title: "Tracks",
+    href: "/admin/tracks",
     icon: <Disc3Icon size={20} />,
   },
   {

@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 export const updatePlaylistStats = Prisma.defineExtension({
   name: "updatePlaylistStats",
   query: {
-    playlistSong: {
+    playlistTrack: {
       async create({ args, query }) {
         const result = await query(args);
 
@@ -12,21 +12,21 @@ export const updatePlaylistStats = Prisma.defineExtension({
 
         if (playlistId) {
           await basePrisma.$transaction(async (tx) => {
-            const playlistSongs = await tx.playlistSong.findMany({
+            const playlistTracks = await tx.playlistTrack.findMany({
               where: { playlistId },
-              include: { song: true },
+              include: { track: true },
             });
 
-            const songCount = playlistSongs.length;
-            const totalDuration = playlistSongs.reduce(
-              (sum, entry) => sum + (entry.song?.duration ?? 0),
+            const trackCount = playlistTracks.length;
+            const totalDuration = playlistTracks.reduce(
+              (sum, entry) => sum + (entry.track?.duration ?? 0),
               0
             );
 
             await tx.playlist.update({
               where: { id: playlistId },
               data: {
-                songCount,
+                trackCount,
                 totalDuration,
               },
             });
@@ -39,7 +39,7 @@ export const updatePlaylistStats = Prisma.defineExtension({
       async update({ args, query }) {
         const result = await query(args);
 
-        const entry = await basePrisma.playlistSong.findUnique({
+        const entry = await basePrisma.playlistTrack.findUnique({
           where: { id: args.where?.id },
           select: { playlistId: true },
         });
@@ -48,21 +48,21 @@ export const updatePlaylistStats = Prisma.defineExtension({
 
         if (playlistId) {
           await basePrisma.$transaction(async (tx) => {
-            const playlistSongs = await tx.playlistSong.findMany({
+            const playlistTracks = await tx.playlistTrack.findMany({
               where: { playlistId },
-              include: { song: true },
+              include: { track: true },
             });
 
-            const songCount = playlistSongs.length;
-            const totalDuration = playlistSongs.reduce(
-              (sum, entry) => sum + (entry.song?.duration ?? 0),
+            const trackCount = playlistTracks.length;
+            const totalDuration = playlistTracks.reduce(
+              (sum, entry) => sum + (entry.track?.duration ?? 0),
               0
             );
 
             await tx.playlist.update({
               where: { id: playlistId },
               data: {
-                songCount,
+                trackCount,
                 totalDuration,
               },
             });
@@ -75,7 +75,7 @@ export const updatePlaylistStats = Prisma.defineExtension({
       async delete({ args, query }) {
         const result = await query(args);
 
-        const entry = await basePrisma.playlistSong.findUnique({
+        const entry = await basePrisma.playlistTrack.findUnique({
           where: { id: args.where?.id },
           select: { playlistId: true },
         });
@@ -84,21 +84,21 @@ export const updatePlaylistStats = Prisma.defineExtension({
 
         if (playlistId) {
           await basePrisma.$transaction(async (tx) => {
-            const playlistSongs = await tx.playlistSong.findMany({
+            const playlistTracks = await tx.playlistTrack.findMany({
               where: { playlistId },
-              include: { song: true },
+              include: { track: true },
             });
 
-            const songCount = playlistSongs.length;
-            const totalDuration = playlistSongs.reduce(
-              (sum, entry) => sum + (entry.song?.duration ?? 0),
+            const trackCount = playlistTracks.length;
+            const totalDuration = playlistTracks.reduce(
+              (sum, entry) => sum + (entry.track?.duration ?? 0),
               0
             );
 
             await tx.playlist.update({
               where: { id: playlistId },
               data: {
-                songCount,
+                trackCount,
                 totalDuration,
               },
             });

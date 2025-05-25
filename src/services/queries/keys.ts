@@ -25,13 +25,13 @@ export const genreKeys = {
   detail: (slug: string) => [...genreKeys.details(), slug] as const,
 };
 
-export const songKeys = {
-  all: ["songs"] as const,
-  lists: () => [...songKeys.all, "list"] as const,
+export const trackKeys = {
+  all: ["tracks"] as const,
+  lists: () => [...trackKeys.all, "list"] as const,
   list: (filters: Record<string, unknown>) =>
-    [...songKeys.lists(), { filters }] as const,
-  details: () => [...songKeys.all, "detail"] as const,
-  detail: (slug: string) => [...songKeys.details(), slug] as const,
+    [...trackKeys.lists(), { filters }] as const,
+  details: () => [...trackKeys.all, "detail"] as const,
+  detail: (slug: string) => [...trackKeys.details(), slug] as const,
 };
 
 export const userKeys = {

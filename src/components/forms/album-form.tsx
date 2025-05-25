@@ -37,7 +37,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import AudioUploader from "@/components/features/song/audio-uploader";
+import AudioUploader from "@/components/features/track/audio-uploader";
 import uploadQueries from "@/services/queries/upload";
 
 interface AlbumFormProps {
@@ -70,17 +70,17 @@ export default function AlbumForm({
       coverUrl: album?.coverUrl ?? "",
       isExplicit: album?.isExplicit ?? false,
       genreIds: album?.genres?.map((genre) => genre.genreId) ?? [],
-      songs: album?.songs
-        ? album.songs.map((song) => ({
-            title: song.title,
-            lyrics: song.lyrics ?? "",
-            duration: song.duration,
-            audioUrl: song.audioUrl,
-            isExplicit: song.isExplicit ?? false,
-            composer: song.composer ?? "",
-            lyricist: song.lyricist ?? "",
-            producer: song.producer ?? "",
-            artists: song.artists.map((artist) => ({
+      tracks: album?.tracks
+        ? album.tracks.map((track) => ({
+            title: track.title,
+            lyrics: track.lyrics ?? "",
+            duration: track.duration,
+            audioUrl: track.audioUrl,
+            isExplicit: track.isExplicit ?? false,
+            composer: track.composer ?? "",
+            lyricist: track.lyricist ?? "",
+            producer: track.producer ?? "",
+            artists: track.artists.map((artist) => ({
               artistId: artist.artistId,
               role: artist.role,
             })),
@@ -108,7 +108,7 @@ export default function AlbumForm({
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "songs",
+    name: "tracks",
   });
 
   const releaseType = form.watch("releaseType");
@@ -117,8 +117,8 @@ export default function AlbumForm({
 
   useEffect(() => {
     if (releaseType === ReleaseType.SINGLE) {
-      form.setValue("songs.0.title", albumTitle);
-      form.setValue("songs.0.isExplicit", albumExplicit);
+      form.setValue("tracks.0.title", albumTitle);
+      form.setValue("tracks.0.isExplicit", albumExplicit);
     }
   }, [releaseType, albumTitle, albumExplicit, form]);
 
@@ -143,17 +143,17 @@ export default function AlbumForm({
         isExplicit: values.isExplicit,
         genreIds: values.genreIds,
         artistId: artistId,
-        songs: values.songs.map((song, index) => ({
-          title: song.title,
-          lyrics: song.lyrics,
-          duration: song.duration,
+        tracks: values.tracks.map((track, index) => ({
+          title: track.title,
+          lyrics: track.lyrics,
+          duration: track.duration,
           trackNumber: index + 1,
-          audioUrl: song.audioUrl,
-          isExplicit: song.isExplicit,
-          composer: song.composer,
-          lyricist: song.lyricist,
-          producer: song.producer,
-          artists: song.artists.map((artist, index) => ({
+          audioUrl: track.audioUrl,
+          isExplicit: track.isExplicit,
+          composer: track.composer,
+          lyricist: track.lyricist,
+          producer: track.producer,
+          artists: track.artists.map((artist, index) => ({
             artistId: artist.artistId,
             role: artist.role,
             order: index + 1,
@@ -178,7 +178,7 @@ export default function AlbumForm({
     }
   };
 
-  const ensureCorrectSongCount = useCallback(() => {
+  const ensureCorrectTrackCount = useCallback(() => {
     if (releaseType === ReleaseType.SINGLE && fields.length !== 1) {
       while (fields.length > 0) {
         remove(0);
@@ -220,20 +220,20 @@ export default function AlbumForm({
   }, [releaseType, fields, remove, append, artistId]);
 
   useEffect(() => {
-    ensureCorrectSongCount();
-  }, [releaseType, fields.length, remove, append, ensureCorrectSongCount]);
+    ensureCorrectTrackCount();
+  }, [releaseType, fields.length, remove, append, ensureCorrectTrackCount]);
 
   const handleAudioChange = (
     index: number,
     data: { url: string; duration: number }
   ) => {
-    form.setValue(`songs.${index}.audioUrl`, data.url);
-    form.setValue(`songs.${index}.duration`, Math.floor(data.duration));
+    form.setValue(`tracks.${index}.audioUrl`, data.url);
+    form.setValue(`tracks.${index}.duration`, Math.floor(data.duration));
   };
 
-  const handleAddArtistToSong = (songIndex: number) => {
-    const currentArtists = form.getValues(`songs.${songIndex}.artists`) || [];
-    form.setValue(`songs.${songIndex}.artists`, [
+  const handleAddArtistToTrack = (trackIndex: number) => {
+    const currentArtists = form.getValues(`tracks.${trackIndex}.artists`) || [];
+    form.setValue(`tracks.${trackIndex}.artists`, [
       ...currentArtists,
       {
         artistId: "",
@@ -242,14 +242,14 @@ export default function AlbumForm({
     ]);
   };
 
-  const handleRemoveArtistFromSong = (
-    songIndex: number,
+  const handleRemoveArtistFromTrack = (
+    trackIndex: number,
     artistIndex: number
   ) => {
-    const currentArtists = form.getValues(`songs.${songIndex}.artists`) || [];
+    const currentArtists = form.getValues(`tracks.${trackIndex}.artists`) || [];
     const newArtists = currentArtists.filter((_, i) => i !== artistIndex);
 
-    form.setValue(`songs.${songIndex}.artists`, newArtists);
+    form.setValue(`tracks.${trackIndex}.artists`, newArtists);
   };
 
   return (
@@ -370,7 +370,7 @@ export default function AlbumForm({
                   <Select
                     onValueChange={(value: string) => {
                       field.onChange(value);
-                      setTimeout(ensureCorrectSongCount, 0);
+                      setTimeout(ensureCorrectTrackCount, 0);
                     }}
                     value={field.value}
                     disabled={isSubmitting}
@@ -459,7 +459,7 @@ export default function AlbumForm({
 
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">
-              {releaseType === ReleaseType.SINGLE ? "Song" : "Songs"}
+              {releaseType === ReleaseType.SINGLE ? "Track" : "Tracks"}
             </h3>
 
             {fields.map((field, index) => (
@@ -468,8 +468,8 @@ export default function AlbumForm({
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="font-medium">
                       {releaseType === ReleaseType.SINGLE
-                        ? "Song Details"
-                        : `Song ${index + 1}`}
+                        ? "Track Details"
+                        : `Track ${index + 1}`}
                     </h4>
                     {releaseType !== ReleaseType.SINGLE &&
                       fields.length > 1 && (
@@ -487,14 +487,14 @@ export default function AlbumForm({
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.title`}
+                      name={`tracks.${index}.title`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Title</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter song title"
+                              placeholder="Enter track title"
                               disabled={
                                 isSubmitting ||
                                 releaseType === ReleaseType.SINGLE
@@ -509,7 +509,7 @@ export default function AlbumForm({
                     <div>
                       <FormLabel>Audio File</FormLabel>
                       <AudioUploader
-                        value={form.watch(`songs.${index}.audioUrl`) || ""}
+                        value={form.watch(`tracks.${index}.audioUrl`) || ""}
                         onChange={(data) => handleAudioChange(index, data)}
                         disabled={isSubmitting}
                       />
@@ -517,14 +517,14 @@ export default function AlbumForm({
 
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.isExplicit`}
+                      name={`tracks.${index}.isExplicit`}
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              id={`song-explicit-${index}`}
+                              id={`track-explicit-${index}`}
                               disabled={
                                 isSubmitting ||
                                 releaseType === ReleaseType.SINGLE
@@ -532,7 +532,7 @@ export default function AlbumForm({
                             />
                           </FormControl>
                           <FormLabel
-                            htmlFor={`song-explicit-${index}`}
+                            htmlFor={`track-explicit-${index}`}
                             className="text-sm font-normal"
                           >
                             Explicit content
@@ -546,7 +546,7 @@ export default function AlbumForm({
                       <FormLabel>Artists</FormLabel>
                       <div className="space-y-2 mt-2">
                         {form
-                          .watch(`songs.${index}.artists`)
+                          .watch(`tracks.${index}.artists`)
                           ?.map((artist, artistIndex) => (
                             <div
                               key={artistIndex}
@@ -554,7 +554,7 @@ export default function AlbumForm({
                             >
                               <FormField
                                 control={form.control}
-                                name={`songs.${index}.artists.${artistIndex}.artistId`}
+                                name={`tracks.${index}.artists.${artistIndex}.artistId`}
                                 render={({ field }) => {
                                   const selectedArtist = artists?.find(
                                     (a) => a.id === field.value
@@ -594,7 +594,7 @@ export default function AlbumForm({
 
                               <FormField
                                 control={form.control}
-                                name={`songs.${index}.artists.${artistIndex}.role`}
+                                name={`tracks.${index}.artists.${artistIndex}.role`}
                                 render={({ field }) => (
                                   <FormItem className="w-32">
                                     <Select
@@ -625,11 +625,14 @@ export default function AlbumForm({
                                 variant="ghost"
                                 size="icon"
                                 onClick={() =>
-                                  handleRemoveArtistFromSong(index, artistIndex)
+                                  handleRemoveArtistFromTrack(
+                                    index,
+                                    artistIndex
+                                  )
                                 }
                                 disabled={
-                                  form.watch(`songs.${index}.artists`).length <=
-                                  1
+                                  form.watch(`tracks.${index}.artists`)
+                                    .length <= 1
                                 }
                               >
                                 <X className="h-4 w-4" />
@@ -642,7 +645,7 @@ export default function AlbumForm({
                           variant="outline"
                           size="sm"
                           className="mt-2 w-full"
-                          onClick={() => handleAddArtistToSong(index)}
+                          onClick={() => handleAddArtistToTrack(index)}
                         >
                           <Plus className="h-4 w-4 mr-2" />
                           Add Artist
@@ -652,14 +655,14 @@ export default function AlbumForm({
 
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.lyrics`}
+                      name={`tracks.${index}.lyrics`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Lyrics</FormLabel>
                           <FormControl>
                             <Textarea
                               {...field}
-                              placeholder="Enter song lyrics"
+                              placeholder="Enter track lyrics"
                               disabled={isSubmitting}
                             />
                           </FormControl>
@@ -670,14 +673,14 @@ export default function AlbumForm({
 
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.composer`}
+                      name={`tracks.${index}.composer`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Composer</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter song composer"
+                              placeholder="Enter track composer"
                               disabled={isSubmitting}
                             />
                           </FormControl>
@@ -688,14 +691,14 @@ export default function AlbumForm({
 
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.lyricist`}
+                      name={`tracks.${index}.lyricist`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Lyricist</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter song lyricist"
+                              placeholder="Enter track lyricist"
                               disabled={isSubmitting}
                             />
                           </FormControl>
@@ -706,14 +709,14 @@ export default function AlbumForm({
 
                     <FormField
                       control={form.control}
-                      name={`songs.${index}.producer`}
+                      name={`tracks.${index}.producer`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Producer</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter song producer"
+                              placeholder="Enter track producer"
                               disabled={isSubmitting}
                             />
                           </FormControl>
@@ -725,7 +728,7 @@ export default function AlbumForm({
                     {/* Hidden field to store audioUrl */}
                     <input
                       type="hidden"
-                      {...form.register(`songs.${index}.audioUrl`)}
+                      {...form.register(`tracks.${index}.audioUrl`)}
                     />
                   </div>
                 </CardContent>
@@ -758,7 +761,7 @@ export default function AlbumForm({
                 }
               >
                 <PlusCircle className="h-4 w-4 mr-2" />
-                Add Song
+                Add Track
               </Button>
             )}
           </div>

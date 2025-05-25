@@ -87,6 +87,8 @@ export default function ArtistForm({
     }
   };
 
+  console.log(form.formState.errors);
+
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">

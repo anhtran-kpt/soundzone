@@ -23,7 +23,7 @@ export type AlbumInfo = {
   releaseDate: string;
   coverUrl: string;
   totalDuration: number;
-  songs: [];
+  tracks: [];
   artist: {
     slug: string;
   };
@@ -65,10 +65,10 @@ export const columns: ColumnDef<AlbumInfo>[] = [
     },
   },
   {
-    header: "Songs",
-    accessorKey: "songs",
+    header: "Tracks",
+    accessorKey: "tracks",
     cell: ({ row }) => {
-      return <div>{row.original.songs.length}</div>;
+      return <div>{row.original.tracks.length}</div>;
     },
   },
   {

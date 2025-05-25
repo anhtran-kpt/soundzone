@@ -22,7 +22,7 @@ export type ArtistInfo = {
   followerCount: number;
   monthlyListeners: number;
   albums: [];
-  songs: [];
+  tracks: [];
 };
 
 export const columns: ColumnDef<ArtistInfo>[] = [
@@ -65,10 +65,10 @@ export const columns: ColumnDef<ArtistInfo>[] = [
     },
   },
   {
-    header: "Songs",
-    accessorKey: "songs",
+    header: "Tracks",
+    accessorKey: "tracks",
     cell: ({ row }) => {
-      return <div>{row.original.songs.length}</div>;
+      return <div>{row.original.tracks.length}</div>;
     },
   },
   {

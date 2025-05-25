@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAudioStore } from "@/stores/audioStore";
-import { Song } from "@/schemas";
-import { Playlist } from "@/app/generated/prisma";
+import { Track, Playlist } from "@/schemas";
 
-export const useCurrentSong = () => useAudioStore((state) => state.currentSong);
+export const useCurrentTrack = () =>
+  useAudioStore((state) => state.currentTrack);
 export const useIsPlaying = () => useAudioStore((state) => state.isPlaying);
 export const useIsLoading = () => useAudioStore((state) => state.isLoading);
 export const useCurrentTime = () => useAudioStore((state) => state.currentTime);
@@ -72,8 +72,8 @@ export const usePlaylistManagement = () =>
     createPlaylist: state.createPlaylist,
     updatePlaylist: state.updatePlaylist,
     deletePlaylist: state.deletePlaylist,
-    addSongToPlaylist: state.addSongToPlaylist,
-    removeSongFromPlaylist: state.removeSongFromPlaylist,
+    addTrackToPlaylist: state.addTrackToPlaylist,
+    removeTrackFromPlaylist: state.removeTrackFromPlaylist,
     loadPlaylist: state.loadPlaylist,
   }));
 
@@ -97,7 +97,7 @@ export const useAudioPlayer = () => {
     };
   }, [setAudioElement]);
 
-  const currentSong = useCurrentSong();
+  const currentTrack = useCurrentTrack();
   const playbackState = usePlaybackState();
   const playerControls = usePlayerControls();
   const volumeControls = useVolumeControls();
@@ -127,9 +127,9 @@ export const useAudioPlayer = () => {
       .padStart(2, "0")}`;
   }, []);
 
-  const playTrack = useCallback(async (song: Song, playlist?: Playlist) => {
-    const { setCurrentSong, play } = useAudioStore.getState();
-    setCurrentSong(song, playlist);
+  const playTrack = useCallback(async (track: Track, playlist?: Playlist) => {
+    const { setCurrentTrack, play } = useAudioStore.getState();
+    setCurrentTrack(track, playlist);
     await play();
   }, []);
 
@@ -143,7 +143,7 @@ export const useAudioPlayer = () => {
   );
 
   return {
-    currentSong,
+    currentTrack,
     error,
     progress,
     hasNext,
@@ -217,7 +217,7 @@ export const useAudioKeyboardShortcuts = () => {
 
 // Hook for media session API (browser media controls)
 export const useMediaSession = () => {
-  const currentTrack = useCurrentSong();
+  const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
   const { play, pause, next, previous } = usePlayerControls();
 
@@ -250,7 +250,7 @@ export const useMediaSession = () => {
 
 // Hook for persisting playback position
 export const usePlaybackPersistence = () => {
-  const currentTrack = useCurrentSong();
+  const currentTrack = useCurrentTrack();
   const currentTime = useCurrentTime();
   const { seek } = usePlayerControls();
 
