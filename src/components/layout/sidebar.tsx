@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import SidebarItem from "./sidebar-item";
 import { navigationItems } from "./navigation";
+
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const session = useSession();
@@ -20,7 +21,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col ${
+      className={`flex flex-col h-screen ${
         sidebarOpen ? "w-64" : "w-20"
       } bg-primary text-primary-foreground relative transition-all duration-300`}
     >

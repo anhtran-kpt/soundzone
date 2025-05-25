@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { ApiError } from "@/lib/api/server/api-error";
 import { SignInDto, SignUpDto } from "@/schemas";
-import { comparePasswords, hashPassword } from "@/lib/helpers";
+import { comparePasswords, hashPassword } from "@/lib/auth";
 
 const authActions = {
   signUp: async (data: SignUpDto) => {

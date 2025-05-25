@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { Providers } from "@/app/providers";
+import { Providers } from "@/providers";
+import AudioPlayer from "@/components/layout/audio-player";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito_sans",
@@ -21,9 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${nunitoSans.variable} antialiased`}>
+      <body className={`${nunitoSans.variable} antialiased overflow-hidden`}>
         <Providers>{children}</Providers>
         <Toaster />
+        <AudioPlayer />
       </body>
     </html>
   );
