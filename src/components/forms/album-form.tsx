@@ -144,7 +144,7 @@ export default function AlbumForm({
         description: values.description,
         releaseType: values.releaseType,
         releaseDate: values.releaseDate,
-        coverUrl: values.coverUrl || album?.coverUrl,
+        coverUrl: values.coverUrl,
         isExplicit: values.isExplicit,
         genreIds: values.genreIds,
         artistId: artistId,

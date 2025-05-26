@@ -37,6 +37,7 @@ export const usePlayerControls = () =>
     previous: state.previous,
     seek: state.seek,
     seekBy: state.seekBy,
+    setVolume: state.setVolume,
   }));
 
 export const useVolumeControls = () =>
@@ -157,7 +158,6 @@ export const useAudioPlayer = () => {
     formatTime,
     playTrack,
     playPlaylist,
-
     audioElement: audioRef.current,
   };
 };

@@ -13,7 +13,7 @@ export const artistBaseSchema = z.object({
   slug: baseFields.slug,
   description: baseFields.description,
   nationality: z.string().optional(),
-  imageUrl: baseFields.url.optional(),
+  imageUrl: baseFields.url,
   bannerUrl: baseFields.url.optional(),
   followerCount: baseFields.count,
   monthlyListeners: baseFields.count,

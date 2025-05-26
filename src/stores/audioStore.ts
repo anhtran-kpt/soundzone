@@ -1,4 +1,7 @@
-import { Track, Playlist } from "@/schemas";
+import {
+  TrackWithRelations as Track,
+  PlaylistWithRelations as Playlist,
+} from "@/schemas";
 import { RepeatMode } from "./types";
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { albumBaseSchema, trackWithRelationsSchema } from "../entities";
-import { artistRole, baseFields } from "../shared";
+import { artistRole } from "../shared";
 
 export const createAlbumSchema = albumBaseSchema
   .pick({
@@ -38,9 +38,7 @@ export const createAlbumSchema = albumBaseSchema
     ),
   });
 
-export const updateAlbumSchema = createAlbumSchema.partial().extend({
-  slug: baseFields.slug,
-});
+export const updateAlbumSchema = createAlbumSchema.partial();
 
 export type CreateAlbumInput = z.infer<typeof createAlbumSchema>;
 export type UpdateAlbumInput = z.infer<typeof updateAlbumSchema>;

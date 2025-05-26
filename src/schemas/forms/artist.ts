@@ -11,14 +11,10 @@ export const createArtistSchema = artistBaseSchema
     bannerUrl: true,
   })
   .extend({
-    genreIds: z
-      .array(z.string().cuid())
-      .min(1, "At least one genre is required"),
+    genreIds: z.array(baseFields.id).min(1, "At least one genre is required"),
   });
 
-export const updateArtistSchema = createArtistSchema.partial().extend({
-  slug: baseFields.slug,
-});
+export const updateArtistSchema = createArtistSchema.partial();
 
 export type CreateArtistInput = z.infer<typeof createArtistSchema>;
 export type UpdateArtistInput = z.infer<typeof updateArtistSchema>;

@@ -57,7 +57,7 @@ model Artist {
   slug             String   @unique
   description      String?  @db.Text
   nationality      String?
-  imageUrl         String?
+  imageUrl         String
   bannerUrl        String?
   followerCount    Int      @default(0)
   monthlyListeners Int      @default(0)

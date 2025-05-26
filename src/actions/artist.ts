@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { CreateArtistDto } from "@/schemas";
+import { CreateArtistInput } from "@/schemas";
 
 const artistActions = {
   getAll: async () => {
@@ -21,7 +21,7 @@ const artistActions = {
     });
   },
 
-  create: async (data: CreateArtistDto) => {
+  create: async (data: CreateArtistInput) => {
     const { genreIds, ...rest } = data;
 
     await db.$transaction(async (tx) => {
