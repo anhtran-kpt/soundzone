@@ -8,12 +8,16 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Genre, CreateGenreDto, createGenreSchema } from "@/schemas";
+import {
+  CreateGenreInput,
+  createGenreSchema,
+  GenreWithRelations,
+} from "@/schemas";
 import { useCreateGenre, useUpdateGenre } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";
 
 interface GenreFormProps {
-  genre?: Genre;
+  genre?: GenreWithRelations;
   mode: "create" | "edit";
 }
 
@@ -24,7 +28,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
   const createMutation = useCreateGenre();
   const updateMutation = useUpdateGenre(genre?.slug || "");
 
-  const form = useForm<CreateGenreDto>({
+  const form = useForm<CreateGenreInput>({
     resolver: zodResolver(createGenreSchema),
     defaultValues: {
       name: genre?.name ?? "",
@@ -32,7 +36,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
     },
   });
 
-  const onSubmit = async (values: CreateGenreDto) => {
+  const onSubmit = async (values: CreateGenreInput) => {
     try {
       setIsSubmitting(true);
       let response = null;

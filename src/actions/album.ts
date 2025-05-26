@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { emptyToNull } from "@/lib/helpers";
-import { CreateAlbumDto } from "@/schemas";
+import { CreateAlbumRequest } from "@/schemas";
 
 const albumActions = {
   getAll: async () => {
@@ -45,9 +45,9 @@ const albumActions = {
     });
   },
 
-  create: async (data: CreateAlbumDto) => {
+  create: async (data: CreateAlbumRequest) => {
     const {
-      title,
+      name,
       description,
       releaseType,
       releaseDate,
@@ -59,7 +59,7 @@ const albumActions = {
     } = data;
 
     return await db.$transaction(async (tx) => {
-      const albumSlug = await tx.album.generateSlug(title);
+      const albumSlug = await tx.album.generateSlug(name);
       const totalDuration = tracks.reduce(
         (sum, track) => sum + track.duration,
         0
@@ -68,7 +68,7 @@ const albumActions = {
 
       const album = await tx.album.create({
         data: {
-          title,
+          name,
           slug: albumSlug,
           description: emptyToNull(description),
           releaseType,
@@ -83,11 +83,11 @@ const albumActions = {
 
       await Promise.all(
         tracks.map(async (trackData) => {
-          const trackSlug = await tx.track.generateSlug(trackData.title);
+          const trackSlug = await tx.track.generateSlug(trackData.name);
 
           const track = await tx.track.create({
             data: {
-              title: trackData.title,
+              name: trackData.name,
               slug: trackSlug,
               duration: trackData.duration,
               audioUrl: trackData.audioUrl,

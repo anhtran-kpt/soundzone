@@ -14,7 +14,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CreateArtistDto, createArtistSchema, Artist } from "@/schemas";
+import {
+  ArtistWithRelations,
+  CreateArtistInput,
+  createArtistSchema,
+} from "@/schemas";
 import { useCreateArtist, useUpdateArtist } from "@/services/queries/artist";
 import { useGenres } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";
@@ -22,7 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import uploadQueries from "@/services/queries/upload";
 
 interface ArtistFormProps {
-  artist?: Artist;
+  artist?: ArtistWithRelations;
   mode: "create" | "edit";
 }
 
@@ -39,31 +43,31 @@ export default function ArtistForm({
   const updateMutation = useUpdateArtist(artist?.slug || "");
   const { data: genres } = useGenres();
 
-  const form = useForm<CreateArtistDto>({
+  const form = useForm<CreateArtistInput>({
     resolver: zodResolver(createArtistSchema),
     defaultValues: {
       name: artist?.name ?? "",
-      bio: artist?.bio ?? "",
-      avatarUrl: artist?.avatarUrl ?? "",
-      coverUrl: artist?.coverUrl ?? "",
+      description: artist?.description ?? "",
+      imageUrl: artist?.imageUrl ?? "",
+      bannerUrl: artist?.bannerUrl ?? "",
       nationality: artist?.nationality ?? "",
       genreIds: artist?.genres.map((genre) => genre.genreId) ?? [],
     },
   });
 
-  const onSubmit = async (values: CreateArtistDto) => {
+  const onSubmit = async (values: CreateArtistInput) => {
     try {
       setIsSubmitting(true);
 
       if (avatarFile) {
-        values.avatarUrl = await uploadQueries.uploadImage(
+        values.imageUrl = await uploadQueries.uploadImage(
           avatarFile,
           "artist",
           "avatar"
         );
       }
       if (coverFile) {
-        values.coverUrl = await uploadQueries.uploadImage(
+        values.bannerUrl = await uploadQueries.uploadImage(
           coverFile,
           "artist",
           "cover"
@@ -117,15 +121,15 @@ export default function ArtistForm({
 
           <FormField
             control={form.control}
-            name="bio"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bio</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Enter artist bio"
-                    autoComplete="artist-bio"
+                    placeholder="Enter artist description"
+                    autoComplete="artist-description"
                     disabled={isSubmitting}
                   />
                 </FormControl>

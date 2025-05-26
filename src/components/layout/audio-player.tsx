@@ -40,12 +40,15 @@ function AudioPlayer() {
           </div>
           <div className="ml-3">
             <h3 className="text-sm font-medium">{track?.title}</h3>
-            <Link
-              href="/artists/bui-anh-tuan"
-              className="text-xs text-gray-500"
-            >
-              Bùi Anh Tuấn
-            </Link>
+            {track?.artists.map((artist) => (
+              <Link
+                key={artist.id}
+                href={`/admin/artists/${artist.artist.slug}`}
+                className="text-xs text-gray-500"
+              >
+                {artist.artist.name}
+              </Link>
+            ))}
           </div>
           <div className="ml-6 space-x-2">
             <Button variant="ghost" size="icon" className="">

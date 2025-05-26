@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { CreateGenreDto } from "@/schemas";
+import { CreateGenreRequest } from "@/schemas";
 
 const genreActions = {
   getAll: async () => {
@@ -16,7 +16,7 @@ const genreActions = {
     });
   },
 
-  create: async (data: CreateGenreDto) => {
+  create: async (data: CreateGenreRequest) => {
     await db.$transaction(async (tx) => {
       const slug = await tx.genre.generateSlug(data.name);
 
