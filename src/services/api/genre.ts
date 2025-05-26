@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Genre, CreateGenreDto, UpdateGenreDto } from "@/schemas";
+import { Genre, CreateGenreRequest, UpdateGenreRequest } from "@/schemas";
 import { GENRE_ENDPOINTS } from "@/lib/endpoints";
 
 export const genreApi = {
@@ -18,13 +18,13 @@ export const genreApi = {
     return apiClient.get<Genre>(GENRE_ENDPOINTS.detail(slug));
   },
 
-  async create(data: CreateGenreDto): Promise<ApiResponse<Genre>> {
+  async create(data: CreateGenreRequest): Promise<ApiResponse<Genre>> {
     return apiClient.post<Genre>(GENRE_ENDPOINTS.create, data);
   },
 
   async update(
     slug: string,
-    data: UpdateGenreDto
+    data: UpdateGenreRequest
   ): Promise<ApiResponse<Genre>> {
     return apiClient.patch<Genre>(GENRE_ENDPOINTS.update(slug), data);
   },

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { SignUpFormDto, signUpFormSchema } from "@/schemas";
+import { SignUpForm as SignUpFormType, signUpFormSchema } from "@/schemas";
 import { useSignUp } from "@/services/queries";
 
 export function SignUpForm() {
@@ -26,7 +26,7 @@ export function SignUpForm() {
 
   const { mutateAsync: signUpMutate } = useSignUp();
 
-  const form = useForm<SignUpFormDto>({
+  const form = useForm<SignUpFormType>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       name: "",
@@ -36,7 +36,7 @@ export function SignUpForm() {
     },
   });
 
-  const onSubmit = async (values: SignUpFormDto) => {
+  const onSubmit = async (values: SignUpFormType) => {
     try {
       setIsLoading(true);
 

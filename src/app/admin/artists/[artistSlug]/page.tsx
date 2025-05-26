@@ -23,7 +23,7 @@ export default function ArtistPage() {
       <Link href={`/admin/artists/${artistSlug}/albums`}>View Albums</Link>
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src={artist?.avatarUrl || ""} />
+          <AvatarImage src={artist?.imageUrl || ""} />
           <AvatarFallback>{formatName(artist?.name || "")}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
@@ -31,7 +31,7 @@ export default function ArtistPage() {
           <p className="text-sm text-muted-foreground">{artist?.nationality}</p>
         </div>
       </div>
-      <p>{artist?.bio}</p>
+      <p>{artist?.description}</p>
     </div>
   );
 }

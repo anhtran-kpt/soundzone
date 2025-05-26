@@ -18,7 +18,7 @@ import { format } from "date-fns";
 
 export type AlbumInfo = {
   slug: string;
-  title: string;
+  name: string;
   releaseType: string;
   releaseDate: string;
   coverUrl: string;
@@ -37,14 +37,14 @@ export const columns: ColumnDef<AlbumInfo>[] = [
       return (
         <Avatar>
           <AvatarImage src={row.original.coverUrl} />
-          <AvatarFallback>{formatName(row.original.title)}</AvatarFallback>
+          <AvatarFallback>{formatName(row.original.name)}</AvatarFallback>
         </Avatar>
       );
     },
   },
   {
-    header: "Title",
-    accessorKey: "title",
+    header: "Name",
+    accessorKey: "name",
   },
   {
     header: "Total Duration",

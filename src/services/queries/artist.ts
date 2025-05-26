@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { artistApi } from "@/services/api";
-import { CreateArtistDto, UpdateArtistDto } from "@/schemas";
+import { CreateArtistRequest, UpdateArtistRequest } from "@/schemas";
 import { artistKeys } from "./keys";
 
 export function useArtists(params?: { limit?: number }) {
@@ -35,7 +35,7 @@ export function useCreateArtist() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateArtistDto) => artistApi.create(data),
+    mutationFn: (data: CreateArtistRequest) => artistApi.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Artist created successfully");
@@ -54,7 +54,7 @@ export function useUpdateArtist(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateArtistDto) => artistApi.update(slug, data),
+    mutationFn: (data: UpdateArtistRequest) => artistApi.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Artist updated successfully");

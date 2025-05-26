@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Edit Album - ${album.title}`,
-    description: `Edit Album - ${album.title}`,
+    title: `Edit Album - ${album.name}`,
+    description: `Edit Album - ${album.name}`,
   };
 }
 

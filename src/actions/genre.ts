@@ -30,6 +30,12 @@ const genreActions = {
       return genre;
     });
   },
+
+  delete: async (slug: string) => {
+    await db.genre.delete({
+      where: { slug },
+    });
+  },
 };
 
 export default genreActions;

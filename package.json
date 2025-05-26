@@ -6,11 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma db push --force-reset && prisma db seed"
+    "lint": "next lint",
+    "db:reset": "prisma db push --force-reset && prisma db seed",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

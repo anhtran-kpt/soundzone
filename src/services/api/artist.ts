@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Artist, CreateArtistDto, UpdateArtistDto } from "@/schemas";
+import { Artist, CreateArtistRequest, UpdateArtistRequest } from "@/schemas";
 import { ARTIST_ENDPOINTS } from "@/lib/endpoints";
 
 export const artistApi = {
@@ -18,13 +18,13 @@ export const artistApi = {
     return apiClient.get<Artist>(ARTIST_ENDPOINTS.detail(slug));
   },
 
-  async create(data: CreateArtistDto): Promise<ApiResponse<Artist>> {
+  async create(data: CreateArtistRequest): Promise<ApiResponse<Artist>> {
     return apiClient.post<Artist>(ARTIST_ENDPOINTS.create, data);
   },
 
   async update(
     slug: string,
-    data: UpdateArtistDto
+    data: UpdateArtistRequest
   ): Promise<ApiResponse<Artist>> {
     return apiClient.patch<Artist>(ARTIST_ENDPOINTS.update(slug), data);
   },

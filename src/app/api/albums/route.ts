@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { createAlbumSchema } from "@/schemas";
+import { createAlbumRequestSchema } from "@/schemas";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { albumActions } from "@/actions";
@@ -8,7 +8,7 @@ import { albumActions } from "@/actions";
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json();
 
-  const validatedData = validateData(createAlbumSchema, body);
+  const validatedData = validateData(createAlbumRequestSchema, body);
 
   const album = await albumActions.create(validatedData);
 

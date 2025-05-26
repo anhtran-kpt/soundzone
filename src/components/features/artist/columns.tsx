@@ -18,7 +18,7 @@ export type ArtistInfo = {
   slug: string;
   name: string;
   nationality: string;
-  avatarUrl: string;
+  imageUrl: string;
   followerCount: number;
   monthlyListeners: number;
   albums: [];
@@ -27,12 +27,12 @@ export type ArtistInfo = {
 
 export const columns: ColumnDef<ArtistInfo>[] = [
   {
-    header: "Avatar",
-    accessorKey: "avatarUrl",
+    header: "Image",
+    accessorKey: "imageUrl",
     cell: ({ row }) => {
       return (
         <Avatar>
-          <AvatarImage src={row.original.avatarUrl} />
+          <AvatarImage src={row.original.imageUrl} />
           <AvatarFallback>
             {row.original.name.split(" ")[0].charAt(0)}
             {row.original.name.split(" ")[1]?.charAt(0)}

@@ -1,6 +1,7 @@
-import { authActions } from "@/actions";
+import { userActions } from "@/actions";
 import prisma from "../src/lib/db";
 import data from "./data/genres.json";
+
 async function createAdminUser() {
   const adminData = {
     name: "SoundZone Admin",
@@ -9,7 +10,7 @@ async function createAdminUser() {
     password: "admin123",
   };
 
-  await authActions.signUp(adminData);
+  await userActions.signUp(adminData);
 
   console.log("Admin created.");
 }

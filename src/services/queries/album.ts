@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { albumApi } from "@/services/api";
-import { CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
+import { CreateAlbumRequest, UpdateAlbumRequest } from "@/schemas";
 import { albumKeys } from "./keys";
 
 export function useAlbums(params?: { limit?: number }) {
@@ -35,7 +35,7 @@ export function useCreateAlbum() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateAlbumDto) => albumApi.create(data),
+    mutationFn: (data: CreateAlbumRequest) => albumApi.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Album created successfully");
@@ -54,7 +54,7 @@ export function useUpdateAlbum(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateAlbumDto) => albumApi.update(slug, data),
+    mutationFn: (data: UpdateAlbumRequest) => albumApi.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Album updated successfully");

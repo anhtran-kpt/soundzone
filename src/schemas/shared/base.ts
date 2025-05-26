@@ -21,7 +21,7 @@ export const baseFields = {
     .optional(),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  url: z.string().url("Invalid URL"),
+  url: z.string(),
   duration: z.number().int().min(0),
   count: z.number().int().min(0),
   createdAt: z.coerce.date(),

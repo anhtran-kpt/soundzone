@@ -1,4 +1,4 @@
-import { authActions } from "@/actions";
+import { userActions } from "@/actions";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await authActions.signIn({
+        const user = await userActions.signIn({
           email: credentials.email,
           password: credentials.password,
         });

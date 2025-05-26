@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Album, CreateAlbumDto, UpdateAlbumDto } from "@/schemas";
+import { Album, CreateAlbumRequest, UpdateAlbumRequest } from "@/schemas";
 import { ALBUM_ENDPOINTS } from "@/lib/endpoints";
 
 export const albumApi = {
@@ -18,13 +18,13 @@ export const albumApi = {
     return apiClient.get<Album>(ALBUM_ENDPOINTS.detail(slug));
   },
 
-  async create(data: CreateAlbumDto): Promise<ApiResponse<Album>> {
+  async create(data: CreateAlbumRequest): Promise<ApiResponse<Album>> {
     return apiClient.post<Album>(ALBUM_ENDPOINTS.create, data);
   },
 
   async update(
     slug: string,
-    data: UpdateAlbumDto
+    data: UpdateAlbumRequest
   ): Promise<ApiResponse<Album>> {
     return apiClient.patch<Album>(ALBUM_ENDPOINTS.update(slug), data);
   },

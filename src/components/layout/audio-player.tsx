@@ -39,10 +39,10 @@ function AudioPlayer() {
             />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium">{track?.title}</h3>
+            <h3 className="text-sm font-medium">{track?.name}</h3>
             {track?.artists.map((artist) => (
               <Link
-                key={artist.id}
+                key={artist.slug}
                 href={`/admin/artists/${artist.artist.slug}`}
                 className="text-xs text-gray-500"
               >

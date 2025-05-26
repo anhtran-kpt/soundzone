@@ -32,15 +32,15 @@ export const GET = withErrorHandler(
 //   }
 // );
 
-// export const DELETE = withErrorHandler(
-//   async (
-//     req: NextRequest,
-//     { params }: { params: Promise<{ slug: string }> }
-//   ) => {
-//     const { slug } = await params;
+export const DELETE = withErrorHandler(
+  async (
+    req: NextRequest,
+    { params }: { params: Promise<{ slug: string }> }
+  ) => {
+    const { slug } = await params;
 
-//     await genreService.delete(slug);
+    await genreActions.delete(slug);
 
-//     return NextResponse.json(ApiResponse.success(null), { status: 200 });
-//   }
-// );
+    return NextResponse.json(ApiResponse.success(null), { status: 200 });
+  }
+);

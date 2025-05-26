@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { genreApi } from "@/services/api";
-import { CreateGenreDto, UpdateGenreDto } from "@/schemas";
+import { CreateGenreRequest, UpdateGenreRequest } from "@/schemas";
 import { genreKeys } from "./keys";
 
 export function useGenres(params?: { limit?: number }) {
@@ -35,7 +35,7 @@ export function useCreateGenre() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateGenreDto) => genreApi.create(data),
+    mutationFn: (data: CreateGenreRequest) => genreApi.create(data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Genre created successfully");
@@ -54,7 +54,7 @@ export function useUpdateGenre(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateGenreDto) => genreApi.update(slug, data),
+    mutationFn: (data: UpdateGenreRequest) => genreApi.update(slug, data),
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Genre updated successfully");
