@@ -326,7 +326,7 @@ export const useAudioStore = create<AudioStore>()(
           const { audioElement } = get();
 
           if (audioElement) {
-            audioElement.src = track.url;
+            audioElement.src = track.audioUrl;
             audioElement.load();
           }
 

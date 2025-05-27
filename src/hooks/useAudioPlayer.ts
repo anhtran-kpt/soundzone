@@ -208,8 +208,8 @@ export const useAudioPlayer = () => {
 
 // Hook for keyboard shortcuts
 export const useAudioKeyboardShortcuts = () => {
-  const { togglePlay, next, previous, setVolume, seekBy } = usePlayerControls();
-  const volume = useVolume();
+  const { togglePlay, next, previous, seekBy } = usePlayerControls();
+  const { volume, setVolume } = useVolumeControls();
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -269,13 +269,14 @@ export const useMediaSession = () => {
   useEffect(() => {
     if ("mediaSession" in navigator && currentTrack) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: currentTrack.title,
-        artist: currentTrack.artist,
-        album: currentTrack.album,
-        artwork: currentTrack.coverImage
+        title: currentTrack.name,
+        artist: currentTrack.artists.find((artist) => artist.role === "MAIN")
+          ?.artist.name,
+        album: currentTrack.album.name,
+        artwork: currentTrack.album.coverUrl
           ? [
               {
-                src: currentTrack.coverImage,
+                src: currentTrack.album.coverUrl,
                 sizes: "300x300",
                 type: "image/jpeg",
               },

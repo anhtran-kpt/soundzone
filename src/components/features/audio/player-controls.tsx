@@ -10,6 +10,7 @@ import {
   Loader2Icon,
   CirclePlayIcon,
   CirclePauseIcon,
+  RepeatIcon,
 } from "lucide-react";
 
 interface PlayerControlsProps {
@@ -39,19 +40,6 @@ export default function PlayerControls({
   onToggleRepeat,
   onToggleShuffle,
 }: PlayerControlsProps) {
-  const getRepeatIcon = (): React.ElementType => {
-    switch (repeatMode) {
-      case "one":
-        return Repeat1Icon;
-      case "all":
-      case "off":
-      default:
-        return RepeatIcon;
-    }
-  };
-
-  const RepeatIcon = getRepeatIcon();
-
   return (
     <div className="space-x-3 flex items-center">
       <Button
@@ -99,7 +87,13 @@ export default function PlayerControls({
         size="sm"
         onClick={onToggleRepeat}
       >
-        <RepeatIcon className="size-4" />
+        {repeatMode === "one" ? (
+          <Repeat1Icon className="size-4" />
+        ) : repeatMode === "all" ? (
+          <RepeatIcon className="size-4" />
+        ) : (
+          <RepeatIcon className="size-4" />
+        )}
       </Button>
     </div>
   );
