@@ -38,15 +38,12 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import AudioUploader from "@/components/features/track/audio-uploader";
 import uploadQueries from "@/services/queries/upload";
-import {
-  AlbumWithRelations,
-  CreateAlbumInput,
-  createAlbumSchema,
-} from "@/schemas";
+import { CreateAlbumInput, createAlbumSchema } from "@/lib/validations";
+import { Album } from "@/types/database";
 
 interface AlbumFormProps {
   artistId: string;
-  album?: AlbumWithRelations;
+  album?: Album;
   mode: "create" | "edit";
 }
 
@@ -135,7 +132,7 @@ export default function AlbumForm({
         values.coverUrl = await uploadQueries.uploadImage(
           coverFile,
           "album",
-          "cover"
+          "image"
         );
       }
 
@@ -148,20 +145,20 @@ export default function AlbumForm({
         isExplicit: values.isExplicit,
         genreIds: values.genreIds,
         artistId: artistId,
-        tracks: values.tracks.map((track, index) => ({
+        tracks: values.tracks.map((track, trackIndex) => ({
           name: track.name,
           lyrics: track.lyrics,
           duration: track.duration,
-          trackNumber: index + 1,
+          trackNumber: trackIndex + 1,
           audioUrl: track.audioUrl,
           isExplicit: track.isExplicit,
           composer: track.composer,
           lyricist: track.lyricist,
           producer: track.producer,
-          artists: track.artists.map((artist, index) => ({
+          artists: track.artists.map((artist, artistIndex) => ({
             artistId: artist.artistId,
             role: artist.role,
-            order: index + 1,
+            order: artistIndex + 1,
           })),
         })),
       };

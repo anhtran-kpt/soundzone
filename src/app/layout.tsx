@@ -3,7 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/providers";
-import AudioPlayer from "@/components/layout/audio-player";
+import AudioPlayer from "@/components/features/audio/audio-player";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito_sans",

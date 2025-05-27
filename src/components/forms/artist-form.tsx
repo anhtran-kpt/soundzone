@@ -14,19 +14,16 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ArtistWithRelations,
-  CreateArtistInput,
-  createArtistSchema,
-} from "@/schemas";
+import { CreateArtistInput, createArtistSchema } from "@/lib/validations";
 import { useCreateArtist, useUpdateArtist } from "@/services/queries/artist";
 import { useGenres } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import uploadQueries from "@/services/queries/upload";
+import { Artist } from "@/types/database";
 
 interface ArtistFormProps {
-  artist?: ArtistWithRelations;
+  artist?: Artist;
   mode: "create" | "edit";
 }
 
@@ -36,8 +33,8 @@ export default function ArtistForm({
 }: ArtistFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
 
   const createMutation = useCreateArtist();
   const updateMutation = useUpdateArtist(artist?.slug || "");
@@ -59,18 +56,18 @@ export default function ArtistForm({
     try {
       setIsSubmitting(true);
 
-      if (avatarFile) {
+      if (imageFile) {
         values.imageUrl = await uploadQueries.uploadImage(
-          avatarFile,
+          imageFile,
           "artist",
-          "avatar"
+          "image"
         );
       }
-      if (coverFile) {
+      if (bannerFile) {
         values.bannerUrl = await uploadQueries.uploadImage(
-          coverFile,
+          bannerFile,
           "artist",
-          "cover"
+          "banner"
         );
       }
 
@@ -207,9 +204,9 @@ export default function ArtistForm({
               <Input
                 type="file"
                 accept="image/*"
-                onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-                placeholder="Upload artist avatar"
-                autoComplete="artist-avatar"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                placeholder="Upload artist image"
+                autoComplete="artist-image"
                 disabled={isSubmitting}
               />
             </FormControl>
@@ -222,9 +219,9 @@ export default function ArtistForm({
               <Input
                 type="file"
                 accept="image/*"
-                onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
-                placeholder="Upload artist cover"
-                autoComplete="artist-cover"
+                onChange={(e) => setBannerFile(e.target.files?.[0] || null)}
+                placeholder="Upload artist banner"
+                autoComplete="artist-banner"
                 disabled={isSubmitting}
               />
             </FormControl>

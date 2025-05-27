@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { CreateArtistInput } from "@/schemas";
+import { CreateArtistInput } from "@/lib/validations";
 
 const artistActions = {
   getAll: async () => {

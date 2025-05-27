@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { SignInRequest, signInRequestSchema } from "@/schemas";
+import { SignInInput, signInSchema } from "@/lib/validations";
 
 export function SignInForm() {
   const router = useRouter();
@@ -25,15 +25,15 @@ export function SignInForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<SignInRequest>({
-    resolver: zodResolver(signInRequestSchema),
+  const form = useForm<SignInInput>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: SignInRequest) => {
+  const onSubmit = async (values: SignInInput) => {
     try {
       setIsLoading(true);
 

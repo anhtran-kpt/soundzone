@@ -1,27 +1,36 @@
-import {
-  TrackWithRelations as Track,
-  PlaylistWithRelations as Playlist,
-} from "@/schemas";
-import { RepeatMode } from "./types";
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
+import { Track, Playlist } from "@/types/database";
+
+export type RepeatMode = "off" | "one" | "all";
 
 interface AudioState {
+  // Current playback state
   currentTrack: Track | null;
   currentPlaylist: Playlist | null;
   currentTrackIndex: number;
+
+  // Playback status
   isPlaying: boolean;
   isLoading: boolean;
   currentTime: number;
   duration: number;
-  volume: number;
+  volume: number; // 0-1
   isMuted: boolean;
+
+  // Player modes
   isShuffled: boolean;
   repeatMode: RepeatMode;
+
+  // Playlists management
   playlists: Playlist[];
+
+  // Queue management
   queue: Track[];
-  originalQueue: Track[];
+  originalQueue: Track[]; // Backup for shuffle
   queueIndex: number;
+
+  // Error handling
   error: string | null;
 }
 
@@ -83,6 +92,7 @@ export const useAudioStore = create<AudioStore>()(
   devtools(
     persist(
       subscribeWithSelector((set, get) => ({
+        // Initial state
         currentTrack: null,
         currentPlaylist: null,
         currentTrackIndex: 0,
@@ -91,19 +101,24 @@ export const useAudioStore = create<AudioStore>()(
         isLoading: false,
         currentTime: 0,
         duration: 0,
-        volume: 1,
+        volume: 0.8,
         isMuted: false,
+
         isShuffled: false,
         repeatMode: "off",
+
         playlists: [],
         queue: [],
         originalQueue: [],
         queueIndex: 0,
+
         error: null,
         audioElement: null,
 
+        // Audio element management
         setAudioElement: (audio) => set({ audioElement: audio }),
 
+        // Basic playback controls
         play: async () => {
           const { audioElement, currentTrack, setLoading, setError } = get();
 
@@ -125,7 +140,6 @@ export const useAudioStore = create<AudioStore>()(
 
         pause: () => {
           const { audioElement } = get();
-
           if (audioElement) {
             audioElement.pause();
             set({ isPlaying: false });
@@ -134,7 +148,6 @@ export const useAudioStore = create<AudioStore>()(
 
         stop: () => {
           const { audioElement } = get();
-
           if (audioElement) {
             audioElement.pause();
             audioElement.currentTime = 0;
@@ -144,7 +157,6 @@ export const useAudioStore = create<AudioStore>()(
 
         togglePlay: async () => {
           const { isPlaying, play, pause } = get();
-
           if (isPlaying) {
             pause();
           } else {
@@ -152,20 +164,23 @@ export const useAudioStore = create<AudioStore>()(
           }
         },
 
+        // Track navigation
         next: async () => {
-          const { queue, queueIndex, repeatMode } = get();
+          const { queue, queueIndex, repeatMode, isShuffled, loadNextTrack } =
+            get();
 
           if (queue.length === 0) return;
 
           let nextIndex = queueIndex + 1;
 
+          // Handle repeat modes
           if (nextIndex >= queue.length) {
-            if (repeatMode === "one") {
-              nextIndex = queueIndex;
-            } else if (repeatMode === "all") {
+            if (repeatMode === "all") {
               nextIndex = 0;
+            } else if (repeatMode === "one") {
+              nextIndex = queueIndex; // Stay on current track
             } else {
-              return;
+              return; // End of queue
             }
           }
 
@@ -177,13 +192,15 @@ export const useAudioStore = create<AudioStore>()(
 
           if (queue.length === 0) return;
 
+          // If more than 3 seconds played, restart current track
           if (currentTime > 3) {
-            await get().seek(0);
+            get().seek(0);
             return;
           }
 
           let prevIndex = queueIndex - 1;
 
+          // Wrap to end if at beginning
           if (prevIndex < 0) {
             prevIndex = queue.length - 1;
           }
@@ -200,14 +217,15 @@ export const useAudioStore = create<AudioStore>()(
           set({ queueIndex: index });
           setCurrentTrack(track);
 
+          // Auto-play if currently playing
           if (get().isPlaying) {
             await get().play();
           }
         },
 
+        // Seek controls
         seek: (time) => {
           const { audioElement, duration } = get();
-
           if (audioElement && duration > 0) {
             const clampedTime = Math.max(0, Math.min(time, duration));
             audioElement.currentTime = clampedTime;
@@ -220,9 +238,10 @@ export const useAudioStore = create<AudioStore>()(
           seek(currentTime + seconds);
         },
 
+        // Volume controls
         setVolume: (volume) => {
           const { audioElement } = get();
-          const clampedVolume = Math.max(0, Math.min(volume, 1));
+          const clampedVolume = Math.max(0, Math.min(1, volume));
 
           if (audioElement) {
             audioElement.volume = clampedVolume;
@@ -248,21 +267,26 @@ export const useAudioStore = create<AudioStore>()(
           }
         },
 
+        // Mode controls
         toggleShuffle: () => {
           const { isShuffled, queue, originalQueue, currentTrack, queueIndex } =
             get();
 
           if (!isShuffled) {
+            // Enable shuffle
             const shuffled = [...queue];
             const currentTrackItem = shuffled[queueIndex];
 
+            // Remove current track from array before shuffling
             shuffled.splice(queueIndex, 1);
 
+            // Shuffle remaining tracks
             for (let i = shuffled.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
               [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
 
+            // Put current track at the beginning
             shuffled.unshift(currentTrackItem);
 
             set({
@@ -272,10 +296,12 @@ export const useAudioStore = create<AudioStore>()(
               queueIndex: 0,
             });
           } else {
+            // Disable shuffle
             const currentTrackId = currentTrack?.id;
             const originalIndex = originalQueue.findIndex(
               (track) => track.id === currentTrackId
             );
+
             set({
               isShuffled: false,
               queue: originalQueue,
@@ -285,23 +311,22 @@ export const useAudioStore = create<AudioStore>()(
           }
         },
 
-        setRepeatMode: (mode) => {
-          set({ repeatMode: mode });
-        },
+        setRepeatMode: (mode) => set({ repeatMode: mode }),
 
         toggleRepeat: () => {
           const { repeatMode } = get();
-          const modes: RepeatMode[] = ["off", "one", "all"];
+          const modes: RepeatMode[] = ["off", "all", "one"];
           const currentIndex = modes.indexOf(repeatMode);
           const nextMode = modes[(currentIndex + 1) % modes.length];
           set({ repeatMode: nextMode });
         },
 
+        // Track/Playlist management
         setCurrentTrack: (track, playlist) => {
           const { audioElement } = get();
 
           if (audioElement) {
-            audioElement.src = track.audioUrl;
+            audioElement.src = track.url;
             audioElement.load();
           }
 
@@ -355,12 +380,13 @@ export const useAudioStore = create<AudioStore>()(
             queue: [],
             originalQueue: [],
             queueIndex: 0,
-            currentPlaylist: null,
             currentTrack: null,
+            currentPlaylist: null,
             isPlaying: false,
           });
         },
 
+        // Playlist management
         createPlaylist: (name, tracks = []) => {
           const { playlists } = get();
           const newPlaylist: Playlist = {
@@ -369,10 +395,7 @@ export const useAudioStore = create<AudioStore>()(
             tracks,
           };
 
-          set({
-            playlists: [...playlists, newPlaylist],
-          });
-
+          set({ playlists: [...playlists, newPlaylist] });
           return newPlaylist;
         },
 
@@ -393,9 +416,7 @@ export const useAudioStore = create<AudioStore>()(
 
         addTrackToPlaylist: (playlistId, track) => {
           const { playlists, updatePlaylist } = get();
-          const playlist = playlists.find(
-            (playlist) => playlist.id === playlistId
-          );
+          const playlist = playlists.find((p) => p.id === playlistId);
 
           if (playlist) {
             const updatedTracks = [...playlist.tracks, track];
@@ -405,33 +426,21 @@ export const useAudioStore = create<AudioStore>()(
 
         removeTrackFromPlaylist: (playlistId, trackId) => {
           const { playlists, updatePlaylist } = get();
-          const playlist = playlists.find(
-            (playlist) => playlist.id === playlistId
-          );
+          const playlist = playlists.find((p) => p.id === playlistId);
 
           if (playlist) {
             const updatedTracks = playlist.tracks.filter(
-              (track) => track.id !== trackId
+              (t) => t.id !== trackId
             );
             updatePlaylist(playlistId, { tracks: updatedTracks });
           }
         },
 
-        setCurrentTime: (time) => {
-          set({ currentTime: time });
-        },
-
-        setDuration: (duration) => {
-          set({ duration });
-        },
-
-        setLoading: (loading) => {
-          set({ isLoading: loading });
-        },
-
-        setError: (error) => {
-          set({ error });
-        },
+        // Internal state management
+        setCurrentTime: (time) => set({ currentTime: time }),
+        setDuration: (duration) => set({ duration }),
+        setLoading: (loading) => set({ isLoading: loading }),
+        setError: (error) => set({ error }),
       })),
       {
         name: "audio-player-storage",
@@ -440,10 +449,10 @@ export const useAudioStore = create<AudioStore>()(
           isMuted: state.isMuted,
           isShuffled: state.isShuffled,
           repeatMode: state.repeatMode,
+          playlists: state.playlists,
+          currentPlaylist: state.currentPlaylist,
           queue: state.queue,
           queueIndex: state.queueIndex,
-          currentPlaylist: state.currentPlaylist,
-          playlists: state.playlists,
         }),
       }
     ),
@@ -458,6 +467,7 @@ useAudioStore.subscribe(
   (state) => state.audioElement,
   (audioElement, previousAudioElement) => {
     if (previousAudioElement) {
+      // Cleanup previous element
       previousAudioElement.removeEventListener("ended", handleTrackEnd);
       previousAudioElement.removeEventListener("timeupdate", handleTimeUpdate);
       previousAudioElement.removeEventListener(
@@ -468,6 +478,7 @@ useAudioStore.subscribe(
     }
 
     if (audioElement) {
+      // Setup new element
       audioElement.addEventListener("ended", handleTrackEnd);
       audioElement.addEventListener("timeupdate", handleTimeUpdate);
       audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);

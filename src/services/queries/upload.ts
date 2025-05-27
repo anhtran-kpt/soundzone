@@ -4,7 +4,7 @@ const uploadQueries = {
   uploadImage: async (
     file: File,
     model: "artist" | "user" | "album" | "playlist",
-    type: "avatar" | "cover"
+    type: "image" | "banner"
   ) => {
     const formData = new FormData();
     formData.append("file", file);

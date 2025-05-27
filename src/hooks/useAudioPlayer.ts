@@ -1,87 +1,126 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useAudioStore } from "@/stores/audioStore";
-import { Track, Playlist } from "@/schemas";
+import { useAudioStore } from "../stores/audioStore";
+import { Track, Playlist } from "@/types/database";
+import { useShallow } from "zustand/react/shallow";
 
+// Selector hooks for optimal re-rendering
 export const useCurrentTrack = () =>
-  useAudioStore((state) => state.currentTrack);
-export const useIsPlaying = () => useAudioStore((state) => state.isPlaying);
-export const useIsLoading = () => useAudioStore((state) => state.isLoading);
-export const useCurrentTime = () => useAudioStore((state) => state.currentTime);
-export const useDuration = () => useAudioStore((state) => state.duration);
-export const useVolume = () => useAudioStore((state) => state.volume);
-export const useIsMuted = () => useAudioStore((state) => state.isMuted);
-export const useIsShuffled = () => useAudioStore((state) => state.isShuffled);
-export const useRepeatMode = () => useAudioStore((state) => state.repeatMode);
-export const useQueue = () => useAudioStore((state) => state.queue);
-export const useQueueIndex = () => useAudioStore((state) => state.queueIndex);
-export const useCurrentPlaylist = () =>
-  useAudioStore((state) => state.currentPlaylist);
-export const usePlaylists = () => useAudioStore((state) => state.playlists);
-export const useError = () => useAudioStore((state) => state.error);
+  useAudioStore(useShallow((state) => state.currentTrack));
 
+export const useIsPlaying = () =>
+  useAudioStore(useShallow((state) => state.isPlaying));
+
+export const useIsLoading = () =>
+  useAudioStore(useShallow((state) => state.isLoading));
+
+export const useCurrentTime = () =>
+  useAudioStore(useShallow((state) => state.currentTime));
+
+export const useDuration = () =>
+  useAudioStore(useShallow((state) => state.duration));
+
+export const useVolume = () =>
+  useAudioStore(useShallow((state) => state.volume));
+
+export const useIsMuted = () =>
+  useAudioStore(useShallow((state) => state.isMuted));
+
+export const useIsShuffled = () =>
+  useAudioStore(useShallow((state) => state.isShuffled));
+
+export const useRepeatMode = () =>
+  useAudioStore(useShallow((state) => state.repeatMode));
+
+export const useQueue = () => useAudioStore(useShallow((state) => state.queue));
+
+export const useQueueIndex = () =>
+  useAudioStore(useShallow((state) => state.queueIndex));
+
+export const usePlaylist = () =>
+  useAudioStore(useShallow((state) => state.currentPlaylist));
+
+export const usePlaylists = () =>
+  useAudioStore(useShallow((state) => state.playlists));
+
+export const useError = () => useAudioStore(useShallow((state) => state.error));
+
+// Compound selectors
 export const usePlaybackState = () =>
-  useAudioStore((state) => ({
-    isPlaying: state.isPlaying,
-    isLoading: state.isLoading,
-    currentTime: state.currentTime,
-    duration: state.duration,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      isPlaying: state.isPlaying,
+      isLoading: state.isLoading,
+      currentTime: state.currentTime,
+      duration: state.duration,
+    }))
+  );
 
 export const usePlayerControls = () =>
-  useAudioStore((state) => ({
-    play: state.play,
-    pause: state.pause,
-    stop: state.stop,
-    togglePlay: state.togglePlay,
-    next: state.next,
-    previous: state.previous,
-    seek: state.seek,
-    seekBy: state.seekBy,
-    setVolume: state.setVolume,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      play: state.play,
+      pause: state.pause,
+      stop: state.stop,
+      togglePlay: state.togglePlay,
+      next: state.next,
+      previous: state.previous,
+      seek: state.seek,
+      seekBy: state.seekBy,
+    }))
+  );
 
 export const useVolumeControls = () =>
-  useAudioStore((state) => ({
-    setVolume: state.setVolume,
-    toggleMute: state.toggleMute,
-    volume: state.volume,
-    isMuted: state.isMuted,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      volume: state.volume,
+      isMuted: state.isMuted,
+      setVolume: state.setVolume,
+      toggleMute: state.toggleMute,
+    }))
+  );
 
 export const usePlayerModes = () =>
-  useAudioStore((state) => ({
-    isShuffled: state.isShuffled,
-    repeatMode: state.repeatMode,
-    toggleShuffle: state.toggleShuffle,
-    toggleRepeat: state.toggleRepeat,
-    setRepeatMode: state.setRepeatMode,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      isShuffled: state.isShuffled,
+      repeatMode: state.repeatMode,
+      toggleShuffle: state.toggleShuffle,
+      toggleRepeat: state.toggleRepeat,
+      setRepeatMode: state.setRepeatMode,
+    }))
+  );
 
 export const useQueueManagement = () =>
-  useAudioStore((state) => ({
-    queue: state.queue,
-    queueIndex: state.queueIndex,
-    addToQueue: state.addToQueue,
-    removeFromQueue: state.removeFromQueue,
-    clearQueue: state.clearQueue,
-    skipTo: state.skipTo,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      queue: state.queue,
+      queueIndex: state.queueIndex,
+      addToQueue: state.addToQueue,
+      removeFromQueue: state.removeFromQueue,
+      clearQueue: state.clearQueue,
+      skipTo: state.skipTo,
+    }))
+  );
 
 export const usePlaylistManagement = () =>
-  useAudioStore((state) => ({
-    playlists: state.playlists,
-    createPlaylist: state.createPlaylist,
-    updatePlaylist: state.updatePlaylist,
-    deletePlaylist: state.deletePlaylist,
-    addTrackToPlaylist: state.addTrackToPlaylist,
-    removeTrackFromPlaylist: state.removeTrackFromPlaylist,
-    loadPlaylist: state.loadPlaylist,
-  }));
+  useAudioStore(
+    useShallow((state) => ({
+      playlists: state.playlists,
+      createPlaylist: state.createPlaylist,
+      updatePlaylist: state.updatePlaylist,
+      deletePlaylist: state.deletePlaylist,
+      addTrackToPlaylist: state.addTrackToPlaylist,
+      removeTrackFromPlaylist: state.removeTrackFromPlaylist,
+      loadPlaylist: state.loadPlaylist,
+    }))
+  );
 
+// Main audio player hook
 export const useAudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const setAudioElement = useAudioStore((state) => state.setAudioElement);
 
+  // Initialize audio element
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -98,6 +137,7 @@ export const useAudioPlayer = () => {
     };
   }, [setAudioElement]);
 
+  // Get all player functionality
   const currentTrack = useCurrentTrack();
   const playbackState = usePlaybackState();
   const playerControls = usePlayerControls();
@@ -107,25 +147,22 @@ export const useAudioPlayer = () => {
   const playlistManagement = usePlaylistManagement();
   const error = useError();
 
+  // Computed values
   const progress =
     playbackState.duration > 0
       ? (playbackState.currentTime / playbackState.duration) * 100
       : 0;
 
-  const hasNext =
-    queueManagement.queue.length > 0 &&
-    queueManagement.queueIndex < queueManagement.queue.length - 1;
-  const hasPrev =
-    queueManagement.queue.length > 0 && queueManagement.queueIndex > 0;
+  const hasNext = queueManagement.queueIndex < queueManagement.queue.length - 1;
+  const hasPrev = queueManagement.queueIndex > 0;
 
+  // Utility functions
   const formatTime = useCallback((seconds: number): string => {
     if (isNaN(seconds)) return "0:00";
 
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
   const playTrack = useCallback(async (track: Track, playlist?: Playlist) => {
@@ -144,24 +181,32 @@ export const useAudioPlayer = () => {
   );
 
   return {
+    // State
     currentTrack,
     error,
     progress,
     hasNext,
     hasPrev,
+
+    // Grouped functionality
     playback: playbackState,
     controls: playerControls,
     volume: volumeControls,
     modes: playerModes,
     queue: queueManagement,
     playlists: playlistManagement,
+
+    // Utility functions
     formatTime,
     playTrack,
     playPlaylist,
+
+    // Raw audio element (if needed)
     audioElement: audioRef.current,
   };
 };
 
+// Hook for keyboard shortcuts
 export const useAudioKeyboardShortcuts = () => {
   const { togglePlay, next, previous, setVolume, seekBy } = usePlayerControls();
   const volume = useVolume();

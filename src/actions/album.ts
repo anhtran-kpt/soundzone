@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { emptyToNull } from "@/lib/helpers";
-import { CreateAlbumRequest } from "@/schemas";
+import { CreateAlbumRequest } from "@/lib/validations";
 
 const albumActions = {
   getAll: async () => {
