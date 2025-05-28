@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${nunitoSans.variable} antialiased overflow-hidden`}>
+      <body
+        className={`${nunitoSans.variable} antialiased overflow-hidden bg-background text-foreground text-sm`}
+      >
         <Providers>
           {children}
           <AudioPlayer />

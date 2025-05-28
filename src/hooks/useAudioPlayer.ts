@@ -278,7 +278,7 @@ export const useMediaSession = () => {
               {
                 src: currentTrack.album.coverUrl,
                 sizes: "300x300",
-                type: "image/jpeg",
+                type: "image/webp",
               },
             ]
           : undefined,
