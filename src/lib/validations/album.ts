@@ -7,7 +7,6 @@ export const albumSchema = z.object({
   description: baseFields.description,
   releaseType: z.nativeEnum(ReleaseType),
   releaseDate: z.coerce.date().optional(),
-  imageUrl: baseFields.url,
   isExplicit: z.boolean(),
   coverUrl: baseFields.url,
 });

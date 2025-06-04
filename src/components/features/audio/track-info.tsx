@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { Track } from "@/types/database";
 import { cn } from "@/lib/utils";
-import { MusicIcon } from "lucide-react";
+import { PlayIcon } from "lucide-react";
+import Link from "next/link";
+import { Icon } from "@/components/common";
+import { Button } from "@/components/ui/button";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 interface TrackInfoProps {
   track: Track;
@@ -11,30 +15,49 @@ interface TrackInfoProps {
 }
 
 export default function TrackInfo({ track, className }: TrackInfoProps) {
-  return (
-    <div className={cn("flex items-center gap-3 min-w-0", className)}>
-      {/* Cover Image */}
-      <div className="h-12 w-12 rounded-md overflow-hidden bg-muted flex-shrink-0">
-        {track.album.coverUrl ? (
-          <Image
-            src={track.album.coverUrl}
-            alt={track.album.name}
-            width={48}
-            height={48}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="h-full w-full flex items-center justify-center">
-            <MusicIcon className="h-6 w-6 text-muted-foreground" />
-          </div>
-        )}
-      </div>
+  const player = useAudioPlayer();
 
-      {/* Track Details */}
+  const handlePlayTrack = async (track: Track) => {
+    await player.playTrack(track);
+  };
+
+  return (
+    <div className={cn("flex items-center gap-3 min-w-0 group", className)}>
+      <div className="h-12 w-12 rounded-md overflow-hidden bg-muted flex-shrink-0 relative">
+        <Image
+          src={track.album.coverUrl}
+          alt={track.album.name}
+          width={48}
+          height={48}
+          className="h-full w-full object-cover"
+        />
+        <Button
+          variant="link"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          onClick={() => handlePlayTrack(track)}
+        >
+          <Icon icon={PlayIcon} />
+        </Button>
+      </div>
       <div className="min-w-0 flex-1">
-        <div className="font-medium text-sm truncate">{track.name}</div>
+        <Link
+          href={`tracks/${track.slug}`}
+          className="font-medium text-sm truncate"
+        >
+          {track.name}
+        </Link>
         <div className="text-xs text-muted-foreground truncate">
-          {track.artists.map((artist) => artist.artist.name).join(", ")}
+          {track.artists
+            .map((artist) => (
+              <Link
+                key={artist.artistId}
+                href={`/artists/${artist.artist.slug}`}
+                className="hover:underline"
+              >
+                {artist.artist.name}
+              </Link>
+            ))
+            .reduce((prev, curr) => [prev, ", ", curr])}
         </div>
       </div>
     </div>
