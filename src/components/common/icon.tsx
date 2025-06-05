@@ -5,6 +5,7 @@ interface IconProps {
   size?: number;
   strokeWidth?: number;
   className?: string;
+  fill?: string;
 }
 
 export default function Icon({
@@ -12,12 +13,14 @@ export default function Icon({
   size = 22,
   strokeWidth = 1.5,
   className = "",
+  fill = "none",
 }: IconProps) {
   return (
     <IconComponent
       width={size}
       height={size}
       strokeWidth={strokeWidth}
+      fill={fill}
       className={className}
     />
   );

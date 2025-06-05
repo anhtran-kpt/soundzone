@@ -10,7 +10,7 @@ export default function UserLayout({
       <UserSidebar />
       <div className="flex-1 flex flex-col">
         <UserHeader />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-scroll p-6">{children}</main>
       </div>
     </div>
   );

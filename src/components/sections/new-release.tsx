@@ -10,6 +10,7 @@ export default async function NewRelease() {
 
   return (
     <section className="container">
+      <h2 className="text-xl font-bold mb-3">New Releases</h2>
       <TrackList tracks={tracks} />
     </section>
   );

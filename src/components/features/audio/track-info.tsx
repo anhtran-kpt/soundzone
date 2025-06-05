@@ -4,10 +4,11 @@ import Image from "next/image";
 import { Track } from "@/types/database";
 import { cn } from "@/lib/utils";
 import { PlayIcon } from "lucide-react";
-import Link from "next/link";
+import CustomLink from "@/components/common/custom-link";
 import { Icon } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import Link from "next/link";
 
 interface TrackInfoProps {
   track: Track;
@@ -23,16 +24,15 @@ export default function TrackInfo({ track, className }: TrackInfoProps) {
 
   return (
     <div className={cn("flex items-center gap-3 min-w-0 group", className)}>
-      <div className="h-12 w-12 rounded-md overflow-hidden bg-muted flex-shrink-0 relative">
+      <div className="size-14 rounded-md overflow-hidden bg-muted flex-shrink-0 relative">
         <Image
           src={track.album.coverUrl}
           alt={track.album.name}
-          width={48}
-          height={48}
+          width={56}
+          height={56}
           className="h-full w-full object-cover"
         />
         <Button
-          variant="link"
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={() => handlePlayTrack(track)}
         >
@@ -46,16 +46,16 @@ export default function TrackInfo({ track, className }: TrackInfoProps) {
         >
           {track.name}
         </Link>
-        <div className="text-xs text-muted-foreground truncate">
+        <div className="text-xs text-muted-foreground truncate mt-0.5">
           {track.artists
             .map((artist) => (
-              <Link
+              <CustomLink
                 key={artist.artistId}
                 href={`/artists/${artist.artist.slug}`}
                 className="hover:underline"
               >
                 {artist.artist.name}
-              </Link>
+              </CustomLink>
             ))
             .reduce((prev, curr) => [prev, ", ", curr])}
         </div>
