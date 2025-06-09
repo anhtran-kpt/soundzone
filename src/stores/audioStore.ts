@@ -334,6 +334,8 @@ export const useAudioStore = create<AudioStore>()(
             currentTrack: track,
             currentPlaylist: playlist || null,
             currentTime: 0,
+            duration: 0,
+            isLoading: true,
             error: null,
           });
         },
@@ -505,6 +507,7 @@ const handleTimeUpdate = (event: Event) => {
 
 const handleLoadedMetadata = (event: Event) => {
   const audio = event.target as HTMLAudioElement;
+  console.log(audio);
   useAudioStore.getState().setDuration(audio.duration);
 };
 

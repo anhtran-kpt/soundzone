@@ -13,6 +13,8 @@ import { usePathname } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import Icon from "../common/icon";
+import Link from "next/link";
+import Logo from "@/assets/logo.svg";
 
 const navItems = [
   {
@@ -47,7 +49,9 @@ export default function UserSidebar() {
 
   return (
     <div className="w-56 flex flex-col bg-secondary px-4">
-      <div></div>
+      <Link href="/" className="flex items-center justify-center pt-4 pb-6">
+        <Logo className="fill-current" />
+      </Link>
       <div className="flex flex-col gap-2 flex-grow">
         {navItems.map((item) => (
           <UserNavItem

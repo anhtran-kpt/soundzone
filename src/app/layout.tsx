@@ -11,8 +11,9 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SoundZone",
-  description: "SoundZone",
+  title: "Soundzone",
+  description: "Soundzone",
+  icons: "/logo-icon.svg",
 };
 
 export default function RootLayout({

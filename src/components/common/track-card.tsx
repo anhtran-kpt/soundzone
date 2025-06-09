@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import Icon from "./icon";
 import { Track } from "@/types/database";
 import CustomLink from "./custom-link";
-import Link from "next/link";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
