@@ -1,44 +1,18 @@
-import db from "@/lib/db";
+import db from "@/lib/prisma/db";
+import { fullTrackInclude } from "@/lib/prisma/presets";
+import { FullTrack } from "@/lib/types";
 
 const trackActions = {
-  getTracks: async () => {
+  getTracks: async (): Promise<FullTrack[]> => {
     return await db.track.findMany({
-      include: {
-        artists: {
-          include: {
-            artist: {
-              select: {
-                name: true,
-                slug: true,
-              },
-            },
-          },
-        },
-        album: true,
-      },
+      include: fullTrackInclude,
     });
   },
 
-  getBySlug: async (slug: string) => {
+  getBySlug: async (slug: string): Promise<FullTrack | null> => {
     return await db.track.findUnique({
       where: { slug },
-      include: {
-        artists: {
-          select: {
-            artist: {
-              select: {
-                name: true,
-                slug: true,
-              },
-            },
-          },
-        },
-        album: {
-          select: {
-            coverUrl: true,
-          },
-        },
-      },
+      include: fullTrackInclude,
     });
   },
 };

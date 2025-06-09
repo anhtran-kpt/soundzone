@@ -15,23 +15,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { formatName, formatDuration } from "@/lib/helpers";
 import { format } from "date-fns";
+import { FullAlbum } from "@/lib/types";
 
-export type AlbumInfo = {
-  slug: string;
-  name: string;
-  releaseType: string;
-  releaseDate: string;
-  coverUrl: string;
-  totalDuration: number;
-  tracks: [];
-  artist: {
-    slug: string;
-  };
-};
-
-export const columns: ColumnDef<AlbumInfo>[] = [
+export const columns: ColumnDef<FullAlbum>[] = [
   {
-    header: "Cover Image",
+    header: "",
     accessorKey: "coverUrl",
     cell: ({ row }) => {
       return (
@@ -61,7 +49,13 @@ export const columns: ColumnDef<AlbumInfo>[] = [
     header: "Release Date",
     accessorKey: "releaseDate",
     cell: ({ row }) => {
-      return <div>{format(row.original.releaseDate, "MMM d, yyyy")}</div>;
+      return (
+        <div>
+          {row.original.releaseDate
+            ? format(row.original.releaseDate, "MMM d, yyyy")
+            : ""}
+        </div>
+      );
     },
   },
   {

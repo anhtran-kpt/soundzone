@@ -1,23 +1,20 @@
-import db from "@/lib/db";
+import db from "@/lib/prisma/db";
+import { fullArtistInclude } from "@/lib/prisma/presets";
+import { FullArtist } from "@/lib/types";
 import { CreateArtistInput } from "@/lib/validations";
 
 const artistActions = {
-  getAll: async () => {
+  getAll: async (): Promise<FullArtist[]> => {
     return await db.artist.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
-        albums: true,
-        tracks: true,
-      },
+      include: fullArtistInclude,
     });
   },
 
-  getBySlug: async (slug: string) => {
+  getBySlug: async (slug: string): Promise<FullArtist | null> => {
     return await db.artist.findUnique({
       where: { slug },
-      include: {
-        albums: true,
-      },
+      include: fullArtistInclude,
     });
   },
 

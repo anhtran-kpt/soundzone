@@ -4,10 +4,11 @@ import { EllipsisIcon, HeartIcon, PlayIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Icon from "./icon";
 import { Track } from "@/types/database";
-import CustomLink from "./custom-link";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import ArtistNames from "./artist-names";
+import Link from "next/link";
 
 interface TrackCardProps {
   track: Track;
@@ -39,20 +40,13 @@ export default function TrackCard({ track }: TrackCardProps) {
           </button>
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="font-medium text-sm truncate">{track.name}</h3>
-          <div className="text-xs text-muted-foreground truncate mt-0.5">
-            {track.artists
-              .map((artist) => (
-                <CustomLink
-                  key={artist.artistId}
-                  href={`/artists/${artist.artist.slug}`}
-                  className="hover:underline"
-                >
-                  {artist.artist.name}
-                </CustomLink>
-              ))
-              .reduce((prev, curr) => [prev, ", ", curr])}
-          </div>
+          <Link
+            href={`/albums/${track.album.slug}`}
+            className="font-medium text-sm truncate hover:text-primary"
+          >
+            {track.name}
+          </Link>
+          <ArtistNames artists={track.artists} />
           <span className="text-xs text-muted-foreground">
             {formatDistanceToNow(track.album.releaseDate ?? track.createdAt, {
               addSuffix: true,

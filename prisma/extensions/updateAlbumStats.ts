@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import basePrisma from "../../src/lib/prisma";
+import basePrisma from "../../src/lib/prisma/prisma";
 
 export const updateAlbumStats = Prisma.defineExtension({
   name: "updateAlbumStats",

@@ -13,30 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FullArtist } from "@/lib/types";
+import { formatName } from "@/lib/helpers";
 
-export type ArtistInfo = {
-  slug: string;
-  name: string;
-  nationality: string;
-  imageUrl: string;
-  followerCount: number;
-  monthlyListeners: number;
-  albums: [];
-  tracks: [];
-};
-
-export const columns: ColumnDef<ArtistInfo>[] = [
+export const columns: ColumnDef<FullArtist>[] = [
   {
-    header: "Image",
+    header: "",
     accessorKey: "imageUrl",
     cell: ({ row }) => {
       return (
         <Avatar>
           <AvatarImage src={row.original.imageUrl} />
-          <AvatarFallback>
-            {row.original.name.split(" ")[0].charAt(0)}
-            {row.original.name.split(" ")[1]?.charAt(0)}
-          </AvatarFallback>
+          <AvatarFallback>{formatName(row.original.name)}</AvatarFallback>
         </Avatar>
       );
     },

@@ -48,7 +48,7 @@ export default function UserSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-56 flex flex-col bg-secondary px-4">
+    <aside className="w-56 flex flex-col bg-sidebar px-4 border-r border-sidebar-border">
       <Link href="/" className="flex items-center justify-center pt-4 pb-6">
         <Logo className="fill-current" />
       </Link>
@@ -66,6 +66,6 @@ export default function UserSidebar() {
         <Icon icon={PlusIcon} />
         <span className="font-medium">Create Playlist</span>
       </Button>
-    </div>
+    </aside>
   );
 }

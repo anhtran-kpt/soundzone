@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import { Track, Playlist } from "@/types/database";
+import { Track, Playlist } from "@/app/generated/prisma";
 
 export type RepeatMode = "off" | "one" | "all";
 

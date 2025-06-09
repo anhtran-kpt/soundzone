@@ -1,32 +1,23 @@
-import db from "@/lib/db";
+import db from "@/lib/prisma/db";
 import { emptyToNull } from "@/lib/helpers";
 import { CreateAlbumRequest } from "@/lib/validations";
+import { FullAlbum } from "@/lib/types";
+import { fullAlbumInclude } from "@/lib/prisma/presets";
 
 const albumActions = {
-  getAll: async () => {
+  getAll: async (): Promise<FullAlbum[]> => {
     return await db.album.findMany({
-      include: {
-        artist: true,
-        genres: true,
-      },
+      include: fullAlbumInclude,
       orderBy: {
         createdAt: "desc",
       },
     });
   },
 
-  getBySlug: async (slug: string) => {
+  getBySlug: async (slug: string): Promise<FullAlbum | null> => {
     return await db.album.findUnique({
       where: { slug },
-      include: {
-        artist: true,
-        genres: true,
-        tracks: {
-          include: {
-            artists: true,
-          },
-        },
-      },
+      include: fullAlbumInclude,
     });
   },
 

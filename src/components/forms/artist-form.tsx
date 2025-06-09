@@ -199,7 +199,7 @@ export default function ArtistForm({
           />
 
           <FormItem>
-            <FormLabel>Avatar</FormLabel>
+            <FormLabel>Image</FormLabel>
             <FormControl>
               <Input
                 type="file"
@@ -214,7 +214,7 @@ export default function ArtistForm({
           </FormItem>
 
           <FormItem>
-            <FormLabel>Cover</FormLabel>
+            <FormLabel>Banner</FormLabel>
             <FormControl>
               <Input
                 type="file"

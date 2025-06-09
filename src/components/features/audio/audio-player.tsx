@@ -33,7 +33,7 @@ function AudioPlayer() {
   console.log(player);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-primary-foreground z-50 px-4 py-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-accent z-50 px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <TrackInfo

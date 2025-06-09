@@ -29,7 +29,7 @@ export default function ArtistsPage() {
         </Link>
       </div>
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={artists} />
+        <DataTable columns={columns} data={artists || []} />
       </div>
     </div>
   );

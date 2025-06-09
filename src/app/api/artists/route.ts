@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { createArtistSchema } from "@/schemas";
+import { createArtistSchema } from "@/lib/validations";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { artistActions } from "@/actions";

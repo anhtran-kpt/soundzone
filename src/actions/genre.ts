@@ -1,18 +1,22 @@
-import db from "@/lib/db";
+import db from "@/lib/prisma/db";
+import { fullGenreInclude } from "@/lib/prisma/presets";
+import { FullGenre } from "@/lib/types";
 import { CreateGenreInput, UpdateGenreInput } from "@/lib/validations";
 
 const genreActions = {
-  getAll: async () => {
+  getAll: async (): Promise<FullGenre[]> => {
     return await db.genre.findMany({
+      include: fullGenreInclude,
       orderBy: {
         createdAt: "desc",
       },
     });
   },
 
-  getBySlug: async (slug: string) => {
+  getBySlug: async (slug: string): Promise<FullGenre | null> => {
     return await db.genre.findUnique({
       where: { slug },
+      include: fullGenreInclude,
     });
   },
 
