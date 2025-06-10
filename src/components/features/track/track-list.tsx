@@ -3,24 +3,17 @@
 import { PlayIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Track } from "@/types/database";
+import { FullTrack } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 interface TrackListProps {
-  tracks: Track[];
+  tracks: FullTrack[];
 }
 
 export default function TrackList({ tracks }: TrackListProps) {
-  const player = useAudioPlayer();
-
-  const handlePlayTrack = async (track: Track) => {
-    await player.playTrack(track);
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {tracks?.map((track: Track) => (
+      {tracks?.map((track: FullTrack) => (
         <div key={track.id}>
           <Card>
             <div className="flex items-center">
@@ -37,11 +30,7 @@ export default function TrackList({ tracks }: TrackListProps) {
                     {track.lyrics || "No lyrics"}
                   </p>
                   <div className="flex items-center gap-3 mt-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePlayTrack(track)}
-                    >
+                    <Button variant="outline" size="sm">
                       <PlayIcon className="h-4 w-4 mr-1" />
                       Play
                     </Button>

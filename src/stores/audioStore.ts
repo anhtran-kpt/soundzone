@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import { Track, Playlist } from "@/app/generated/prisma";
+import { FullTrack, FullPlaylist } from "@/lib/types";
 
 export type RepeatMode = "off" | "one" | "all";
 
 interface AudioState {
   // Current playback state
-  currentTrack: Track | null;
-  currentPlaylist: Playlist | null;
+  currentTrack: FullTrack | null;
+  currentPlaylist: FullPlaylist | null;
   currentTrackIndex: number;
 
   // Playback status
@@ -23,11 +23,11 @@ interface AudioState {
   repeatMode: RepeatMode;
 
   // Playlists management
-  playlists: Playlist[];
+  playlists: FullPlaylist[];
 
   // Queue management
-  queue: Track[];
-  originalQueue: Track[]; // Backup for shuffle
+  queue: FullTrack[];
+  originalQueue: FullTrack[]; // Backup for shuffle
   queueIndex: number;
 
   // Error handling
@@ -60,17 +60,17 @@ interface AudioActions {
   toggleRepeat: () => void;
 
   // Track/Playlist management
-  setCurrentTrack: (track: Track, playlist?: Playlist) => void;
-  loadPlaylist: (playlist: Playlist, startIndex?: number) => void;
-  addToQueue: (track: Track) => void;
+  setCurrentTrack: (track: FullTrack, playlist?: FullPlaylist) => void;
+  loadPlaylist: (playlist: FullPlaylist, startIndex?: number) => void;
+  addToQueue: (track: FullTrack) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
 
   // Playlist management
-  createPlaylist: (name: string, tracks?: Track[]) => Playlist;
-  updatePlaylist: (id: string, updates: Partial<Playlist>) => void;
+  createPlaylist: (name: string, tracks?: FullTrack[]) => FullPlaylist;
+  updatePlaylist: (id: string, updates: Partial<FullPlaylist>) => void;
   deletePlaylist: (id: string) => void;
-  addTrackToPlaylist: (playlistId: string, track: Track) => void;
+  addTrackToPlaylist: (playlistId: string, track: FullTrack) => void;
   removeTrackFromPlaylist: (playlistId: string, trackId: string) => void;
 
   // Internal state management
@@ -166,8 +166,7 @@ export const useAudioStore = create<AudioStore>()(
 
         // Track navigation
         next: async () => {
-          const { queue, queueIndex, repeatMode, isShuffled, loadNextTrack } =
-            get();
+          const { queue, queueIndex, repeatMode } = get();
 
           if (queue.length === 0) return;
 
@@ -391,7 +390,7 @@ export const useAudioStore = create<AudioStore>()(
         // Playlist management
         createPlaylist: (name, tracks = []) => {
           const { playlists } = get();
-          const newPlaylist: Playlist = {
+          const newPlaylist: FullPlaylist = {
             id: Date.now().toString(),
             name,
             tracks,
@@ -464,12 +463,37 @@ export const useAudioStore = create<AudioStore>()(
   )
 );
 
-// Auto-handle track ending
+// Event handlers
 useAudioStore.subscribe(
   (state) => state.audioElement,
   (audioElement, previousAudioElement) => {
+    const handleTrackEnd = () => {
+      const { repeatMode, next, play } = useAudioStore.getState();
+      if (repeatMode === "one") {
+        play();
+      } else {
+        next();
+      }
+    };
+
+    const handleTimeUpdate = (event: Event) => {
+      const audio = event.target as HTMLAudioElement;
+      useAudioStore.getState().setCurrentTime(audio.currentTime);
+    };
+
+    const handleLoadedMetadata = (event: Event) => {
+      const audio = event.target as HTMLAudioElement;
+      useAudioStore.getState().setDuration(audio.duration);
+    };
+
+    const handleError = (event: Event) => {
+      const audio = event.target as HTMLAudioElement;
+      console.error("Audio error:", audio.error);
+      useAudioStore.getState().setError("Failed to load audio");
+      useAudioStore.getState().setLoading(false);
+    };
+
     if (previousAudioElement) {
-      // Cleanup previous element
       previousAudioElement.removeEventListener("ended", handleTrackEnd);
       previousAudioElement.removeEventListener("timeupdate", handleTimeUpdate);
       previousAudioElement.removeEventListener(
@@ -480,7 +504,6 @@ useAudioStore.subscribe(
     }
 
     if (audioElement) {
-      // Setup new element
       audioElement.addEventListener("ended", handleTrackEnd);
       audioElement.addEventListener("timeupdate", handleTimeUpdate);
       audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -488,32 +511,3 @@ useAudioStore.subscribe(
     }
   }
 );
-
-// Event handlers
-const handleTrackEnd = () => {
-  const { repeatMode, next, play } = useAudioStore.getState();
-
-  if (repeatMode === "one") {
-    play();
-  } else {
-    next();
-  }
-};
-
-const handleTimeUpdate = (event: Event) => {
-  const audio = event.target as HTMLAudioElement;
-  useAudioStore.getState().setCurrentTime(audio.currentTime);
-};
-
-const handleLoadedMetadata = (event: Event) => {
-  const audio = event.target as HTMLAudioElement;
-  console.log(audio);
-  useAudioStore.getState().setDuration(audio.duration);
-};
-
-const handleError = (event: Event) => {
-  const audio = event.target as HTMLAudioElement;
-  console.error("Audio error:", audio.error);
-  useAudioStore.getState().setError("Failed to load audio");
-  useAudioStore.getState().setLoading(false);
-};

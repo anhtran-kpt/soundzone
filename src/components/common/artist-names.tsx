@@ -1,9 +1,15 @@
-import { Artist } from "@/types/database";
 import CustomLink from "./custom-link";
 import { cn } from "@/lib/utils";
 
 interface ArtistNamesProps {
-  artists: Artist[];
+  artists: {
+    artistId: string;
+    order: number;
+    artist: {
+      name: string;
+      slug: string;
+    };
+  }[];
   className?: string;
 }
 

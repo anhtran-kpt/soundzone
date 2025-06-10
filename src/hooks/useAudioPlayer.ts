@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAudioStore } from "../stores/audioStore";
-import { Track, Playlist } from "@/types/database";
+import { FullPlaylist, FullTrack } from "@/lib/types";
 import { useShallow } from "zustand/react/shallow";
 
 // Selector hooks for optimal re-rendering
@@ -165,14 +165,17 @@ export const useAudioPlayer = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
-  const playTrack = useCallback(async (track: Track, playlist?: Playlist) => {
-    const { setCurrentTrack, play } = useAudioStore.getState();
-    setCurrentTrack(track, playlist);
-    await play();
-  }, []);
+  const playTrack = useCallback(
+    async (track: FullTrack, playlist?: FullPlaylist) => {
+      const { setCurrentTrack, play } = useAudioStore.getState();
+      setCurrentTrack(track, playlist);
+      await play();
+    },
+    []
+  );
 
   const playPlaylist = useCallback(
-    async (playlist: Playlist, startIndex = 0) => {
+    async (playlist: FullPlaylist, startIndex = 0) => {
       const { loadPlaylist, play } = useAudioStore.getState();
       loadPlaylist(playlist, startIndex);
       await play();

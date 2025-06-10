@@ -3,23 +3,15 @@
 import { EllipsisIcon, HeartIcon, PlayIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Icon from "./icon";
-import { Track } from "@/types/database";
+import { FullTrack } from "@/lib/types";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import ArtistNames from "./artist-names";
 import Link from "next/link";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
-interface TrackCardProps {
-  track: Track;
-}
-
-export default function TrackCard({ track }: TrackCardProps) {
-  const player = useAudioPlayer();
-
-  const handlePlayTrack = async (track: Track) => {
-    await player.playTrack(track);
-  };
+export default function TrackCard({ track }: { track: FullTrack }) {
+  const { playTrack } = useAudioPlayer();
 
   return (
     <div className="flex justify-between items-center hover:bg-muted rounded-md p-2 transition-colors duration-200 group">
@@ -34,7 +26,7 @@ export default function TrackCard({ track }: TrackCardProps) {
           />
           <button
             className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:brightness-90 cursor-pointer"
-            onClick={() => handlePlayTrack(track)}
+            onClick={() => playTrack(track)}
           >
             <Icon icon={PlayIcon} fill="white" strokeWidth={0} />
           </button>
