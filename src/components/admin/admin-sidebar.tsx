@@ -1,67 +1,84 @@
+"use client";
+
 import {
-  ChartNoAxesCombinedIcon,
-  Disc3Icon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   DiscAlbumIcon,
-  ListMusicIcon,
+  HeartIcon,
+  HistoryIcon,
+  LayoutDashboardIcon,
   ListPlusIcon,
   Mic2Icon,
+  MusicIcon,
+  UsersIcon,
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
+  SidebarSeparator,
 } from "../ui/sidebar";
 import { Icon } from "../common";
 import Link from "next/link";
-import CustomTrigger from "./custom-trigger";
 import { usePathname } from "next/navigation";
 import Logo from "@/assets/logo.svg";
+import { Button } from "../ui/button";
 
 const items = [
   {
-    title: "Discover",
-    url: "/",
-    icon: Disc3Icon,
-  },
-  {
-    title: "Playlists",
-    url: "/playlists",
-    icon: ListMusicIcon,
+    title: "Dashboard",
+    url: "/admin",
+    icon: LayoutDashboardIcon,
   },
   {
     title: "Artists",
-    url: "/artists",
+    url: "/admin/artists",
     icon: Mic2Icon,
   },
   {
     title: "Albums",
-    url: "/albums",
+    url: "/admin/albums",
     icon: DiscAlbumIcon,
   },
   {
-    title: "Top 100",
-    url: "/top100",
-    icon: ChartNoAxesCombinedIcon,
+    title: "Genres",
+    url: "/admin/genres",
+    icon: MusicIcon,
+  },
+  {
+    title: "Users",
+    url: "/admin/users",
+    icon: UsersIcon,
   },
 ];
 
-export default function AppSidebar() {
+export default function AdminSidebar() {
   const pathname = usePathname();
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
 
   return (
     <Sidebar collapsible="icon" className="relative">
-      <CustomTrigger />
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleSidebar}
+        className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 size-6 rounded-full"
+      >
+        {state === "collapsed" ? (
+          <Icon icon={ChevronRightIcon} className="size-4" />
+        ) : (
+          <Icon icon={ChevronLeftIcon} className="size-4" />
+        )}
+      </Button>
       <SidebarHeader>
-        <Link href="/" className="flex flex-col items-center">
+        <Link href="/admin" className="flex flex-col items-center">
           <Logo className="size-8 fill-current" />
           <span
             className={`text-lg font-medium ${
@@ -92,6 +109,29 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/favorites">
+                    <Icon icon={HeartIcon} className="size-6" />
+                    <span>Favorites</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/history">
+                    <Icon icon={HistoryIcon} className="size-6" />
+                    <span>History</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

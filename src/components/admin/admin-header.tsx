@@ -6,10 +6,10 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import Icon from "../common/icon";
-import { UserProfile, UserSearchBar } from ".";
+import { AdminProfile, AdminSearchBar } from ".";
 import { ModeToggle } from "../layout/mode-toggle";
 
-export default function UserHeader() {
+export default function AdminHeader() {
   return (
     <header className="flex items-center justify-between py-3">
       <div className="flex items-center gap-4 flex-grow">
@@ -21,7 +21,7 @@ export default function UserHeader() {
             <Icon icon={ArrowRightIcon} />
           </Button>
         </div>
-        <UserSearchBar />
+        <AdminSearchBar />
       </div>
       <div className="flex items-center gap-3">
         <ModeToggle />
@@ -31,7 +31,7 @@ export default function UserHeader() {
         <Button variant="ghost">
           <Icon icon={SettingsIcon} />
         </Button>
-        <UserProfile />
+        <AdminProfile />
       </div>
     </header>
   );

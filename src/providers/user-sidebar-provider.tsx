@@ -1,5 +1,5 @@
 import { SidebarProvider as ShadcnSidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/user/app-sidebar";
+import { UserSidebar } from "@/components/user";
 
 export default function SidebarProvider({
   children,
@@ -8,8 +8,8 @@ export default function SidebarProvider({
 }) {
   return (
     <ShadcnSidebarProvider>
-      <AppSidebar />
-      <main className="flex-1 overflow-y-scroll">{children}</main>
+      <UserSidebar />
+      {children}
     </ShadcnSidebarProvider>
   );
 }

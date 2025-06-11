@@ -1,4 +1,5 @@
 import { UserHeader } from "@/components/user";
+import UserSidebarProvider from "@/providers/user-sidebar-provider";
 
 export default function UserLayout({
   children,
@@ -6,11 +7,11 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1 flex flex-col">
+    <UserSidebarProvider>
+      <main className="flex-1 overflow-y-scroll px-12">
         <UserHeader />
-        <main className="flex-1 overflow-y-scroll p-6">{children}</main>
-      </div>
-    </div>
+        {children}
+      </main>
+    </UserSidebarProvider>
   );
 }
