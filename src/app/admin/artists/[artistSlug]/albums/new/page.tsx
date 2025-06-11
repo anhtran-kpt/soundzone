@@ -31,7 +31,7 @@ export default async function NewAlbumPage({ params }: Props) {
 
   return (
     <div className="container mx-auto p-6">
-      <AlbumForm artistId={artist.id} mode="create" />
+      <AlbumForm artistId={artist.id} />
     </div>
   );
 }

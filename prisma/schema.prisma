@@ -112,7 +112,6 @@ model Album {
   trackCount    Int         @default(0)
   likeCount     Int         @default(0)
   coverUrl      String
-  isExplicit    Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 

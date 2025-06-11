@@ -2,7 +2,6 @@
 
 import {
   FormControl,
-  FormDescription,
   FormMessage,
   FormItem,
   FormLabel,
@@ -34,16 +33,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import AudioUploader from "@/components/features/track/audio-uploader";
 import uploadQueries from "@/services/queries/upload";
 import { CreateAlbumInput, createAlbumSchema } from "@/lib/validations";
-import { Album } from "@/types/database";
+import { FullAlbum } from "@/lib/types";
 
 interface AlbumFormProps {
   artistId: string;
-  album?: Album;
+  album?: FullAlbum;
   mode: "create" | "edit";
 }
 
@@ -70,7 +67,6 @@ export default function AlbumForm({
       releaseType: album?.releaseType ?? ReleaseType.SINGLE,
       releaseDate: album?.releaseDate ?? undefined,
       coverUrl: album?.coverUrl ?? "",
-      isExplicit: album?.isExplicit ?? false,
       genreIds: album?.genres?.map((genre) => genre.genreId) ?? [],
       tracks: album?.tracks
         ? album.tracks.map((track) => ({
@@ -115,14 +111,12 @@ export default function AlbumForm({
 
   const releaseType = form.watch("releaseType");
   const albumName = form.watch("name");
-  const albumExplicit = form.watch("isExplicit");
 
   useEffect(() => {
     if (releaseType === ReleaseType.SINGLE) {
       form.setValue("tracks.0.name", albumName);
-      form.setValue("tracks.0.isExplicit", albumExplicit);
     }
-  }, [releaseType, albumName, albumExplicit, form]);
+  }, [releaseType, albumName, form]);
 
   const onSubmit = async (values: CreateAlbumInput) => {
     try {
@@ -142,7 +136,6 @@ export default function AlbumForm({
         releaseType: values.releaseType,
         releaseDate: values.releaseDate,
         coverUrl: values.coverUrl,
-        isExplicit: values.isExplicit,
         genreIds: values.genreIds,
         artistId: artistId,
         tracks: values.tracks.map((track, trackIndex) => ({
@@ -225,14 +218,6 @@ export default function AlbumForm({
     ensureCorrectTrackCount();
   }, [releaseType, fields.length, remove, append, ensureCorrectTrackCount]);
 
-  const handleAudioChange = (
-    index: number,
-    data: { url: string; duration: number }
-  ) => {
-    form.setValue(`tracks.${index}.audioUrl`, data.url);
-    form.setValue(`tracks.${index}.duration`, Math.floor(data.duration));
-  };
-
   const handleAddArtistToTrack = (trackIndex: number) => {
     const currentArtists = form.getValues(`tracks.${trackIndex}.artists`) || [];
     form.setValue(`tracks.${trackIndex}.artists`, [
@@ -259,7 +244,7 @@ export default function AlbumForm({
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">
-        {mode === "create" ? "Create New Album" : "Edit Album"}
+        {mode === "create" ? "New Album" : "Edit Album"}
       </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -297,27 +282,6 @@ export default function AlbumForm({
                   />
                 </FormControl>
                 <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="isExplicit"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-2">
-                  <FormLabel>Explicit</FormLabel>
-                  <FormDescription>
-                    This album contains explicit content.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
               </FormItem>
             )}
           />
@@ -408,39 +372,41 @@ export default function AlbumForm({
                 <div className="mb-2">
                   <FormLabel className="text-base">Genres</FormLabel>
                 </div>
-                {genres?.map((genre) => (
-                  <FormField
-                    key={genre.id}
-                    control={form.control}
-                    name="genreIds"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={genre.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(genre.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, genre.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== genre.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            {genre.name}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
+                <div className="grid grid-cols-2 gap-2">
+                  {genres?.map((genre) => (
+                    <FormField
+                      key={genre.id}
+                      control={form.control}
+                      name="genreIds"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={genre.id}
+                            className="flex flex-row items-start space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(genre.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...field.value, genre.id])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== genre.id
+                                        )
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-sm font-normal">
+                              {genre.name}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -510,14 +476,22 @@ export default function AlbumForm({
                       )}
                     />
 
-                    <div>
-                      <FormLabel>Audio File</FormLabel>
-                      <AudioUploader
-                        value={form.watch(`tracks.${index}.audioUrl`) || ""}
-                        onChange={(data) => handleAudioChange(index, data)}
-                        disabled={isSubmitting}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name={`tracks.${index}.audioUrl`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Audio URL</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter audio url"
+                              disabled={isSubmitting}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={form.control}
