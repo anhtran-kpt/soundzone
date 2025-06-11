@@ -11,9 +11,8 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Soundzone",
-  description: "Soundzone",
-  icons: "/logo-icon.svg",
+  title: "SoundZone",
+  description: "SoundZone",
 };
 
 export default function RootLayout({
@@ -23,6 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="SoundZone" />
+      </head>
       <body
         className={`${nunitoSans.variable} antialiased overflow-hidden bg-background text-foreground text-sm`}
       >
