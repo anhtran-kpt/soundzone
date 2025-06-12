@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -8,10 +10,32 @@ import { Button } from "../ui/button";
 import Icon from "../common/icon";
 import { AdminProfile, AdminSearchBar } from ".";
 import { ModeToggle } from "../layout/mode-toggle";
+import { useScroll, motion, useMotionValueEvent } from "motion/react";
+import { useState } from "react";
 
-export default function AdminHeader() {
+export default function AdminHeader({
+  scrollContainerRef,
+}: {
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    setIsScrolled(y > 0);
+  });
+
   return (
-    <header className="flex items-center justify-between py-3">
+    <motion.header
+      className={`sticky top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-background"
+      }`}
+    >
       <div className="flex items-center gap-4 flex-grow">
         <div className="space-x-2">
           <Button variant="ghost">
@@ -33,6 +57,6 @@ export default function AdminHeader() {
         </Button>
         <AdminProfile />
       </div>
-    </header>
+    </motion.header>
   );
 }
