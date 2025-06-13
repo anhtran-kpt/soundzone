@@ -123,11 +123,7 @@ export default function AlbumForm({
       setIsSubmitting(true);
 
       if (coverFile) {
-        values.coverUrl = await uploadQueries.uploadImage(
-          coverFile,
-          "album",
-          "image"
-        );
+        values.coverUrl = await uploadQueries.uploadAlbumImage(coverFile);
       }
 
       const albumData = {

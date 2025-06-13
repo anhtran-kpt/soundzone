@@ -1,5 +1,5 @@
 import { userActions } from "@/actions";
-import prisma from "../src/lib/db";
+import prisma from "@/lib/prisma/prisma";
 import data from "./data/genres.json";
 
 async function createAdminUser() {

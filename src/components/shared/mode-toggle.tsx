@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Icon from "../common/icon";
 
-export function ModeToggle() {
+export default function ModeToggle() {
   const { setTheme } = useTheme();
 
   return (

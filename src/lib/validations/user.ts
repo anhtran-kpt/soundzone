@@ -26,4 +26,5 @@ export const signUpSchema = userSchema
   });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
+export type SignUpRequest = z.infer<typeof userSchema>;
 export type SignInInput = z.infer<typeof signInSchema>;

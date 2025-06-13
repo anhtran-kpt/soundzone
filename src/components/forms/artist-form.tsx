@@ -20,10 +20,10 @@ import { useGenres } from "@/services/queries/genre";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import uploadQueries from "@/services/queries/upload";
-import { Artist } from "@/types/database";
+import { FullArtist } from "@/lib/types";
 
 interface ArtistFormProps {
-  artist?: Artist;
+  artist?: FullArtist;
   mode: "create" | "edit";
 }
 
@@ -57,18 +57,10 @@ export default function ArtistForm({
       setIsSubmitting(true);
 
       if (imageFile) {
-        values.imageUrl = await uploadQueries.uploadImage(
-          imageFile,
-          "artist",
-          "image"
-        );
+        values.imageUrl = await uploadQueries.uploadArtistImage(imageFile);
       }
       if (bannerFile) {
-        values.bannerUrl = await uploadQueries.uploadImage(
-          bannerFile,
-          "artist",
-          "banner"
-        );
+        values.bannerUrl = await uploadQueries.uploadArtistBanner(bannerFile);
       }
 
       let response = null;

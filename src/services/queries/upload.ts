@@ -1,17 +1,45 @@
 import axios from "axios";
 
 const uploadQueries = {
-  uploadImage: async (
-    file: File,
-    model: "artist" | "user" | "album" | "playlist",
-    type: "image" | "banner"
-  ) => {
+  uploadArtistImage: async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("type", type);
-    formData.append("model", model);
 
-    const response = await axios.post("/api/upload/image", formData, {
+    const response = await axios.post("/api/upload/artist/image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Failed to upload image");
+    }
+
+    return response.data.data.secure_url;
+  },
+
+  uploadArtistBanner: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.post("/api/upload/artist/banner", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Failed to upload image");
+    }
+
+    return response.data.data.secure_url;
+  },
+
+  uploadAlbumImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.post("/api/upload/album", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

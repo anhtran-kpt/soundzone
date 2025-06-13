@@ -74,7 +74,6 @@ CREATE TABLE "Album" (
     "trackCount" INTEGER NOT NULL DEFAULT 0,
     "likeCount" INTEGER NOT NULL DEFAULT 0,
     "coverUrl" TEXT NOT NULL,
-    "isExplicit" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "artistId" TEXT NOT NULL,

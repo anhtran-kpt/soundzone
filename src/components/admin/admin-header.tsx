@@ -9,7 +9,7 @@ import {
 import { Button } from "../ui/button";
 import Icon from "../common/icon";
 import { AdminProfile, AdminSearchBar } from ".";
-import { ModeToggle } from "../layout/mode-toggle";
+import { ModeToggle } from "../shared";
 import { useScroll, motion, useMotionValueEvent } from "motion/react";
 import { useState } from "react";
 

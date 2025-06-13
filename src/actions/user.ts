@@ -1,10 +1,10 @@
 import { comparePasswords, hashPassword } from "@/lib/auth";
 import { ApiError } from "@/lib/api/server/api-error";
 import db from "@/lib/prisma/db";
-import { SignUpInput, SignInInput } from "@/lib/validations";
+import { SignInInput, SignUpRequest } from "@/lib/validations";
 
 const userActions = {
-  signUp: async (data: SignUpInput) => {
+  signUp: async (data: SignUpRequest) => {
     const existingUser = await db.user.findUnique({
       where: { email: data.email },
     });

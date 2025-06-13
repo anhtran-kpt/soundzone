@@ -8,8 +8,6 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const formData = await req.formData();
 
   const imageFile = formData.get("file") as File;
-  const model = formData.get("model") as string;
-  const type = formData.get("type") as string;
 
   const arrayBuffer = await imageFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
@@ -19,13 +17,9 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const uploadResult = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: `${model}s/${type}`,
+        folder: "soundzone/artist/images",
         resource_type: "image",
         format: "webp",
-        overwrite: true,
-        use_filename: false,
-        unique_filename: true,
-        quality: "auto",
       },
       (error, result) => {
         if (error) reject(error);
