@@ -34,7 +34,6 @@ export default function ArtistForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [bannerFile, setBannerFile] = useState<File | null>(null);
 
   const createMutation = useCreateArtist();
   const updateMutation = useUpdateArtist(artist?.slug || "");
@@ -46,7 +45,6 @@ export default function ArtistForm({
       name: artist?.name ?? "",
       description: artist?.description ?? "",
       imageUrl: artist?.imageUrl ?? "",
-      bannerUrl: artist?.bannerUrl ?? "",
       nationality: artist?.nationality ?? "",
       genreIds: artist?.genres.map((genre) => genre.genreId) ?? [],
     },
@@ -58,9 +56,6 @@ export default function ArtistForm({
 
       if (imageFile) {
         values.imageUrl = await uploadQueries.uploadArtistImage(imageFile);
-      }
-      if (bannerFile) {
-        values.bannerUrl = await uploadQueries.uploadArtistBanner(bannerFile);
       }
 
       let response = null;
@@ -199,21 +194,6 @@ export default function ArtistForm({
                 onChange={(e) => setImageFile(e.target.files?.[0] || null)}
                 placeholder="Upload artist image"
                 autoComplete="artist-image"
-                disabled={isSubmitting}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-
-          <FormItem>
-            <FormLabel>Banner</FormLabel>
-            <FormControl>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setBannerFile(e.target.files?.[0] || null)}
-                placeholder="Upload artist banner"
-                autoComplete="artist-banner"
                 disabled={isSubmitting}
               />
             </FormControl>

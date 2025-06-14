@@ -22,18 +22,8 @@ export default async function ArtistPage({
   return (
     <div className="flex flex-col gap-4">
       <section className="flex items-center gap-4 relative h-72">
-        {artist.bannerUrl ? (
-          <Image
-            src={artist.bannerUrl}
-            alt={artist.name}
-            width={1000}
-            height={1000}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="size-full bg-muted" />
-        )}
-        <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-6 px-6">
+        <div className="absolute inset-0 -mx-12 -mt-24 bg-muted dark:bg-muted/80"></div>
+        <div className="absolute bottom-6 flex items-center gap-6 px-6">
           <Image
             src={artist.imageUrl}
             alt={artist.name}

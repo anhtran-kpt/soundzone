@@ -22,12 +22,17 @@ enum UserRole {
 enum ReleaseType {
   SINGLE
   ALBUM
-  EP
 }
 
 enum ArtistRole {
   MAIN
   FEATURED
+}
+
+enum PlaylistType {
+  USER
+  EDITORIAL
+  ALGORITHM
 }
 
 model User {
@@ -36,7 +41,7 @@ model User {
   slug      String   @unique
   email     String   @unique
   password  String
-  avatarUrl String?
+  imagePublicId String?
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,16 +62,12 @@ model Artist {
   slug             String   @unique
   description      String?  @db.Text
   nationality      String?
-  imageUrl         String
-  bannerUrl        String?
-  followerCount    Int      @default(0)
-  monthlyListeners Int      @default(0)
+  imagePublicId    String
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
   tracks    TrackArtist[]
   albums    Album[]
-  genres    ArtistGenre[]
   followers UserFollowedArtist[]
 
   @@index([slug])
@@ -74,18 +75,16 @@ model Artist {
 
 model Track {
   id           String           @id @default(cuid())
-  name         String
+  title         String
   slug         String           @unique
   lyrics       String?          @db.Text
   duration     Int              @default(0) // In seconds
-  playCount    Int              @default(0)
-  likeCount    Int              @default(0)
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
   isExplicit   Boolean          @default(false)
-  audioUrl     String
+  audioPublicId String
   genres       TrackGenre[]
-  trackNumber  Int              @default(1) // Position in the album
+  trackNumber  Int              // Position in the album
   composer     String?
   lyricist     String?
   producer     String?
@@ -102,23 +101,18 @@ model Track {
 
 model Album {
   id            String      @id @default(cuid())
-  name          String
+  title          String
   description   String?     @db.Text
   slug          String      @unique
   releaseType   ReleaseType @default(SINGLE)
   releaseDate   DateTime?
-  playCount     Int         @default(0)
-  totalDuration Int         @default(0)
-  trackCount    Int         @default(0)
-  likeCount     Int         @default(0)
-  coverUrl      String
+  coverPublicId String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   tracks       Track[]
   artist       Artist           @relation(fields: [artistId], references: [id])
   artistId     String
-  genres       AlbumGenre[]
   likedByUsers UserLikedAlbum[]
 
   @@index([slug])
@@ -126,23 +120,19 @@ model Album {
 
 model Playlist {
   id            String   @id @default(cuid())
-  name          String
+  title          String
   description   String?  @db.Text
   slug          String   @unique
   isPublic      Boolean  @default(true)
-  totalDuration Int      @default(0)
-  playCount     Int      @default(0)
-  trackCount    Int      @default(0)
-  likeCount     Int      @default(0)
-  coverUrl      String?
+  coverPublicId String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  user         User                @relation(fields: [userId], references: [id])
-  userId       String
+  user         User?                @relation(fields: [userId], references: [id])
+  userId       String?
+  type         PlaylistType         @default(USER)
   likedByUsers UserLikedPlaylist[]
   tracks       PlaylistTrack[]
-  genres       PlaylistGenre[]
 
   @@index([slug])
   @@index([userId])
@@ -151,20 +141,11 @@ model Playlist {
 model Genre {
   id          String   @id @default(cuid())
   name        String   @unique
-  description String?  @db.Text
   slug        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  trackCount    Int @default(0)
-  artistCount   Int @default(0)
-  albumCount    Int @default(0)
-  playlistCount Int @default(0)
-
-  albums    AlbumGenre[]
-  artists   ArtistGenre[]
   tracks    TrackGenre[]
-  playlists PlaylistGenre[]
 
   @@index([slug])
 }
@@ -187,18 +168,6 @@ model PlayHistory {
   @@index([trackId])
 }
 
-model PlaylistGenre {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
-  playlistId String
-  genre      Genre    @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  genreId    String
-
-  @@unique([playlistId, genreId])
-}
 
 model TrackGenre {
   id        String   @id @default(uuid())
@@ -241,31 +210,6 @@ model PlaylistTrack {
   @@unique([playlistId, trackId])
 }
 
-model AlbumGenre {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  albumId String
-  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  genreId String
-
-  @@unique([albumId, genreId])
-}
-
-model ArtistGenre {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
-  artistId String
-  genre    Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  genreId  String
-
-  @@unique([artistId, genreId])
-}
 
 model UserLikedTrack {
   id        String   @id @default(uuid())

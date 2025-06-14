@@ -6,7 +6,6 @@ export const artistSchema = z.object({
   description: baseFields.description,
   nationality: z.string().optional(),
   imageUrl: baseFields.url,
-  bannerUrl: baseFields.url,
 });
 
 export const createArtistSchema = artistSchema.extend({

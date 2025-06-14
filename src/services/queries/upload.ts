@@ -5,24 +5,7 @@ const uploadQueries = {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await axios.post("/api/upload/artist/image", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    if (response.status !== 200) {
-      throw new Error("Failed to upload image");
-    }
-
-    return response.data.data.secure_url;
-  },
-
-  uploadArtistBanner: async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await axios.post("/api/upload/artist/banner", formData, {
+    const response = await axios.post("/api/upload/artist", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
