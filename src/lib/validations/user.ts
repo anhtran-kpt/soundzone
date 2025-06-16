@@ -19,6 +19,7 @@ export const signUpSchema = userSchema
   .superRefine((data, ctx) => {
     if (data.password !== data.passwordConfirmation) {
       ctx.addIssue({
+        path: ["passwordConfirmation"],
         code: z.ZodIssueCode.custom,
         message: "Passwords do not match",
       });

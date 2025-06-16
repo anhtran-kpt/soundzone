@@ -53,6 +53,8 @@ export function SignUpForm() {
 
         router.push("/");
         router.refresh();
+      } else {
+        toast.error(response.error?.message || "Sign up failed");
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");

@@ -1,9 +1,7 @@
-// import { createTrackSchema } from "@/schemas";
-// import { ApiResponse } from "@/lib/api/server/api-response";
-// import { withErrorHandler } from "@/lib/api/server/error-handler";
-// import { validateData } from "@/lib/api/server/validate-data";
-// import { NextRequest, NextResponse } from "next/server";
-// import { createTrack, getAllTracks } from "@/actions";
+import { ApiResponse } from "@/lib/api/server/api-response";
+import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { NextResponse } from "next/server";
+import { getAllTracks } from "@/lib/services/track";
 
 // export const POST = withErrorHandler(async (req: NextRequest) => {
 //   const body = await req.json();
@@ -15,8 +13,8 @@
 //   return NextResponse.json(ApiResponse.success(newTrack), { status: 200 });
 // });
 
-// export const GET = withErrorHandler(async () => {
-//   const tracks = await getAllTracks();
+export const GET = withErrorHandler(async () => {
+  const tracks = await getAllTracks();
 
-//   return NextResponse.json(ApiResponse.success(tracks), { status: 200 });
-// });
+  return NextResponse.json(ApiResponse.success(tracks), { status: 200 });
+});

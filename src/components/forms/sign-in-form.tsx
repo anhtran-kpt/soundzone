@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,6 @@ import { SignInInput, signInSchema } from "@/lib/validations";
 
 export function SignInForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
@@ -42,14 +40,18 @@ export function SignInForm() {
         redirect: false,
       });
 
-      if (response?.error) {
-        toast.error("Incorrect email or password");
-        return;
-      }
+      if (response?.ok) {
+        toast.success("Signed in successfully");
 
-      toast.success("Signed in successfully");
-      router.push(callbackUrl);
-      router.refresh();
+        const session = await getSession();
+        if (session?.user.role === "USER") {
+          router.push("/");
+        } else {
+          router.push("/admin");
+        }
+      } else {
+        toast.error("Incorrect email or password");
+      }
     } catch (error) {
       console.error(error);
       toast.error("An error has occurred");
