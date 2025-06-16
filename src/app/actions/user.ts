@@ -3,13 +3,13 @@ import {
   SignInInput,
   signInSchema,
   SignUpRequest,
-  signUpSchema,
+  userSchema,
 } from "@/lib/validations";
 import db from "@/lib/prisma/db";
 import { comparePasswords, hashPassword } from "@/lib/auth";
 
 export async function signUpAction(input: SignUpRequest) {
-  const { ...data } = signUpSchema.parse(input);
+  const { ...data } = userSchema.parse(input);
 
   if (
     await db.user.findUnique({

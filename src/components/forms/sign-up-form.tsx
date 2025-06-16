@@ -16,8 +16,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { SignUpInput, signUpSchema } from "@/lib/validations";
 import { useSignUp } from "@/lib/queries";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function SignUpForm() {
+  const router = useRouter();
+
   const form = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -30,14 +34,26 @@ export function SignUpForm() {
 
   const { clearErrors, formState, control, handleSubmit } = form;
 
-  const { mutate: signUp } = useSignUp();
+  const mutation = useSignUp();
 
   const onSubmit = async (values: SignUpInput) => {
     clearErrors();
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { passwordConfirmation, ...data } = values;
-      signUp(data);
+      const response = await mutation.mutateAsync(data);
+
+      if (response.success) {
+        toast.success("Sign up successful");
+        await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
+
+        router.push("/");
+        router.refresh();
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
     }

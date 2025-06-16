@@ -4,8 +4,6 @@ import { USER_ENDPOINTS } from "../endpoints";
 import { FullUser } from "../types";
 import { apiClient } from "../api/client/api-client";
 import { SignUpRequest } from "../validations";
-import { toast } from "sonner";
-import { signIn } from "next-auth/react";
 
 export function useUsers(params?: { limit?: number }) {
   return useQuery({
@@ -48,16 +46,6 @@ export function useSignUp() {
   return useMutation({
     mutationFn: (data: SignUpRequest) => {
       return apiClient.post<FullUser>(USER_ENDPOINTS.signUp, data);
-    },
-    onSuccess: async (response) => {
-      if (response.data) {
-        const { email, password } = response.data;
-        toast.success("Sign up successful");
-        await signIn("credentials", { email, password, redirect: false });
-      }
-    },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Sign up failed");
     },
   });
 }
