@@ -21,14 +21,14 @@ export async function getAlbumsByArtistId(
   });
 }
 
-export async function getAlbums(): Promise<FullAlbum[]> {
+export async function getAllAlbums(): Promise<FullAlbum[]> {
   return await db.album.findMany({
     orderBy: { createdAt: "desc" },
     include: fullAlbumInclude,
   });
 }
 
-export async function createAlbum(data: CreateAlbumInput) {
+export async function createAlbum(data: CreateAlbumInput): Promise<void> {
   const { title, description, releaseDate, coverPublicId, artistId, tracks } =
     data;
 

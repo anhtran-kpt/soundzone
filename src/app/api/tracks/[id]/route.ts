@@ -1,16 +1,13 @@
-import trackActions from "@/actions/track";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { getTrackById } from "@/lib/services/track";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
-  async (
-    req: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }
-  ) => {
-    const { slug } = await params;
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
 
-    const track = await trackActions.getBySlug(slug);
+    const track = await getTrackById(id);
 
     return NextResponse.json(ApiResponse.success(track), { status: 200 });
   }

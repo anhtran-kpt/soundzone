@@ -1,22 +1,22 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { createAlbumRequestSchema } from "@/lib/validations/album";
+import { createAlbumSchema } from "@/lib/validations";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
-import { albumActions } from "@/actions";
+import { createAlbum, getAllAlbums } from "@/lib/services/album";
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json();
 
-  const validatedData = validateData(createAlbumRequestSchema, body);
+  const validatedData = validateData(createAlbumSchema, body);
 
-  const album = await albumActions.create(validatedData);
+  const album = await createAlbum(validatedData);
 
   return NextResponse.json(ApiResponse.success(album), { status: 200 });
 });
 
 export const GET = withErrorHandler(async () => {
-  const albums = await albumActions.getAll();
+  const albums = await getAllAlbums();
 
   return NextResponse.json(ApiResponse.success(albums), { status: 200 });
 });

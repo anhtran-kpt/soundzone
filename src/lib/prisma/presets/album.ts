@@ -2,7 +2,6 @@ import { Prisma } from "@/app/generated/prisma";
 
 export const fullAlbumInclude = Prisma.validator<Prisma.AlbumInclude>()({
   artist: true,
-  genres: true,
   tracks: {
     include: {
       artists: true,
@@ -13,8 +12,8 @@ export const fullAlbumInclude = Prisma.validator<Prisma.AlbumInclude>()({
 
 export const minimalAlbumSelect = Prisma.validator<Prisma.AlbumSelect>()({
   id: true,
-  name: true,
+  title: true,
   slug: true,
   releaseDate: true,
-  coverUrl: true,
+  coverPublicId: true,
 });

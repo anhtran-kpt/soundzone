@@ -1,40 +1,48 @@
 export const GENRE_ENDPOINTS = {
   list: "/genres",
-  detail: (slug: string) => `/genres/${slug}`,
+  detail: (id: string) => `/genres/${id}`,
   create: "/genres",
-  update: (slug: string) => `/genres/${slug}`,
-  delete: (slug: string) => `/genres/${slug}`,
+  update: (id: string) => `/genres/${id}`,
+  delete: (id: string) => `/genres/${id}`,
 };
 
 export const TRACK_ENDPOINTS = {
   list: "/tracks",
-  detail: (slug: string) => `/tracks/${slug}`,
+  detail: (id: string) => `/tracks/${id}`,
   create: "/tracks",
-  update: (slug: string) => `/tracks/${slug}`,
-  delete: (slug: string) => `/tracks/${slug}`,
+  update: (id: string) => `/tracks/${id}`,
+  delete: (id: string) => `/tracks/${id}`,
 };
 
 export const ARTIST_ENDPOINTS = {
   list: "/artists",
-  detail: (slug: string) => `/artists/${slug}`,
+  detail: (id: string) => `/artists/${id}`,
   create: "/artists",
-  update: (slug: string) => `/artists/${slug}`,
-  delete: (slug: string) => `/artists/${slug}`,
+  update: (id: string) => `/artists/${id}`,
+  delete: (id: string) => `/artists/${id}`,
 };
 
 export const ALBUM_ENDPOINTS = {
   list: "/albums",
-  detail: (slug: string) => `/albums/${slug}`,
+  detail: (id: string) => `/albums/${id}`,
   create: "/albums",
-  update: (slug: string) => `/albums/${slug}`,
-  delete: (slug: string) => `/albums/${slug}`,
+  update: (id: string) => `/albums/${id}`,
+  delete: (id: string) => `/albums/${id}`,
 };
 
 export const USER_ENDPOINTS = {
   list: "/users",
   signIn: "/auth/sign-in",
   signUp: "/auth/sign-up",
-  detail: (slug: string) => `/users/${slug}`,
-  update: (slug: string) => `/users/${slug}`,
-  delete: (slug: string) => `/users/${slug}`,
+  detail: (id: string) => `/users/${id}`,
+  update: (id: string) => `/users/${id}`,
+  delete: (id: string) => `/users/${id}`,
+};
+
+export const PLAYLIST_ENDPOINTS = {
+  list: "/playlists",
+  detail: (id: string) => `/playlists/${id}`,
+  create: "/playlists",
+  update: (id: string) => `/playlists/${id}`,
+  delete: (id: string) => `/playlists/${id}`,
 };

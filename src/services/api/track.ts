@@ -1,24 +1,22 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
 import { TRACK_ENDPOINTS } from "@/lib/endpoints";
-import { Track } from "@/types/database";
+import { FullTrack } from "@/lib/types";
 
-export const trackApi = {
-  async getAll(params?: { limit?: number }): Promise<ApiResponse<Track[]>> {
-    const queryParams = new URLSearchParams();
-    if (params?.limit) {
-      queryParams.append("limit", params.limit.toString());
-    }
+export async function getAllTracks(params?: {
+  limit?: number;
+}): Promise<ApiResponse<FullTrack[]>> {
+  const queryParams = new URLSearchParams();
+  if (params?.limit) {
+    queryParams.append("limit", params.limit.toString());
+  }
 
-    const url = `${TRACK_ENDPOINTS.list}?${queryParams.toString()}`;
-    return apiClient.get<Track[]>(url);
-  },
+  const url = `${TRACK_ENDPOINTS.list}?${queryParams.toString()}`;
+  return apiClient.get<FullTrack[]>(url);
+}
 
-  async getBySlug(slug: string): Promise<ApiResponse<Track>> {
-    return apiClient.get<Track>(TRACK_ENDPOINTS.detail(slug));
-  },
-
-  async delete(slug: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(TRACK_ENDPOINTS.delete(slug));
-  },
-};
+export async function getTrackById(
+  id: string
+): Promise<ApiResponse<FullTrack>> {
+  return apiClient.get<FullTrack>(TRACK_ENDPOINTS.detail(id));
+}

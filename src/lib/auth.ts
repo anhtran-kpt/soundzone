@@ -1,4 +1,3 @@
-import { userActions } from "@/actions";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -6,6 +5,7 @@ import { SALT_ROUNDS } from "./constants";
 import { redirect } from "next/navigation";
 import { ApiError } from "./api/server/api-error";
 import { getServerSession } from "next-auth";
+import { signInAction } from "@/app/actions/user";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await userActions.signIn({
+        const user = await signInAction({
           email: credentials.email,
           password: credentials.password,
         });
@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.name,
           email: user.email,
-          image: user.avatarUrl,
+          image: user.imagePublicId,
           role: user.role,
         };
       },
@@ -99,7 +99,7 @@ export async function requireAuth() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    redirect("/signin");
+    redirect("/sign-in");
   }
 
   return session;

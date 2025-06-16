@@ -1,17 +1,38 @@
 import db from "@/lib/prisma/db";
+import { fullGenreInclude } from "../prisma/presets";
+import { FullGenre } from "../types";
 
-export async function getGenreByName(name: string) {
-  return await db.genre.findUnique({ where: { name } });
+export async function getAllGenres(): Promise<FullGenre[]> {
+  return await db.genre.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: fullGenreInclude,
+  });
 }
 
-export async function createGenre(name: string) {
+export async function getGenreById(id: string): Promise<FullGenre | null> {
+  return await db.genre.findUnique({
+    where: { id },
+    include: fullGenreInclude,
+  });
+}
+
+export async function getGenreByName(name: string): Promise<FullGenre | null> {
+  return await db.genre.findUnique({
+    where: { name },
+    include: fullGenreInclude,
+  });
+}
+
+export async function createGenre(name: string): Promise<void> {
   await db.$transaction(async (tx) => {
     const slug = await tx.genre.generateSlug(name);
     await tx.genre.create({ data: { name, slug } });
   });
 }
 
-export async function updateGenre(id: string, name: string) {
+export async function updateGenre(id: string, name: string): Promise<void> {
   await db.$transaction(async (tx) => {
     const slug = await tx.genre.generateSlug(name);
 

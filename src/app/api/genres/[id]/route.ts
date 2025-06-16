@@ -1,16 +1,13 @@
-import { genreActions } from "@/actions";
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { getGenreById } from "@/lib/services/genre";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
-  async (
-    req: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }
-  ) => {
-    const { slug } = await params;
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
 
-    const genre = await genreActions.getBySlug(slug);
+    const genre = await getGenreById(id);
 
     return NextResponse.json(ApiResponse.success(genre), { status: 200 });
   }
@@ -32,15 +29,15 @@ export const GET = withErrorHandler(
 //   }
 // );
 
-export const DELETE = withErrorHandler(
-  async (
-    req: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }
-  ) => {
-    const { slug } = await params;
+// export const DELETE = withErrorHandler(
+//   async (
+//     req: NextRequest,
+//     { params }: { params: Promise<{ slug: string }> }
+//   ) => {
+//     const { slug } = await params;
 
-    await genreActions.delete(slug);
+//     await genreActions.delete(slug);
 
-    return NextResponse.json(ApiResponse.success(null), { status: 200 });
-  }
-);
+//     return NextResponse.json(ApiResponse.success(null), { status: 200 });
+//   }
+// );

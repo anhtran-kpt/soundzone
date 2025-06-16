@@ -1,35 +1,22 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { apiClient } from "@/lib/api/client/api-client";
-import { Album, CreateAlbumRequest, UpdateAlbumRequest } from "@/schemas";
+import { FullAlbum } from "@/lib/types";
 import { ALBUM_ENDPOINTS } from "@/lib/endpoints";
 
-export const albumApi = {
-  async getAll(params?: { limit?: number }): Promise<ApiResponse<Album[]>> {
-    const queryParams = new URLSearchParams();
-    if (params?.limit) {
-      queryParams.append("limit", params.limit.toString());
-    }
+export async function getAllAlbums(params?: {
+  limit?: number;
+}): Promise<ApiResponse<FullAlbum[]>> {
+  const queryParams = new URLSearchParams();
+  if (params?.limit) {
+    queryParams.append("limit", params.limit.toString());
+  }
 
-    const url = `${ALBUM_ENDPOINTS.list}?${queryParams.toString()}`;
-    return apiClient.get<Album[]>(url);
-  },
+  const url = `${ALBUM_ENDPOINTS.list}?${queryParams.toString()}`;
+  return apiClient.get<FullAlbum[]>(url);
+}
 
-  async getBySlug(slug: string): Promise<ApiResponse<Album>> {
-    return apiClient.get<Album>(ALBUM_ENDPOINTS.detail(slug));
-  },
-
-  async create(data: CreateAlbumRequest): Promise<ApiResponse<Album>> {
-    return apiClient.post<Album>(ALBUM_ENDPOINTS.create, data);
-  },
-
-  async update(
-    slug: string,
-    data: UpdateAlbumRequest
-  ): Promise<ApiResponse<Album>> {
-    return apiClient.patch<Album>(ALBUM_ENDPOINTS.update(slug), data);
-  },
-
-  async delete(slug: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(ALBUM_ENDPOINTS.delete(slug));
-  },
-};
+export async function getAlbumById(
+  id: string
+): Promise<ApiResponse<FullAlbum>> {
+  return apiClient.get<FullAlbum>(ALBUM_ENDPOINTS.detail(id));
+}

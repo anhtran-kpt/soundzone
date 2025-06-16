@@ -15,13 +15,11 @@ export const fullTrackInclude = Prisma.validator<Prisma.TrackInclude>()({
 
 export const minimalTrackSelect = Prisma.validator<Prisma.TrackSelect>()({
   id: true,
-  name: true,
+  title: true,
   slug: true,
   duration: true,
-  playCount: true,
-  likeCount: true,
   isExplicit: true,
-  audioUrl: true,
+  audioPublicId: true,
   trackNumber: true,
   composer: true,
   lyricist: true,

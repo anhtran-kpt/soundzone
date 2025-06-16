@@ -1,16 +1,16 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { signUpRequestSchema } from "@/schemas";
+import { signUpSchema } from "@/lib/validations";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
-import { userActions } from "@/actions";
+import { signUpAction } from "@/app/actions/user";
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json();
 
-  const validatedData = validateData(signUpRequestSchema, body);
+  const validatedData = validateData(signUpSchema, body);
 
-  const user = await userActions.signUp(validatedData);
+  const user = await signUpAction(validatedData);
 
   return NextResponse.json(ApiResponse.success(user), { status: 200 });
 });

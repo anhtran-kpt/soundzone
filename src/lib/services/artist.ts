@@ -10,14 +10,14 @@ export async function getArtistById(id: string): Promise<FullArtist | null> {
   });
 }
 
-export async function getArtists(): Promise<FullArtist[]> {
+export async function getAllArtists(): Promise<FullArtist[]> {
   return await db.artist.findMany({
     orderBy: { createdAt: "desc" },
     include: fullArtistInclude,
   });
 }
 
-export async function createArtist(data: CreateArtistInput) {
+export async function createArtist(data: CreateArtistInput): Promise<void> {
   await db.$transaction(async (tx) => {
     const slug = await tx.artist.generateSlug(data.name);
 
@@ -30,7 +30,10 @@ export async function createArtist(data: CreateArtistInput) {
   });
 }
 
-export async function updateArtist(id: string, data: UpdateArtistInput) {
+export async function updateArtist(
+  id: string,
+  data: UpdateArtistInput
+): Promise<void> {
   await db.$transaction(async (tx) => {
     if (data.name) {
       const slug = await tx.artist.generateSlug(data.name);
