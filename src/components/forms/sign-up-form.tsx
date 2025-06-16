@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { SignUpInput, signUpSchema } from "@/lib/validations";
-import { signUpAction } from "@/app/actions/user";
+import { useSignUp } from "@/lib/queries";
 
 export function SignUpForm() {
   const form = useForm<SignUpInput>({
@@ -31,16 +30,14 @@ export function SignUpForm() {
 
   const { clearErrors, formState, control, handleSubmit } = form;
 
+  const { mutate: signUp } = useSignUp();
+
   const onSubmit = async (values: SignUpInput) => {
     clearErrors();
     try {
-      await signUpAction(values);
-
-      await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: true,
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordConfirmation, ...data } = values;
+      signUp(data);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
     }
@@ -148,7 +145,7 @@ export function SignUpForm() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/signin" className="text-primary hover:underline">
+        <Link href="/sign-in" className="text-primary hover:underline">
           Sign in
         </Link>
       </p>

@@ -1,8 +1,10 @@
-import trackActions from "@/actions/track";
+"use client";
+
+import { useTracks } from "@/lib/queries";
 import { TrackList } from "../common";
 
-export default async function NewRelease() {
-  const tracks = await trackActions.getTracks();
+export default function NewRelease() {
+  const { data: tracks } = useTracks();
 
   if (!tracks) {
     return null;

@@ -14,7 +14,7 @@ import {
   useAudioKeyboardShortcuts,
   useMediaSession,
   useAudioPlayer,
-} from "@/hooks/useAudioPlayer";
+} from "@/hooks/use-audio-player";
 import PlayerControls from "./player-controls";
 import ProgressBar from "./progress-bar";
 import VolumeControl from "./volume-control";

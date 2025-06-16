@@ -8,7 +8,7 @@ import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import ArtistNames from "./artist-names";
 import Link from "next/link";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useAudioPlayer } from "@/hooks/use-audio-player";
 
 export default function TrackCard({ track }: { track: FullTrack }) {
   const { playTrack } = useAudioPlayer();
