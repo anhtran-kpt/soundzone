@@ -1,7 +1,6 @@
 import { Prisma } from "@/app/generated/prisma";
 
 export const fullGenreInclude = Prisma.validator<Prisma.GenreInclude>()({
-  albums: true,
   tracks: true,
 });
 

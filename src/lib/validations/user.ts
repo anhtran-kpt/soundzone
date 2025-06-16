@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseFields } from "./common";
+import { baseFields } from "./shared";
 
 export const userSchema = z.object({
   name: baseFields.name,

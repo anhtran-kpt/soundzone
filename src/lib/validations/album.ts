@@ -1,24 +1,24 @@
-import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
-import { baseFields } from "./common";
+import { ArtistRole } from "@/app/generated/prisma";
+import { baseFields } from "./shared";
 import { z } from "zod";
 
 export const albumSchema = z.object({
-  name: baseFields.name,
+  title: baseFields.title,
   description: baseFields.description,
-  releaseType: z.nativeEnum(ReleaseType),
   releaseDate: z.coerce.date().optional(),
-  coverUrl: baseFields.url,
 });
 
 export const createAlbumSchema = albumSchema.extend({
-  genreIds: z.array(z.string()).min(1, "At least one genre is required"),
+  coverFile: z.instanceof(File, { message: "Please select a cover image" }),
   tracks: z.array(
     z.object({
-      name: baseFields.name,
+      title: baseFields.title,
       lyrics: baseFields.description,
       duration: baseFields.duration,
-      audioUrl: baseFields.url,
+      audioFile: z.instanceof(File, { message: "Please select an audio file" }),
+      audioPublicId: baseFields.publicId,
       isExplicit: z.boolean(),
+      genreIds: z.array(z.string()).min(1, "At least one genre is required"),
       composer: z.string().optional(),
       lyricist: z.string().optional(),
       producer: z.string().optional(),
@@ -32,17 +32,17 @@ export const createAlbumSchema = albumSchema.extend({
   ),
 });
 
-export const createAlbumRequestSchema = albumSchema.extend({
-  genreIds: z.array(z.string()).min(1, "At least one genre is required"),
+export const createAlbumInputSchema = albumSchema.extend({
+  coverPublicId: baseFields.publicId,
   artistId: baseFields.id,
   tracks: z.array(
     z.object({
-      name: baseFields.name,
+      title: baseFields.title,
       lyrics: baseFields.description,
       duration: baseFields.duration,
-      audioUrl: baseFields.url,
-      trackNumber: z.number(),
+      audioPublicId: baseFields.publicId,
       isExplicit: z.boolean(),
+      genreIds: z.array(z.string()).min(1, "At least one genre is required"),
       composer: z.string().optional(),
       lyricist: z.string().optional(),
       producer: z.string().optional(),
@@ -50,16 +50,11 @@ export const createAlbumRequestSchema = albumSchema.extend({
         z.object({
           artistId: baseFields.id,
           role: z.nativeEnum(ArtistRole),
-          order: z.number(),
         })
       ),
     })
   ),
 });
 
-export const updateAlbumSchema = createAlbumSchema.partial();
-
-export type CreateAlbumInput = z.infer<typeof createAlbumSchema>;
-export type UpdateAlbumInput = z.infer<typeof updateAlbumSchema>;
-
-export type CreateAlbumRequest = z.infer<typeof createAlbumRequestSchema>;
+export type CreateAlbumForm = z.infer<typeof createAlbumSchema>;
+export type CreateAlbumInput = z.infer<typeof createAlbumInputSchema>;

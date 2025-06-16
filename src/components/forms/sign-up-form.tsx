@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -17,46 +15,34 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { SignUpForm as SignUpFormType, signUpFormSchema } from "@/schemas";
-import { useSignUp } from "@/services/queries";
+import { SignUpInput, signUpSchema } from "@/lib/validations";
+import { signUpAction } from "@/app/actions/user";
 
 export function SignUpForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { mutateAsync: signUpMutate } = useSignUp();
-
-  const form = useForm<SignUpFormType>({
-    resolver: zodResolver(signUpFormSchema),
+  const form = useForm<SignUpInput>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      passwordConfirmation: "",
     },
   });
 
-  const onSubmit = async (values: SignUpFormType) => {
+  const { clearErrors, formState, control, handleSubmit } = form;
+
+  const onSubmit = async (values: SignUpInput) => {
+    clearErrors();
     try {
-      setIsLoading(true);
-
-      const { confirmPassword, ...rest } = values;
-
-      await signUpMutate(rest);
+      await signUpAction(values);
 
       await signIn("credentials", {
         email: values.email,
         password: values.password,
-        redirect: false,
+        redirect: true,
       });
-
-      router.push("/");
-      router.refresh();
     } catch (error) {
-      console.error("Sign up failed:", error);
-      toast.error("Sign up failed");
-    } finally {
-      setIsLoading(false);
+      toast.error(error instanceof Error ? error.message : "Sign up failed");
     }
   };
 
@@ -70,9 +56,9 @@ export function SignUpForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormField
-            control={form.control}
+            control={control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -82,7 +68,7 @@ export function SignUpForm() {
                     {...field}
                     placeholder="John Doe"
                     autoComplete="name"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -91,7 +77,7 @@ export function SignUpForm() {
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -102,7 +88,7 @@ export function SignUpForm() {
                     placeholder="name@example.com"
                     type="email"
                     autoComplete="email"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -111,7 +97,7 @@ export function SignUpForm() {
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -122,7 +108,7 @@ export function SignUpForm() {
                     placeholder="••••••••"
                     type="password"
                     autoComplete="new-password"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -131,8 +117,8 @@ export function SignUpForm() {
           />
 
           <FormField
-            control={form.control}
-            name="confirmPassword"
+            control={control}
+            name="passwordConfirmation"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm password</FormLabel>
@@ -142,7 +128,7 @@ export function SignUpForm() {
                     placeholder="••••••••"
                     type="password"
                     autoComplete="new-password"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -150,8 +136,12 @@ export function SignUpForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Sign up"}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={formState.isSubmitting}
+          >
+            {formState.isSubmitting ? "Processing..." : "Sign up"}
           </Button>
         </form>
       </Form>

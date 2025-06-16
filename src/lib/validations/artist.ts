@@ -1,17 +1,14 @@
-import { baseFields } from "./common";
+import { baseFields } from "./shared";
 import { z } from "zod";
 
 export const artistSchema = z.object({
   name: baseFields.name,
   description: baseFields.description,
   nationality: z.string().optional(),
-  imageUrl: baseFields.url,
+  imagePublicId: baseFields.publicId,
 });
 
-export const createArtistSchema = artistSchema.extend({
-  genreIds: z.array(z.string()).min(1, "At least one genre is required"),
-});
-
+export const createArtistSchema = artistSchema;
 export const updateArtistSchema = createArtistSchema.partial();
 
 export type CreateArtistInput = z.infer<typeof createArtistSchema>;

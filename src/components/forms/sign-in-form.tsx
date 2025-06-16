@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -23,7 +22,6 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
@@ -33,10 +31,11 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = async (values: SignInInput) => {
-    try {
-      setIsLoading(true);
+  const { clearErrors, formState, control, handleSubmit } = form;
 
+  const onSubmit = async (values: SignInInput) => {
+    clearErrors();
+    try {
       const response = await signIn("credentials", {
         email: values.email,
         password: values.password,
@@ -49,14 +48,11 @@ export function SignInForm() {
       }
 
       toast.success("Signed in successfully");
-
       router.push(callbackUrl);
       router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("An error has occurred");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -70,9 +66,9 @@ export function SignInForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormField
-            control={form.control}
+            control={control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -83,7 +79,7 @@ export function SignInForm() {
                     placeholder="name@example.com"
                     type="email"
                     autoComplete="email"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -92,7 +88,7 @@ export function SignInForm() {
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -111,7 +107,7 @@ export function SignInForm() {
                     placeholder="••••••••"
                     type="password"
                     autoComplete="current-password"
-                    disabled={isLoading}
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -119,8 +115,12 @@ export function SignInForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Sign in"}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={formState.isSubmitting}
+          >
+            {formState.isSubmitting ? "Processing..." : "Sign in"}
           </Button>
         </form>
       </Form>

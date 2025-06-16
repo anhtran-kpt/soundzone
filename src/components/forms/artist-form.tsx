@@ -15,12 +15,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CreateArtistInput, createArtistSchema } from "@/lib/validations";
-import { useCreateArtist, useUpdateArtist } from "@/services/queries/artist";
-import { useGenres } from "@/services/queries/genre";
-import { useRouter } from "next/navigation";
-import { Checkbox } from "@/components/ui/checkbox";
-import uploadQueries from "@/services/queries/upload";
+import { uploadArtistImage } from "@/services/queries/upload";
 import { FullArtist } from "@/lib/types";
+import { updateArtistAction } from "@/app/actions/artist";
+import { createArtistAction } from "@/app/actions/artist";
+import { toast } from "sonner";
 
 interface ArtistFormProps {
   artist?: FullArtist;
@@ -31,47 +30,34 @@ export default function ArtistForm({
   artist,
   mode = "create",
 }: ArtistFormProps) {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const createMutation = useCreateArtist();
-  const updateMutation = useUpdateArtist(artist?.slug || "");
-  const { data: genres } = useGenres();
 
   const form = useForm<CreateArtistInput>({
     resolver: zodResolver(createArtistSchema),
     defaultValues: {
       name: artist?.name ?? "",
       description: artist?.description ?? "",
-      imageUrl: artist?.imageUrl ?? "",
+      imagePublicId: artist?.imagePublicId ?? "",
       nationality: artist?.nationality ?? "",
-      genreIds: artist?.genres.map((genre) => genre.genreId) ?? [],
     },
   });
 
   const onSubmit = async (values: CreateArtistInput) => {
+    form.clearErrors();
     try {
-      setIsSubmitting(true);
-
       if (imageFile) {
-        values.imageUrl = await uploadQueries.uploadArtistImage(imageFile);
+        values.imagePublicId = await uploadArtistImage(imageFile);
       }
-
-      let response = null;
 
       if (mode === "create") {
-        response = await createMutation.mutateAsync(values);
+        await createArtistAction(values);
       } else {
-        response = await updateMutation.mutateAsync(values);
+        await updateArtistAction(artist?.id as string, values);
       }
-
-      if (response.success) {
-        router.push("/admin/artists");
-        router.refresh();
-      }
-    } finally {
-      setIsSubmitting(false);
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong"
+      );
     }
   };
 
@@ -93,7 +79,7 @@ export default function ArtistForm({
                     {...field}
                     placeholder="Enter artist name"
                     autoComplete="artist-name"
-                    disabled={isSubmitting}
+                    disabled={form.formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -112,7 +98,7 @@ export default function ArtistForm({
                     {...field}
                     placeholder="Enter artist description"
                     autoComplete="artist-description"
-                    disabled={isSubmitting}
+                    disabled={form.formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -131,55 +117,9 @@ export default function ArtistForm({
                     {...field}
                     placeholder="Enter artist nationality"
                     autoComplete="artist-nationality"
-                    disabled={isSubmitting}
+                    disabled={form.formState.isSubmitting}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="genreIds"
-            render={() => (
-              <FormItem>
-                <div className="mb-2">
-                  <FormLabel className="">Genres</FormLabel>
-                </div>
-                {genres?.map((genre) => (
-                  <FormField
-                    key={genre.id}
-                    control={form.control}
-                    name="genreIds"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={genre.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(genre.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, genre.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== genre.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            {genre.name}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
                 <FormMessage />
               </FormItem>
             )}
@@ -193,15 +133,18 @@ export default function ArtistForm({
                 accept="image/*"
                 onChange={(e) => setImageFile(e.target.files?.[0] || null)}
                 placeholder="Upload artist image"
-                autoComplete="artist-image"
-                disabled={isSubmitting}
+                disabled={form.formState.isSubmitting}
               />
             </FormControl>
             <FormMessage />
           </FormItem>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+          >
+            {form.formState.isSubmitting
               ? mode === "create"
                 ? "Creating..."
                 : "Updating..."

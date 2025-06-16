@@ -1,4 +1,4 @@
-import { baseFields } from "./common";
+import { baseFields } from "./shared";
 import { z } from "zod";
 
 export const genreSchema = z.object({
@@ -6,9 +6,7 @@ export const genreSchema = z.object({
 });
 
 export const createGenreSchema = genreSchema;
-export const updateGenreSchema = createGenreSchema.partial().extend({
-  id: baseFields.id,
-});
+export const updateGenreSchema = createGenreSchema.partial();
 
 export type CreateGenreInput = z.infer<typeof createGenreSchema>;
 export type UpdateGenreInput = z.infer<typeof updateGenreSchema>;
