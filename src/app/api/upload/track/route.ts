@@ -7,10 +7,10 @@ import { Readable } from "stream";
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const formData = await req.formData();
 
-  const imageFile = formData.get("file") as File;
+  const audioFile = formData.get("file") as File;
   const fileName = formData.get("fileName") as string;
 
-  const arrayBuffer = await imageFile.arrayBuffer();
+  const arrayBuffer = await audioFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
   const stream = Readable.from(buffer);
@@ -18,9 +18,9 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const uploadResult = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: "soundzone/albums",
-        resource_type: "image",
-        format: "webp",
+        folder: "soundzone/tracks",
+        resource_type: "video",
+        format: "mp3",
         public_id: fileName,
         overwrite: true,
         unique_filename: false,

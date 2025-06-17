@@ -1,4 +1,4 @@
-import { artistActions } from "@/actions";
+import { getArtistBySlug } from "@/lib/services/artist";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import AlbumCard from "@/components/common/album-card";
@@ -13,7 +13,7 @@ export default async function ArtistPage({
 }) {
   const { artistSlug } = await params;
 
-  const artist = await artistActions.getBySlug(artistSlug);
+  const artist = await getArtistBySlug(artistSlug);
 
   if (!artist) {
     return notFound();

@@ -14,9 +14,9 @@ export const createAlbumSchema = albumSchema.extend({
     z.object({
       title: baseFields.title,
       lyrics: baseFields.description,
-      duration: baseFields.duration,
+      duration: baseFields.duration.optional(),
       audioFile: z.instanceof(File, { message: "Please select an audio file" }),
-      audioPublicId: baseFields.publicId,
+      audioPublicId: baseFields.publicId.optional(),
       isExplicit: z.boolean(),
       genreIds: z.array(z.string()).min(1, "At least one genre is required"),
       composer: z.string().optional(),

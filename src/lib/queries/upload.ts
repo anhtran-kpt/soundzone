@@ -18,9 +18,10 @@ export async function uploadArtistImage(file: File, fileName: string) {
   return response.data.data.public_id;
 }
 
-export async function uploadAlbumImage(file: File) {
+export async function uploadAlbumImage(file: File, fileName: string) {
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("fileName", fileName);
 
   const response = await axios.post("/api/upload/album", formData, {
     headers: {
@@ -35,11 +36,12 @@ export async function uploadAlbumImage(file: File) {
   return response.data.data.public_id;
 }
 
-export async function uploadAudio(file: File) {
+export async function uploadAudio(file: File, fileName: string) {
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("fileName", fileName);
 
-  const response = await axios.post("/api/upload/audio", formData, {
+  const response = await axios.post("/api/upload/track", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -49,5 +51,8 @@ export async function uploadAudio(file: File) {
     throw new Error("Failed to upload audio");
   }
 
-  return response.data.data.public_id;
+  return {
+    duration: response.data.data.duration,
+    publicId: response.data.data.public_id,
+  };
 }

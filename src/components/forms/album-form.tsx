@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArtistRole } from "@/app/generated/prisma";
@@ -36,6 +35,7 @@ import { uploadAlbumImage, uploadAudio } from "@/lib/queries/upload";
 import { CreateAlbumForm, createAlbumSchema } from "@/lib/validations";
 import { createAlbumAction } from "@/app/actions/album";
 import { toast } from "sonner";
+import { customSlugify } from "@/lib/helpers";
 
 export default function AlbumForm({ artistId }: { artistId: string }) {
   const { data: genres } = useGenres();
@@ -71,63 +71,39 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
     },
   });
 
-  const {
-    setValue,
-    getValues,
-    watch,
-    formState,
-    control,
-    clearErrors,
-    handleSubmit,
-  } = form;
+  const { setValue, getValues, formState, control, clearErrors, handleSubmit } =
+    form;
 
   const { fields, append, remove } = useFieldArray({
     control: control,
     name: "tracks",
   });
 
-  const tracks = watch("tracks");
-
-  useEffect(() => {
-    if (tracks.length === 1) {
-      setValue("title", tracks[0].title);
-    }
-
-    tracks.forEach(async (t, idx) => {
-      if (t.audioFile && t.duration === undefined) {
-        const url = URL.createObjectURL(t.audioFile);
-        const audio = new Audio(url);
-        audio.addEventListener("loadedmetadata", () => {
-          setValue(`tracks.${idx}.duration`, audio.duration, {
-            shouldValidate: true,
-          });
-          URL.revokeObjectURL(url);
-        });
-      }
-
-      if (t.audioFile && t.audioPublicId === undefined) {
-        const audioPublicId = await uploadAudio(t.audioFile);
-        setValue(`tracks.${idx}.audioPublicId`, audioPublicId);
-      }
-    });
-  }, [tracks, setValue]);
-
   const onSubmit = async (values: CreateAlbumForm) => {
     clearErrors();
     try {
-      const coverPublicId = await uploadAlbumImage(values.coverFile);
+      const trackPromises = values.tracks.map((track) =>
+        track.audioFile && track.audioPublicId == null
+          ? uploadAudio(track.audioFile, customSlugify(track.title))
+          : Promise.resolve(track.audioPublicId!)
+      );
+
+      const [coverPublicId, ...audioPublicIds] = await Promise.all([
+        uploadAlbumImage(values.coverFile, customSlugify(values.title)),
+        ...trackPromises,
+      ]);
 
       const formData = {
         title: values.title,
         description: values.description,
         releaseDate: values.releaseDate,
-        coverPublicId: coverPublicId,
+        coverPublicId,
         artistId: artistId,
-        tracks: values.tracks.map((track) => ({
+        tracks: values.tracks.map((track, index) => ({
           title: track.title,
           lyrics: track.lyrics,
-          duration: track.duration,
-          audioPublicId: track.audioPublicId,
+          duration: audioPublicIds[index].duration,
+          audioPublicId: audioPublicIds[index].publicId,
           isExplicit: track.isExplicit,
           genreIds: track.genreIds,
           composer: track.composer,
@@ -169,8 +145,6 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
     setValue(`tracks.${trackIndex}.artists`, newArtists);
   };
 
-  console.log(formState.errors);
-
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">New Album</h2>
@@ -185,9 +159,9 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter album name"
-                    autoComplete="album-name"
-                    disabled={formState.isSubmitting || tracks.length === 1}
+                    placeholder="Enter album title"
+                    autoComplete="album-title"
+                    disabled={formState.isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -281,19 +255,19 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
 
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">
-              {tracks.length === 1 ? "Track" : "Tracks"}
+              {fields.length === 1 ? "Track" : "Tracks"}
             </h3>
 
             {fields.map((field, index) => (
               <Card key={field.id} className="mb-4">
-                <CardContent className="pt-4">
+                <CardContent className="">
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="font-medium">
-                      {tracks.length === 1
+                      {fields.length === 1
                         ? "Track Details"
                         : `Track ${index + 1}`}
                     </h4>
-                    {tracks.length !== 1 && fields.length > 1 && (
+                    {fields.length !== 1 && fields.length > 1 && (
                       <Button
                         type="button"
                         variant="ghost"
@@ -342,11 +316,6 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
                             />
                           </FormControl>
                           <FormMessage />
-                          {tracks[index].duration !== undefined && (
-                            <p className="mt-2 text-sm">
-                              Duration: {tracks[index].duration?.toFixed(2)}s
-                            </p>
-                          )}
                         </FormItem>
                       )}
                     />

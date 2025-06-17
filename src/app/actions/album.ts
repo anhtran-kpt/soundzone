@@ -9,11 +9,11 @@ export async function createAlbumAction(input: CreateAlbumInput) {
   const { ...data } = createAlbumInputSchema.parse(input);
 
   try {
-    return await createAlbum(data);
+    await createAlbum(data);
   } catch (error) {
     throw error;
   }
 
-  revalidatePath("/admin/albums");
-  redirect("/admin/albums");
+  revalidatePath("/admin/artists");
+  redirect(`/admin/artists/${data.artistId}`);
 }
