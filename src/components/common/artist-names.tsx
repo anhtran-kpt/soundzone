@@ -22,7 +22,7 @@ export default function ArtistNames({ artists, className }: ArtistNamesProps) {
         .map((artist) => (
           <CustomLink
             key={artist.artistId}
-            href={`/artists/${artist.artist.slug}`}
+            href={`/artists/${artist.artist.slug}/${artist.artistId}`}
             className="hover:underline"
           >
             {artist.artist.name}

@@ -1,8 +1,8 @@
 import TrackCard from "./track-card";
-import { Track } from "@/types/database";
+import { FullTrack } from "@/lib/types";
 
 interface TrackListProps {
-  tracks: Track[];
+  tracks: FullTrack[];
 }
 
 export default function TrackList({ tracks }: TrackListProps) {

@@ -1,7 +1,11 @@
 import { Prisma } from "@/app/generated/prisma";
 
 export const fullArtistInclude = Prisma.validator<Prisma.ArtistInclude>()({
-  albums: true,
+  albums: {
+    include: {
+      tracks: true,
+    },
+  },
   tracks: true,
 });
 
