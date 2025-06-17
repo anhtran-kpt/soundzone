@@ -1,10 +1,13 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useArtist } from "@/services/queries/artist";
+import { useArtist } from "@/lib/queries/artist";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { formatName } from "@/lib/helpers";
+import cloudinaryLoader from "@/lib/cloudinary-loader";
+import Image from "next/image";
+import CloudinaryImage from "@/components/shared/cloudinary-image";
 
 export default function ArtistPage() {
   const { artistSlug } = useParams();
@@ -16,6 +19,9 @@ export default function ArtistPage() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+  if (!artist) {
+    return <div>Artist not found</div>;
+  }
 
   return (
     <div className="flex flex-col space-y-4">
@@ -23,7 +29,13 @@ export default function ArtistPage() {
       <Link href={`/admin/artists/${artistSlug}/albums`}>View Albums</Link>
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src={artist?.imageUrl || ""} />
+          <CloudinaryImage
+            publicId={artist?.imagePublicId || ""}
+            alt={artist?.name || ""}
+            width={80}
+            height={80}
+            className="rounded-full"
+          />
           <AvatarFallback>{formatName(artist?.name || "")}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">

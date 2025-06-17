@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FullArtist } from "@/lib/types";
 import { formatName } from "@/lib/helpers";
+import { CldImage } from "next-cloudinary";
 
 export const columns: ColumnDef<FullArtist>[] = [
   {
@@ -23,7 +24,14 @@ export const columns: ColumnDef<FullArtist>[] = [
     cell: ({ row }) => {
       return (
         <Avatar>
-          <AvatarImage src={row.original.imageUrl} />
+          <CldImage
+            src={row.original.imagePublicId}
+            alt={row.original.name}
+            fill
+            aspectRatio="1:1"
+            className="rounded-full"
+            crop="fill"
+          />
           <AvatarFallback>{formatName(row.original.name)}</AvatarFallback>
         </Avatar>
       );

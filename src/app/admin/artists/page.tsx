@@ -5,7 +5,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { DataTable } from "@/components/common/data-table";
 import { columns } from "@/components/features/artist/columns";
-import { useArtists } from "@/services/queries/artist";
+import { useArtists } from "@/lib/queries/artist";
 
 export default function ArtistsPage() {
   const { data: artists, isLoading, error } = useArtists();

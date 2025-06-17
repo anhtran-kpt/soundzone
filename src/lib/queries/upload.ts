@@ -1,8 +1,9 @@
 import axios from "axios";
 
-export async function uploadArtistImage(file: File) {
+export async function uploadArtistImage(file: File, fileName: string) {
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("fileName", fileName);
 
   const response = await axios.post("/api/upload/artist", formData, {
     headers: {

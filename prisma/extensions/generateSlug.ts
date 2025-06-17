@@ -1,6 +1,5 @@
-import { SLUG_OPTIONS } from "@/lib/constants";
 import { Prisma } from "@prisma/client";
-import slugify from "slugify";
+import { customSlugify } from "@/lib/helpers";
 
 export const generateSlug = Prisma.defineExtension({
   name: "generateSlug",
@@ -8,8 +7,7 @@ export const generateSlug = Prisma.defineExtension({
     $allModels: {
       async generateSlug<T>(this: T, title: string): Promise<string> {
         const context = Prisma.getExtensionContext(this);
-        slugify.extend({ đ: "d", Đ: "D" });
-        const baseSlug = slugify(title, SLUG_OPTIONS);
+        const baseSlug = customSlugify(title);
 
         const existingSlugs = await context.findMany({
           where: { slug: { startsWith: baseSlug } },

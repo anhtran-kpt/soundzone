@@ -15,11 +15,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CreateArtistInput, createArtistSchema } from "@/lib/validations";
-import { uploadArtistImage } from "@/services/queries/upload";
+import { uploadArtistImage } from "@/lib/queries/upload";
 import { FullArtist } from "@/lib/types";
 import { updateArtistAction } from "@/app/actions/artist";
 import { createArtistAction } from "@/app/actions/artist";
 import { toast } from "sonner";
+import { customSlugify } from "@/lib/helpers";
 
 interface ArtistFormProps {
   artist?: FullArtist;
@@ -46,7 +47,10 @@ export default function ArtistForm({
     form.clearErrors();
     try {
       if (imageFile) {
-        values.imagePublicId = await uploadArtistImage(imageFile);
+        values.imagePublicId = await uploadArtistImage(
+          imageFile,
+          customSlugify(values.name)
+        );
       }
 
       if (mode === "create") {
@@ -64,7 +68,7 @@ export default function ArtistForm({
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
       <h2 className="text-2xl font-bold mb-6">
-        {mode === "create" ? "Create New Artist" : "Edit Artist"}
+        {mode === "create" ? "New Artist" : "Edit Artist"}
       </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

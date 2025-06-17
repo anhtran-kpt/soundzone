@@ -1,5 +1,7 @@
 import { ZodSchema } from "zod";
 import { ApiError } from "./api/server/api-error";
+import slugify from "slugify";
+import { SLUG_OPTIONS } from "./constants";
 
 export const validateData = (schema: ZodSchema, data: unknown) => {
   const result = schema.safeParse(data);
@@ -35,4 +37,9 @@ export const formatName = (name: string) => {
   if (words.length === 1) {
     return words[0].charAt(0);
   }
+};
+
+export const customSlugify = (name: string) => {
+  slugify.extend({ đ: "d", Đ: "D" });
+  return slugify(name, SLUG_OPTIONS);
 };
