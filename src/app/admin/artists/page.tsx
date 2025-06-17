@@ -16,6 +16,11 @@ export default function ArtistsPage() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+  if (!artists) {
+    return <div>No artists found</div>;
+  }
+
+  console.log(artists);
 
   return (
     <div className="space-y-6">

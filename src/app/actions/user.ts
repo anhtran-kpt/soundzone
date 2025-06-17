@@ -1,3 +1,5 @@
+"use server";
+
 import { ApiError } from "@/lib/api/server/api-error";
 import {
   SignInInput,

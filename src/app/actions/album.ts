@@ -1,3 +1,5 @@
+"use server";
+
 import { CreateAlbumInput, createAlbumInputSchema } from "@/lib/validations";
 import { createAlbum } from "@/lib/services/album";
 import { revalidatePath } from "next/cache";

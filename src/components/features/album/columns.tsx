@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
@@ -16,16 +16,27 @@ import {
 import { formatName, formatDuration } from "@/lib/helpers";
 import { format } from "date-fns";
 import { FullAlbum } from "@/lib/types";
+import { CldImage } from "next-cloudinary";
 
 export const columns: ColumnDef<FullAlbum>[] = [
   {
     header: "",
-    accessorKey: "coverUrl",
+    accessorKey: "coverPublicId",
     cell: ({ row }) => {
       return (
         <Avatar>
-          <AvatarImage src={row.original.coverUrl} />
-          <AvatarFallback>{formatName(row.original.name)}</AvatarFallback>
+          {row.original.coverPublicId ? (
+            <CldImage
+              src={row.original.coverPublicId}
+              alt={row.original.title}
+              fill
+              aspectRatio="1:1"
+              className="rounded-full"
+              crop="fill"
+            />
+          ) : (
+            <AvatarFallback>{formatName(row.original.title)}</AvatarFallback>
+          )}
         </Avatar>
       );
     },
@@ -38,7 +49,13 @@ export const columns: ColumnDef<FullAlbum>[] = [
     header: "Total Duration",
     accessorKey: "totalDuration",
     cell: ({ row }) => {
-      return <div>{formatDuration(row.original.totalDuration)}</div>;
+      return (
+        <div>
+          {formatDuration(
+            row.original.tracks.reduce((acc, track) => acc + track.duration, 0)
+          )}
+        </div>
+      );
     },
   },
   {

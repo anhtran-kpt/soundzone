@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
@@ -20,19 +20,25 @@ import { CldImage } from "next-cloudinary";
 export const columns: ColumnDef<FullArtist>[] = [
   {
     header: "",
-    accessorKey: "imageUrl",
+    accessorKey: "imagePublicId",
     cell: ({ row }) => {
       return (
         <Avatar>
-          <CldImage
-            src={row.original.imagePublicId}
-            alt={row.original.name}
-            fill
-            aspectRatio="1:1"
-            className="rounded-full"
-            crop="fill"
-          />
-          <AvatarFallback>{formatName(row.original.name)}</AvatarFallback>
+          {row.original.imagePublicId ? (
+            <CldImage
+              src={row.original.imagePublicId}
+              alt={row.original.name}
+              fill
+              aspectRatio="1:1"
+              className="rounded-full"
+              crop="fill"
+              sizes="32px"
+            />
+          ) : (
+            <AvatarFallback>
+              {formatName(row.original.name || "")}
+            </AvatarFallback>
+          )}
         </Avatar>
       );
     },
@@ -82,12 +88,16 @@ export const columns: ColumnDef<FullArtist>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/admin/artists/${row.original.slug}`}>
+              <Link
+                href={`/admin/artists/${row.original.slug}/${row.original.id}`}
+              >
                 View Artist
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/admin/artists/${row.original.slug}/edit`}>
+              <Link
+                href={`/admin/artists/${row.original.slug}/${row.original.id}/edit`}
+              >
                 Edit Artist
               </Link>
             </DropdownMenuItem>

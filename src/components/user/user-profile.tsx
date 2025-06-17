@@ -8,10 +8,11 @@ import {
   DropdownMenuContent,
   DropdownMenuShortcut,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useSession } from "next-auth/react";
 import { formatName } from "@/lib/helpers";
+import { CldImage } from "next-cloudinary";
 
 export default function UserProfile() {
   const { data } = useSession();
@@ -20,8 +21,19 @@ export default function UserProfile() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={data?.user.image || ""} />
-          <AvatarFallback>{formatName(data?.user.name || "")}</AvatarFallback>
+          {data?.user.image ? (
+            <CldImage
+              src={data?.user.image}
+              alt={data?.user.name || ""}
+              fill
+              aspectRatio="1:1"
+              className="rounded-full"
+              crop="fill"
+              sizes="32px"
+            />
+          ) : (
+            <AvatarFallback>{formatName(data?.user.name || "")}</AvatarFallback>
+          )}
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
