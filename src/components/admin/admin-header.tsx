@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import Icon from "../common/icon";
 import { AdminProfile, AdminSearchBar } from ".";
 import { ModeToggle } from "../shared";
-import { useScroll, motion, useMotionValueEvent } from "motion/react";
+import { useScroll, motion, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 
 export default function AdminHeader({
@@ -20,6 +20,7 @@ export default function AdminHeader({
 }) {
   const { scrollY } = useScroll({
     container: scrollContainerRef,
+    layoutEffect: false,
   });
 
   const [isScrolled, setIsScrolled] = useState(false);

@@ -98,8 +98,10 @@ export default function AdminSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={
-                      pathname === item.url ||
-                      pathname.startsWith(`${item.url}/`)
+                      item.url === "/admin"
+                        ? pathname === "/admin"
+                        : pathname === item.url ||
+                          pathname.startsWith(`${item.url}/`)
                     }
                   >
                     <Link href={item.url}>

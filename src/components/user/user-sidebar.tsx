@@ -27,9 +27,9 @@ import {
 } from "../ui/sidebar";
 import { Icon } from "../common";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import Logo from "@/assets/logo.svg";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 const items = [
   {
@@ -60,8 +60,8 @@ const items = [
 ];
 
 export default function UserSidebar() {
-  const pathname = usePathname();
   const { state, toggleSidebar } = useSidebar();
+  const pathname = usePathname();
 
   return (
     <Sidebar collapsible="icon" className="relative">
@@ -98,8 +98,10 @@ export default function UserSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={
-                      pathname === item.url ||
-                      pathname.startsWith(`${item.url}/`)
+                      item.url === "/"
+                        ? pathname === "/"
+                        : pathname === item.url ||
+                          pathname.startsWith(`${item.url}/`)
                     }
                   >
                     <Link href={item.url}>

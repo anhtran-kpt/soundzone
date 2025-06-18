@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import Icon from "../common/icon";
 import { UserProfile, UserSearchBar } from ".";
 import { ModeToggle } from "../shared";
-import { useScroll, motion, useMotionValueEvent } from "motion/react";
+import { useScroll, motion, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 
 export default function UserHeader({
@@ -18,11 +18,12 @@ export default function UserHeader({
 }: {
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const { scrollY } = useScroll({
     container: scrollContainerRef,
+    layoutEffect: false,
   });
-
-  const [isScrolled, setIsScrolled] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (y) => {
     setIsScrolled(y > 0);
