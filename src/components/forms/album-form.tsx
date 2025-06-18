@@ -31,11 +31,12 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
-import { uploadAlbumImage, uploadAudio } from "@/lib/queries/upload";
+import { uploadAlbumImage } from "@/lib/queries/upload";
 import { CreateAlbumForm, createAlbumSchema } from "@/lib/validations";
 import { createAlbumAction } from "@/app/actions/album";
 import { toast } from "sonner";
 import { customSlugify } from "@/lib/helpers";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 export default function AlbumForm({ artistId }: { artistId: string }) {
   const { data: genres } = useGenres();
@@ -46,15 +47,16 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
     defaultValues: {
       title: "",
       description: "",
-      releaseDate: undefined,
+      releaseDate: new Date(),
       coverFile: undefined,
       tracks: [
         {
           title: "",
           lyrics: "",
-          duration: undefined,
-          audioFile: undefined,
-          audioPublicId: undefined,
+          audioMeta: {
+            duration: undefined,
+            publicId: undefined,
+          },
           isExplicit: false,
           genreIds: [],
           composer: "",
@@ -82,16 +84,10 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
   const onSubmit = async (values: CreateAlbumForm) => {
     clearErrors();
     try {
-      const trackPromises = values.tracks.map((track) =>
-        track.audioFile && track.audioPublicId == null
-          ? uploadAudio(track.audioFile, customSlugify(track.title))
-          : Promise.resolve(track.audioPublicId!)
+      const coverPublicId = await uploadAlbumImage(
+        values.coverFile,
+        customSlugify(values.title)
       );
-
-      const [coverPublicId, ...audioPublicIds] = await Promise.all([
-        uploadAlbumImage(values.coverFile, customSlugify(values.title)),
-        ...trackPromises,
-      ]);
 
       const formData = {
         title: values.title,
@@ -99,11 +95,11 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
         releaseDate: values.releaseDate,
         coverPublicId,
         artistId: artistId,
-        tracks: values.tracks.map((track, index) => ({
+        tracks: values.tracks.map((track) => ({
           title: track.title,
           lyrics: track.lyrics,
-          duration: audioPublicIds[index].duration,
-          audioPublicId: audioPublicIds[index].publicId,
+          duration: track.audioMeta.duration,
+          audioPublicId: track.audioMeta.publicId,
           isExplicit: track.isExplicit,
           genreIds: track.genreIds,
           composer: track.composer,
@@ -300,20 +296,38 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
 
                     <FormField
                       control={control}
-                      name={`tracks.${index}.audioFile`}
+                      name={`tracks.${index}.audioMeta`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Audio File</FormLabel>
                           <FormControl>
-                            <Input
-                              type="file"
-                              accept="audio/*"
-                              onChange={(e) =>
-                                field.onChange(e.target.files?.[0] || null)
-                              }
-                              placeholder="Upload audio file"
-                              disabled={formState.isSubmitting}
-                            />
+                            <CldUploadWidget
+                              signatureEndpoint="/api/sign-cloudinary-params"
+                              options={{
+                                folder: "soundzone/tracks",
+                                resourceType: "video",
+                                publicId: customSlugify(
+                                  getValues(`tracks.${index}.title`)
+                                ),
+                              }}
+                              onSuccess={(results, widget) => {
+                                const info =
+                                  results.info as CloudinaryUploadWidgetInfo;
+                                field.onChange({
+                                  duration: info.duration,
+                                  publicId: info.public_id,
+                                });
+                                widget.close();
+                              }}
+                            >
+                              {({ open }) => {
+                                return (
+                                  <Button onClick={() => open()}>
+                                    Upload Audio File
+                                  </Button>
+                                );
+                              }}
+                            </CldUploadWidget>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -592,9 +606,10 @@ export default function AlbumForm({ artistId }: { artistId: string }) {
                 append({
                   title: "",
                   isExplicit: false,
-                  audioPublicId: undefined,
-                  duration: undefined,
-                  audioFile: undefined,
+                  audioMeta: {
+                    duration: undefined,
+                    publicId: undefined,
+                  },
                   genreIds: [],
                   artists: [
                     {

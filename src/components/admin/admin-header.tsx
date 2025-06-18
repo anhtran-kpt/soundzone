@@ -32,7 +32,7 @@ export default function AdminHeader({
     <motion.header
       className={`sticky top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          ? "bg-background/90 backdrop-blur-md shadow-sm"
           : "bg-background"
       }`}
     >

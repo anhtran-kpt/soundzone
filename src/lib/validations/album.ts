@@ -5,7 +5,7 @@ import { z } from "zod";
 export const albumSchema = z.object({
   title: baseFields.title,
   description: baseFields.description,
-  releaseDate: z.coerce.date().optional(),
+  releaseDate: z.coerce.date(),
 });
 
 export const createAlbumSchema = albumSchema.extend({
@@ -15,8 +15,10 @@ export const createAlbumSchema = albumSchema.extend({
       title: baseFields.title,
       lyrics: baseFields.description,
       duration: baseFields.duration.optional(),
-      audioFile: z.instanceof(File, { message: "Please select an audio file" }),
-      audioPublicId: baseFields.publicId.optional(),
+      audioMeta: z.object({
+        duration: baseFields.duration.optional(),
+        publicId: baseFields.publicId.optional(),
+      }),
       isExplicit: z.boolean(),
       genreIds: z.array(z.string()).min(1, "At least one genre is required"),
       composer: z.string().optional(),

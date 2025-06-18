@@ -23,6 +23,7 @@ export default function TrackCard({ track }: { track: FullTrack }) {
               alt={track.album.title}
               fill
               aspectRatio="1:1"
+              sizes="64px"
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300 group-hover:brightness-75"
             />
           )}

@@ -10,7 +10,6 @@ interface AlbumCardProps {
 }
 
 export default function AlbumCard({ album }: AlbumCardProps) {
-  console.log(album);
   return (
     <div className="flex flex-col items-center group aspect-square">
       <div className="relative rounded-md overflow-hidden group w-full h-full">
@@ -44,7 +43,7 @@ export default function AlbumCard({ album }: AlbumCardProps) {
         >
           {album.title}
         </CustomLink>
-        <div className="flex gap-0.5 items-center justify-center text-xs text-muted-foreground">
+        <div className="flex items-center justify-center text-xs text-muted-foreground">
           {album.releaseDate && (
             <span className="">{formatDate(album.releaseDate, "yyyy")}</span>
           )}

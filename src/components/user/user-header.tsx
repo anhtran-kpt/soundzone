@@ -32,8 +32,8 @@ export default function UserHeader({
     <motion.header
       className={`sticky top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
+          ? "bg-background/90 backdrop-blur-md shadow-sm"
+          : "bg-background"
       }`}
     >
       <div className="flex items-center gap-4 flex-grow">
