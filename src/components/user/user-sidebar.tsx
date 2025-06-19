@@ -66,10 +66,10 @@ export default function UserSidebar() {
   return (
     <Sidebar collapsible="icon" className="relative">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         onClick={toggleSidebar}
-        className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 size-6 rounded-full"
+        className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 size-6 rounded-full bg-sidebar border border-border"
       >
         {state === "collapsed" ? (
           <Icon icon={ChevronRightIcon} className="size-4" />

@@ -52,15 +52,15 @@ export default function ArtistPage() {
           className="absolute inset-0 -mx-12 -mt-24"
           style={{ backgroundColor: bannerColor || "transparent" }}
         ></div>
-        <div className="absolute bottom-6 flex items-center gap-6 px-6">
-          <div className="relative size-40">
+        <div className="absolute -bottom-12 flex items-center gap-6 px-6">
+          <div className="relative size-56">
             {artist.imagePublicId && (
               <CldImage
                 src={artist.imagePublicId}
                 alt={artist.name}
                 fill
                 aspectRatio="1:1"
-                className="rounded-full size-40"
+                className="rounded-full size-56 border-2 border-white"
                 crop="fill"
                 sizes="160px"
                 onLoad={(e) => setImageUrl(e.target.src)}
@@ -94,6 +94,14 @@ export default function ArtistPage() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="mt-12">
+        {/* <h2 className="text-2xl font-bold mb-2">Top Tracks</h2>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6">
+          {artist.tracks.map((track) => (
+            <TrackCard key={track.id} track={track} />
+          ))}
+        </div> */}
       </section>
       <section>
         <h2 className="text-2xl font-bold mb-2">About</h2>

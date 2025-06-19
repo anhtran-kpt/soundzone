@@ -6,18 +6,18 @@ export const albumSchema = z.object({
   title: baseFields.title,
   description: baseFields.description,
   releaseDate: z.coerce.date(),
+  coverPublicId: baseFields.publicId,
+  bannerPublicId: baseFields.publicId,
 });
 
 export const createAlbumSchema = albumSchema.extend({
-  coverFile: z.instanceof(File, { message: "Please select a cover image" }),
   tracks: z.array(
     z.object({
       title: baseFields.title,
       lyrics: baseFields.description,
-      duration: baseFields.duration.optional(),
       audioMeta: z.object({
-        duration: baseFields.duration.optional(),
-        publicId: baseFields.publicId.optional(),
+        duration: baseFields.duration,
+        publicId: baseFields.publicId,
       }),
       isExplicit: z.boolean(),
       genreIds: z.array(z.string()).min(1, "At least one genre is required"),
@@ -35,7 +35,6 @@ export const createAlbumSchema = albumSchema.extend({
 });
 
 export const createAlbumInputSchema = albumSchema.extend({
-  coverPublicId: baseFields.publicId,
   artistId: baseFields.id,
   tracks: z.array(
     z.object({

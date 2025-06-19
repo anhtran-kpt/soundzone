@@ -29,9 +29,5 @@ export default async function NewAlbumPage({ params }: Props) {
     notFound();
   }
 
-  return (
-    <div className="container mx-auto p-6">
-      <AlbumForm artistId={artist.id} />
-    </div>
-  );
+  return <AlbumForm artist={artist} />;
 }
