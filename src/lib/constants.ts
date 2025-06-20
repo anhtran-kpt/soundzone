@@ -10,8 +10,8 @@ export const SLUG_OPTIONS = {
 };
 
 export const CREDIT_ROLES = {
-  MAIN_ARTIST: "Main",
-  FEATURED_ARTIST: "Featured",
+  MAIN_ARTIST: "Main Artist",
+  FEATURED_ARTIST: "Featured Artist",
   COMPOSER: "Composer",
   LYRICIST: "Lyricist",
   PRODUCER: "Producer",

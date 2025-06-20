@@ -1,4 +1,4 @@
-import { ArtistRole } from "@/app/generated/prisma";
+import { CreditRole } from "@/app/generated/prisma";
 import { baseFields } from "./shared";
 import { z } from "zod";
 
@@ -21,13 +21,11 @@ export const createAlbumSchema = albumSchema.extend({
       }),
       isExplicit: z.boolean(),
       genreIds: z.array(z.string()).min(1, "At least one genre is required"),
-      composer: z.string().optional(),
-      lyricist: z.string().optional(),
-      producer: z.string().optional(),
       artists: z.array(
         z.object({
-          artistId: baseFields.id,
-          role: z.nativeEnum(ArtistRole),
+          id: baseFields.id.optional(),
+          name: z.string().optional(),
+          roles: z.array(z.nativeEnum(CreditRole)),
         })
       ),
     })
@@ -44,13 +42,11 @@ export const createAlbumInputSchema = albumSchema.extend({
       audioPublicId: baseFields.publicId,
       isExplicit: z.boolean(),
       genreIds: z.array(z.string()).min(1, "At least one genre is required"),
-      composer: z.string().optional(),
-      lyricist: z.string().optional(),
-      producer: z.string().optional(),
       artists: z.array(
         z.object({
-          artistId: baseFields.id,
-          role: z.nativeEnum(ArtistRole),
+          id: baseFields.id.optional(),
+          name: z.string().optional(),
+          roles: z.array(z.nativeEnum(CreditRole)),
         })
       ),
     })

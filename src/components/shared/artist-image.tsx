@@ -5,12 +5,14 @@ interface ArtistImageProps {
   imagePublicId: string;
   artistName: string;
   className?: string;
+  sizes?: string;
 }
 
 export default function ArtistImage({
   imagePublicId,
   artistName,
   className,
+  sizes = "64px",
 }: ArtistImageProps) {
   return (
     <div
@@ -20,7 +22,7 @@ export default function ArtistImage({
         src={imagePublicId}
         alt={artistName}
         fill
-        sizes="64px"
+        sizes={sizes}
         className="rounded-full object-cover"
       />
     </div>
