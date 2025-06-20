@@ -8,3 +8,12 @@ export const SLUG_OPTIONS = {
   locale: "vi",
   trim: true,
 };
+
+export const CREDIT_ROLES = {
+  MAIN_ARTIST: "Main",
+  FEATURED_ARTIST: "Featured",
+  COMPOSER: "Composer",
+  LYRICIST: "Lyricist",
+  PRODUCER: "Producer",
+  ENGINEER: "Engineer",
+};

@@ -2,6 +2,7 @@ import AlbumForm from "@/components/forms/album-form";
 import { notFound } from "next/navigation";
 import { getArtistById } from "@/lib/services/artist";
 import { Metadata } from "next";
+import ArtistBanner from "@/components/sections/artist-banner";
 
 type Props = {
   params: Promise<{ artistId: string }>;
@@ -29,5 +30,10 @@ export default async function NewAlbumPage({ params }: Props) {
     notFound();
   }
 
-  return <AlbumForm artist={artist} />;
+  return (
+    <div className="flex flex-col gap-16">
+      <ArtistBanner artist={artist} />
+      <AlbumForm artist={artist} />
+    </div>
+  );
 }

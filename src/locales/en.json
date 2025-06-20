@@ -1,0 +1,10 @@
+{
+  "creditRoles": {
+    "MAIN_ARTIST": "Main Artist",
+    "FEATURED_ARTIST": "Featured Artist",
+    "COMPOSER": "Composer",
+    "LYRICIST": "Lyricist",
+    "PRODUCER": "Producer",
+    "ENGINEER": "Engineer"
+  }
+}

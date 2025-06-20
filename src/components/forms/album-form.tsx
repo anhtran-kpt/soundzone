@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArtistRole } from "@/app/generated/prisma";
+import { CreditRole } from "@/app/generated/prisma";
 import { useGenres } from "@/lib/queries/genre";
 import { useArtists } from "@/lib/queries/artist";
 import { Calendar } from "@/components/ui/calendar";
@@ -28,15 +28,11 @@ import {
   Plus,
   X,
   UploadIcon,
+  Check,
+  Command,
+  ChevronsUpDown,
 } from "lucide-react";
 import { format } from "date-fns";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -48,7 +44,12 @@ import { Icon } from "../common";
 import { FullArtist } from "@/lib/types";
 import { Explicit } from "../shared";
 import { useState } from "react";
+import { CommandEmpty, CommandItem, CommandGroup } from "../ui/command";
 import Image from "next/image";
+import { CommandList } from "../ui/command";
+import { CommandInput } from "../ui/command";
+import { CREDIT_ROLES } from "@/lib/constants";
+import { BadgeCheckbox } from "../ui/badge-checkbox";
 
 export default function AlbumForm({ artist }: { artist: FullArtist }) {
   const { data: genres } = useGenres();
@@ -78,13 +79,12 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
           },
           isExplicit: false,
           genreIds: [],
-          composer: "",
-          lyricist: "",
-          producer: "",
-          artists: [
+          artistsId: [artist.id],
+          credits: [
             {
+              role: CreditRole.MAIN_ARTIST,
               artistId: artist.id,
-              role: ArtistRole.MAIN,
+              name: artist.name,
             },
           ],
         },
@@ -141,7 +141,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
       ...currentArtists,
       {
         artistId: "",
-        role: ArtistRole.FEATURED,
+        creditIds: [],
       },
     ]);
   };
@@ -158,9 +158,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
 
   return (
     <div className="text-center">
-      <h2 className="text-2xl font-bold mb-6">
-        New Album For <span className="text-primary">{artist.name}</span>
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">New Album</h2>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -171,7 +169,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                   name="title"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Album Title</FormLabel>
+                      <FormLabel>Album title</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -190,7 +188,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                   name="releaseDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Release Date</FormLabel>
+                      <FormLabel>Release date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -213,11 +211,11 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={field.value || undefined}
+                            selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
+                            fromDate={new Date(1900, 0, 1)}
+                            toDate={new Date()}
+                            captionLayout="dropdown"
                             initialFocus
                           />
                         </PopoverContent>
@@ -233,7 +231,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Album Description</FormLabel>
+                    <FormLabel>Album description</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -252,7 +250,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                 name="coverPublicId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Album Cover</FormLabel>
+                    <FormLabel>Album cover</FormLabel>
                     {albumCoverPreview && (
                       <div className="flex justify-center items-center">
                         <div className="relative rounded-lg overflow-hidden size-48 aspect-square">
@@ -304,7 +302,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                 name="bannerPublicId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Album Banner</FormLabel>
+                    <FormLabel>Album banner</FormLabel>
                     {albumBannerPreview && (
                       <div className="w-full aspect-video relative">
                         <Image
@@ -397,7 +395,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                           name={`tracks.${index}.audioMeta`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Audio File</FormLabel>
+                              <FormLabel>Audio file</FormLabel>
                               <FormControl>
                                 <CldUploadWidget
                                   signatureEndpoint="/api/sign-cloudinary-params"
@@ -426,7 +424,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                                           icon={UploadIcon}
                                           className="size-4 mr-1"
                                         />
-                                        Upload Track Audio
+                                        Upload Audio
                                       </Button>
                                     );
                                   }}
@@ -468,7 +466,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                         render={() => (
                           <FormItem>
                             <FormLabel>Genres</FormLabel>
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="flex flex-wrap gap-x-1 gap-y-2">
                               {genres?.map((genre) => (
                                 <FormField
                                   key={genre.id}
@@ -478,10 +476,12 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                                     return (
                                       <FormItem
                                         key={genre.id}
-                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                        className="flex flex-row items-center space-x-1 space-y-0"
                                       >
                                         <FormControl>
-                                          <Checkbox
+                                          <BadgeCheckbox
+                                            size="sm"
+                                            showIcon={false}
                                             checked={field.value?.includes(
                                               genre.id
                                             )}
@@ -498,11 +498,10 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                                                     )
                                                   );
                                             }}
-                                          />
+                                          >
+                                            {genre.name}
+                                          </BadgeCheckbox>
                                         </FormControl>
-                                        <FormLabel className="text-sm font-normal">
-                                          {genre.name}
-                                        </FormLabel>
                                       </FormItem>
                                     );
                                   }}
@@ -522,7 +521,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                             ?.map((artist, artistIndex) => (
                               <div
                                 key={artistIndex}
-                                className="flex items-center space-x-2 border p-2 rounded-md"
+                                className="flex items-center space-x-4 border p-2 rounded-md"
                               >
                                 <FormField
                                   control={control}
@@ -534,69 +533,124 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
 
                                     return (
                                       <FormItem className="flex-1">
-                                        <Select
-                                          value={field.value}
-                                          onValueChange={field.onChange}
-                                          disabled={formState.isSubmitting}
-                                        >
-                                          <FormControl>
-                                            <SelectTrigger>
-                                              <SelectValue placeholder="Select artist">
+                                        <Popover>
+                                          <PopoverTrigger asChild>
+                                            <FormControl>
+                                              <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                className={cn(
+                                                  "w-[200px] justify-between",
+                                                  !field.value &&
+                                                    "text-muted-foreground"
+                                                )}
+                                              >
                                                 {selectedArtist
                                                   ? selectedArtist.name
                                                   : "Select artist"}
-                                              </SelectValue>
-                                            </SelectTrigger>
-                                          </FormControl>
-                                          <SelectContent>
-                                            {artists?.map((artist) => (
-                                              <SelectItem
-                                                key={artist.id}
-                                                value={artist.id}
-                                              >
-                                                {artist.name}
-                                              </SelectItem>
-                                            ))}
-                                          </SelectContent>
-                                        </Select>
+                                                <ChevronsUpDown className="opacity-50" />
+                                              </Button>
+                                            </FormControl>
+                                          </PopoverTrigger>
+                                          <PopoverContent className="w-[200px] p-0">
+                                            <Command>
+                                              <CommandInput
+                                                placeholder="Search framework..."
+                                                className="h-9"
+                                              />
+                                              <CommandList>
+                                                <CommandEmpty>
+                                                  No framework found.
+                                                </CommandEmpty>
+                                                <CommandGroup>
+                                                  {artists?.map((artist) => (
+                                                    <CommandItem
+                                                      value={artist.id}
+                                                      key={artist.id}
+                                                      onSelect={() => {
+                                                        form.setValue(
+                                                          `tracks.${index}.artists.${artistIndex}.artistId`,
+                                                          artist.id
+                                                        );
+                                                      }}
+                                                    >
+                                                      {artist.name}
+                                                      <Check
+                                                        className={cn(
+                                                          "ml-auto",
+                                                          artist.id ===
+                                                            field.value
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                        )}
+                                                      />
+                                                    </CommandItem>
+                                                  ))}
+                                                </CommandGroup>
+                                              </CommandList>
+                                            </Command>
+                                          </PopoverContent>
+                                        </Popover>
                                       </FormItem>
                                     );
                                   }}
                                 />
 
                                 <FormField
-                                  control={control}
-                                  name={`tracks.${index}.artists.${artistIndex}.role`}
-                                  render={({ field }) => (
-                                    <FormItem className="w-32">
-                                      <Select
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                        disabled={formState.isSubmitting}
-                                      >
-                                        <FormControl>
-                                          <SelectTrigger>
-                                            <SelectValue placeholder="Role" />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          <SelectItem value={ArtistRole.MAIN}>
-                                            Main
-                                          </SelectItem>
-                                          <SelectItem
-                                            value={ArtistRole.FEATURED}
-                                          >
-                                            Featured
-                                          </SelectItem>
-                                        </SelectContent>
-                                      </Select>
+                                  control={form.control}
+                                  name={`tracks.${index}.artists.${artistIndex}.creditIds`}
+                                  render={() => (
+                                    <FormItem className="flex flex-wrap space-x-2">
+                                      {Object.values(CreditRole).map((role) => (
+                                        <FormField
+                                          key={role}
+                                          control={form.control}
+                                          name={`tracks.${index}.artists.${artistIndex}.creditIds`}
+                                          render={({ field }) => {
+                                            return (
+                                              <FormItem
+                                                key={role}
+                                                className="flex flex-row items-center gap-2"
+                                              >
+                                                <FormControl>
+                                                  <Checkbox
+                                                    checked={field.value?.includes(
+                                                      role
+                                                    )}
+                                                    onCheckedChange={(
+                                                      checked
+                                                    ) => {
+                                                      return checked
+                                                        ? field.onChange([
+                                                            ...field.value,
+                                                            role,
+                                                          ])
+                                                        : field.onChange(
+                                                            field.value?.filter(
+                                                              (value: string) =>
+                                                                value !== role
+                                                            )
+                                                          );
+                                                    }}
+                                                  />
+                                                </FormControl>
+                                                <FormLabel className="text-sm font-normal">
+                                                  {CREDIT_ROLES[role]}
+                                                </FormLabel>
+                                              </FormItem>
+                                            );
+                                          }}
+                                        />
+                                      ))}
+
+                                      <FormMessage />
                                     </FormItem>
                                   )}
                                 />
 
                                 <Button
                                   type="button"
-                                  variant="ghost"
+                                  variant="outline"
                                   size="icon"
                                   onClick={() =>
                                     handleRemoveArtistFromTrack(
@@ -626,60 +680,6 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                           </Button>
                         </div>
                       </div>
-
-                      <FormField
-                        control={control}
-                        name={`tracks.${index}.composer`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Composer</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Enter track composer"
-                                disabled={formState.isSubmitting}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={control}
-                        name={`tracks.${index}.lyricist`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Lyricist</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Enter track lyricist"
-                                disabled={formState.isSubmitting}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={control}
-                        name={`tracks.${index}.producer`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Producer</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Enter track producer"
-                                disabled={formState.isSubmitting}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
 
                       <FormField
                         control={control}
@@ -719,13 +719,10 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                     artists: [
                       {
                         artistId: artist.id,
-                        role: ArtistRole.MAIN,
+                        creditIds: [],
                       },
                     ],
                     lyrics: "",
-                    composer: "",
-                    lyricist: "",
-                    producer: "",
                   })
                 }
               >
@@ -745,13 +742,5 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
         </form>
       </Form>
     </div>
-    // <div className="max-w-md flex flex-col items-center mx-auto">
-    //   <h2 className="text-2xl font-bold mb-6">New Album</h2>
-    //   <Form {...form}>
-    //     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-    //     </form>
-    //   </Form>
-    // </div>
   );
 }
