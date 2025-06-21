@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CreditRole } from "@/app/generated/prisma";
+import { ArtistRole } from "@/app/generated/prisma";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
@@ -24,12 +24,12 @@ import { CreateAlbumForm, createAlbumSchema } from "@/lib/validations";
 import { createAlbumAction } from "@/app/actions/album";
 import { toast } from "sonner";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { Icon } from "../common";
+import { Icon } from "@/components/common";
 import { FullArtist } from "@/lib/types";
 import { useState } from "react";
 import Image from "next/image";
-import TrackDetailsForm from "./track-details-form";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import TrackField from "./track-field";
 
 export default function AlbumForm({ artist }: { artist: FullArtist }) {
   const [albumBannerPreview, setAlbumBannerPreview] = useState<
@@ -57,10 +57,15 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
             publicId: undefined,
           },
           genreIds: [],
-          artists: [
+          performers: [
             {
-              roles: [CreditRole.MAIN_ARTIST],
-              id: artist.id,
+              artistId: artist.id,
+              role: ArtistRole.MAIN_ARTIST,
+            },
+          ],
+          credits: [
+            {
+              roles: [],
               name: artist.name,
             },
           ],
@@ -91,13 +96,6 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
       isExplicit: false,
       audioMeta: { duration: 0, publicId: "" },
       genreIds: [],
-      artists: [
-        {
-          roles: [CreditRole.MAIN_ARTIST],
-          id: artist.id,
-          name: artist.name,
-        },
-      ],
     });
   };
 
@@ -121,7 +119,8 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
           audioPublicId: track.audioMeta.publicId,
           isExplicit: track.isExplicit,
           genreIds: track.genreIds,
-          artists: track.artists,
+          performers: track.performers,
+          credits: track.credits,
         })),
       };
 
@@ -132,6 +131,8 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
       );
     }
   };
+
+  console.log(methods.formState.errors);
 
   return (
     <Card>
@@ -354,7 +355,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                 </FormLabel>
                 <div className="space-y-6">
                   {trackFields.map((track, trackIndex) => (
-                    <TrackDetailsForm
+                    <TrackField
                       key={track.id}
                       trackIndex={trackIndex}
                       onRemove={() => handleRemoveTrack(trackIndex)}
@@ -375,7 +376,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting || !isValid}
+                  disabled={isSubmitting}
                   className="w-full mt-8"
                 >
                   {isSubmitting ? "Creating new album..." : "Create new album"}

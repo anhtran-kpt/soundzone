@@ -2,10 +2,13 @@
 CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "ReleaseType" AS ENUM ('SINGLE', 'ALBUM');
+CREATE TYPE "ReleaseType" AS ENUM ('SINGLE', 'EP', 'ALBUM');
 
 -- CreateEnum
-CREATE TYPE "CreditRole" AS ENUM ('MAIN_ARTIST', 'FEATURED_ARTIST', 'PRODUCER', 'LYRICIST', 'COMPOSER', 'ENGINEER');
+CREATE TYPE "ArtistRole" AS ENUM ('MAIN_ARTIST', 'FEATURED_ARTIST');
+
+-- CreateEnum
+CREATE TYPE "CreditRole" AS ENUM ('PRODUCER', 'LYRICIST', 'COMPOSER');
 
 -- CreateEnum
 CREATE TYPE "PlaylistType" AS ENUM ('USER', 'EDITORIAL', 'ALGORITHM');
@@ -46,12 +49,12 @@ CREATE TABLE "Track" (
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "lyrics" TEXT,
-    "duration" INTEGER NOT NULL DEFAULT 0,
+    "duration" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "isExplicit" BOOLEAN NOT NULL DEFAULT false,
     "audioPublicId" TEXT NOT NULL,
-    "trackNumber" INTEGER NOT NULL DEFAULT 0,
+    "trackNumber" INTEGER NOT NULL,
     "albumId" TEXT NOT NULL,
 
     CONSTRAINT "Track_pkey" PRIMARY KEY ("id")
@@ -103,20 +106,20 @@ CREATE TABLE "Genre" (
 
 -- CreateTable
 CREATE TABLE "Credit" (
+    "id" TEXT NOT NULL,
     "trackId" TEXT NOT NULL,
     "artistId" TEXT,
     "name" TEXT NOT NULL,
     "role" "CreditRole" NOT NULL,
-    "order" INTEGER NOT NULL DEFAULT 0,
 
-    CONSTRAINT "Credit_pkey" PRIMARY KEY ("trackId","order")
+    CONSTRAINT "Credit_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PlayHistory" (
     "id" TEXT NOT NULL,
     "playedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "playDuration" INTEGER NOT NULL DEFAULT 0,
+    "playDuration" INTEGER NOT NULL,
     "completedPlay" BOOLEAN NOT NULL DEFAULT false,
     "sourceType" TEXT,
     "sourceId" TEXT,
@@ -145,6 +148,7 @@ CREATE TABLE "TrackArtist" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "trackId" TEXT NOT NULL,
     "artistId" TEXT NOT NULL,
+    "role" "ArtistRole" NOT NULL DEFAULT 'MAIN_ARTIST',
 
     CONSTRAINT "TrackArtist_pkey" PRIMARY KEY ("id")
 );
@@ -156,7 +160,7 @@ CREATE TABLE "PlaylistTrack" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "playlistId" TEXT NOT NULL,
     "trackId" TEXT NOT NULL,
-    "order" INTEGER NOT NULL DEFAULT 0,
+    "order" INTEGER NOT NULL,
 
     CONSTRAINT "PlaylistTrack_pkey" PRIMARY KEY ("id")
 );
@@ -254,10 +258,16 @@ CREATE UNIQUE INDEX "Genre_slug_key" ON "Genre"("slug");
 CREATE INDEX "Genre_slug_idx" ON "Genre"("slug");
 
 -- CreateIndex
+CREATE INDEX "Credit_trackId_idx" ON "Credit"("trackId");
+
+-- CreateIndex
 CREATE INDEX "Credit_artistId_idx" ON "Credit"("artistId");
 
 -- CreateIndex
 CREATE INDEX "Credit_role_idx" ON "Credit"("role");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Credit_trackId_artistId_role_key" ON "Credit"("trackId", "artistId", "role");
 
 -- CreateIndex
 CREATE INDEX "PlayHistory_userId_playedAt_idx" ON "PlayHistory"("userId", "playedAt");

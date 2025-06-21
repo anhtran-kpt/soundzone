@@ -1,29 +1,29 @@
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { Icon } from "../common";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/common";
 import { Trash2Icon } from "lucide-react";
-import { FormControl, FormField, FormMessage } from "../ui/form";
-import { FormItem } from "../ui/form";
-import { FormLabel } from "../ui/form";
-import { BadgeCheckbox } from "../ui/badge-checkbox";
+import { FormControl, FormField, FormMessage } from "@/components/ui/form";
+import { FormItem } from "@/components/ui/form";
+import { FormLabel } from "@/components/ui/form";
+import { BadgeCheckbox } from "@/components/ui/badge-checkbox";
 import { CreditRole } from "@/app/generated/prisma/client";
 import { CREDIT_ROLES } from "@/lib/constants";
-import { ComboboxPopover } from "../ui/combobox-popover";
+import { ComboboxPopover } from "@/components/ui/combobox-popover";
 
-interface TrackArtistFormProps {
+interface ArtistFieldProps {
   trackIndex: number;
   artistIndex: number;
   onRemove: () => void;
   canRemove: boolean;
 }
 
-export default function TrackArtistForm({
+export default function ArtistField({
   trackIndex,
   artistIndex,
   onRemove,
   canRemove,
-}: TrackArtistFormProps) {
+}: ArtistFieldProps) {
   const { control, setValue } = useFormContext();
 
   const artistIdFieldName =

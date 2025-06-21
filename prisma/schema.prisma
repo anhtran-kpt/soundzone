@@ -21,16 +21,19 @@ enum UserRole {
 
 enum ReleaseType {
   SINGLE
+  EP
   ALBUM
 }
 
-enum CreditRole {
+enum ArtistRole {
   MAIN_ARTIST
   FEATURED_ARTIST
+}
+
+enum CreditRole {
   PRODUCER
   LYRICIST
   COMPOSER
-  ENGINEER
 }
 
 enum PlaylistType {
@@ -68,7 +71,6 @@ model Artist {
   nationality    String?
   imagePublicId  String
   bannerPublicId String?
-  credits        Credit[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -84,13 +86,13 @@ model Track {
   title         String
   slug          String           @unique
   lyrics        String?          @db.Text
-  duration      Int              @default(0)
+  duration      Int
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   isExplicit    Boolean          @default(false)
   audioPublicId String
   genres        TrackGenre[]
-  trackNumber   Int              @default(0)
+  trackNumber   Int
   credits       Credit[]
   album         Album            @relation(fields: [albumId], references: [id])
   albumId       String
@@ -156,23 +158,19 @@ model Genre {
 }
 
 model Credit {
-  track    Track      @relation(fields: [trackId], references: [id])
-  trackId  String
-  artist   Artist?    @relation(fields: [artistId], references: [id])
-  artistId String?
-  name     String
-  role     CreditRole
-  order    Int        @default(0)
+  id      String       @id @default(cuid())
+  track   Track        @relation(fields: [trackId], references: [id])
+  trackId String
+  name    String
+  roles   CreditRole[]
 
-  @@id([trackId, order])
-  @@index([artistId])
-  @@index([role])
+  @@index([trackId])
 }
 
 model PlayHistory {
   id            String   @id @default(cuid())
   playedAt      DateTime @default(now())
-  playDuration  Int      @default(0)
+  playDuration  Int
   completedPlay Boolean  @default(false)
   sourceType    String? // Source of the play: Search, Playlist, Radio, Album...
   sourceId      String?
@@ -203,10 +201,11 @@ model TrackArtist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  track    Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  track    Track      @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId  String
-  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artist   Artist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
   artistId String
+  role     ArtistRole @default(MAIN_ARTIST)
 
   @@unique([trackId, artistId])
 }
@@ -220,7 +219,7 @@ model PlaylistTrack {
   playlistId String
   track      Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId    String
-  order      Int      @default(0)
+  order      Int
 
   @@unique([playlistId, trackId])
 }

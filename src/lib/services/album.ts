@@ -29,8 +29,15 @@ export async function getAllAlbums(): Promise<FullAlbum[]> {
 }
 
 export async function createAlbum(data: CreateAlbumInput): Promise<void> {
-  const { title, description, releaseDate, coverPublicId, artistId, tracks } =
-    data;
+  const {
+    title,
+    description,
+    releaseDate,
+    coverPublicId,
+    bannerPublicId,
+    artistId,
+    tracks,
+  } = data;
 
   return await db.$transaction(async (tx) => {
     const albumSlug = await tx.album.generateSlug(title);
@@ -44,6 +51,7 @@ export async function createAlbum(data: CreateAlbumInput): Promise<void> {
           tracks.length === 1 ? ReleaseType.SINGLE : ReleaseType.ALBUM,
         releaseDate,
         coverPublicId,
+        bannerPublicId,
         artistId,
       },
     });
@@ -62,20 +70,47 @@ export async function createAlbum(data: CreateAlbumInput): Promise<void> {
             isExplicit: trackData.isExplicit,
             lyrics: emptyToNull(trackData.lyrics),
             albumId: album.id,
-            composer: emptyToNull(trackData.composer),
-            lyricist: emptyToNull(trackData.lyricist),
-            producer: emptyToNull(trackData.producer),
           },
         });
 
         if (trackData.artists.length > 0) {
+          const trackArtists = trackData.artists.filter(
+            (artistInput) =>
+              artistInput.id !== "" && artistInput.id !== undefined
+          );
+
+          const credits = trackData.artists.flatMap(
+            (artistInput, artistIndex) =>
+              artistInput.roles.map((role) =>
+                artistInput.id
+                  ? {
+                      trackId: track.id,
+                      artistId: artistInput.id,
+                      name: artistInput.name,
+                      role,
+                      order: artistIndex + 1,
+                    }
+                  : {
+                      trackId: track.id,
+                      name: artistInput.name,
+                      role,
+                      order: artistIndex + 1,
+                    }
+              )
+          );
+
+          console.log(credits);
+
           await tx.trackArtist.createMany({
-            data: trackData.artists.map((artistInput, artistIndex) => ({
+            data: trackArtists.map((artist, artistIndex) => ({
               trackId: track.id,
-              artistId: artistInput.artistId,
-              role: artistInput.role,
+              artistId: artist.id!,
               order: artistIndex + 1,
             })),
+          });
+
+          await tx.credit.createMany({
+            data: credits,
           });
         }
 

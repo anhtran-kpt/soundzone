@@ -6,33 +6,33 @@ import {
   FormItem,
   FormLabel,
   FormDescription,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusIcon, Trash2Icon, UploadIcon } from "lucide-react";
-import Icon from "../common/icon";
+import Icon from "@/components/common/icon";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
-import { Explicit } from "../shared";
-import { Switch } from "../ui/switch";
-import { BadgeCheckbox } from "../ui/badge-checkbox";
-import { Textarea } from "../ui/textarea";
+import { Explicit } from "@/components/shared";
+import { Switch } from "@/components/ui/switch";
+import { BadgeCheckbox } from "@/components/ui/badge-checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { useGenres } from "@/lib/queries/genre";
-import TrackArtistForm from "./track-artist-form";
+import ArtistField from "./artist-field";
 import { CreditRole } from "@/app/generated/prisma/client";
 
-interface TrackDetailsFormProps {
+interface TrackFieldProps {
   trackIndex: number;
   onRemove: () => void;
   canRemove: boolean;
 }
 
-export default function TrackDetailsForm({
+export default function TrackField({
   trackIndex,
   onRemove,
   canRemove,
-}: TrackDetailsFormProps) {
+}: TrackFieldProps) {
   const { data: genres } = useGenres();
   const {
     control,
@@ -206,7 +206,7 @@ export default function TrackDetailsForm({
           />
 
           {artistFields.map((artist, artistIndex) => (
-            <TrackArtistForm
+            <ArtistField
               key={`${trackIndex}-${artistIndex}`}
               trackIndex={trackIndex}
               artistIndex={artistIndex}
