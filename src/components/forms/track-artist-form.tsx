@@ -24,7 +24,7 @@ export default function TrackArtistForm({
   onRemove,
   canRemove,
 }: TrackArtistFormProps) {
-  const { control, setValue, getValues } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const artistIdFieldName =
     `tracks.${trackIndex}.artists.${artistIndex}.id` as const;
@@ -35,7 +35,7 @@ export default function TrackArtistForm({
 
   return (
     <Card className="relative">
-      <CardHeader className="pb-3">
+      <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Artist #{artistIndex + 1}</CardTitle>
           {canRemove && (
@@ -50,7 +50,7 @@ export default function TrackArtistForm({
           )}
         </div>
       </CardHeader>
-      <CardContent className="flex gap-4 items-start">
+      <CardContent className="flex flex-col gap-4">
         <FormField
           control={control}
           name={artistIdFieldName}
@@ -66,7 +66,6 @@ export default function TrackArtistForm({
                   onAddNewArtist={(name) => {
                     setValue(artistNameFieldName, name);
                   }}
-                  artistName={getValues(artistNameFieldName)}
                 />
               </FormControl>
               <FormMessage />

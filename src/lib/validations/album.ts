@@ -25,7 +25,9 @@ export const createAlbumSchema = albumSchema.extend({
         z.object({
           id: baseFields.id.optional(),
           name: z.string().optional(),
-          roles: z.array(z.nativeEnum(CreditRole)),
+          roles: z
+            .array(z.nativeEnum(CreditRole))
+            .min(1, "At least one role is required"),
         })
       ),
     })
@@ -46,7 +48,9 @@ export const createAlbumInputSchema = albumSchema.extend({
         z.object({
           id: baseFields.id.optional(),
           name: z.string().optional(),
-          roles: z.array(z.nativeEnum(CreditRole)),
+          roles: z
+            .array(z.nativeEnum(CreditRole))
+            .min(1, "At least one role is required"),
         })
       ),
     })
