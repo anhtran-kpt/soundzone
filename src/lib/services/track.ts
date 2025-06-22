@@ -17,3 +17,23 @@ export async function getTrackBySlug(slug: string): Promise<FullTrack | null> {
     include: fullTrackInclude,
   });
 }
+
+export async function getTrackByArtistSlug(slug: string): Promise<FullTrack[]> {
+  return await db.track.findMany({
+    where: {
+      artists: {
+        some: {
+          artist: {
+            slug,
+          },
+        },
+      },
+    },
+    orderBy: {
+      playHistory: {
+        _count: "desc",
+      },
+    },
+    include: fullTrackInclude,
+  });
+}

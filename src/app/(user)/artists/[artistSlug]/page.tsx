@@ -1,11 +1,8 @@
 "use client";
 
-// import AlbumCard from "@/components/common/album-card";
 import { useParams } from "next/navigation";
 import { useArtist } from "@/lib/queries/artist";
-import Discography from "@/components/sections/discography";
-import CustomLink from "@/components/common/custom-link";
-import { ArtistBanner } from "@/components/sections";
+import { ArtistBanner, TracksPopular } from "@/components/sections";
 
 export default function ArtistPage() {
   const { artistSlug } = useParams();
@@ -25,6 +22,7 @@ export default function ArtistPage() {
   return (
     <div className="flex flex-col gap-4">
       <ArtistBanner artist={artist} />
+      <TracksPopular className="mt-32" />
       <section className="mt-12">
         {/* <h2 className="text-2xl font-bold mb-2">Top Tracks</h2>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6">
@@ -33,7 +31,7 @@ export default function ArtistPage() {
           ))}
         </div> */}
       </section>
-      <section>
+      {/* <section>
         <h2 className="text-2xl font-bold mb-2">About</h2>
         <p className="text-sm text-muted-foreground">
           {artist.description || "No description available"}
@@ -47,16 +45,7 @@ export default function ArtistPage() {
           </CustomLink>
         </div>
         <Discography albums={artist.albums} />
-        {/* <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6">
-          {artist.albums.length > 0 ? (
-            artist.albums.map((album) => (
-              <AlbumCard key={album.id} album={album} />
-            ))
-          ) : (
-            <p className="text-sm text-muted-foreground">No albums found</p>
-          )}
-        </div> */}
-      </section>
+      </section> */}
     </div>
   );
 }
