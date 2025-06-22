@@ -5,18 +5,18 @@ import { FullAlbum } from "../types";
 import { CreateAlbumInput } from "../validations";
 import { ReleaseType } from "@/app/generated/prisma";
 
-export async function getAlbumById(id: string): Promise<FullAlbum | null> {
+export async function getAlbumBySlug(slug: string): Promise<FullAlbum | null> {
   return await db.album.findUnique({
-    where: { id },
+    where: { slug },
     include: fullAlbumInclude,
   });
 }
 
-export async function getAlbumsByArtistId(
-  artistId: string
+export async function getAlbumsByArtistSlug(
+  artistSlug: string
 ): Promise<FullAlbum[]> {
   return await db.album.findMany({
-    where: { artistId },
+    where: { artist: { slug: artistSlug } },
     include: fullAlbumInclude,
   });
 }
@@ -73,44 +73,21 @@ export async function createAlbum(data: CreateAlbumInput): Promise<void> {
           },
         });
 
-        if (trackData.artists.length > 0) {
-          const trackArtists = trackData.artists.filter(
-            (artistInput) =>
-              artistInput.id !== "" && artistInput.id !== undefined
-          );
-
-          const credits = trackData.artists.flatMap(
-            (artistInput, artistIndex) =>
-              artistInput.roles.map((role) =>
-                artistInput.id
-                  ? {
-                      trackId: track.id,
-                      artistId: artistInput.id,
-                      name: artistInput.name,
-                      role,
-                      order: artistIndex + 1,
-                    }
-                  : {
-                      trackId: track.id,
-                      name: artistInput.name,
-                      role,
-                      order: artistIndex + 1,
-                    }
-              )
-          );
-
-          console.log(credits);
-
+        if (trackData.performers.length > 0) {
           await tx.trackArtist.createMany({
-            data: trackArtists.map((artist, artistIndex) => ({
+            data: trackData.performers.map((performer) => ({
               trackId: track.id,
-              artistId: artist.id!,
-              order: artistIndex + 1,
+              artistId: performer.artistId,
+              role: performer.role,
             })),
           });
 
           await tx.credit.createMany({
-            data: credits,
+            data: trackData.credits.map((credit) => ({
+              name: credit.name,
+              roles: credit.roles,
+              trackId: track.id,
+            })),
           });
         }
 

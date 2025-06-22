@@ -1,48 +1,48 @@
 export const GENRE_ENDPOINTS = {
   list: "/genres",
-  detail: (id: string) => `/genres/${id}`,
+  detail: (slug: string) => `/genres/${slug}`,
   create: "/genres",
-  update: (id: string) => `/genres/${id}`,
-  delete: (id: string) => `/genres/${id}`,
+  update: (slug: string) => `/genres/${slug}`,
+  delete: (slug: string) => `/genres/${slug}`,
 };
 
 export const TRACK_ENDPOINTS = {
   list: "/tracks",
-  detail: (id: string) => `/tracks/${id}`,
+  detail: (slug: string) => `/tracks/${slug}`,
   create: "/tracks",
-  update: (id: string) => `/tracks/${id}`,
-  delete: (id: string) => `/tracks/${id}`,
+  update: (slug: string) => `/tracks/${slug}`,
+  delete: (slug: string) => `/tracks/${slug}`,
 };
 
 export const ARTIST_ENDPOINTS = {
   list: "/artists",
-  detail: (id: string) => `/artists/${id}`,
+  detail: (slug: string) => `/artists/${slug}`,
   create: "/artists",
-  update: (id: string) => `/artists/${id}`,
-  delete: (id: string) => `/artists/${id}`,
+  update: (slug: string) => `/artists/${slug}`,
+  delete: (slug: string) => `/artists/${slug}`,
 };
 
 export const ALBUM_ENDPOINTS = {
   list: "/albums",
-  detail: (id: string) => `/albums/${id}`,
+  detail: (slug: string) => `/albums/${slug}`,
   create: "/albums",
-  update: (id: string) => `/albums/${id}`,
-  delete: (id: string) => `/albums/${id}`,
+  update: (slug: string) => `/albums/${slug}`,
+  delete: (slug: string) => `/albums/${slug}`,
 };
 
 export const USER_ENDPOINTS = {
   list: "/users",
   signIn: "/auth/sign-in",
   signUp: "/auth/sign-up",
-  detail: (id: string) => `/users/${id}`,
-  update: (id: string) => `/users/${id}`,
-  delete: (id: string) => `/users/${id}`,
+  detail: (slug: string) => `/users/${slug}`,
+  update: (slug: string) => `/users/${slug}`,
+  delete: (slug: string) => `/users/${slug}`,
 };
 
 export const PLAYLIST_ENDPOINTS = {
   list: "/playlists",
-  detail: (id: string) => `/playlists/${id}`,
+  detail: (slug: string) => `/playlists/${slug}`,
   create: "/playlists",
-  update: (id: string) => `/playlists/${id}`,
-  delete: (id: string) => `/playlists/${id}`,
+  update: (slug: string) => `/playlists/${slug}`,
+  delete: (slug: string) => `/playlists/${slug}`,
 };

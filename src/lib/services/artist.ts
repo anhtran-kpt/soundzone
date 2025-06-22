@@ -3,9 +3,11 @@ import { CreateArtistInput, UpdateArtistInput } from "../validations";
 import { fullArtistInclude } from "../prisma/presets";
 import { FullArtist } from "../types";
 
-export async function getArtistById(id: string): Promise<FullArtist | null> {
+export async function getArtistBySlug(
+  slug: string
+): Promise<FullArtist | null> {
   return await db.artist.findUnique({
-    where: { id },
+    where: { slug },
     include: fullArtistInclude,
   });
 }

@@ -11,9 +11,9 @@ export async function getAllGenres(): Promise<FullGenre[]> {
   });
 }
 
-export async function getGenreById(id: string): Promise<FullGenre | null> {
+export async function getGenreBySlug(slug: string): Promise<FullGenre | null> {
   return await db.genre.findUnique({
-    where: { id },
+    where: { slug },
     include: fullGenreInclude,
   });
 }

@@ -1,15 +1,18 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { getGenreBySlug } from "@/lib/services/genre";
 import { NextRequest, NextResponse } from "next/server";
-import { getArtistById } from "@/lib/services/artist";
 
 export const GET = withErrorHandler(
-  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
-    const { id } = await params;
+  async (
+    req: NextRequest,
+    { params }: { params: Promise<{ slug: string }> }
+  ) => {
+    const { slug } = await params;
 
-    const artist = await getArtistById(id);
+    const genre = await getGenreBySlug(slug);
 
-    return NextResponse.json(ApiResponse.success(artist), { status: 200 });
+    return NextResponse.json(ApiResponse.success(genre), { status: 200 });
   }
 );
 
@@ -21,11 +24,11 @@ export const GET = withErrorHandler(
 //     const body = await req.json();
 //     const { slug } = await params;
 
-//     const validatedData = validateData(artistSchema, body);
+//     const validatedData = validateData(genreSchema, body);
 
-//     const newArtist = await updateArtist(slug, validatedData);
+//     const newGenre = await genreService.update(slug, validatedData);
 
-//     return NextResponse.json(ApiResponse.success(newArtist), { status: 200 });
+//     return NextResponse.json(ApiResponse.success(newGenre), { status: 200 });
 //   }
 // );
 
@@ -36,7 +39,7 @@ export const GET = withErrorHandler(
 //   ) => {
 //     const { slug } = await params;
 
-//     await artistService.delete(slug);
+//     await genreActions.delete(slug);
 
 //     return NextResponse.json(ApiResponse.success(null), { status: 200 });
 //   }

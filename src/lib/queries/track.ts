@@ -1,42 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
-import { trackKeys } from "./keys";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api/client/api-client";
 import { TRACK_ENDPOINTS } from "../endpoints";
 import { FullTrack } from "../types";
 
+const keys = {
+  all: ["tracks"] as const,
+  lists: (params: { limit?: number } = {}) =>
+    [...keys.all, "list", params] as const,
+  list: (filters: Record<string, unknown>) =>
+    [...keys.lists({}), { filters }] as const,
+  details: () => [...keys.all, "detail"] as const,
+  detail: (slug: string) => [...keys.details(), slug] as const,
+};
+
 export function useTracks(params?: { limit?: number }) {
   return useQuery({
-    queryKey: trackKeys.lists(),
-    queryFn: () => {
-      const queryParams = new URLSearchParams();
-      if (params?.limit) {
-        queryParams.append("limit", params.limit.toString());
-      }
-
-      const url = `${TRACK_ENDPOINTS.list}?${queryParams.toString()}`;
-      return apiClient.get<FullTrack[]>(url);
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch tracks");
-      }
-      return response.data;
-    },
+    queryKey: keys.lists(params),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullTrack[]>(TRACK_ENDPOINTS.list, {
+        params,
+        signal,
+      }),
+    placeholderData: keepPreviousData,
   });
 }
 
-export function useTrack(id: string) {
+export function useTrack(slug: string) {
   return useQuery({
-    queryKey: trackKeys.detail(id),
-    queryFn: () => {
-      return apiClient.get<FullTrack>(TRACK_ENDPOINTS.detail(id));
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch track");
-      }
-      return response.data;
-    },
-    enabled: !!id,
+    queryKey: keys.detail(slug),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullTrack>(TRACK_ENDPOINTS.detail(slug), {
+        signal,
+      }),
+    enabled: !!slug,
+    placeholderData: keepPreviousData,
   });
 }

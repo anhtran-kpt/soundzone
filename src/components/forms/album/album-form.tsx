@@ -66,7 +66,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
           credits: [
             {
               roles: [],
-              name: artist.name,
+              name: "",
             },
           ],
         },
@@ -78,7 +78,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
   const {
     control,
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { isSubmitting },
   } = methods;
 
   const {
@@ -96,6 +96,8 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
       isExplicit: false,
       audioMeta: { duration: 0, publicId: "" },
       genreIds: [],
+      performers: [],
+      credits: [],
     });
   };
 
@@ -371,7 +373,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
                   onClick={handleAddTrack}
                 >
                   <Icon icon={PlusCircle} className="size-4 mr-1" />
-                  Add Track
+                  Add track
                 </Button>
 
                 <Button

@@ -11,9 +11,9 @@ export async function getAllTracks(): Promise<FullTrack[]> {
   });
 }
 
-export async function getTrackById(id: string): Promise<FullTrack | null> {
+export async function getTrackBySlug(slug: string): Promise<FullTrack | null> {
   return await db.track.findUnique({
-    where: { id },
+    where: { slug },
     include: fullTrackInclude,
   });
 }

@@ -1,42 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
-import { playlistKeys } from "./keys";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api/client/api-client";
 import { FullPlaylist } from "../types";
 import { PLAYLIST_ENDPOINTS } from "../endpoints";
 
+const keys = {
+  all: ["playlists"] as const,
+  lists: (params: { limit?: number } = {}) =>
+    [...keys.all, "list", params] as const,
+  list: (filters: Record<string, unknown>) =>
+    [...keys.lists({}), { filters }] as const,
+  details: () => [...keys.all, "detail"] as const,
+  detail: (slug: string) => [...keys.details(), slug] as const,
+};
+
 export function usePlaylists(params?: { limit?: number }) {
   return useQuery({
-    queryKey: playlistKeys.lists(),
-    queryFn: () => {
-      const queryParams = new URLSearchParams();
-      if (params?.limit) {
-        queryParams.append("limit", params.limit.toString());
-      }
-
-      const url = `${PLAYLIST_ENDPOINTS.list}?${queryParams.toString()}`;
-      return apiClient.get<FullPlaylist[]>(url);
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch Playlists");
-      }
-      return response.data;
-    },
+    queryKey: keys.lists(params),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullPlaylist[]>(PLAYLIST_ENDPOINTS.list, {
+        params,
+        signal,
+      }),
+    placeholderData: keepPreviousData,
   });
 }
 
-export function usePlaylist(id: string) {
+export function usePlaylist(slug: string) {
   return useQuery({
-    queryKey: playlistKeys.detail(id),
-    queryFn: () => {
-      return apiClient.get<FullPlaylist>(PLAYLIST_ENDPOINTS.detail(id));
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch Playlist");
-      }
-      return response.data;
-    },
-    enabled: !!id,
+    queryKey: keys.detail(slug),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullPlaylist>(PLAYLIST_ENDPOINTS.detail(slug), {
+        signal,
+      }),
+    enabled: !!slug,
+    placeholderData: keepPreviousData,
   });
 }

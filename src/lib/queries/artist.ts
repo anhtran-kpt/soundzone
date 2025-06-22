@@ -1,42 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
-import { artistKeys } from "./keys";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api/client/api-client";
 import { FullArtist } from "../types";
 import { ARTIST_ENDPOINTS } from "../endpoints";
 
+export const keys = {
+  all: ["artists"] as const,
+  lists: (params: { limit?: number } = {}) =>
+    [...keys.all, "list", params] as const,
+  list: (filters: Record<string, unknown>) =>
+    [...keys.lists({}), { filters }] as const,
+  details: () => [...keys.all, "detail"] as const,
+  detail: (id: string) => [...keys.details(), id] as const,
+};
+
 export function useArtists(params?: { limit?: number }) {
   return useQuery({
-    queryKey: artistKeys.lists(),
-    queryFn: () => {
-      const queryParams = new URLSearchParams();
-      if (params?.limit) {
-        queryParams.append("limit", params.limit.toString());
-      }
-
-      const url = `${ARTIST_ENDPOINTS.list}?${queryParams.toString()}`;
-      return apiClient.get<FullArtist[]>(url);
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch artists");
-      }
-      return response.data;
-    },
+    queryKey: keys.lists(params),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullArtist[]>(ARTIST_ENDPOINTS.list, {
+        params,
+        signal,
+      }),
+    placeholderData: keepPreviousData,
   });
 }
 
-export function useArtist(id: string) {
+export function useArtist(slug: string) {
   return useQuery({
-    queryKey: artistKeys.detail(id),
-    queryFn: () => {
-      return apiClient.get<FullArtist>(ARTIST_ENDPOINTS.detail(id));
-    },
-    select: (response) => {
-      if (!response.success) {
-        throw new Error(response.error?.message || "Failed to fetch artist");
-      }
-      return response.data;
-    },
-    enabled: !!id,
+    queryKey: keys.detail(slug),
+    queryFn: ({ signal }) =>
+      apiClient.get<FullArtist>(ARTIST_ENDPOINTS.detail(slug), {
+        signal,
+      }),
+    enabled: !!slug,
+    placeholderData: keepPreviousData,
   });
 }

@@ -1,19 +1,22 @@
 import { ApiResponse } from "@/lib/api/server/api-response";
 import { withErrorHandler } from "@/lib/api/server/error-handler";
-import { getTrackById } from "@/lib/services/track";
+import { getAlbumBySlug } from "@/lib/services/album";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = withErrorHandler(
-  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
-    const { id } = await params;
+  async (
+    req: NextRequest,
+    { params }: { params: Promise<{ slug: string }> }
+  ) => {
+    const { slug } = await params;
 
-    const track = await getTrackById(id);
+    const album = await getAlbumBySlug(slug);
 
-    return NextResponse.json(ApiResponse.success(track), { status: 200 });
+    return NextResponse.json(ApiResponse.success(album), { status: 200 });
   }
 );
 
-// export const PATCH = withErrorHandler(
+// export const PATCH = withErrorHand ler(
 //   async (
 //     req: NextRequest,
 //     { params }: { params: Promise<{ slug: string }> }
@@ -21,11 +24,11 @@ export const GET = withErrorHandler(
 //     const body = await req.json();
 //     const { slug } = await params;
 
-//     const validatedData = validateData(updateTrackSchema, body);
+//     const validatedData = validateData(albumSchema, body);
 
-//     const newTrack = await trackService.update(slug, validatedData);
+//     const newalbum = await updateAlbum(slug, validatedData);
 
-//     return NextResponse.json(ApiResponse.success(newTrack), { status: 200 });
+//     return NextResponse.json(ApiResponse.success(newalbum), { status: 200 });
 //   }
 // );
 
@@ -36,7 +39,7 @@ export const GET = withErrorHandler(
 //   ) => {
 //     const { slug } = await params;
 
-//     await trackService.delete(slug);
+//     await albumService.delete(slug);
 
 //     return NextResponse.json(ApiResponse.success(null), { status: 200 });
 //   }

@@ -1,26 +1,38 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import {
-  FormControl,
-  FormMessage,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormDescription,
-} from "@/components/ui/form";
+import { FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { PlusIcon, UploadIcon } from "lucide-react";
 import Icon from "@/components/common/icon";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
 import { Explicit } from "@/components/shared";
 import { Switch } from "@/components/ui/switch";
-import { BadgeCheckbox } from "@/components/ui/badge-checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { useGenres } from "@/lib/queries/genre";
-import ArtistField from "./artist-field";
-import { CreditRole } from "@/app/generated/prisma/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
+import { FormControl, FormField, FormMessage } from "@/components/ui/form";
+import { FormItem } from "@/components/ui/form";
+import { FormLabel } from "@/components/ui/form";
+import { BadgeCheckbox } from "@/components/ui/badge-checkbox";
+import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
+import { CREDIT_ROLES } from "@/lib/constants";
+import {
+  Command,
+  CommandItem,
+  CommandGroup,
+  CommandList,
+  CommandEmpty,
+} from "@/components/ui/command";
+import { PopoverContent } from "@/components/ui/popover";
+import { PopoverTrigger } from "@/components/ui/popover";
+import { CommandInput } from "@/components/ui/command";
+import { Popover } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { useArtists } from "@/lib/queries/artist";
+import { ArtistImage } from "@/components/shared";
+import { Separator } from "@/components/ui/separator";
 
 interface TrackFieldProps {
   trackIndex: number;
@@ -34,36 +46,51 @@ export default function TrackField({
   canRemove,
 }: TrackFieldProps) {
   const { data: genres } = useGenres();
+  const { data: artists } = useArtists();
+
   const {
     control,
     formState: { isSubmitting },
   } = useFormContext();
 
   const {
-    fields: artistFields,
-    append: appendArtist,
-    remove: removeArtist,
+    fields: performersFields,
+    append: appendPerformer,
+    remove: removePerformer,
   } = useFieldArray({
     control,
-    name: `tracks.${trackIndex}.artists`,
+    name: `tracks.${trackIndex}.performers`,
   });
 
-  const titleFieldName = `tracks.${trackIndex}.title` as const;
-  const audioMetaFieldName = `tracks.${trackIndex}.audioMeta` as const;
-  const genreIdsFieldName = `tracks.${trackIndex}.genreIds` as const;
-  const isExplicitFieldName = `tracks.${trackIndex}.isExplicit` as const;
-  const lyricsFieldName = `tracks.${trackIndex}.lyrics` as const;
+  const {
+    fields: otherCreditsFields,
+    append: appendOtherCredit,
+    remove: removeOtherCredit,
+  } = useFieldArray({
+    control,
+    name: `tracks.${trackIndex}.credits`,
+  });
 
-  const handleAddArtist = () => {
-    appendArtist({
-      id: "",
-      name: "",
-      roles: [CreditRole.MAIN_ARTIST],
+  const handleAddPerformer = () => {
+    appendPerformer({
+      artistId: "",
+      role: ArtistRole.MAIN_ARTIST,
     });
   };
 
-  const handleRemoveArtist = (artistIndex: number) => {
-    removeArtist(artistIndex);
+  const handleAddOtherCredit = () => {
+    appendOtherCredit({
+      name: "",
+      roles: [],
+    });
+  };
+
+  const handleRemovePerformer = (performerIndex: number) => {
+    removePerformer(performerIndex);
+  };
+
+  const handleRemoveOtherCredit = (creditIndex: number) => {
+    removeOtherCredit(creditIndex);
   };
 
   return (
@@ -88,7 +115,7 @@ export default function TrackField({
           <div className="flex gap-4">
             <FormField
               control={control}
-              name={titleFieldName}
+              name={`tracks.${trackIndex}.title`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Title</FormLabel>
@@ -106,7 +133,7 @@ export default function TrackField({
 
             <FormField
               control={control}
-              name={audioMetaFieldName}
+              name={`tracks.${trackIndex}.audioMeta`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Audio file</FormLabel>
@@ -147,7 +174,7 @@ export default function TrackField({
           </div>
           <FormField
             control={control}
-            name={isExplicitFieldName}
+            name={`tracks.${trackIndex}.isExplicit`}
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                 <div className="space-y-1">
@@ -172,7 +199,7 @@ export default function TrackField({
 
           <FormField
             control={control}
-            name={genreIdsFieldName}
+            name={`tracks.${trackIndex}.genreIds`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Genres</FormLabel>
@@ -199,71 +226,231 @@ export default function TrackField({
                     ))}
                   </div>
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {artistFields.map((artist, artistIndex) => (
-            <ArtistField
-              key={`${trackIndex}-${artistIndex}`}
-              trackIndex={trackIndex}
-              artistIndex={artistIndex}
-              onRemove={() => handleRemoveArtist(artistIndex)}
-              canRemove={artistFields.length > 1}
-            />
-          ))}
+          <Separator />
 
-          {/* <FormField
-            control={control}
-            name={creditsFieldName}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Artists</FormLabel>
-                <FormControl>
-                  <div className="space-y-2 mt-2">
-                    {field.value.map(
-                      (
-                        credit: {
-                          artist: {
-                            id: string;
-                            name: string;
-                          };
-                          role: CreditRole;
-                        },
-                        creditIndex: number
-                      ) => (
-                        <TrackArtistForm
-                          key={`${trackIndex}-${creditIndex}`}
-                          trackIndex={trackIndex}
-                          creditIndex={creditIndex}
-                          onRemove={() => handleRemoveArtist(creditIndex)}
-                          canRemove={creditFields.length > 1}
+          <div className="space-y-4 flex flex-col">
+            <FormLabel className="text-base font-semibold">
+              Main credits
+            </FormLabel>
+            {performersFields.map((performer, performerIndex) => (
+              <div key={performer.id} className="flex gap-4 items-start">
+                <FormField
+                  control={control}
+                  name={`tracks.${trackIndex}.performers.${performerIndex}.artistId`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Artist</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-64 justify-between",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value
+                                ? artists?.find(
+                                    (artist) => artist.id === field.value
+                                  )?.name
+                                : "Select artist"}
+                              <ChevronsUpDownIcon className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-64 p-0">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search artist..."
+                              className="h-9"
+                            />
+                            <CommandList>
+                              <CommandEmpty>No artist found.</CommandEmpty>
+                              <CommandGroup>
+                                {artists?.map((artist) => (
+                                  <CommandItem
+                                    value={artist.name}
+                                    key={artist.id}
+                                    onSelect={() => {
+                                      field.onChange(artist.id);
+                                    }}
+                                  >
+                                    <ArtistImage
+                                      imagePublicId={artist.imagePublicId}
+                                      artistName={artist.name}
+                                      className="size-8 mr-2"
+                                      sizes="32px"
+                                    />
+                                    {artist.name}
+                                    <CheckIcon
+                                      className={cn(
+                                        "ml-auto",
+                                        artist.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`tracks.${trackIndex}.performers.${performerIndex}.role`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Roles</FormLabel>
+                      <FormControl>
+                        <div className="flex flex-wrap gap-x-1 gap-y-2">
+                          {Object.values(ArtistRole).map((role) => (
+                            <BadgeCheckbox
+                              key={role}
+                              size="sm"
+                              showIcon={false}
+                              checked={field.value?.includes(role)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, role])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value: string) => value !== role
+                                      )
+                                    );
+                              }}
+                            >
+                              {CREDIT_ROLES[role]}
+                            </BadgeCheckbox>
+                          ))}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRemovePerformer(performerIndex)}
+                >
+                  <Icon icon={Trash2Icon} className="size-4" />
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => handleAddPerformer()}
+              className="self-center"
+            >
+              <Icon icon={PlusIcon} className="size-4" />
+              Add main credit
+            </Button>
+          </div>
+
+          <div className="space-y-4 flex flex-col">
+            <FormLabel className="text-base font-semibold">
+              Other credits
+            </FormLabel>
+
+            {otherCreditsFields.map((credit, creditIndex) => (
+              <div key={credit.id} className="flex gap-4 items-start">
+                <FormField
+                  control={control}
+                  name={`tracks.${trackIndex}.credits.${creditIndex}.name`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Artist</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter artist name"
+                          autoComplete="artist-name"
                         />
-                      )
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2 w-full"
-            onClick={() => handleAddArtist()}
-          >
-            <Icon icon={PlusIcon} className="h-4 w-4 mr-1" />
-            Add Artist
-          </Button>
+                <FormField
+                  control={control}
+                  name={`tracks.${trackIndex}.credits.${creditIndex}.roles`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Roles</FormLabel>
+                      <FormControl>
+                        <div className="flex flex-wrap gap-x-1 gap-y-2">
+                          {Object.values(CreditRole).map((role) => (
+                            <BadgeCheckbox
+                              key={role}
+                              size="sm"
+                              showIcon={false}
+                              checked={field.value?.includes(role)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, role])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value: string) => value !== role
+                                      )
+                                    );
+                              }}
+                            >
+                              {CREDIT_ROLES[role]}
+                            </BadgeCheckbox>
+                          ))}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRemoveOtherCredit(creditIndex)}
+                >
+                  <Icon icon={Trash2Icon} className="size-4" />
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => handleAddOtherCredit()}
+              className="self-center"
+            >
+              <Icon icon={PlusIcon} className="size-4" />
+              Add other credit
+            </Button>
+          </div>
 
           <FormField
             control={control}
-            name={lyricsFieldName}
+            name={`tracks.${trackIndex}.lyrics`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Lyrics</FormLabel>

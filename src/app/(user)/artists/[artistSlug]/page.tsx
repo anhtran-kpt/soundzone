@@ -8,17 +8,19 @@ import CustomLink from "@/components/common/custom-link";
 import { ArtistBanner } from "@/components/sections";
 
 export default function ArtistPage() {
-  const { artistId } = useParams();
+  const { artistSlug } = useParams();
 
-  const { data: artist, isLoading } = useArtist(artistId as string);
+  const { data: artist, status } = useArtist(artistSlug as string);
 
-  if (isLoading) {
+  if (status === "pending") {
     return <div>Loading...</div>;
   }
 
-  if (!artist) {
+  if (status === "error") {
     return <div>Artist not found</div>;
   }
+
+  console.log(artist);
 
   return (
     <div className="flex flex-col gap-4">
