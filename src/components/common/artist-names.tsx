@@ -14,6 +14,7 @@ interface ArtistNamesProps {
 }
 
 export default function ArtistNames({ artists, className }: ArtistNamesProps) {
+  console.log(artists);
   return (
     <div
       className={cn("text-xs text-muted-foreground truncate mt-0.5", className)}
@@ -22,7 +23,7 @@ export default function ArtistNames({ artists, className }: ArtistNamesProps) {
         .map((artist) => (
           <CustomLink
             key={artist.artistId}
-            href={`/artists/${artist.artist.slug}/${artist.artistId}`}
+            href={`/artists/${artist.artist.slug}`}
             className="hover:underline"
           >
             {artist.artist.name}

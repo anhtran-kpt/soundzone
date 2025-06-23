@@ -16,8 +16,8 @@ export default function QueryProvider({
           queries: {
             staleTime: 60 * 1000, // 1 minute
             gcTime: 5 * 60 * 1000, // 5 minutes
-            refetchOnWindowFocus: process.env.NODE_ENV === "production",
-            retry: 1,
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
           },
         },
       })
@@ -26,7 +26,7 @@ export default function QueryProvider({
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* {process.env.NODE_ENV !== "production" && <ReactQueryDevtools />} */}
+      {process.env.NODE_ENV !== "production" && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
 }

@@ -1,40 +1,42 @@
-export const GENRE_ENDPOINTS = {
-  list: "/genres",
-  detail: (slug: string) => `/genres/${slug}`,
-  create: "/genres",
-  update: (slug: string) => `/genres/${slug}`,
-  delete: (slug: string) => `/genres/${slug}`,
-};
+function buildQuery(params?: Record<string, string | number | boolean>) {
+  if (!params) return "";
+  const qp = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null) qp.set(k, String(v));
+  }
+  return `?${qp.toString()}`;
+}
 
 export const ARTIST_ENDPOINTS = {
-  list: "/artists",
-  detail: (slug: string) => `/artists/${slug}`,
-  create: "/artists",
-  update: (slug: string) => `/artists/${slug}`,
-  delete: (slug: string) => `/artists/${slug}`,
+  list: (params?: { limit?: number; page?: number }) =>
+    `/artists${buildQuery(params)}`,
+  detail: (slug: string) => `/artists/${encodeURIComponent(slug)}`,
+};
+
+export const ARTIST_TRACKS_ENDPOINTS = {
+  list: (artistSlug: string, params?: { limit?: number; page?: number }) =>
+    `/artists/${encodeURIComponent(artistSlug)}/tracks${buildQuery(params)}`,
+};
+
+export const TRACK_ENDPOINTS = {
+  list: (params?: { limit?: number; page?: number }) =>
+    `/tracks${buildQuery(params)}`,
+  detail: (slug: string) => `/tracks/${encodeURIComponent(slug)}`,
 };
 
 export const ALBUM_ENDPOINTS = {
-  list: "/albums",
-  detail: (slug: string) => `/albums/${slug}`,
-  create: "/albums",
-  update: (slug: string) => `/albums/${slug}`,
-  delete: (slug: string) => `/albums/${slug}`,
+  list: (params?: { limit?: number; page?: number }) =>
+    `/albums${buildQuery(params)}`,
+  detail: (slug: string) => `/albums/${encodeURIComponent(slug)}`,
 };
 
-export const USER_ENDPOINTS = {
-  list: "/users",
-  signIn: "/auth/sign-in",
-  signUp: "/auth/sign-up",
-  detail: (slug: string) => `/users/${slug}`,
-  update: (slug: string) => `/users/${slug}`,
-  delete: (slug: string) => `/users/${slug}`,
+export const ALBUM_ARTIST_ENDPOINTS = {
+  list: (slug: string, params?: { limit?: number; page?: number }) =>
+    `/albums/artist/${encodeURIComponent(slug)}${buildQuery(params)}`,
 };
 
-export const PLAYLIST_ENDPOINTS = {
-  list: "/playlists",
-  detail: (slug: string) => `/playlists/${slug}`,
-  create: "/playlists",
-  update: (slug: string) => `/playlists/${slug}`,
-  delete: (slug: string) => `/playlists/${slug}`,
+export const GENRE_ENDPOINTS = {
+  list: (params?: { limit?: number; page?: number }) =>
+    `/genres${buildQuery(params)}`,
+  detail: (slug: string) => `/genres/${encodeURIComponent(slug)}`,
 };

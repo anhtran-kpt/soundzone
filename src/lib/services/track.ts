@@ -18,13 +18,16 @@ export async function getTrackBySlug(slug: string): Promise<FullTrack | null> {
   });
 }
 
-export async function getTrackByArtistSlug(slug: string): Promise<FullTrack[]> {
+export async function getTracksByArtistSlug(
+  artistSlug: string,
+  params: { limit?: number; page?: number } = { limit: undefined, page: 1 }
+): Promise<FullTrack[]> {
   return await db.track.findMany({
     where: {
       artists: {
         some: {
           artist: {
-            slug,
+            slug: artistSlug,
           },
         },
       },
@@ -34,6 +37,8 @@ export async function getTrackByArtistSlug(slug: string): Promise<FullTrack[]> {
         _count: "desc",
       },
     },
+    skip: params?.page ? (params.page - 1) * (params.limit ?? 10) : 0,
+    take: params?.limit,
     include: fullTrackInclude,
   });
 }

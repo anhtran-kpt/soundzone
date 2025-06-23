@@ -10,7 +10,18 @@ import Link from "next/link";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import { CldImage } from "next-cloudinary";
 
-export default function TrackCard({ track }: { track: FullTrack }) {
+interface TrackCardProps {
+  track: FullTrack & {
+    album: {
+      title: string;
+      slug: string;
+      coverPublicId: string;
+      releaseDate: Date;
+    };
+  };
+}
+
+export default function TrackCard({ track }: TrackCardProps) {
   const { playTrack } = useAudioPlayer();
 
   return (
@@ -20,7 +31,7 @@ export default function TrackCard({ track }: { track: FullTrack }) {
           {track.album.coverPublicId && (
             <CldImage
               src={track.album.coverPublicId}
-              alt={track.album.title}
+              alt={track.title}
               fill
               aspectRatio="1:1"
               sizes="64px"
@@ -43,12 +54,12 @@ export default function TrackCard({ track }: { track: FullTrack }) {
           </Link>
           <ArtistNames artists={track.artists} />
           <span className="text-xs text-muted-foreground">
-            {formatDistanceToNow(track.album.releaseDate ?? track.createdAt, {
+            {formatDistanceToNow(track.album.releaseDate, {
               addSuffix: true,
             })
               .charAt(0)
               .toUpperCase() +
-              formatDistanceToNow(track.album.releaseDate ?? track.createdAt, {
+              formatDistanceToNow(track.album.releaseDate, {
                 addSuffix: true,
               }).slice(1)}
           </span>

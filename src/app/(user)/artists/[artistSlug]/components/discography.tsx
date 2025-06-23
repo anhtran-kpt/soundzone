@@ -1,10 +1,12 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AlbumCard from "../shared/album-card";
+import AlbumCard from "@/components/shared/album-card";
 import { FullAlbum } from "@/lib/types";
 
 export default function Discography({ albums }: { albums: FullAlbum[] }) {
+  console.log(albums);
+
   return (
     <Tabs defaultValue="Popular Releases" className="w-full">
       <TabsList>

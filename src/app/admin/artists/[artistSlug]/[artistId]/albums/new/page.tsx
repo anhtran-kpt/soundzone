@@ -2,7 +2,7 @@ import AlbumForm from "@/components/forms/album/album-form";
 import { notFound } from "next/navigation";
 import { getArtistById } from "@/lib/services/artist";
 import { Metadata } from "next";
-import ArtistBanner from "@/components/sections/artist-banner";
+import ArtistBanner from "@/app/(user)/artists/[artistSlug]/components/artist-banner";
 
 type Props = {
   params: Promise<{ artistId: string }>;

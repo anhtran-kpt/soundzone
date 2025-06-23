@@ -15,6 +15,7 @@ export default function AlbumCard({ album }: { album: FullAlbum }) {
           alt={album.title}
           fill
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 group-hover:brightness-75"
+          sizes="20vw"
         />
         <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-10 rounded-full invisible group-hover:visible bg-primary text-white flex items-center justify-center">
           <Icon icon={PlayIcon} className="size-5" fill="currentColor" />

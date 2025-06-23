@@ -1,51 +1,34 @@
-"use client";
+import ArtistDetails from "./components/artist-detail";
+import { artistKeys, fetchArtistBySlug } from "@/lib/queries/artist";
+import { fetchTracksByArtistSlug, trackKeys } from "@/lib/queries/track";
+import { getQueryClient } from "@/lib/get-query-client";
+import { dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary } from "@tanstack/react-query";
 
-import { useParams } from "next/navigation";
-import { useArtist } from "@/lib/queries/artist";
-import { ArtistBanner, TracksPopular } from "@/components/sections";
+export default async function ArtistPage({
+  params,
+}: {
+  params: Promise<{ artistSlug: string }>;
+}) {
+  const { artistSlug } = await params;
 
-export default function ArtistPage() {
-  const { artistSlug } = useParams();
+  const qc = getQueryClient();
 
-  const { data: artist, status } = useArtist(artistSlug as string);
-
-  if (status === "pending") {
-    return <div>Loading...</div>;
-  }
-
-  if (status === "error") {
-    return <div>Artist not found</div>;
-  }
-
-  console.log(artist);
+  await Promise.all([
+    qc.prefetchQuery({
+      queryKey: artistKeys.detail(artistSlug),
+      queryFn: ({ signal }) => fetchArtistBySlug(artistSlug, signal),
+    }),
+    qc.prefetchQuery({
+      queryKey: trackKeys.listByArtistSlug(artistSlug),
+      queryFn: ({ signal }) =>
+        fetchTracksByArtistSlug(artistSlug, { limit: 5 }, signal),
+    }),
+  ]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <ArtistBanner artist={artist} />
-      <TracksPopular className="mt-32" />
-      <section className="mt-12">
-        {/* <h2 className="text-2xl font-bold mb-2">Top Tracks</h2>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6">
-          {artist.tracks.map((track) => (
-            <TrackCard key={track.id} track={track} />
-          ))}
-        </div> */}
-      </section>
-      {/* <section>
-        <h2 className="text-2xl font-bold mb-2">About</h2>
-        <p className="text-sm text-muted-foreground">
-          {artist.description || "No description available"}
-        </p>
-      </section>
-      <section>
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold mb-2">Discography</h2>
-          <CustomLink href={`/artists/${artist.slug}/discography`}>
-            Show all
-          </CustomLink>
-        </div>
-        <Discography albums={artist.albums} />
-      </section> */}
-    </div>
+    <HydrationBoundary state={dehydrate(qc)}>
+      <ArtistDetails artistSlug={artistSlug} />
+    </HydrationBoundary>
   );
 }

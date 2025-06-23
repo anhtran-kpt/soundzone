@@ -1,15 +1,15 @@
 "use client";
 
-import QueryProvider from "./query-provider";
+import QueryClientProvider from "./query-client-provider";
 import SessionProvider from "./session-provider";
 import ThemeProvider from "./theme-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <QueryProvider>
+      <QueryClientProvider>
         <ThemeProvider>{children}</ThemeProvider>
-      </QueryProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }

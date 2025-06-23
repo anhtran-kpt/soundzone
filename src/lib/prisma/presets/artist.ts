@@ -6,7 +6,19 @@ export const fullArtistInclude = Prisma.validator<Prisma.ArtistInclude>()({
       tracks: true,
     },
   },
-  tracks: true,
+  tracks: {
+    include: {
+      track: {
+        include: {
+          artists: {
+            include: {
+              artist: true,
+            },
+          },
+        },
+      },
+    },
+  },
 });
 
 export const minimalArtistSelect = Prisma.validator<Prisma.ArtistSelect>()({
