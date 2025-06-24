@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/common/data-table";
+import { DataTable } from "@/components/shared/data-table";
 import { columns } from "@/components/features/album/columns";
 import { getAlbumsByArtistId } from "@/lib/services/album";
 

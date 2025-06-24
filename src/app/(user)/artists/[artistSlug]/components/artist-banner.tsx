@@ -28,7 +28,7 @@ export default function ArtistBanner({ artist }: { artist: FullArtist }) {
   }, [imageUrl, fac]);
 
   return (
-    <section className="flex items-center gap-4 relative h-72">
+    <section className="flex items-center gap-4 relative h-72 mb-36">
       {artist.bannerPublicId ? (
         <CldImage
           src={artist.bannerPublicId}

@@ -24,7 +24,6 @@ export default function ArtistNames({ artists, className }: ArtistNamesProps) {
           <CustomLink
             key={artist.artistId}
             href={`/artists/${artist.artist.slug}`}
-            className="hover:underline"
           >
             {artist.artist.name}
           </CustomLink>

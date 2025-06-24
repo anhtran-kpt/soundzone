@@ -27,9 +27,9 @@ export async function getTrackBySlug(slug: string): Promise<FullTrack | null> {
 
 export async function getTracksByArtistSlug(
   artistSlug: string,
-  params: { offset?: number; limit?: number } = {}
+  params: { offset: number; limit: number }
 ): Promise<PaginatedTracks> {
-  const { offset = 0, limit = 5 } = params;
+  const { offset, limit } = params;
 
   const total = await db.track.count({
     where: {

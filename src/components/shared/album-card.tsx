@@ -7,6 +7,7 @@ import { DotIcon } from "lucide-react";
 import CustomLink from "../common/custom-link";
 
 export default function AlbumCard({ album }: { album: FullAlbum }) {
+  console.log(album);
   return (
     <li className="flex flex-col items-center group gap-1.5">
       <div className="relative rounded-lg overflow-hidden w-full h-full aspect-square">
@@ -23,14 +24,14 @@ export default function AlbumCard({ album }: { album: FullAlbum }) {
       </div>
       <div className="flex flex-col items-center">
         <CustomLink
-          href={`/albums/${album.slug}/${album.id}`}
+          href={`/albums/${album.slug}`}
           className="text-sm font-medium line-clamp-1 text-ellipsis"
         >
           {album.title}
         </CustomLink>
         <div className="flex text-[13px] text-muted-foreground items-center">
           <span>{formatDate(album.releaseDate, "yyyy")}</span>
-          <Icon icon={DotIcon} className="size-5" fill="currentColor" />
+          <Icon icon={DotIcon} size={24} fill="currentColor" />
           <span>{album.releaseType === "ALBUM" ? "Album" : "Single"}</span>
         </div>
       </div>

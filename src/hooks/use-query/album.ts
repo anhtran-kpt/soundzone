@@ -1,38 +1,19 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { FullAlbum } from "@/lib/types";
-import { apiClient } from "@/lib/api-client";
-import { ALBUM_ENDPOINTS } from "@/lib/endpoints";
+import { albumKeys, fetchAlbumsByArtistSlug } from "@/lib/queries/album";
+import { PaginationParams } from "@/lib/type";
 
-export const albumKeys = {
-  all: ["albums"] as const,
-  lists: (params: { limit?: number } = {}) =>
-    [...albumKeys.all, "list", params] as const,
-  list: (filters: Record<string, unknown>) =>
-    [...albumKeys.lists({}), { filters }] as const,
-  details: () => [...albumKeys.all, "detail"] as const,
-  detail: (slug: string) => [...albumKeys.details(), slug] as const,
-};
-
-export function useAlbums(params?: { limit?: number }) {
+export function useAlbumsByArtistSlug(
+  artistSlug: string,
+  params?: PaginationParams
+) {
   return useQuery({
-    queryKey: albumKeys.lists(params),
+    queryKey: albumKeys.paginatedByArtist(
+      artistSlug,
+      params?.offset,
+      params?.limit
+    ),
     queryFn: ({ signal }) =>
-      apiClient.get<FullAlbum[]>(ALBUM_ENDPOINTS.list, {
-        params,
-        signal,
-      }),
-    placeholderData: keepPreviousData,
-  });
-}
-
-export function useAlbum(slug: string) {
-  return useQuery({
-    queryKey: albumKeys.detail(slug),
-    queryFn: ({ signal }) =>
-      apiClient.get<FullAlbum>(ALBUM_ENDPOINTS.detail(slug), {
-        signal,
-      }),
-    enabled: !!slug,
+      fetchAlbumsByArtistSlug(artistSlug, params, signal),
     placeholderData: keepPreviousData,
   });
 }

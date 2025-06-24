@@ -5,6 +5,13 @@ import { FullAlbum } from "../types";
 import { CreateAlbumInput } from "../validations";
 import { ReleaseType } from "@/app/generated/prisma";
 
+export interface PaginatedAlbums {
+  items: FullAlbum[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
 export async function getAlbumBySlug(slug: string): Promise<FullAlbum | null> {
   return await db.album.findUnique({
     where: { slug },
@@ -13,12 +20,29 @@ export async function getAlbumBySlug(slug: string): Promise<FullAlbum | null> {
 }
 
 export async function getAlbumsByArtistSlug(
-  artistSlug: string
-): Promise<FullAlbum[]> {
-  return await db.album.findMany({
+  artistSlug: string,
+  params: { offset: number; limit: number }
+): Promise<PaginatedAlbums> {
+  const { offset, limit } = params;
+
+  const total = await db.album.count({
     where: { artist: { slug: artistSlug } },
-    include: fullAlbumInclude,
   });
+
+  const items = await db.album.findMany({
+    where: { artist: { slug: artistSlug } },
+    orderBy: { releaseDate: "desc" },
+    include: fullAlbumInclude,
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    items,
+    total,
+    offset,
+    limit,
+  };
 }
 
 export async function getAllAlbums(): Promise<FullAlbum[]> {
