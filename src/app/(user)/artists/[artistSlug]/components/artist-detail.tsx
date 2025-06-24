@@ -7,13 +7,14 @@ import { useFetchArtistBySlug } from "@/hooks/use-query/artist";
 import { notFound } from "next/navigation";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data: artist, isError, error } = useFetchArtistBySlug(artistSlug);
+  const { data, isError, error } = useFetchArtistBySlug(artistSlug);
+  console.log("data", data?.data);
 
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
 
-  if (!artist) {
+  if (data) {
     return notFound();
   }
 

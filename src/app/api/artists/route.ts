@@ -1,22 +1,20 @@
-import { ApiResponse } from "@/lib/api/server/api-response";
-import { withErrorHandler } from "@/lib/api/server/error-handler";
 import { createArtistSchema } from "@/lib/validations";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { createArtist, getAllArtists } from "@/lib/services/artist";
 
-export const POST = withErrorHandler(async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   const body = await req.json();
 
   const validatedData = validateData(createArtistSchema, body);
 
   const artist = await createArtist(validatedData);
 
-  return NextResponse.json(ApiResponse.success(artist), { status: 200 });
-});
+  return NextResponse.json(artist, { status: 200 });
+};
 
-export const GET = withErrorHandler(async () => {
+export const GET = async () => {
   const artists = await getAllArtists();
 
-  return NextResponse.json(ApiResponse.success(artists), { status: 200 });
-});
+  return NextResponse.json(artists, { status: 200 });
+};

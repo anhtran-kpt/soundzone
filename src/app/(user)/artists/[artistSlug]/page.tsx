@@ -22,7 +22,7 @@ export default async function ArtistPage({
     qc.prefetchQuery({
       queryKey: trackKeys.listByArtistSlug(artistSlug),
       queryFn: ({ signal }) =>
-        fetchTracksByArtistSlug(artistSlug, { limit: 5 }, signal),
+        fetchTracksByArtistSlug(artistSlug, { offset: 0, limit: 5 }, signal),
     }),
   ]);
 

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { FullAlbum } from "@/lib/types";
-import { apiClient } from "@/lib/api/client/api-client";
+import { apiClient } from "@/lib/api-client";
 import { ALBUM_ENDPOINTS } from "@/lib/endpoints";
 
 export const albumKeys = {

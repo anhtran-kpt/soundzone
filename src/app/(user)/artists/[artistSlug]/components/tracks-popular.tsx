@@ -7,7 +7,7 @@ export default function TracksPopular({ artistSlug }: { artistSlug: string }) {
     data: tracks,
     isError,
     error,
-  } = useFetchTracksByArtistSlug(artistSlug);
+  } = useFetchTracksByArtistSlug(artistSlug, { limit: 5 });
 
   if (isError) {
     return <div>Error: {error?.message}</div>;

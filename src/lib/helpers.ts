@@ -1,7 +1,7 @@
 import { ZodSchema } from "zod";
-import { ApiError } from "./api/server/api-error";
 import slugify from "slugify";
 import { SLUG_OPTIONS } from "./constants";
+import { NextResponse } from "next/server";
 
 export const validateData = (schema: ZodSchema, data: unknown) => {
   const result = schema.safeParse(data);
@@ -11,7 +11,7 @@ export const validateData = (schema: ZodSchema, data: unknown) => {
       .map((err) => `${err.path.join(".")}: ${err.message}`)
       .join(", ");
 
-    throw ApiError.badRequest(errorMessages, "VALIDATION_ERROR");
+    return NextResponse.json({ error: errorMessages }, { status: 400 });
   }
 
   return result.data;
@@ -42,4 +42,11 @@ export const formatName = (name: string) => {
 export const customSlugify = (name: string) => {
   slugify.extend({ đ: "d", Đ: "D" });
   return slugify(name, SLUG_OPTIONS);
+};
+
+export const parsePaging = (qp: URLSearchParams) => {
+  const offset = parseInt(qp.get("offset") ?? "0", 10);
+  const limit = parseInt(qp.get("limit") ?? "10", 10);
+
+  return { offset, limit };
 };

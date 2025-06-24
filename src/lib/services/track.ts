@@ -2,6 +2,13 @@ import db from "../prisma/db";
 import { fullTrackInclude } from "../prisma/presets";
 import { FullTrack } from "../types";
 
+export interface PaginatedTracks {
+  items: FullTrack[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
 export async function getAllTracks(): Promise<FullTrack[]> {
   return await db.track.findMany({
     orderBy: {
@@ -20,9 +27,19 @@ export async function getTrackBySlug(slug: string): Promise<FullTrack | null> {
 
 export async function getTracksByArtistSlug(
   artistSlug: string,
-  params: { limit?: number; page?: number } = { limit: undefined, page: 1 }
-): Promise<FullTrack[]> {
-  return await db.track.findMany({
+  params: { offset?: number; limit?: number } = {}
+): Promise<PaginatedTracks> {
+  const { offset = 0, limit = 5 } = params;
+
+  const total = await db.track.count({
+    where: {
+      artists: {
+        some: { artist: { slug: artistSlug } },
+      },
+    },
+  });
+
+  const tracks = await db.track.findMany({
     where: {
       artists: {
         some: {
@@ -37,8 +54,15 @@ export async function getTracksByArtistSlug(
         _count: "desc",
       },
     },
-    skip: params?.page ? (params.page - 1) * (params.limit ?? 10) : 0,
-    take: params?.limit,
+    skip: offset,
+    take: limit,
     include: fullTrackInclude,
   });
+
+  return {
+    items: tracks,
+    total,
+    offset,
+    limit,
+  };
 }

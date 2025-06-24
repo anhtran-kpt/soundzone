@@ -1,29 +1,23 @@
-import { ApiResponse } from "@/lib/api/server/api-response";
-import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { parsePaging } from "@/lib/helpers";
 import { getTracksByArtistSlug } from "@/lib/services/track";
-import { NextRequest, NextResponse } from "next/server";
+import withApiResponse from "@/lib/api/with-api-response";
+import { NextRequest } from "next/server";
 
-export const GET = withErrorHandler(
-  async (req: NextRequest, { params }: { params: { artistSlug: string } }) => {
-    const artistSlug = params.artistSlug;
+export const GET = withApiResponse(async (req: NextRequest, { params }) => {
+  const { artistSlug } = await params;
+  const { offset, limit } = parsePaging(req.nextUrl.searchParams);
 
-    if (!artistSlug) {
-      return NextResponse.json(
-        ApiResponse.error("INVALID_REQUEST", "Artist slug is required"),
-        {
-          status: 400,
-        }
-      );
-    }
+  const { items, total } = await getTracksByArtistSlug(artistSlug, {
+    offset,
+    limit,
+  });
 
-    const limit = req.nextUrl.searchParams.get("limit");
-    const page = req.nextUrl.searchParams.get("page");
-
-    const tracks = await getTracksByArtistSlug(artistSlug, {
-      limit: limit ? parseInt(limit) : undefined,
-      page: page ? parseInt(page) : 1,
-    });
-
-    return NextResponse.json(ApiResponse.success(tracks), { status: 200 });
-  }
-);
+  return {
+    data: items,
+    meta: {
+      offset,
+      limit,
+      total,
+    },
+  };
+});

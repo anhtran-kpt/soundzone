@@ -3,9 +3,10 @@ import {
   artistKeys,
   fetchArtists,
 } from "@/lib/queries/artist";
+import { PaginationParams } from "@/lib/type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-export const useFetchArtists = (params?: { limit?: number }) => {
+export const useFetchArtists = (params?: PaginationParams) => {
   return useQuery({
     queryKey: artistKeys.list(params),
     queryFn: ({ signal }) => fetchArtists(params, signal),

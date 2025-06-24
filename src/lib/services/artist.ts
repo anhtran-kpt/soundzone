@@ -1,7 +1,7 @@
 import db from "@/lib/prisma/db";
 import { CreateArtistInput, UpdateArtistInput } from "../validations";
 import { fullArtistInclude } from "../prisma/presets";
-import { FullArtist } from "../types";
+import { FullArtist } from "@/lib/types/artist";
 
 export async function getArtistBySlug(
   slug: string

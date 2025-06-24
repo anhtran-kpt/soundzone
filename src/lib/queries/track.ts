@@ -1,20 +1,21 @@
-import { apiClient } from "@/lib/api/client/api-client";
+import { apiClient } from "@/lib/api-client";
+import { PaginationParams } from "@/lib/type";
 import { FullTrack } from "@/lib/types";
-import { ARTIST_TRACKS_ENDPOINTS, TRACK_ENDPOINTS } from "../endpoints";
 
 export const trackKeys = {
-  list: (params?: { limit?: number; page?: number }) =>
-    ["tracks", params] as const,
+  list: (params?: PaginationParams) => ["tracks", params] as const,
   detail: (slug: string) => ["track", slug] as const,
   listByArtistSlug: (artistSlug: string) =>
     ["tracks", "artist", artistSlug] as const,
+  paginatedByArtist: (artistSlug: string, offset: number, limit: number) =>
+    ["artist", artistSlug, "tracks", "paginated", offset, limit] as const,
 };
 
 export async function fetchTracks(
-  params?: { limit?: number; page?: number },
+  params?: PaginationParams,
   signal?: AbortSignal
 ) {
-  return await apiClient.get<FullTrack[]>(TRACK_ENDPOINTS.list(params), {
+  return await apiClient.get<FullTrack[]>("/tracks", {
     params,
     signal,
   });
@@ -22,14 +23,11 @@ export async function fetchTracks(
 
 export async function fetchTracksByArtistSlug(
   artistSlug: string,
-  params?: { limit?: number; page?: number },
+  params?: PaginationParams,
   signal?: AbortSignal
 ) {
-  return await apiClient.get<FullTrack[]>(
-    ARTIST_TRACKS_ENDPOINTS.list(artistSlug, params),
-    {
-      params,
-      signal,
-    }
-  );
+  return await apiClient.get<FullTrack[]>(`/artists/${artistSlug}/tracks`, {
+    params,
+    signal,
+  });
 }

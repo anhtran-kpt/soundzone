@@ -1,6 +1,5 @@
 "use server";
 
-import { ApiError } from "@/lib/api/server/api-error";
 import {
   SignInInput,
   signInSchema,
@@ -9,6 +8,7 @@ import {
 } from "@/lib/validations";
 import db from "@/lib/prisma/db";
 import { comparePasswords, hashPassword } from "@/lib/auth";
+import { NextResponse } from "next/server";
 
 export async function signUpAction(input: SignUpRequest) {
   const { ...data } = userSchema.parse(input);
@@ -18,7 +18,7 @@ export async function signUpAction(input: SignUpRequest) {
       where: { email: data.email },
     })
   ) {
-    throw ApiError.badRequest("User already exists", "USER_ALREADY_EXISTS");
+    return NextResponse.json({ error: "User already exists" }, { status: 400 });
   }
 
   try {
@@ -46,9 +46,9 @@ export async function signInAction(input: SignInInput) {
     });
 
     if (!user) {
-      throw ApiError.badRequest(
-        "Incorrect email or password",
-        "INVALID_CREDENTIALS"
+      return NextResponse.json(
+        { error: "Incorrect email or password" },
+        { status: 400 }
       );
     }
 
@@ -58,9 +58,9 @@ export async function signInAction(input: SignInInput) {
     );
 
     if (!isPasswordValid) {
-      throw ApiError.badRequest(
-        "Incorrect email or password",
-        "INVALID_CREDENTIALS"
+      return NextResponse.json(
+        { error: "Incorrect email or password" },
+        { status: 400 }
       );
     }
 

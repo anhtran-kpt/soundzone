@@ -1,5 +1,5 @@
-import { ApiResponse } from "@/lib/api/server/api-response";
-import { withErrorHandler } from "@/lib/api/server/error-handler";
+import { ApiResponse } from "@/lib/api/api-response";
+import { withErrorHandler } from "@/lib/api/with-api-response";
 import { userSchema } from "@/lib/validations";
 import { validateData } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";

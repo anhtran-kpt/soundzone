@@ -1,6 +1,10 @@
-import { apiClient } from "@/lib/api/client/api-client";
+import { apiClient } from "@/lib/api-client";
 import { FullAlbum } from "../types";
-import { ALBUM_ARTIST_ENDPOINTS, ALBUM_ENDPOINTS } from "../endpoints";
+import {
+  ALBUM_ARTIST_ENDPOINTS,
+  ALBUM_ENDPOINTS,
+  PaginationParams,
+} from "../endpoints";
 
 export const albumKeys = {
   all: ["albums"] as const,
@@ -11,7 +15,7 @@ export const albumKeys = {
 
 export async function fetchAlbumsByArtistSlug(
   artistSlug: string,
-  params?: { limit?: number; page?: number },
+  params?: PaginationParams,
   signal?: AbortSignal
 ) {
   return await apiClient.get<FullAlbum[]>(

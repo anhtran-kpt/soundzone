@@ -3,9 +3,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { SALT_ROUNDS } from "./constants";
 import { redirect } from "next/navigation";
-import { ApiError } from "./api/server/api-error";
 import { getServerSession } from "next-auth";
 import { signInAction } from "@/app/actions/user";
+import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -119,9 +119,9 @@ export async function requireAuthApi() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    throw ApiError.unauthorized(
-      "You need to sign in to perform this action",
-      "UNAUTHORIZED"
+    return NextResponse.json(
+      { error: "You need to sign in to perform this action" },
+      { status: 401 }
     );
   }
 
@@ -132,16 +132,16 @@ export async function requireAdminApi() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    throw ApiError.unauthorized(
-      "You need to sign in to perform this action",
-      "UNAUTHORIZED"
+    return NextResponse.json(
+      { error: "You need to sign in to perform this action" },
+      { status: 401 }
     );
   }
 
   if (session.user.role !== "ADMIN") {
-    throw ApiError.forbidden(
-      "You do not have permission to perform this action",
-      "FORBIDDEN"
+    return NextResponse.json(
+      { error: "You do not have permission to perform this action" },
+      { status: 403 }
     );
   }
 
