@@ -3,10 +3,12 @@
 
 import db from "@/lib/prisma/db";
 import { signUpSchema, type SignUp, signInSchema, type SignIn } from "@/types";
-import { comparePasswords, hashPassword } from "../../lib/auth";
+import { comparePasswords, hashPassword } from "../../lib/next-auth";
 import { User } from "@/app/generated/prisma";
 
-export const checkUserExists = async (email: string): Promise<boolean> => {
+export const checkUserExistsAction = async (
+  email: string
+): Promise<boolean> => {
   return !!(await db.user.findUnique({
     where: {
       email,
@@ -14,7 +16,7 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
   }));
 };
 
-export const signUp = async (input: SignUp): Promise<User> => {
+export const signUpAction = async (input: SignUp): Promise<User> => {
   const { confirmPassword, ...data } = signUpSchema.parse(input);
 
   const [hashedPassword, slug] = await Promise.all([
@@ -34,7 +36,7 @@ export const signUp = async (input: SignUp): Promise<User> => {
   return newUser;
 };
 
-export const signIn = async (input: SignIn): Promise<User> => {
+export const signInAction = async (input: SignIn): Promise<User> => {
   const data = signInSchema.parse(input);
 
   const user = await db.user.findUnique({

@@ -1,37 +1,58 @@
 "use server";
 
-import { createArtist, updateArtist } from "@/lib/services/artist";
-import {
-  CreateArtistInput,
-  createArtistSchema,
-  UpdateArtistInput,
-  updateArtistSchema,
-} from "@/lib/validations";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import db from "@/lib/prisma/db";
+import { CreateArtistInput, UpdateArtistInput } from "@/lib/validations";
+import { fullArtistInclude } from "@/lib/prisma/presets";
+import { FullArtist } from "@/lib/types/artist";
 
-export async function createArtistAction(input: CreateArtistInput) {
-  const { ...data } = createArtistSchema.parse(input);
-
-  try {
-    await createArtist(data);
-  } catch (error: unknown) {
-    throw error;
-  }
-
-  revalidatePath("/admin/artists");
-  redirect("/admin/artists");
+export async function getArtistBySlugAction(
+  slug: string
+): Promise<FullArtist | null> {
+  return await db.artist.findUnique({
+    where: { slug },
+    include: fullArtistInclude,
+  });
 }
 
-export async function updateArtistAction(id: string, input: UpdateArtistInput) {
-  const { ...data } = updateArtistSchema.parse(input);
+export async function getAllArtistsAction(): Promise<FullArtist[]> {
+  return await db.artist.findMany({
+    orderBy: { createdAt: "desc" },
+    include: fullArtistInclude,
+  });
+}
 
-  try {
-    await updateArtist(id, data);
-  } catch (error: unknown) {
-    throw error;
-  }
+export async function createArtistAction(
+  data: CreateArtistInput
+): Promise<void> {
+  await db.$transaction(async (tx) => {
+    const slug = await tx.artist.generateSlug(data.name);
 
-  revalidatePath("/admin/artists");
-  redirect("/admin/artists");
+    await tx.artist.create({
+      data: {
+        ...data,
+        slug,
+      },
+    });
+  });
+}
+
+export async function updateArtist(
+  id: string,
+  data: UpdateArtistInput
+): Promise<void> {
+  await db.$transaction(async (tx) => {
+    if (data.name) {
+      const slug = await tx.artist.generateSlug(data.name);
+
+      await tx.artist.update({
+        where: { id },
+        data: { ...data, slug },
+      });
+    } else {
+      await tx.artist.update({
+        where: { id },
+        data,
+      });
+    }
+  });
 }

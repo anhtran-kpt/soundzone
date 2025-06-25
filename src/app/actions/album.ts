@@ -1,19 +1,126 @@
 "use server";
 
-import { CreateAlbumInput, createAlbumInputSchema } from "@/lib/validations";
-import { createAlbum } from "@/lib/services/album";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { emptyToNull } from "@/lib/utils";
+import db from "@/lib/prisma/db";
+import { fullAlbumInclude } from "@/lib/prisma/presets";
+import { FullAlbum } from "@/lib/types";
+import { CreateAlbumInput } from "@/lib/validations";
+import { ReleaseType } from "@/app/generated/prisma";
 
-export async function createAlbumAction(input: CreateAlbumInput) {
-  const { ...data } = createAlbumInputSchema.parse(input);
+export async function getAlbumBySlugAction(
+  slug: string
+): Promise<FullAlbum | null> {
+  return await db.album.findUnique({
+    where: { slug },
+    include: fullAlbumInclude,
+  });
+}
 
-  try {
-    await createAlbum(data);
-  } catch (error) {
-    throw error;
-  }
+export async function getAlbumsByArtistSlugAction(
+  artistSlug: string,
+  params: { offset: number; limit: number }
+): Promise<PaginatedAlbums> {
+  const { offset, limit } = params;
 
-  revalidatePath("/admin/artists");
-  redirect(`/admin/artists/${data.artistId}`);
+  const total = await db.album.count({
+    where: { artist: { slug: artistSlug } },
+  });
+
+  const items = await db.album.findMany({
+    where: { artist: { slug: artistSlug } },
+    orderBy: { releaseDate: "desc" },
+    include: fullAlbumInclude,
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    items,
+    total,
+    offset,
+    limit,
+  };
+}
+
+export async function getAllAlbumsAction(): Promise<FullAlbum[]> {
+  return await db.album.findMany({
+    orderBy: { createdAt: "desc" },
+    include: fullAlbumInclude,
+  });
+}
+
+export async function createAlbumAction(data: CreateAlbumInput): Promise<void> {
+  const {
+    title,
+    description,
+    releaseDate,
+    coverPublicId,
+    bannerPublicId,
+    artistId,
+    tracks,
+  } = data;
+
+  return await db.$transaction(async (tx) => {
+    const albumSlug = await tx.album.generateSlug(title);
+
+    const album = await tx.album.create({
+      data: {
+        title,
+        slug: albumSlug,
+        description: emptyToNull(description),
+        releaseType:
+          tracks.length === 1 ? ReleaseType.SINGLE : ReleaseType.ALBUM,
+        releaseDate,
+        coverPublicId,
+        bannerPublicId,
+        artistId,
+      },
+    });
+
+    await Promise.all(
+      tracks.map(async (trackData, trackIndex) => {
+        const trackSlug = await tx.track.generateSlug(trackData.title);
+
+        const track = await tx.track.create({
+          data: {
+            title: trackData.title,
+            slug: trackSlug,
+            duration: trackData.duration,
+            audioPublicId: trackData.audioPublicId,
+            trackNumber: trackIndex + 1,
+            isExplicit: trackData.isExplicit,
+            lyrics: emptyToNull(trackData.lyrics),
+            albumId: album.id,
+          },
+        });
+
+        if (trackData.performers.length > 0) {
+          await tx.trackArtist.createMany({
+            data: trackData.performers.map((performer) => ({
+              trackId: track.id,
+              artistId: performer.artistId,
+              role: performer.role,
+            })),
+          });
+
+          await tx.credit.createMany({
+            data: trackData.credits.map((credit) => ({
+              name: credit.name,
+              roles: credit.roles,
+              trackId: track.id,
+            })),
+          });
+        }
+
+        if (trackData.genreIds.length > 0) {
+          await tx.trackGenre.createMany({
+            data: trackData.genreIds.map((genreId) => ({
+              trackId: track.id,
+              genreId,
+            })),
+          });
+        }
+      })
+    );
+  });
 }

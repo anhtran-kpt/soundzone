@@ -81,21 +81,22 @@ export const api = {
   },
 };
 
-export const userApi = {
-  getUsers: (params?: { page?: number; limit?: number; q?: string }) =>
-    api.getWithMeta<{ users: unknown[]; meta: unknown }>("/users", params),
+export const artistApi = {
+  getArtists: (params?: { page?: number; limit?: number; q?: string }) =>
+    api.getWithMeta<{ artists: unknown[]; meta: unknown }>("/artists", params),
 
-  getUser: (id: string) => api.get<{ user: unknown }>(`/users/${id}`),
+  getArtist: (slug: string) => api.get<{ artist: unknown }>(`/artists/${slug}`),
 
-  createUser: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ user: unknown; message: string }>("/users", data),
+  createArtist: (data: { name: string; email: string; age?: number }) =>
+    api.post<{ artist: unknown; message: string }>("/artists", data),
 
-  updateUser: (
-    id: string,
+  updateArtist: (
+    slug: string,
     data: Partial<{ name: string; email: string; age: number }>
-  ) => api.put<{ user: unknown; message: string }>(`/users/${id}`, data),
+  ) => api.put<{ artist: unknown; message: string }>(`/artists/${slug}`, data),
 
-  deleteUser: (id: string) => api.delete<{ message: string }>(`/users/${id}`),
+  deleteArtist: (slug: string) =>
+    api.delete<{ message: string }>(`/artists/${slug}`),
 };
 
 export default apiClient;

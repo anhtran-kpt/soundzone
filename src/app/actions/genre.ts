@@ -1,70 +1,49 @@
 "use server";
 
-import {
-  CreateGenreInput,
-  createGenreSchema,
-  UpdateGenreInput,
-  updateGenreSchema,
-} from "@/lib/validations";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { createGenre, getGenreByName, updateGenre } from "@/lib/services/genre";
+import db from "@/lib/prisma/db";
+import { fullGenreInclude } from "@/lib/prisma/presets";
+import { FullGenre } from "@/lib/types";
 
-export async function createGenreAction(input: CreateGenreInput) {
-  const { name } = createGenreSchema.parse(input);
-
-  if (await getGenreByName(name)) {
-    throw new Error("Genre already exists");
-  }
-
-  try {
-    await createGenre(name);
-  } catch (error: unknown) {
-    if (
-      error instanceof PrismaClientKnownRequestError &&
-      error.code === "P2002" &&
-      (error.meta?.target as string[]).includes("name")
-    ) {
-      throw new Error("Genre already exists");
-    }
-    throw error;
-  }
-
-  revalidatePath("/admin/genres");
-  redirect("/admin/genres");
+export async function getAllGenres(): Promise<FullGenre[]> {
+  return await db.genre.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: fullGenreInclude,
+  });
 }
 
-export async function updateGenreAction(id: string, input: UpdateGenreInput) {
-  const { name } = updateGenreSchema.parse(input);
+export async function getGenreBySlug(slug: string): Promise<FullGenre | null> {
+  return await db.genre.findUnique({
+    where: { slug },
+    include: fullGenreInclude,
+  });
+}
 
-  if (!id) {
-    throw new Error("ID is required");
-  }
+export async function getGenreByName(name: string): Promise<FullGenre | null> {
+  return await db.genre.findUnique({
+    where: { name },
+    include: fullGenreInclude,
+  });
+}
 
-  if (!name) {
-    throw new Error("Name is required");
-  }
+export async function createGenre(name: string): Promise<void> {
+  await db.$transaction(async (tx) => {
+    const slug = await tx.genre.generateSlug(name);
+    await tx.genre.create({ data: { name, slug } });
+  });
+}
 
-  if (await getGenreByName(name)) {
-    throw new Error("Genre already exists");
-  }
+export async function updateGenre(id: string, name: string): Promise<void> {
+  await db.$transaction(async (tx) => {
+    const slug = await tx.genre.generateSlug(name);
 
-  try {
-    await updateGenre(id, name);
-  } catch (error: unknown) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      if (
-        error.code === "P2002" &&
-        (error.meta?.target as string[]).includes("name")
-      ) {
-        throw new Error("Genre already exists");
-      }
-    }
-
-    throw error;
-  }
-
-  revalidatePath("/admin/genres");
-  redirect("/admin/genres");
+    await tx.genre.update({
+      where: { id },
+      data: {
+        name,
+        slug,
+      },
+    });
+  });
 }

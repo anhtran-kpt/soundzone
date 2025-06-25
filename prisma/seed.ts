@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma/prisma";
 import { UserRole } from "@/app/generated/prisma/client";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword } from "@/lib/next-auth";
 
 async function createAdminUser() {
   const adminData = {

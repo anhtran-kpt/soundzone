@@ -1,4 +1,4 @@
-import { UserRole } from "@/app/generated/prisma";
+import { UserRole } from "../app/generated/prisma";
 import { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
@@ -12,6 +12,7 @@ declare module "next-auth" {
 
   interface User extends DefaultUser {
     role: UserRole;
+    imagePublicId: string;
   }
 }
 

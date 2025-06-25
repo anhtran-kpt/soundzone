@@ -27,7 +27,8 @@ export function validateQuery<T>(
 
 // Common validation schemas
 export const commonSchemas = {
-  id: z.string().uuid("Invalid ID format"),
+  id: z.string().cuid("Invalid ID format"),
+  email: z.string().email(),
   pagination: z.object({
     page: z.coerce.number().min(1).default(1),
     limit: z.coerce.number().min(1).max(100).default(10),
