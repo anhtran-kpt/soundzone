@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/lib/api/api-response";
-import { withErrorHandler } from "@/lib/api/with-api-response";
+import { withErrorHandler } from "@/lib/api-handler";
 import { NextResponse } from "next/server";
 import { getAllTracks } from "@/lib/services/track";
 

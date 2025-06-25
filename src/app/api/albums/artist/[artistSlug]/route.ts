@@ -1,4 +1,4 @@
-import withApiResponse from "@/lib/api/with-api-response";
+import withApiResponse from "@/lib/api-handler";
 import { parsePaging } from "@/lib/helpers";
 import { NextRequest } from "next/server";
 import { getAlbumsByArtistSlug } from "@/lib/services/album";

@@ -1,16 +1,15 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { albumKeys, fetchAlbumsByArtistSlug } from "@/lib/queries/album";
-import { PaginationParams } from "@/lib/type";
 
-export function useAlbumsByArtistSlug(
+export function useFetchAlbumsByArtistSlug(
   artistSlug: string,
-  params?: PaginationParams
+  params: { offset: number; limit: number }
 ) {
   return useQuery({
     queryKey: albumKeys.paginatedByArtist(
       artistSlug,
-      params?.offset,
-      params?.limit
+      params.offset,
+      params.limit
     ),
     queryFn: ({ signal }) =>
       fetchAlbumsByArtistSlug(artistSlug, params, signal),

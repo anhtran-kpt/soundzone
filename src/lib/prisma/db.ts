@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import { generateSlug } from "../../../prisma/extensions/generateSlug";
+import { generateSlug } from "./extensions";
 
 const db = prisma.$extends(generateSlug);
 

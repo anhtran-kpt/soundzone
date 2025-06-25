@@ -1,16 +1,27 @@
-import { ApiResponse } from "@/lib/api/api-response";
-import { withErrorHandler } from "@/lib/api/with-api-response";
-import { userSchema } from "@/lib/validations";
-import { validateData } from "@/lib/helpers";
-import { NextRequest, NextResponse } from "next/server";
-import { signUpAction } from "@/app/actions/user";
+import { signUp } from "@/app/actions/user";
+import { withApiHandler } from "@/lib/api-handler";
+import { signUpSchema } from "@/types";
+import { NextRequest } from "next/server";
+import { checkUserExists } from "@/app/actions/user";
+import { ApiErrorCode } from "@/types";
+import { ApiError } from "@/lib/api-handler";
+import { validateBody } from "@/lib/validation";
 
-export const POST = withErrorHandler(async (req: NextRequest) => {
-  const body = await req.json();
+export const POST = withApiHandler(async (req: NextRequest) => {
+  const userData = await validateBody(req, signUpSchema);
 
-  const validatedData = validateData(userSchema, body);
+  if (await checkUserExists(userData.email)) {
+    throw new ApiError(
+      ApiErrorCode.CONFLICT,
+      "User with this email already exists",
+      409
+    );
+  }
 
-  const user = await signUpAction(validatedData);
+  const user = await signUp(userData);
 
-  return NextResponse.json(ApiResponse.success(user), { status: 200 });
+  return {
+    user,
+    message: "User signed up successfully",
+  };
 });

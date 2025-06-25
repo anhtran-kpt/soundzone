@@ -1,9 +1,9 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchGenreBySlug, fetchGenres, genreKeys } from "@/lib/queries/genre";
 
-export function useFetchGenres(params?: { limit?: number; page?: number }) {
+export function useFetchGenres(params: { offset: number; limit: number }) {
   return useQuery({
-    queryKey: genreKeys.list(params),
+    queryKey: genreKeys.paginated(params.offset, params.limit),
     queryFn: ({ signal }) => fetchGenres(params, signal),
     placeholderData: keepPreviousData,
   });
@@ -14,5 +14,6 @@ export function useFetchGenreBySlug(slug: string) {
     queryKey: genreKeys.detail(slug),
     queryFn: ({ signal }) => fetchGenreBySlug(slug, signal),
     placeholderData: keepPreviousData,
+    enabled: !!slug,
   });
 }

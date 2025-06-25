@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/lib/api/api-response";
-import { withErrorHandler } from "@/lib/api/with-api-response";
+import { withErrorHandler } from "@/lib/api-handler";
 import { getGenreBySlug } from "@/lib/services/genre";
 import { NextRequest, NextResponse } from "next/server";
 

@@ -1,6 +1,6 @@
 import { parsePaging } from "@/lib/helpers";
 import { getTracksByArtistSlug } from "@/lib/services/track";
-import withApiResponse from "@/lib/api/with-api-response";
+import withApiResponse from "@/lib/api-handler";
 import { NextRequest } from "next/server";
 
 export const GET = withApiResponse(async (req: NextRequest, { params }) => {

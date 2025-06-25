@@ -72,7 +72,7 @@ export default function AlbumForm({ artist }: { artist: FullArtist }) {
         },
       ],
     },
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const {

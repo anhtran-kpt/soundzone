@@ -1,71 +1,50 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
-import {
-  SignInInput,
-  signInSchema,
-  SignUpRequest,
-  userSchema,
-} from "@/lib/validations";
 import db from "@/lib/prisma/db";
-import { comparePasswords, hashPassword } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { signUpSchema, type SignUp, signInSchema, type SignIn } from "@/types";
+import { comparePasswords, hashPassword } from "../../lib/auth";
+import { User } from "@/app/generated/prisma";
 
-export async function signUpAction(input: SignUpRequest) {
-  const { ...data } = userSchema.parse(input);
+export const checkUserExists = async (email: string): Promise<boolean> => {
+  return !!(await db.user.findUnique({
+    where: {
+      email,
+    },
+  }));
+};
 
-  if (
-    await db.user.findUnique({
-      where: { email: data.email },
-    })
-  ) {
-    return NextResponse.json({ error: "User already exists" }, { status: 400 });
-  }
+export const signUp = async (input: SignUp): Promise<User> => {
+  const { confirmPassword, ...data } = signUpSchema.parse(input);
 
-  try {
-    const hashedPassword = await hashPassword(data.password);
-    const slug = await db.user.generateSlug(data.name);
+  const [hashedPassword, slug] = await Promise.all([
+    hashPassword(data.password),
+    db.user.generateSlug(data.name),
+  ]);
 
-    return db.user.create({
-      data: {
-        ...data,
-        password: hashedPassword,
-        slug,
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
-}
+  const newUser = db.user.create({
+    data: {
+      name: data.name,
+      email: data.email,
+      password: hashedPassword,
+      slug,
+    },
+  });
 
-export async function signInAction(input: SignInInput) {
-  const { ...data } = signInSchema.parse(input);
+  return newUser;
+};
 
-  try {
-    const user = await db.user.findUnique({
-      where: { email: data.email },
-    });
+export const signIn = async (input: SignIn): Promise<User> => {
+  const data = signInSchema.parse(input);
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Incorrect email or password" },
-        { status: 400 }
-      );
-    }
+  const user = await db.user.findUnique({
+    where: { email: data.email },
+  });
 
-    const isPasswordValid = await comparePasswords(
-      data.password,
-      user.password
-    );
+  if (!user) throw new Error("Invalid credentials");
 
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Incorrect email or password" },
-        { status: 400 }
-      );
-    }
+  if (!(await comparePasswords(data.password, user.password)))
+    throw new Error("Invalid credentials");
 
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
+  return user;
+};

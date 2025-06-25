@@ -1,16 +1,15 @@
 import { apiClient } from "@/lib/api-client";
-import { PaginationParams } from "@/lib/type";
 import { FullGenre } from "@/lib/types";
 
 export const genreKeys = {
-  all: ["genres"] as const,
-  list: (params?: PaginationParams) => [...genreKeys.all, params] as const,
-  detail: (slug: string) => [...genreKeys.all, slug] as const,
+  list: (params: { offset: number; limit: number }) =>
+    ["genres", "paginated", params.offset, params.limit] as const,
+  detail: (slug: string) => ["genres", slug] as const,
 };
 
 export async function fetchGenres(
-  params?: PaginationParams,
-  signal?: AbortSignal
+  params: { offset: number; limit: number },
+  signal: AbortSignal
 ) {
   return await apiClient.get<FullGenre[]>("/genres", {
     params,
@@ -18,10 +17,7 @@ export async function fetchGenres(
   });
 }
 
-export async function fetchGenreBySlug(
-  genreSlug: string,
-  signal?: AbortSignal
-) {
+export async function fetchGenreBySlug(genreSlug: string, signal: AbortSignal) {
   return await apiClient.get<FullGenre>(`/genres/${genreSlug}`, {
     signal,
   });

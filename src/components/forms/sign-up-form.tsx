@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,39 +10,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  Input,
+  Button,
+} from "@/components/ui";
 import { toast } from "sonner";
-import { SignUpInput, signUpSchema } from "@/lib/validations";
-import { useSignUp } from "@/lib/queries";
+import { type SignUp, signUpSchema } from "@/types";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signUp } from "@/lib/queries";
 
 export function SignUpForm() {
   const router = useRouter();
 
-  const form = useForm<SignUpInput>({
+  const form = useForm<SignUp>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      passwordConfirmation: "",
+      confirmPassword: "",
     },
+    mode: "onBlur",
   });
 
   const { clearErrors, formState, control, handleSubmit } = form;
 
-  const mutation = useSignUp();
-
-  const onSubmit = async (values: SignUpInput) => {
+  const onSubmit = async (values: SignUp) => {
     clearErrors();
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { passwordConfirmation, ...data } = values;
-      const response = await mutation.mutateAsync(data);
+      const response = await signUp(values);
 
-      if (response.success) {
+      if (response.data) {
         toast.success("Sign up successful");
         await signIn("credentials", {
           email: values.email,
@@ -133,7 +130,7 @@ export function SignUpForm() {
 
           <FormField
             control={control}
-            name="passwordConfirmation"
+            name="confirmPassword"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm password</FormLabel>
