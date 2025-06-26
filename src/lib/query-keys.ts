@@ -1,59 +1,55 @@
 export const queryKeys = {
-  // Base keys
   all: ["queries"] as const,
 
-  // Artists
   artists: () => [...queryKeys.all, "artists"] as const,
-  artistsList: (params?: {
-    page?: number;
-    limit?: number;
-    q?: string;
-    sortBy?: string;
-    sortOrder?: "asc" | "desc";
-  }) => [...queryKeys.artists(), "list", params] as const,
-  artistsDetail: (slug: string) =>
-    [...queryKeys.artists(), "detail", slug] as const,
-  artistsInfinite: (params?: {
-    limit?: number;
-    q?: string;
-    sortBy?: string;
-    sortOrder?: "asc" | "desc";
-  }) => [...queryKeys.artists(), "infinite", params] as const,
+  artistsList: () => [...queryKeys.artists(), "list"] as const,
+  artistDetail: (artistSlug: string) =>
+    [...queryKeys.artists(), "detail", artistSlug] as const,
 
-  // Tracks
   tracks: () => [...queryKeys.all, "tracks"] as const,
-  tracksList: (params?: unknown) =>
-    [...queryKeys.tracks(), "list", params] as const,
-  tracksDetail: (slug: string) =>
+  tracksList: () => [...queryKeys.tracks(), "list"] as const,
+  trackDetail: (slug: string) =>
     [...queryKeys.tracks(), "detail", slug] as const,
-  tracksByUser: (userSlug: string) =>
-    [...queryKeys.tracks(), "by-user", userSlug] as const,
 
-  // // Settings
-  // settings: () => [...queryKeys.all, "settings"] as const,
-  // profile: () => [...queryKeys.settings(), "profile"] as const,
+  albums: () => [...queryKeys.all, "albums"] as const,
+  albumsList: () => [...queryKeys.albums(), "list"] as const,
+  albumDetail: (slug: string) =>
+    [...queryKeys.albums(), "detail", slug] as const,
 
-  // // Search
-  // search: (query: string, type?: string) =>
-  //   [...queryKeys.all, "search", { query, type }] as const,
+  genres: () => [...queryKeys.all, "genres"] as const,
+  genresList: () => [...queryKeys.genres(), "list"] as const,
+  genreDetail: (slug: string) =>
+    [...queryKeys.genres(), "detail", slug] as const,
+
+  playlists: () => [...queryKeys.all, "playlists"] as const,
+  playlistsList: () => [...queryKeys.playlists(), "list"] as const,
+  playlistDetail: (slug: string) =>
+    [...queryKeys.playlists(), "detail", slug] as const,
 };
 
-// Helper to invalidate related queries
 export const invalidateQueries = {
-  // Invalidate all artists queries
-  artists: () => queryKeys.artists(),
-
-  // Invalidate artist detail specific
-  artistDetail: (slug: string) => queryKeys.artistsDetail(slug),
-
-  // Invalidate artists list với params specific
-  artistsList: (params?: Parameters<typeof queryKeys.artistsList>[0]) =>
-    queryKeys.artistsList(params),
-
-  // Invalidate all
   all: () => queryKeys.all,
+
+  artists: () => queryKeys.artists(),
+  artistDetail: (artistSlug: string) => queryKeys.artistDetail(artistSlug),
+  artistsList: () => queryKeys.artistsList(),
+
+  tracks: () => queryKeys.tracks(),
+  trackDetail: (trackSlug: string) => queryKeys.trackDetail(trackSlug),
+  tracksList: () => queryKeys.tracksList(),
+
+  albums: () => queryKeys.albums(),
+  albumDetail: (albumSlug: string) => queryKeys.albumDetail(albumSlug),
+  albumsList: () => queryKeys.albumsList(),
+
+  genres: () => queryKeys.genres(),
+  genreDetail: (genreSlug: string) => queryKeys.genreDetail(genreSlug),
+  genresList: () => queryKeys.genresList(),
+
+  playlists: () => queryKeys.playlists(),
+  playlistDetail: (playlistSlug: string) =>
+    queryKeys.playlistDetail(playlistSlug),
+  playlistsList: () => queryKeys.playlistsList(),
 };
 
 export type QueryKeys = typeof queryKeys;
-export type ArtistListParams = Parameters<typeof queryKeys.artistsList>[0];
-export type ArtistDetailParams = Parameters<typeof queryKeys.artistsDetail>[0];

@@ -3,7 +3,7 @@ import { FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, UploadIcon } from "lucide-react";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
 import { Explicit } from "@/components/shared";

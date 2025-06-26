@@ -62,7 +62,6 @@ export function useApi<T>(
   };
 }
 
-// Mutation hook for POST/PUT/DELETE operations
 export function useMutation<T, P = unknown>(
   apiCall: (params: P) => Promise<T>,
   options: UseApiOptions = {}
@@ -108,34 +107,6 @@ export function useMutation<T, P = unknown>(
   };
 }
 
-// Specific hooks for user operations
-// export function useUsers(params?: {
-//   page?: number;
-//   limit?: number;
-//   q?: string;
-// }) {
-//   return useApi(() => userApi.getUsers(params));
-// }
-
-// export function useUser(id: string) {
-//   return useApi(() => userApi.getUser(id), { immediate: !!id });
-// }
-
-// export function useCreateUser() {
-//   return useMutation(userApi.createUser);
-// }
-
-// export function useUpdateUser() {
-//   return useMutation(({ id, data }: { id: string; data: unknown }) =>
-//     userApi.updateUser(id, data)
-//   );
-// }
-
-// export function useDeleteUser() {
-//   return useMutation(userApi.deleteUser);
-// }
-
-// Error helper hook
 export function useApiError() {
   const [error, setError] = useState<ApiClientError | null>(null);
 

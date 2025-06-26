@@ -1,6 +1,6 @@
 import { SearchIcon } from "lucide-react";
 import { Input } from "../ui/input";
-import Icon from "../common/icon";
+import Icon from "../shared/icon";
 
 export default function UserSearchBar() {
   return (

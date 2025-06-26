@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Icon from "../common/icon";
+import Icon from "./icon";
 
 export default function ModeToggle() {
   const { setTheme } = useTheme();

@@ -2,7 +2,7 @@
 
 import { EllipsisIcon, HeartIcon, PlayIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import Icon from "./icon";
+import Icon from "../shared/icon";
 import { FullTrack } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import ArtistNames from "./artist-names";

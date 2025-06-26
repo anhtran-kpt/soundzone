@@ -7,55 +7,43 @@ import {
   FormLabel,
   FormField,
   Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  Input,
+  Button,
+  Textarea,
+  Card,
+  CardContent,
+  CardTitle,
+  CardHeader,
+} from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { CreateArtistInput, createArtistSchema } from "@/lib/validations";
-import { FullArtist } from "@/lib/types";
-import { updateArtistAction } from "@/app/actions/artist";
+import { CreateArtistInput, createArtistSchema } from "@/schemas";
 import { createArtistAction } from "@/app/actions/artist";
 import { toast } from "sonner";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import Image from "next/image";
 import { UploadIcon } from "lucide-react";
-import { Icon } from "@/components/common";
-import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
+import { Icon } from "@/components/shared";
 
-interface ArtistFormProps {
-  artist?: FullArtist;
-  mode: "create" | "edit";
-}
-
-export default function ArtistForm({
-  artist,
-  mode = "create",
-}: ArtistFormProps) {
+export default function ArtistForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
   const form = useForm<CreateArtistInput>({
     resolver: zodResolver(createArtistSchema),
     defaultValues: {
-      name: artist?.name ?? "",
-      description: artist?.description ?? "",
-      nationality: artist?.nationality ?? "",
-      imagePublicId: artist?.imagePublicId ?? "",
-      bannerPublicId: artist?.bannerPublicId ?? "",
+      name: "",
+      description: "",
+      imagePublicId: "",
+      bannerPublicId: "",
     },
   });
 
   const onSubmit = async (values: CreateArtistInput) => {
     form.clearErrors();
     try {
-      if (mode === "create") {
-        await createArtistAction(values);
-      } else {
-        await updateArtistAction(artist?.id as string, values);
-      }
+      await createArtistAction(values);
     } catch (error: unknown) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong"
@@ -67,7 +55,7 @@ export default function ArtistForm({
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-center">
-          {mode === "create" ? "New Artist" : "Edit Artist"}
+          New Artist
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -103,25 +91,6 @@ export default function ArtistForm({
                       {...field}
                       placeholder="Enter artist description"
                       autoComplete="artist-description"
-                      disabled={form.formState.isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nationality"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nationality</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Enter artist nationality"
-                      autoComplete="artist-nationality"
                       disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
@@ -237,13 +206,7 @@ export default function ArtistForm({
               disabled={form.formState.isSubmitting}
               className="w-full"
             >
-              {form.formState.isSubmitting
-                ? mode === "create"
-                  ? "Creating..."
-                  : "Updating..."
-                : mode === "create"
-                ? "Create"
-                : "Update"}
+              {form.formState.isSubmitting ? "Creating..." : "Create"}
             </Button>
           </form>
         </Form>

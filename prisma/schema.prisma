@@ -68,7 +68,6 @@ model Artist {
   name           String
   slug           String   @unique
   description    String?  @db.Text
-  nationality    String?
   imagePublicId  String
   bannerPublicId String?
   createdAt      DateTime @default(now())

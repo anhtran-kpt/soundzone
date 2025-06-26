@@ -1,6 +1,6 @@
 "use client";
 
-import ArtistForm from "@/components/forms/artist-form";
+import ArtistForm from "@/app/admin/artists/components/artist-form";
 import { useArtist } from "@/services/queries/artist";
 import { useParams } from "next/navigation";
 

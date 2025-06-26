@@ -7,7 +7,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import Icon from "../common/icon";
+import Icon from "../shared/icon";
 import { UserProfile, UserSearchBar } from ".";
 import { ModeToggle } from "../shared";
 import { useScroll, motion, useMotionValueEvent } from "framer-motion";

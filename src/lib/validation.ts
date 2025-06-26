@@ -25,8 +25,7 @@ export function validateQuery<T>(
   return schema.parse(query);
 }
 
-// Common validation schemas
-export const commonSchemas = {
+export const sharedSchemas = {
   id: z.string().cuid("Invalid ID format"),
   email: z.string().email(),
   pagination: z.object({

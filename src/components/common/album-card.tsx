@@ -1,5 +1,5 @@
 import { DotIcon, PlayIcon } from "lucide-react";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import CustomLink from "./custom-link";
 import { FullAlbum } from "@/lib/types";
 import { CldImage } from "next-cloudinary";

@@ -55,8 +55,8 @@ export class ApiClientError extends Error {
 }
 
 export const api = {
-  async get<T>(url: string, params?: unknown): Promise<T> {
-    const response = await apiClient.get<ApiResponse<T>>(url, { params });
+  async get<T>(url: string, signal: AbortSignal): Promise<T> {
+    const response = await apiClient.get<ApiResponse<T>>(url, { signal });
     return response.data.data!;
   },
 
@@ -70,33 +70,82 @@ export const api = {
     return response.data.data!;
   },
 
+  async patch<T>(url: string, data?: unknown): Promise<T> {
+    const response = await apiClient.patch<ApiResponse<T>>(url, data);
+    return response.data.data!;
+  },
+
   async delete<T>(url: string): Promise<T> {
     const response = await apiClient.delete<ApiResponse<T>>(url);
     return response.data.data!;
   },
 
-  async getWithMeta<T>(url: string, params?: unknown): Promise<ApiResponse<T>> {
-    const response = await apiClient.get<ApiResponse<T>>(url, { params });
+  async getWithMeta<T>(
+    url: string,
+    signal: AbortSignal,
+    params?: unknown
+  ): Promise<ApiResponse<T>> {
+    const response = await apiClient.get<ApiResponse<T>>(url, {
+      params,
+      signal,
+    });
     return response.data;
   },
 };
 
 export const artistApi = {
-  getArtists: (params?: { page?: number; limit?: number; q?: string }) =>
-    api.getWithMeta<{ artists: unknown[]; meta: unknown }>("/artists", params),
+  getArtists: (signal: AbortSignal) =>
+    api.get<{ artists: unknown[] }>("/artists", signal),
 
-  getArtist: (slug: string) => api.get<{ artist: unknown }>(`/artists/${slug}`),
+  getArtistBySlug: (artistSlug: string, signal: AbortSignal) =>
+    api.get<{ artist: unknown }>(`/artists/${artistSlug}`, signal),
 
   createArtist: (data: { name: string; email: string; age?: number }) =>
     api.post<{ artist: unknown; message: string }>("/artists", data),
+};
 
-  updateArtist: (
-    slug: string,
-    data: Partial<{ name: string; email: string; age: number }>
-  ) => api.put<{ artist: unknown; message: string }>(`/artists/${slug}`, data),
+export const trackApi = {
+  getTracks: (signal: AbortSignal) =>
+    api.get<{ tracks: unknown[] }>("/tracks", signal),
 
-  deleteArtist: (slug: string) =>
-    api.delete<{ message: string }>(`/artists/${slug}`),
+  getTrackBySlug: (trackSlug: string, signal: AbortSignal) =>
+    api.get<{ track: unknown }>(`/tracks/${trackSlug}`, signal),
+
+  createTrack: (data: { name: string; email: string; age?: number }) =>
+    api.post<{ track: unknown; message: string }>("/tracks", data),
+};
+
+export const albumApi = {
+  getAlbums: (signal: AbortSignal) =>
+    api.get<{ albums: unknown[] }>("/albums", signal),
+
+  getAlbumBySlug: (albumSlug: string, signal: AbortSignal) =>
+    api.get<{ album: unknown }>(`/albums/${albumSlug}`, signal),
+
+  createAlbum: (data: { name: string; email: string; age?: number }) =>
+    api.post<{ album: unknown; message: string }>("/albums", data),
+};
+
+export const genreApi = {
+  getGenres: (signal: AbortSignal) =>
+    api.get<{ genres: unknown[] }>("/genres", signal),
+
+  getGenreBySlug: (genreSlug: string, signal: AbortSignal) =>
+    api.get<{ genre: unknown }>(`/genres/${genreSlug}`, signal),
+
+  createGenre: (data: { name: string; email: string; age?: number }) =>
+    api.post<{ genre: unknown; message: string }>("/genres", data),
+};
+
+export const playlistApi = {
+  getPlaylists: (signal: AbortSignal) =>
+    api.get<{ playlists: unknown[] }>("/playlists", signal),
+
+  getPlaylistBySlug: (playlistSlug: string, signal: AbortSignal) =>
+    api.get<{ playlist: unknown }>(`/playlists/${playlistSlug}`, signal),
+
+  createPlaylist: (data: { name: string; email: string; age?: number }) =>
+    api.post<{ playlist: unknown; message: string }>("/playlists", data),
 };
 
 export default apiClient;
