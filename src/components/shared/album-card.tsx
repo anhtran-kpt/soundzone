@@ -7,7 +7,6 @@ import { DotIcon } from "lucide-react";
 import CustomLink from "../common/custom-link";
 
 export default function AlbumCard({ album }: { album: FullAlbum }) {
-  console.log(album);
   return (
     <li className="flex flex-col items-center group gap-1.5">
       <div className="relative rounded-lg overflow-hidden w-full h-full aspect-square">

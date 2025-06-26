@@ -11,14 +11,3 @@ export const prefetchArtistDetail = async (
     queryFn: ({ signal }) => artistApi.getArtistBySlug(artistSlug, signal),
   });
 };
-
-export const prefetchTracksByArtistSlug = async (
-  qc: QueryClient,
-  artistSlug: string
-) => {
-  await qc.prefetchQuery({
-    queryKey: artistKeys.tracks(artistSlug),
-    queryFn: ({ signal }) =>
-      artistApi.getTracksByArtistSlug(artistSlug, signal),
-  });
-};

@@ -14,8 +14,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useFetchTracksByArtistSlug } from "@/hooks/use-query/track";
-import { formatDuration } from "@/lib/helpers";
+import { formatDuration } from "@/lib/utils";
 import {
   CirclePlusIcon,
   EllipsisIcon,
@@ -25,26 +24,12 @@ import {
 } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 
-export default function TracksPopular({ artistSlug }: { artistSlug: string }) {
-  const { data, isError, error } = useFetchTracksByArtistSlug(artistSlug, {
-    limit: 5,
-  });
-
-  const tracks = data?.data;
-
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
-
-  if (!tracks) {
-    return <div>No tracks found.</div>;
-  }
-
+export default function TracksPopular({ tracks }) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">Popular</h2>
       <ul role="list" className="space-y-2">
-        {tracks.map((track, index) => (
+        {tracks.map(({ track }, index) => (
           <li
             key={track.id}
             className="flex gap-6 px-4 py-2 rounded-sm hover:bg-muted items-center group"
@@ -75,20 +60,20 @@ export default function TracksPopular({ artistSlug }: { artistSlug: string }) {
                 <h3 className="text-sm font-medium">{track.title}</h3>
                 <div className="flex items-center gap-1.5">
                   {track.isExplicit && <Explicit />}
-                  {track.artists.map((artist) => (
+                  {track.artists.map(({ artist }) => (
                     <CustomLink
-                      href={`/artists/${artist.artist.slug}`}
-                      key={artist.artist.id}
+                      href={`/artists/${artist.slug}`}
+                      key={artist.id}
                       className="text-xs"
                     >
-                      {artist.artist.name}
+                      {artist.name}
                     </CustomLink>
                   ))}
                 </div>
               </div>
             </div>
             <div className="text-muted-foreground w-32">
-              {track.playHistory.length}
+              {/* {track.playHistory.length} */}
             </div>
             <div>
               <Button

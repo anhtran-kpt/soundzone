@@ -2,34 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AlbumCard from "@/components/shared/album-card";
-import { useMemo } from "react";
-import { useAlbumsByArtistSlug } from "@/hooks/use-query/album";
-import { notFound } from "next/navigation";
 
-export default function Discography({ artistSlug }: { artistSlug: string }) {
-  const { data, isError, error } = useAlbumsByArtistSlug(artistSlug, {
-    offset: 0,
-    limit: 5,
-  });
-
-  const albums = data?.data;
-
-  const albumsData = useMemo(() => {
-    return albums?.filter((album) => album.releaseType === "ALBUM");
-  }, [albums]);
-
-  const singlesData = useMemo(() => {
-    return albums?.filter((album) => album.releaseType === "SINGLE");
-  }, [albums]);
-
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
-
-  if (!albums) {
-    return notFound();
-  }
-
+export default function Discography({ popularRelease, albumsByType }) {
   return (
     <Tabs defaultValue="Popular Releases" className="w-full gap-6">
       <TabsList>
@@ -42,7 +16,7 @@ export default function Discography({ artistSlug }: { artistSlug: string }) {
           role="list"
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
         >
-          {albumsData?.map((album) => (
+          {popularRelease?.map((album) => (
             <AlbumCard key={album.id} album={album} />
           ))}
         </ul>
@@ -52,7 +26,7 @@ export default function Discography({ artistSlug }: { artistSlug: string }) {
           role="list"
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
         >
-          {albumsData?.map((album) => (
+          {albumsByType.album?.map((album) => (
             <AlbumCard key={album.id} album={album} />
           ))}
         </ul>
@@ -62,7 +36,7 @@ export default function Discography({ artistSlug }: { artistSlug: string }) {
           role="list"
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
         >
-          {singlesData?.map((album) => (
+          {albumsByType.single?.map((album) => (
             <AlbumCard key={album.id} album={album} />
           ))}
         </ul>

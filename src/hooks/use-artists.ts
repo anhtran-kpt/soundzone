@@ -21,7 +21,7 @@ export function useArtistsQuery(
   });
 }
 
-export function useArtistQuery(
+export function useArtistDetail(
   artistSlug: string,
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
@@ -33,20 +33,6 @@ export function useArtistQuery(
     ...options,
   });
 }
-
-export const useTracksByArtistSlug = (
-  artistSlug: string,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) => {
-  return useQuery({
-    queryKey: artistKeys.tracks(artistSlug),
-    queryFn: ({ signal }) =>
-      artistApi.getTracksByArtistSlug(artistSlug, signal),
-    placeholderData: keepPreviousData,
-    enabled: !!artistSlug,
-    ...options,
-  });
-};
 
 export function useCreateArtistMutation(
   options?: UseMutationOptions<

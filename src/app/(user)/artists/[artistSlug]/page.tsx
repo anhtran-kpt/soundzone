@@ -2,7 +2,7 @@ import ArtistDetails from "./components/artist-detail";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate } from "@tanstack/react-query";
 import { HydrationBoundary } from "@tanstack/react-query";
-import { prefetchArtistDetail } from "@/lib/prefetch";
+import { prefetchArtistDetail } from "@/lib/prefetchs";
 
 export default async function ArtistPage({
   params,
@@ -13,7 +13,7 @@ export default async function ArtistPage({
 
   const qc = getQueryClient();
 
-  await Promise.all([prefetchArtistDetail(qc, artistSlug)]);
+  await prefetchArtistDetail(qc, artistSlug);
 
   return (
     <HydrationBoundary state={dehydrate(qc)}>
