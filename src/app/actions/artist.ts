@@ -19,6 +19,21 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
   });
 };
 
+export const getTracksByArtistSlugAction = async (artistSlug: string) => {
+  return await db.artist.findUnique({
+    where: {
+      slug: artistSlug,
+    },
+    include: {
+      tracks: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+};
+
 export const createArtistAction = async (input: CreateArtistInput) => {
   return await db.$transaction(async (tx) => {
     const slug = await tx.artist.generateSlug(input.name);

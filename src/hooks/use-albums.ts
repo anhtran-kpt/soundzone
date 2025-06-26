@@ -7,14 +7,14 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { albumApi, ApiClientError } from "@/lib/api-client";
-import { queryKeys, invalidateQueries } from "@/lib/query-keys";
 import { toast } from "sonner";
+import { albumKeys } from "@/lib/query-keys";
 
 export function useAlbumsQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.albumsList(),
+    queryKey: albumKeys.all,
     queryFn: ({ signal }) => albumApi.getAlbums(signal),
     placeholderData: keepPreviousData,
     ...options,
@@ -26,7 +26,7 @@ export function useAlbumQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.albumDetail(albumSlug),
+    queryKey: albumKeys.detail(albumSlug),
     queryFn: ({ signal }) => albumApi.getAlbumBySlug(albumSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!albumSlug,
@@ -47,7 +47,7 @@ export function useCreateAlbumMutation(
     mutationFn: albumApi.createAlbum,
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: invalidateQueries.albums(),
+        queryKey: albumKeys.all,
       });
 
       // queryClient.setQueryData(queryKeys.albumsDetail(data.album.id), data);

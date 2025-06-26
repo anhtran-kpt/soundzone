@@ -7,14 +7,14 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { playlistApi, ApiClientError } from "@/lib/api-client";
-import { queryKeys, invalidateQueries } from "@/lib/query-keys";
 import { toast } from "sonner";
+import { playlistKeys } from "@/lib/query-keys";
 
 export function usePlaylistsQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.playlistsList(),
+    queryKey: playlistKeys.all,
     queryFn: ({ signal }) => playlistApi.getPlaylists(signal),
     placeholderData: keepPreviousData,
     ...options,
@@ -26,7 +26,7 @@ export function usePlaylistQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.playlistDetail(playlistSlug),
+    queryKey: playlistKeys.detail(playlistSlug),
     queryFn: ({ signal }) =>
       playlistApi.getPlaylistBySlug(playlistSlug, signal),
     placeholderData: keepPreviousData,
@@ -48,7 +48,7 @@ export function useCreatePlaylistMutation(
     mutationFn: playlistApi.createPlaylist,
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: invalidateQueries.playlists(),
+        queryKey: playlistKeys.all,
       });
 
       // queryClient.setQueryData(queryKeys.playlistsDetail(data.playlist.id), data);

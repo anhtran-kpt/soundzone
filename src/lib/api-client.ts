@@ -100,6 +100,9 @@ export const artistApi = {
   getArtistBySlug: (artistSlug: string, signal: AbortSignal) =>
     api.get<{ artist: unknown }>(`/artists/${artistSlug}`, signal),
 
+  getTracksByArtistSlug: (artistSlug: string, signal: AbortSignal) =>
+    api.get(`/artists/${artistSlug}`, signal),
+
   createArtist: (data: { name: string; email: string; age?: number }) =>
     api.post<{ artist: unknown; message: string }>("/artists", data),
 };
@@ -110,6 +113,9 @@ export const trackApi = {
 
   getTrackBySlug: (trackSlug: string, signal: AbortSignal) =>
     api.get<{ track: unknown }>(`/tracks/${trackSlug}`, signal),
+
+  getTracksByArtistSlug: (artistSlug: string, signal: AbortSignal) =>
+    api.get<{ tracks: unknown }>(`/tracks/artists/${artistSlug}`, signal),
 
   createTrack: (data: { name: string; email: string; age?: number }) =>
     api.post<{ track: unknown; message: string }>("/tracks", data),

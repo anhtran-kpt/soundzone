@@ -7,14 +7,14 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { genreApi, ApiClientError } from "@/lib/api-client";
-import { queryKeys, invalidateQueries } from "@/lib/query-keys";
 import { toast } from "sonner";
+import { genreKeys } from "@/lib/query-keys";
 
 export function useGenresQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.genresList(),
+    queryKey: genreKeys.all,
     queryFn: ({ signal }) => genreApi.getGenres(signal),
     placeholderData: keepPreviousData,
     ...options,
@@ -26,7 +26,7 @@ export function useGenreQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
-    queryKey: queryKeys.genreDetail(genreSlug),
+    queryKey: genreKeys.detail(genreSlug),
     queryFn: ({ signal }) => genreApi.getGenreBySlug(genreSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!genreSlug,
@@ -47,7 +47,7 @@ export function useCreateGenreMutation(
     mutationFn: genreApi.createGenre,
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: invalidateQueries.genres(),
+        queryKey: genreKeys.all,
       });
 
       // queryClient.setQueryData(queryKeys.genresDetail(data.genre.id), data);

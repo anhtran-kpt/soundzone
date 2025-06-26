@@ -1,25 +1,22 @@
 "use client";
 
 import CustomLink from "@/components/common/custom-link";
-// import TracksPopular from "./tracks-popular";
+import TracksPopular from "./tracks-popular";
 import ArtistBanner from "./artist-banner";
 import { useArtistQuery } from "@/hooks";
 import { notFound } from "next/navigation";
 // import Discography from "./discography";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data, isError, error } = useArtistQuery(artistSlug);
-
-  console.log(data);
+  const { data: artist, isError, error } = useArtistQuery(artistSlug);
 
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
 
-  // if (!artist) {
-  //   return notFound();
-  // }
-  return null;
+  if (!artist) {
+    return notFound();
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -32,7 +29,7 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
             Show all
           </CustomLink>
         </div>
-        <Discography artistSlug={artistSlug} />
+        {/* <Discography artistSlug={artistSlug} /> */}
       </section>
     </div>
   );
