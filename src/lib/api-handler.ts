@@ -11,13 +11,16 @@ import {
 
 type ApiHandler<T = unknown> = (
   req: NextRequest,
-  context?: { params: unknown }
+  { params }: { params: Promise<Record<string, string>> }
 ) => Promise<T>;
 
 export function withApiHandler<T>(handler: ApiHandler<T>) {
-  return async (req: NextRequest, context?: { params: unknown }) => {
+  return async (
+    req: NextRequest,
+    { params }: { params: Promise<Record<string, string>> }
+  ) => {
     try {
-      const result = await handler(req, context);
+      const result = await handler(req, { params });
 
       if (result && typeof result === "object" && "success" in result) {
         return NextResponse.json(result);

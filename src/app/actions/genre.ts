@@ -1,49 +1,26 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { fullGenreInclude } from "@/lib/prisma/presets";
-import { FullGenre } from "@/lib/types";
 
-export async function getAllGenres(): Promise<FullGenre[]> {
+export const getGenresAction = async () => {
   return await db.genre.findMany({
     orderBy: {
       createdAt: "desc",
     },
-    include: fullGenreInclude,
   });
-}
+};
 
-export async function getGenreBySlug(slug: string): Promise<FullGenre | null> {
+export const getGenreBySlugAction = async (genreSlug: string) => {
   return await db.genre.findUnique({
-    where: { slug },
-    include: fullGenreInclude,
+    where: {
+      slug: genreSlug,
+    },
   });
-}
+};
 
-export async function getGenreByName(name: string): Promise<FullGenre | null> {
-  return await db.genre.findUnique({
-    where: { name },
-    include: fullGenreInclude,
-  });
-}
-
-export async function createGenre(name: string): Promise<void> {
+export const createGenreAction = async (genreName: string) => {
   await db.$transaction(async (tx) => {
-    const slug = await tx.genre.generateSlug(name);
-    await tx.genre.create({ data: { name, slug } });
+    const slug = await tx.genre.generateSlug(genreName);
+    await tx.genre.create({ data: { name: genreName, slug } });
   });
-}
-
-export async function updateGenre(id: string, name: string): Promise<void> {
-  await db.$transaction(async (tx) => {
-    const slug = await tx.genre.generateSlug(name);
-
-    await tx.genre.update({
-      where: { id },
-      data: {
-        name,
-        slug,
-      },
-    });
-  });
-}
+};

@@ -7,11 +7,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuContent,
   DropdownMenuShortcut,
-} from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
+  Avatar,
+  AvatarFallback,
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "../ui";
 import { useSession } from "next-auth/react";
-import { formatName } from "@/lib/helpers";
+import { formatName } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";
 
 export default function AdminProfile() {
@@ -37,7 +39,7 @@ export default function AdminProfile() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{data?.user?.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           Profile

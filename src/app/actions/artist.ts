@@ -1,58 +1,33 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { CreateArtistInput, UpdateArtistInput } from "@/lib/validations";
-import { fullArtistInclude } from "@/lib/prisma/presets";
-import { FullArtist } from "@/lib/types/artist";
+import { CreateArtistInput } from "@/schemas";
 
-export async function getArtistBySlugAction(
-  slug: string
-): Promise<FullArtist | null> {
-  return await db.artist.findUnique({
-    where: { slug },
-    include: fullArtistInclude,
-  });
-}
-
-export async function getAllArtistsAction(): Promise<FullArtist[]> {
+export const getArtistsAction = async () => {
   return await db.artist.findMany({
-    orderBy: { createdAt: "desc" },
-    include: fullArtistInclude,
+    orderBy: {
+      createdAt: "desc",
+    },
   });
-}
+};
 
-export async function createArtistAction(
-  data: CreateArtistInput
-): Promise<void> {
-  await db.$transaction(async (tx) => {
-    const slug = await tx.artist.generateSlug(data.name);
+export const getArtistBySlugAction = async (artistSlug: string) => {
+  return await db.artist.findUnique({
+    where: {
+      slug: artistSlug,
+    },
+  });
+};
 
-    await tx.artist.create({
+export const createArtistAction = async (input: CreateArtistInput) => {
+  return await db.$transaction(async (tx) => {
+    const slug = await tx.artist.generateSlug(input.name);
+
+    return await tx.artist.create({
       data: {
-        ...data,
+        ...input,
         slug,
       },
     });
   });
-}
-
-export async function updateArtist(
-  id: string,
-  data: UpdateArtistInput
-): Promise<void> {
-  await db.$transaction(async (tx) => {
-    if (data.name) {
-      const slug = await tx.artist.generateSlug(data.name);
-
-      await tx.artist.update({
-        where: { id },
-        data: { ...data, slug },
-      });
-    } else {
-      await tx.artist.update({
-        where: { id },
-        data,
-      });
-    }
-  });
-}
+};

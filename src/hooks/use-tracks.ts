@@ -62,14 +62,3 @@ export function useCreateTrackMutation(
     ...options,
   });
 }
-
-export function usePrefetchTrack() {
-  const queryClient = useQueryClient();
-
-  return (trackSlug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.trackDetail(trackSlug),
-      queryFn: ({ signal }) => trackApi.getTrackBySlug(trackSlug, signal),
-    });
-  };
-}

@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { customSlugify } from "@/lib/helpers";
+import { customSlugify } from "@/lib/utils";
 
 export const generateSlug = Prisma.defineExtension({
   name: "generateSlug",

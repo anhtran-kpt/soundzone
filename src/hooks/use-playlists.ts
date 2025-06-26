@@ -63,15 +63,3 @@ export function useCreatePlaylistMutation(
     ...options,
   });
 }
-
-export function usePrefetchPlaylist() {
-  const queryClient = useQueryClient();
-
-  return (playlistSlug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.playlistDetail(playlistSlug),
-      queryFn: ({ signal }) =>
-        playlistApi.getPlaylistBySlug(playlistSlug, signal),
-    });
-  };
-}

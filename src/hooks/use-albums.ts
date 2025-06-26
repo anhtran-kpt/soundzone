@@ -62,14 +62,3 @@ export function useCreateAlbumMutation(
     ...options,
   });
 }
-
-export function usePrefetchAlbum() {
-  const queryClient = useQueryClient();
-
-  return (albumSlug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.albumDetail(albumSlug),
-      queryFn: ({ signal }) => albumApi.getAlbumBySlug(albumSlug, signal),
-    });
-  };
-}

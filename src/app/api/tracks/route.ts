@@ -1,20 +1,6 @@
-import { ApiResponse } from "@/lib/api/api-response";
-import { withErrorHandler } from "@/lib/api-handler";
-import { NextResponse } from "next/server";
-import { getAllTracks } from "@/lib/services/track";
+import { getTracksAction } from "@/app/actions";
+import { withApiHandler } from "@/lib/api-handler";
 
-// export const POST = withErrorHandler(async (req: NextRequest) => {
-//   const body = await req.json();
-
-//   const validatedData = validateData(createTrackSchema, body);
-
-//   const newTrack = await createTrack(validatedData);
-
-//   return NextResponse.json(ApiResponse.success(newTrack), { status: 200 });
-// });
-
-export const GET = withErrorHandler(async () => {
-  const tracks = await getAllTracks();
-
-  return NextResponse.json(ApiResponse.success(tracks), { status: 200 });
+export const GET = withApiHandler(async () => {
+  return await getTracksAction();
 });

@@ -62,14 +62,3 @@ export function useCreateArtistMutation(
     ...options,
   });
 }
-
-export function usePrefetchArtist() {
-  const queryClient = useQueryClient();
-
-  return (artistSlug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.artistDetail(artistSlug),
-      queryFn: ({ signal }) => artistApi.getArtistBySlug(artistSlug, signal),
-    });
-  };
-}

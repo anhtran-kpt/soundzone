@@ -1,24 +1,25 @@
 "use client";
 
 import CustomLink from "@/components/common/custom-link";
-import TracksPopular from "./tracks-popular";
+// import TracksPopular from "./tracks-popular";
 import ArtistBanner from "./artist-banner";
-import { useFetchArtistBySlug } from "@/hooks/use-query/artist";
+import { useArtistQuery } from "@/hooks";
 import { notFound } from "next/navigation";
-import Discography from "./discography";
+// import Discography from "./discography";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data, isError, error } = useFetchArtistBySlug(artistSlug);
+  const { data, isError, error } = useArtistQuery(artistSlug);
 
-  const artist = data?.data;
+  console.log(data);
 
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
 
-  if (!artist) {
-    return notFound();
-  }
+  // if (!artist) {
+  //   return notFound();
+  // }
+  return null;
 
   return (
     <div className="flex flex-col gap-4">

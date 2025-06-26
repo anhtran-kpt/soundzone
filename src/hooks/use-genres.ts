@@ -62,14 +62,3 @@ export function useCreateGenreMutation(
     ...options,
   });
 }
-
-export function usePrefetchGenre() {
-  const queryClient = useQueryClient();
-
-  return (genreSlug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.genreDetail(genreSlug),
-      queryFn: ({ signal }) => genreApi.getGenreBySlug(genreSlug, signal),
-    });
-  };
-}

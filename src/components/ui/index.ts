@@ -4,7 +4,6 @@ export * from "./button";
 export * from "./calendar";
 export * from "./card";
 export * from "./checkbox";
-export * from "./combobox-popover";
 export * from "./command";
 export * from "./dialog";
 export * from "./dropdown-menu";

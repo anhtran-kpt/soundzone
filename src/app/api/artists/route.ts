@@ -1,20 +1,8 @@
-import { createArtistSchema } from "@/lib/validations";
-import { validateData } from "@/lib/helpers";
-import { NextRequest, NextResponse } from "next/server";
-import { createArtist, getAllArtists } from "@/lib/services/artist";
+import { getArtistsAction } from "@/app/actions";
+import { withApiHandler } from "@/lib/api-handler";
 
-export const POST = async (req: NextRequest) => {
-  const body = await req.json();
+export const GET = withApiHandler(async () => {
+  const data = await getArtistsAction();
 
-  const validatedData = validateData(createArtistSchema, body);
-
-  const artist = await createArtist(validatedData);
-
-  return NextResponse.json(artist, { status: 200 });
-};
-
-export const GET = async () => {
-  const artists = await getAllArtists();
-
-  return NextResponse.json(artists, { status: 200 });
-};
+  return data;
+});
