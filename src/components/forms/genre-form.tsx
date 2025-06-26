@@ -7,20 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { CreateGenreInput, createGenreSchema } from "@/lib/validations";
-import { FullGenre } from "@/lib/types/genre";
-import { updateGenreAction, createGenreAction } from "@/app/actions/genre";
+import { createGenreAction } from "@/app/actions/genre";
 import { toast } from "sonner";
 
-interface GenreFormProps {
-  genre?: FullGenre;
-  mode: "create" | "edit";
-}
-
-export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
+export default function GenreForm() {
   const form = useForm<CreateGenreInput>({
     resolver: zodResolver(createGenreSchema),
     defaultValues: {
-      name: genre?.name ?? "",
+      name: "",
     },
   });
 
@@ -46,9 +40,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
 
   return (
     <div className="max-w-md flex flex-col items-center mx-auto">
-      <h2 className="text-2xl font-bold mb-6">
-        {mode === "create" ? "Create New Genre" : "Edit Genre"}
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">New Genre</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -74,13 +66,7 @@ export default function GenreForm({ genre, mode = "create" }: GenreFormProps) {
             disabled={form.formState.isSubmitting}
             className="w-full"
           >
-            {form.formState.isSubmitting
-              ? mode === "create"
-                ? "Creating..."
-                : "Updating..."
-              : mode === "create"
-              ? "Create"
-              : "Update"}
+            {form.formState.isSubmitting ? "Creating..." : "Create"}
           </Button>
         </form>
       </Form>

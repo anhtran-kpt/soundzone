@@ -49,6 +49,7 @@ export function SignInForm() {
         } else {
           router.push("/admin");
         }
+        router.refresh();
       } else {
         toast.error("Incorrect email or password");
       }

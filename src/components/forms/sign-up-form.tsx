@@ -14,13 +14,11 @@ import {
   Button,
 } from "@/components/ui";
 import { toast } from "sonner";
-import { type SignUp, signUpSchema } from "@/types";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { signUp } from "@/lib/queries";
+import { type SignUp, signUpSchema } from "@/schemas";
+import { useSignUpMutation } from "@/hooks/use-users";
 
 export function SignUpForm() {
-  const router = useRouter();
+  const { mutateAsync: signUp } = useSignUpMutation();
 
   const form = useForm<SignUp>({
     resolver: zodResolver(signUpSchema),
@@ -38,21 +36,7 @@ export function SignUpForm() {
   const onSubmit = async (values: SignUp) => {
     clearErrors();
     try {
-      const response = await signUp(values);
-
-      if (response.data) {
-        toast.success("Sign up successful");
-        await signIn("credentials", {
-          email: values.email,
-          password: values.password,
-          redirect: false,
-        });
-
-        router.push("/");
-        router.refresh();
-      } else {
-        toast.error(response.error?.message || "Sign up failed");
-      }
+      await signUp(values);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
     }

@@ -1,21 +1,22 @@
-import z from "zod";
+import { UserRole } from "@/app/generated/prisma";
+import { DefaultSession, DefaultUser } from "next-auth";
 
-export const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: UserRole;
+      imagePublicId: string;
+    } & DefaultSession["user"];
+  }
 
-export const signUpSchema = z
-  .object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(6),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+  interface User extends DefaultUser {
+    role: UserRole;
+  }
+}
 
-export type SignIn = z.infer<typeof signInSchema>;
-export type SignUp = z.infer<typeof signUpSchema>;
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: UserRole;
+  }
+}

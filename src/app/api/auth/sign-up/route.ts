@@ -1,8 +1,8 @@
-import { signUp } from "@/app/actions/user";
+import { signUpAction } from "@/app/actions/user";
 import { withApiHandler } from "@/lib/api-handler";
-import { signUpSchema } from "@/types";
+import { signUpSchema } from "@/schemas";
 import { NextRequest } from "next/server";
-import { checkUserExists } from "@/app/actions/user";
+import { checkUserExistsAction } from "@/app/actions/user";
 import { ApiErrorCode } from "@/types";
 import { ApiError } from "@/lib/api-handler";
 import { validateBody } from "@/lib/validation";
@@ -10,7 +10,7 @@ import { validateBody } from "@/lib/validation";
 export const POST = withApiHandler(async (req: NextRequest) => {
   const userData = await validateBody(req, signUpSchema);
 
-  if (await checkUserExists(userData.email)) {
+  if (await checkUserExistsAction(userData.email)) {
     throw new ApiError(
       ApiErrorCode.CONFLICT,
       "User with this email already exists",
@@ -18,7 +18,7 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     );
   }
 
-  const user = await signUp(userData);
+  const user = await signUpAction(userData);
 
   return {
     user,

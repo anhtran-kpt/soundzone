@@ -1,6 +1,8 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 import { ApiResponse } from "@/types";
+import { SignUp } from "@/schemas";
+import { User } from "@/app/generated/prisma";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
@@ -146,6 +148,17 @@ export const playlistApi = {
 
   createPlaylist: (data: { name: string; email: string; age?: number }) =>
     api.post<{ playlist: unknown; message: string }>("/playlists", data),
+};
+
+export const userApi = {
+  getUsers: (signal: AbortSignal) =>
+    api.get<{ users: unknown[] }>("/users", signal),
+
+  getUserBySlug: (userSlug: string, signal: AbortSignal) =>
+    api.get<{ user: unknown }>(`/users/${userSlug}`, signal),
+
+  signUp: (data: SignUp) =>
+    api.post<{ user: User; message: string }>("/auth/sign-up", data),
 };
 
 export default apiClient;
