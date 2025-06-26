@@ -6,32 +6,26 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { CreateGenreInput, createGenreSchema } from "@/lib/validations";
-import { createGenreAction } from "@/app/actions/genre";
+import { CreateGenre, createGenreSchema } from "@/schemas";
 import { toast } from "sonner";
+import { useCreateGenreMutation } from "@/hooks";
 
 export default function GenreForm() {
-  const form = useForm<CreateGenreInput>({
+  const form = useForm<CreateGenre>({
     resolver: zodResolver(createGenreSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  const onSubmit = async (values: CreateGenreInput) => {
+  const { mutateAsync: createGenre } = useCreateGenreMutation();
+
+  const onSubmit = async (values: CreateGenre) => {
     form.clearErrors();
 
     try {
-      if (mode === "create") {
-        await createGenreAction(values);
-      } else {
-        await updateGenreAction(genre?.id as string, values);
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error && error.message.includes("exists")) {
-        form.setError("name", { message: error.message });
-      }
-
+      await createGenre(values);
+    } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong"
       );

@@ -9,8 +9,8 @@ export function useSignUpMutation() {
   const router = useRouter();
   return useMutation({
     mutationFn: (data: SignUp) => userApi.signUp(data),
-    onSuccess: async ({ user, message }) => {
-      toast.success(message);
+    onSuccess: async ({ user }) => {
+      toast.success("Signed up successfully");
 
       await signIn("credentials", {
         email: user.email,

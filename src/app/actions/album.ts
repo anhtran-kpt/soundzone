@@ -1,13 +1,14 @@
 "use server";
 
 import db from "@/lib/prisma/db";
+import { Prisma } from "@/app/generated/prisma";
 
 export const getAlbumsAction = async () => {
   return await db.album.findMany({
     orderBy: {
       createdAt: "desc",
     },
-  });
+  } satisfies Prisma.AlbumFindManyArgs);
 };
 
 export const getAlbumBySlugAction = async (albumSlug: string) => {
@@ -15,49 +16,8 @@ export const getAlbumBySlugAction = async (albumSlug: string) => {
     where: {
       slug: albumSlug,
     },
-  });
+  } satisfies Prisma.AlbumFindUniqueArgs);
 };
-
-// export async function getAlbumBySlugAction(
-//   slug: string
-// ): Promise<FullAlbum | null> {
-//   return await db.album.findUnique({
-//     where: { slug },
-//   });
-// }
-
-// export async function getAlbumsByArtistSlugAction(
-//   artistSlug: string,
-//   params: { offset: number; limit: number }
-// ): Promise<PaginatedAlbums> {
-//   const { offset, limit } = params;
-
-//   const total = await db.album.count({
-//     where: { artist: { slug: artistSlug } },
-//   });
-
-//   const items = await db.album.findMany({
-//     where: { artist: { slug: artistSlug } },
-//     orderBy: { releaseDate: "desc" },
-//     include: fullAlbumInclude,
-//     skip: offset,
-//     take: limit,
-//   });
-
-//   return {
-//     items,
-//     total,
-//     offset,
-//     limit,
-//   };
-// }
-
-// export async function getAllAlbumsAction(): Promise<FullAlbum[]> {
-//   return await db.album.findMany({
-//     orderBy: { createdAt: "desc" },
-//     include: fullAlbumInclude,
-//   });
-// }
 
 // export async function createAlbumAction(data: CreateAlbumInput): Promise<void> {
 //   const {

@@ -1,8 +1,19 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 import { ApiResponse } from "@/types";
-import { SignUp } from "@/schemas";
-import { User } from "@/app/generated/prisma";
+import { CreateArtistInput, CreateGenre, SignUp } from "@/schemas";
+import {
+  Album,
+  Artist,
+  Genre,
+  Playlist,
+  Track,
+  User,
+} from "@/app/generated/prisma";
+
+interface ResourceConfig {
+  basePath: string;
+}
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
@@ -95,70 +106,98 @@ export const api = {
   },
 };
 
-export const artistApi = {
-  getArtists: (signal: AbortSignal) =>
-    api.get<{ artists: unknown[] }>("/artists", signal),
+function createResourceApi<
+  TEntity = unknown,
+  TListResponse = { [key: string]: TEntity[] },
+  TGetResponse = { [key: string]: TEntity },
+  TCreateData = { [key: string]: TEntity },
+  TCreateResponse = { [key: string]: TEntity }
+>(config: ResourceConfig) {
+  const { basePath } = config;
 
-  getArtistBySlug: (artistSlug: string, signal: AbortSignal) =>
-    api.get<{ artist: unknown }>(`/artists/${artistSlug}`, signal),
+  return {
+    getAll: (signal: AbortSignal) => api.get<TListResponse>(basePath, signal),
 
-  createArtist: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ artist: unknown; message: string }>("/artists", data),
-};
+    getBySlug: (slug: string, signal: AbortSignal) =>
+      api.get<TGetResponse>(`${basePath}/${slug}`, signal),
 
-export const trackApi = {
-  getTracks: (signal: AbortSignal) =>
-    api.get<{ tracks: unknown[] }>("/tracks", signal),
+    create: (data: TCreateData) => api.post<TCreateResponse>(basePath, data),
 
-  getTrackBySlug: (trackSlug: string, signal: AbortSignal) =>
-    api.get<{ track: unknown }>(`/tracks/${trackSlug}`, signal),
+    getCustom: <T>(endpoint: string, signal: AbortSignal) =>
+      api.get<T>(`${basePath}${endpoint}`, signal),
 
-  createTrack: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ track: unknown; message: string }>("/tracks", data),
-};
+    postCustom: <T>(endpoint: string, data?: unknown) =>
+      api.post<T>(`${basePath}${endpoint}`, data),
+  };
+}
 
-export const albumApi = {
-  getAlbums: (signal: AbortSignal) =>
-    api.get<{ albums: unknown[] }>("/albums", signal),
+const RESOURCE_CONFIGS = {
+  artists: {
+    basePath: "/artists",
+  },
+  tracks: {
+    basePath: "/tracks",
+  },
+  albums: {
+    basePath: "/albums",
+  },
+  genres: {
+    basePath: "/genres",
+  },
+  playlists: {
+    basePath: "/playlists",
+  },
+  users: {
+    basePath: "/users",
+  },
+} as const;
 
-  getAlbumBySlug: (albumSlug: string, signal: AbortSignal) =>
-    api.get<{ album: unknown }>(`/albums/${albumSlug}`, signal),
+export const artistApi = createResourceApi<
+  Artist,
+  { artists: Artist[] },
+  { artist: Artist },
+  CreateArtistInput,
+  { artist: Artist }
+>(RESOURCE_CONFIGS.artists);
 
-  createAlbum: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ album: unknown; message: string }>("/albums", data),
-};
+export const trackApi = createResourceApi<
+  Track,
+  { tracks: Track[] },
+  { track: unknown },
+  { track: unknown; message: string }
+>(RESOURCE_CONFIGS.tracks);
 
-export const genreApi = {
-  getGenres: (signal: AbortSignal) =>
-    api.get<{ genres: unknown[] }>("/genres", signal),
+export const albumApi = createResourceApi<
+  Album,
+  { albums: Album[] },
+  { album: unknown },
+  { album: unknown; message: string }
+>(RESOURCE_CONFIGS.albums);
 
-  getGenreBySlug: (genreSlug: string, signal: AbortSignal) =>
-    api.get<{ genre: unknown }>(`/genres/${genreSlug}`, signal),
+export const genreApi = createResourceApi<
+  Genre,
+  { genres: Genre[] },
+  { genre: Genre },
+  CreateGenre,
+  { genre: Genre }
+>(RESOURCE_CONFIGS.genres);
 
-  createGenre: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ genre: unknown; message: string }>("/genres", data),
-};
-
-export const playlistApi = {
-  getPlaylists: (signal: AbortSignal) =>
-    api.get<{ playlists: unknown[] }>("/playlists", signal),
-
-  getPlaylistBySlug: (playlistSlug: string, signal: AbortSignal) =>
-    api.get<{ playlist: unknown }>(`/playlists/${playlistSlug}`, signal),
-
-  createPlaylist: (data: { name: string; email: string; age?: number }) =>
-    api.post<{ playlist: unknown; message: string }>("/playlists", data),
-};
+export const playlistApi = createResourceApi<
+  Playlist,
+  { playlists: Playlist[] },
+  { playlist: unknown },
+  { playlist: unknown; message: string }
+>(RESOURCE_CONFIGS.playlists);
 
 export const userApi = {
-  getUsers: (signal: AbortSignal) =>
-    api.get<{ users: unknown[] }>("/users", signal),
+  ...createResourceApi<
+    User,
+    { users: User[] },
+    { user: User },
+    { user: User; message: string }
+  >(RESOURCE_CONFIGS.users),
 
-  getUserBySlug: (userSlug: string, signal: AbortSignal) =>
-    api.get<{ user: unknown }>(`/users/${userSlug}`, signal),
-
-  signUp: (data: SignUp) =>
-    api.post<{ user: User; message: string }>("/auth/sign-up", data),
+  signUp: (data: SignUp) => api.post<{ user: User }>("/auth/sign-up", data),
 };
 
 export default apiClient;

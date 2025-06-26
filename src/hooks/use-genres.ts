@@ -1,21 +1,20 @@
 import {
   useQuery,
   useMutation,
-  useQueryClient,
   UseQueryOptions,
-  UseMutationOptions,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { genreApi, ApiClientError } from "@/lib/api-client";
+import { genreApi } from "@/lib/api-client";
 import { toast } from "sonner";
 import { genreKeys } from "@/lib/query-keys";
+import { CreateGenre } from "@/schemas";
 
 export function useGenresQuery(
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) {
   return useQuery({
     queryKey: genreKeys.all,
-    queryFn: ({ signal }) => genreApi.getGenres(signal),
+    queryFn: ({ signal }) => genreApi.getAll(signal),
     placeholderData: keepPreviousData,
     ...options,
   });
@@ -27,38 +26,22 @@ export function useGenreQuery(
 ) {
   return useQuery({
     queryKey: genreKeys.detail(genreSlug),
-    queryFn: ({ signal }) => genreApi.getGenreBySlug(genreSlug, signal),
+    queryFn: ({ signal }) => genreApi.getBySlug(genreSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!genreSlug,
     ...options,
   });
 }
 
-export function useCreateGenreMutation(
-  options?: UseMutationOptions<
-    unknown,
-    ApiClientError,
-    Parameters<typeof genreApi.createGenre>[0]
-  >
-) {
-  const queryClient = useQueryClient();
-
+export function useCreateGenreMutation() {
   return useMutation({
-    mutationFn: genreApi.createGenre,
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: genreKeys.all,
-      });
-
-      // queryClient.setQueryData(queryKeys.genresDetail(data.genre.id), data);
+    mutationFn: (data: CreateGenre) => genreApi.create(data),
+    onSuccess: async () => {
       toast.success("Genre created successfully");
-      options?.onSuccess?.(data, variables, undefined);
     },
-    onError: (error, variables, context) => {
-      toast.error(`Create genre failed: ${error.message}`);
-      console.error("Create genre failed:", error);
-      options?.onError?.(error, variables, context);
+    onError: (error) => {
+      toast.error(`Created failed: ${error.message}`);
+      console.error("Created failed:", error);
     },
-    ...options,
   });
 }

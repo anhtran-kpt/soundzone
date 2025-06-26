@@ -2,7 +2,7 @@
 
 import db from "@/lib/prisma/db";
 import { CreateArtistInput } from "@/schemas";
-import { Album } from "../generated/prisma";
+import { Prisma, Album, Artist } from "@/app/generated/prisma";
 
 type ReleaseGroup = Record<string, Album[]>;
 
@@ -24,7 +24,7 @@ export const getArtistsAction = async () => {
     orderBy: {
       createdAt: "desc",
     },
-  });
+  } satisfies Prisma.ArtistFindManyArgs);
 };
 
 export const getArtistBySlugAction = async (artistSlug: string) => {
@@ -60,7 +60,7 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
         },
       },
     },
-  });
+  } satisfies Prisma.ArtistFindUniqueArgs);
 
   return artistDetail
     ? {
@@ -70,39 +70,9 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
     : [];
 };
 
-export const getTracksByArtistSlugAction = async (artistSlug: string) => {
-  const artistWithTracks = await db.artist.findUnique({
-    where: {
-      slug: artistSlug,
-    },
-    include: {
-      tracks: {
-        include: {
-          track: {
-            include: {
-              artists: {
-                include: {
-                  artist: true,
-                },
-              },
-              album: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  return (
-    artistWithTracks?.tracks.map(({ track }) => ({
-      ...track,
-      album: track.album,
-      artists: track.artists.map((artist) => artist.artist),
-    })) ?? []
-  );
-};
-
-export const createArtistAction = async (input: CreateArtistInput) => {
+export const createArtistAction = async (
+  input: CreateArtistInput
+): Promise<Artist> => {
   return await db.$transaction(async (tx) => {
     const slug = await tx.artist.generateSlug(input.name);
 

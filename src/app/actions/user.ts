@@ -2,7 +2,12 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { signUpSchema, type SignUp, signInSchema, type SignIn } from "@/types";
+import {
+  signUpSchema,
+  type SignUp,
+  signInSchema,
+  type SignIn,
+} from "@/schemas";
 import { comparePasswords, hashPassword } from "../../lib/next-auth";
 import { User } from "@/app/generated/prisma";
 
