@@ -7,4 +7,4 @@ export const genreSchema = z.object({
 
 export const createGenreSchema = genreSchema;
 
-export type CreateGenre = z.infer<typeof createGenreSchema>;
+export type CreateGenreInput = z.infer<typeof createGenreSchema>;

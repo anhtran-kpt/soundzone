@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { Track } from "../generated/prisma";
+import { Track } from "@/app/generated/prisma";
 
 export const getTracksAction = async (): Promise<Track[] | []> => {
   return await db.track.findMany({

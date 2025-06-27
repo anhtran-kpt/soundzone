@@ -8,8 +8,7 @@ import {
   signInSchema,
   type SignIn,
 } from "@/schemas";
-import { comparePasswords, hashPassword } from "../../lib/next-auth";
-import { User } from "@/app/generated/prisma";
+import { comparePasswords, hashPassword } from "@/lib/next-auth";
 
 export const checkUserExistsAction = async (
   email: string
@@ -21,7 +20,7 @@ export const checkUserExistsAction = async (
   }));
 };
 
-export const signUpAction = async (input: SignUp): Promise<User> => {
+export const signUpAction = async (input: SignUp) => {
   const { confirmPassword, ...data } = signUpSchema.parse(input);
 
   const [hashedPassword, slug] = await Promise.all([
@@ -41,7 +40,7 @@ export const signUpAction = async (input: SignUp): Promise<User> => {
   return newUser;
 };
 
-export const signInAction = async (input: SignIn): Promise<User> => {
+export const signInAction = async (input: SignIn) => {
   const data = signInSchema.parse(input);
 
   const user = await db.user.findUnique({
@@ -54,4 +53,20 @@ export const signInAction = async (input: SignIn): Promise<User> => {
     throw new Error("Invalid credentials");
 
   return user;
+};
+
+export const getUsersAction = async () => {
+  return await db.user.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
+export const getUserBySlugAction = async (userSlug: string) => {
+  return await db.user.findUnique({
+    where: {
+      slug: userSlug,
+    },
+  });
 };

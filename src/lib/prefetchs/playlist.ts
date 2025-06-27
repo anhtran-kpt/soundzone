@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
-import { playlistApi } from "../api-client";
-import { playlistKeys } from "../query-keys";
+import { playlistApi } from "@/lib/api-client";
+import { playlistKeys } from "@/lib/query-keys";
 
 export const prefetchPlaylistDetail = async (
   qc: QueryClient,
@@ -8,7 +8,6 @@ export const prefetchPlaylistDetail = async (
 ) => {
   await qc.prefetchQuery({
     queryKey: playlistKeys.detail(playlistSlug),
-    queryFn: ({ signal }) =>
-      playlistApi.getPlaylistBySlug(playlistSlug, signal),
+    queryFn: ({ signal }) => playlistApi.getBySlug(playlistSlug, signal),
   });
 };

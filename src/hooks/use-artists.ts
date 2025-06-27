@@ -2,63 +2,45 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  UseQueryOptions,
-  UseMutationOptions,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { artistApi, ApiClientError } from "@/lib/api-client";
+import { artistApi } from "@/lib/api-client";
 import { toast } from "sonner";
 import { artistKeys } from "@/lib/query-keys";
+import { CreateArtistInput } from "@/schemas";
 
-export function useArtistsQuery(
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useArtistsQuery() {
   return useQuery({
     queryKey: artistKeys.all,
-    queryFn: ({ signal }) => artistApi.getArtists(signal),
+    queryFn: ({ signal }) => artistApi.getAll(signal),
     placeholderData: keepPreviousData,
-    ...options,
   });
 }
 
-export function useArtistDetail(
-  artistSlug: string,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useArtistDetail(artistSlug: string) {
   return useQuery({
     queryKey: artistKeys.detail(artistSlug),
-    queryFn: ({ signal }) => artistApi.getArtistBySlug(artistSlug, signal),
+    queryFn: ({ signal }) => artistApi.getBySlug(artistSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!artistSlug,
-    ...options,
   });
 }
 
-export function useCreateArtistMutation(
-  options?: UseMutationOptions<
-    unknown,
-    ApiClientError,
-    Parameters<typeof artistApi.createArtist>[0]
-  >
-) {
+export function useCreateArtistMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: artistApi.createArtist,
-    onSuccess: (data, variables) => {
+    mutationFn: (data: CreateArtistInput) => artistApi.create(data),
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: artistKeys.all,
       });
 
-      // queryClient.setQueryData(queryKeys.artistsDetail(data.artist.id), data);
       toast.success("Artist created successfully");
-      options?.onSuccess?.(data, variables, undefined);
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       toast.error(`Create artist failed: ${error.message}`);
       console.error("Create artist failed:", error);
-      options?.onError?.(error, variables, context);
     },
-    ...options,
   });
 }

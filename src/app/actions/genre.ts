@@ -1,14 +1,14 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { Genre, Prisma } from "../generated/prisma";
+import { Genre } from "../generated/prisma";
 
 export const getGenresAction = async () => {
   return await db.genre.findMany({
     orderBy: {
       createdAt: "desc",
     },
-  } satisfies Prisma.GenreFindManyArgs);
+  });
 };
 
 export const getGenreBySlugAction = async (genreSlug: string) => {
@@ -16,7 +16,7 @@ export const getGenreBySlugAction = async (genreSlug: string) => {
     where: {
       slug: genreSlug,
     },
-  } satisfies Prisma.GenreFindUniqueArgs);
+  });
 };
 
 export const createGenreAction = async (genreName: string): Promise<Genre> => {

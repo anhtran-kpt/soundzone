@@ -1,14 +1,16 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { Prisma } from "@/app/generated/prisma";
+import { emptyToNull } from "@/lib/utils";
+import { ReleaseType } from "@/app/generated/prisma";
+import { CreateAlbumInput } from "@/schemas/album";
 
 export const getAlbumsAction = async () => {
   return await db.album.findMany({
     orderBy: {
       createdAt: "desc",
     },
-  } satisfies Prisma.AlbumFindManyArgs);
+  });
 };
 
 export const getAlbumBySlugAction = async (albumSlug: string) => {
@@ -16,81 +18,81 @@ export const getAlbumBySlugAction = async (albumSlug: string) => {
     where: {
       slug: albumSlug,
     },
-  } satisfies Prisma.AlbumFindUniqueArgs);
+  });
 };
 
-// export async function createAlbumAction(data: CreateAlbumInput): Promise<void> {
-//   const {
-//     title,
-//     description,
-//     releaseDate,
-//     coverPublicId,
-//     bannerPublicId,
-//     artistId,
-//     tracks,
-//   } = data;
+export const createAlbumAction = async (data: CreateAlbumInput) => {
+  const {
+    title,
+    description,
+    releaseDate,
+    coverPublicId,
+    bannerPublicId,
+    artistId,
+    tracks,
+  } = data;
 
-//   return await db.$transaction(async (tx) => {
-//     const albumSlug = await tx.album.generateSlug(title);
+  return await db.$transaction(async (tx) => {
+    const albumSlug = await tx.album.generateSlug(title);
 
-//     const album = await tx.album.create({
-//       data: {
-//         title,
-//         slug: albumSlug,
-//         description: emptyToNull(description),
-//         releaseType:
-//           tracks.length === 1 ? ReleaseType.SINGLE : ReleaseType.ALBUM,
-//         releaseDate,
-//         coverPublicId,
-//         bannerPublicId,
-//         artistId,
-//       },
-//     });
+    const album = await tx.album.create({
+      data: {
+        title,
+        slug: albumSlug,
+        description: emptyToNull(description),
+        releaseType:
+          tracks.length === 1 ? ReleaseType.SINGLE : ReleaseType.ALBUM,
+        releaseDate,
+        coverPublicId,
+        bannerPublicId,
+        artistId,
+      },
+    });
 
-//     await Promise.all(
-//       tracks.map(async (trackData, trackIndex) => {
-//         const trackSlug = await tx.track.generateSlug(trackData.title);
+    await Promise.all(
+      tracks.map(async (trackData, trackIndex) => {
+        const trackSlug = await tx.track.generateSlug(trackData.title);
 
-//         const track = await tx.track.create({
-//           data: {
-//             title: trackData.title,
-//             slug: trackSlug,
-//             duration: trackData.duration,
-//             audioPublicId: trackData.audioPublicId,
-//             trackNumber: trackIndex + 1,
-//             isExplicit: trackData.isExplicit,
-//             lyrics: emptyToNull(trackData.lyrics),
-//             albumId: album.id,
-//           },
-//         });
+        const track = await tx.track.create({
+          data: {
+            title: trackData.title,
+            slug: trackSlug,
+            duration: trackData.duration,
+            audioPublicId: trackData.audioPublicId,
+            trackNumber: trackIndex + 1,
+            isExplicit: trackData.isExplicit,
+            lyrics: emptyToNull(trackData.lyrics),
+            albumId: album.id,
+          },
+        });
 
-//         if (trackData.performers.length > 0) {
-//           await tx.trackArtist.createMany({
-//             data: trackData.performers.map((performer) => ({
-//               trackId: track.id,
-//               artistId: performer.artistId,
-//               role: performer.role,
-//             })),
-//           });
+        if (trackData.performers.length > 0) {
+          await tx.trackArtist.createMany({
+            data: trackData.performers.map((performer) => ({
+              trackId: track.id,
+              artistId: performer.artistId,
+              role: performer.role,
+            })),
+          });
 
-//           await tx.credit.createMany({
-//             data: trackData.credits.map((credit) => ({
-//               name: credit.name,
-//               roles: credit.roles,
-//               trackId: track.id,
-//             })),
-//           });
-//         }
+          await tx.credit.createMany({
+            data: trackData.credits.map((credit) => ({
+              name: credit.name,
+              roles: credit.roles,
+              trackId: track.id,
+            })),
+          });
+        }
 
-//         if (trackData.genreIds.length > 0) {
-//           await tx.trackGenre.createMany({
-//             data: trackData.genreIds.map((genreId) => ({
-//               trackId: track.id,
-//               genreId,
-//             })),
-//           });
-//         }
-//       })
-//     );
-//   });
-// }
+        if (trackData.genreIds.length > 0) {
+          await tx.trackGenre.createMany({
+            data: trackData.genreIds.map((genreId) => ({
+              trackId: track.id,
+              genreId,
+            })),
+          });
+        }
+      })
+    );
+  });
+};

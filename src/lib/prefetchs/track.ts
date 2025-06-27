@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
-import { trackKeys } from "../query-keys";
-import { trackApi } from "../api-client";
+import { trackKeys } from "@/lib/query-keys";
+import { trackApi } from "@/lib/api-client";
 
 export const prefetchTrackDetail = async (
   qc: QueryClient,
@@ -8,6 +8,6 @@ export const prefetchTrackDetail = async (
 ) => {
   await qc.prefetchQuery({
     queryKey: trackKeys.detail(trackSlug),
-    queryFn: ({ signal }) => trackApi.getTrackBySlug(trackSlug, signal),
+    queryFn: ({ signal }) => trackApi.getBySlug(trackSlug, signal),
   });
 };

@@ -2,7 +2,7 @@
 
 import db from "@/lib/prisma/db";
 import { CreateArtistInput } from "@/schemas";
-import { Prisma, Album, Artist } from "@/app/generated/prisma";
+import { Album, Artist } from "@/app/generated/prisma";
 
 type ReleaseGroup = Record<string, Album[]>;
 
@@ -24,7 +24,7 @@ export const getArtistsAction = async () => {
     orderBy: {
       createdAt: "desc",
     },
-  } satisfies Prisma.ArtistFindManyArgs);
+  });
 };
 
 export const getArtistBySlugAction = async (artistSlug: string) => {
@@ -60,7 +60,7 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
         },
       },
     },
-  } satisfies Prisma.ArtistFindUniqueArgs);
+  });
 
   return artistDetail
     ? {

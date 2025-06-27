@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
-import { albumKeys } from "../query-keys";
-import { albumApi } from "../api-client";
+import { albumKeys } from "@/lib/query-keys";
+import { albumApi } from "@/lib/api-client";
 
 export const prefetchAlbumDetail = async (
   qc: QueryClient,
@@ -8,6 +8,6 @@ export const prefetchAlbumDetail = async (
 ) => {
   await qc.prefetchQuery({
     queryKey: albumKeys.detail(albumSlug),
-    queryFn: ({ signal }) => albumApi.getAlbumBySlug(albumSlug, signal),
+    queryFn: ({ signal }) => albumApi.getBySlug(albumSlug, signal),
   });
 };

@@ -1,19 +1,26 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
-import { ApiResponse } from "@/types";
-import { CreateArtistInput, CreateGenre, SignUp } from "@/schemas";
 import {
-  Album,
-  Artist,
-  Genre,
-  Playlist,
-  Track,
-  User,
-} from "@/app/generated/prisma";
-
-interface ResourceConfig {
-  basePath: string;
-}
+  ApiResponse,
+  CreateArtistReturn,
+  CreateGenreReturn,
+  GetArtistBySlugReturn,
+  GetArtistsReturn,
+  GetGenreBySlugReturn,
+  GetGenresReturn,
+  CreateAlbumReturn,
+  GetAlbumsReturn,
+  GetAlbumBySlugReturn,
+  GetUserBySlugReturn,
+  GetUsersReturn,
+  SignUpReturn,
+} from "@/types";
+import {
+  CreateArtistInput,
+  CreateGenreInput,
+  SignUp,
+  CreateAlbumInput,
+} from "@/schemas";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
@@ -107,21 +114,18 @@ export const api = {
 };
 
 function createResourceApi<
-  TEntity = unknown,
-  TListResponse = { [key: string]: TEntity[] },
-  TGetResponse = { [key: string]: TEntity },
-  TCreateData = { [key: string]: TEntity },
-  TCreateResponse = { [key: string]: TEntity }
->(config: ResourceConfig) {
-  const { basePath } = config;
-
+  TGetBySlugReturn,
+  TGetAllReturn,
+  TCreateInput,
+  TCreateReturn
+>(basePath: string) {
   return {
-    getAll: (signal: AbortSignal) => api.get<TListResponse>(basePath, signal),
+    getAll: (signal: AbortSignal) => api.get<TGetAllReturn>(basePath, signal),
 
     getBySlug: (slug: string, signal: AbortSignal) =>
-      api.get<TGetResponse>(`${basePath}/${slug}`, signal),
+      api.get<TGetBySlugReturn>(`${basePath}/${slug}`, signal),
 
-    create: (data: TCreateData) => api.post<TCreateResponse>(basePath, data),
+    create: (data: TCreateInput) => api.post<TCreateReturn>(basePath, data),
 
     getCustom: <T>(endpoint: string, signal: AbortSignal) =>
       api.get<T>(`${basePath}${endpoint}`, signal),
@@ -132,72 +136,51 @@ function createResourceApi<
 }
 
 const RESOURCE_CONFIGS = {
-  artists: {
-    basePath: "/artists",
-  },
-  tracks: {
-    basePath: "/tracks",
-  },
-  albums: {
-    basePath: "/albums",
-  },
-  genres: {
-    basePath: "/genres",
-  },
-  playlists: {
-    basePath: "/playlists",
-  },
-  users: {
-    basePath: "/users",
-  },
+  artists: "/artists",
+  tracks: "/tracks",
+  albums: "/albums",
+  genres: "/genres",
+  playlists: "/playlists",
+  users: "/users",
 } as const;
 
 export const artistApi = createResourceApi<
-  Artist,
-  { artists: Artist[] },
-  { artist: Artist },
+  GetArtistBySlugReturn,
+  GetArtistsReturn,
   CreateArtistInput,
-  { artist: Artist }
+  CreateArtistReturn
 >(RESOURCE_CONFIGS.artists);
 
-export const trackApi = createResourceApi<
-  Track,
-  { tracks: Track[] },
-  { track: unknown },
-  { track: unknown; message: string }
->(RESOURCE_CONFIGS.tracks);
-
 export const albumApi = createResourceApi<
-  Album,
-  { albums: Album[] },
-  { album: unknown },
-  { album: unknown; message: string }
+  GetAlbumBySlugReturn,
+  GetAlbumsReturn,
+  CreateAlbumInput,
+  CreateAlbumReturn
 >(RESOURCE_CONFIGS.albums);
 
 export const genreApi = createResourceApi<
-  Genre,
-  { genres: Genre[] },
-  { genre: Genre },
-  CreateGenre,
-  { genre: Genre }
+  GetGenreBySlugReturn,
+  GetGenresReturn,
+  CreateGenreInput,
+  CreateGenreReturn
 >(RESOURCE_CONFIGS.genres);
 
-export const playlistApi = createResourceApi<
-  Playlist,
-  { playlists: Playlist[] },
-  { playlist: unknown },
-  { playlist: unknown; message: string }
->(RESOURCE_CONFIGS.playlists);
+// export const playlistApi = createResourceApi<
+//   Playlist,
+//   { playlists: Playlist[] },
+//   { playlist: unknown },
+//   { playlist: unknown; message: string }
+// >(RESOURCE_CONFIGS.playlists);
 
 export const userApi = {
   ...createResourceApi<
-    User,
-    { users: User[] },
-    { user: User },
-    { user: User; message: string }
+    GetUserBySlugReturn,
+    GetUsersReturn,
+    SignUp,
+    SignUpReturn
   >(RESOURCE_CONFIGS.users),
 
-  signUp: (data: SignUp) => api.post<{ user: User }>("/auth/sign-up", data),
+  signUp: (data: SignUp) => api.post<SignUpReturn>("/auth/sign-up", data),
 };
 
 export default apiClient;
