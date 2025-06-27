@@ -1,13 +1,16 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import { FullTrack, FullPlaylist } from "@/lib/types";
+import {
+  GetPlaylistBySlugReturn as Playlist,
+  GetTrackBySlugReturn as Track,
+} from "@/types";
 
 export type RepeatMode = "off" | "one" | "all";
 
 interface AudioState {
   // Current playback state
-  currentTrack: FullTrack | null;
-  currentPlaylist: FullPlaylist | null;
+  currentTrack: Track | null;
+  currentPlaylist: Playlist | null;
   currentTrackIndex: number;
 
   // Playback status
@@ -23,11 +26,11 @@ interface AudioState {
   repeatMode: RepeatMode;
 
   // Playlists management
-  playlists: FullPlaylist[];
+  playlists: Playlist[];
 
   // Queue management
-  queue: FullTrack[];
-  originalQueue: FullTrack[]; // Backup for shuffle
+  queue: Track[];
+  originalQueue: Track[]; // Backup for shuffle
   queueIndex: number;
 
   // Error handling
@@ -60,17 +63,17 @@ interface AudioActions {
   toggleRepeat: () => void;
 
   // Track/Playlist management
-  setCurrentTrack: (track: FullTrack, playlist?: FullPlaylist) => void;
-  loadPlaylist: (playlist: FullPlaylist, startIndex?: number) => void;
-  addToQueue: (track: FullTrack) => void;
+  setCurrentTrack: (track: Track, playlist?: Playlist) => void;
+  loadPlaylist: (playlist: Playlist, startIndex?: number) => void;
+  addToQueue: (track: Track) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
 
   // Playlist management
-  createPlaylist: (name: string, tracks?: FullTrack[]) => FullPlaylist;
-  updatePlaylist: (id: string, updates: Partial<FullPlaylist>) => void;
+  createPlaylist: (name: string, tracks?: Track[]) => Playlist;
+  updatePlaylist: (id: string, updates: Partial<Playlist>) => void;
   deletePlaylist: (id: string) => void;
-  addTrackToPlaylist: (playlistId: string, track: FullTrack) => void;
+  addTrackToPlaylist: (playlistId: string, track: Track) => void;
   removeTrackFromPlaylist: (playlistId: string, trackId: string) => void;
 
   // Internal state management
@@ -390,7 +393,7 @@ export const useAudioStore = create<AudioStore>()(
         // Playlist management
         createPlaylist: (name, tracks = []) => {
           const { playlists } = get();
-          const newPlaylist: FullPlaylist = {
+          const newPlaylist: Playlist = {
             id: Date.now().toString(),
             name,
             tracks,

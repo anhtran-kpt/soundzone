@@ -1,6 +1,7 @@
 import { Icon } from "@/components/common";
 import CustomLink from "@/components/common/custom-link";
 import { Explicit } from "@/components/shared";
+import PlayButton from "@/components/shared/play-button";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,16 +16,20 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { formatDuration } from "@/lib/utils";
+import { GetArtistBySlugReturn } from "@/types";
 import {
   CirclePlusIcon,
   EllipsisIcon,
   ImportIcon,
   ListPlusIcon,
-  PlayIcon,
 } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 
-export default function TracksPopular({ tracks }) {
+interface TracksPopularProps {
+  tracks: GetArtistBySlugReturn["tracks"];
+}
+
+export default function TracksPopular({ tracks }: TracksPopularProps) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">Popular</h2>
@@ -38,13 +43,7 @@ export default function TracksPopular({ tracks }) {
               <span className="text-right text-muted-foreground text-base font-semibold group-hover:hidden">
                 {index + 1}
               </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden group-hover:flex items-center justify-center size-4"
-              >
-                <Icon icon={PlayIcon} className="size-4 fill-white stroke-0" />
-              </Button>
+              <PlayButton track={track} />
             </div>
             <div className="grow flex gap-3 items-center">
               <div className="relative size-12">

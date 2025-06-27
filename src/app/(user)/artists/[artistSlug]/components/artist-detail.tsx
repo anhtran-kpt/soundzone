@@ -10,8 +10,6 @@ import Discography from "./discography";
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
 
-  console.log(artist);
-
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }

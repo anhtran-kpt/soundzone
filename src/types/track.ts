@@ -1,6 +1,3 @@
-import { getTrackBySlugAction, getTracksAction } from "@/app/actions";
+import { getTrackBySlugAction } from "@/app/actions";
 
-export type GetTracksReturn = Awaited<ReturnType<typeof getTracksAction>>;
-export type GetTrackBySlugReturn = Awaited<
-  ReturnType<typeof getTrackBySlugAction>
->;
+export type Track = Awaited<ReturnType<typeof getTrackBySlugAction>>;

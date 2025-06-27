@@ -1,10 +1,6 @@
 import { api } from "@/lib/api-client";
 import { CreateAlbumInput } from "@/schemas";
-import {
-  CreateAlbumReturn,
-  GetAlbumsReturn,
-  GetAlbumBySlugReturn,
-} from "@/types";
+import { Album, CreateAlbumReturn } from "@/types";
 
 const endpoints = {
   all: "/albums",
@@ -13,17 +9,14 @@ const endpoints = {
 } as const;
 
 export const getAlbums = async (signal: AbortSignal) => {
-  return await api.get<GetAlbumsReturn>(endpoints.all, signal);
+  return await api.get<Album[]>(endpoints.all, signal);
 };
 
 export const getAlbumBySlug = async (
   albumSlug: string,
   signal: AbortSignal
 ) => {
-  return await api.get<GetAlbumBySlugReturn>(
-    endpoints.detail(albumSlug),
-    signal
-  );
+  return await api.get<Album>(endpoints.detail(albumSlug), signal);
 };
 
 export const createAlbum = async (data: CreateAlbumInput) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RepeatMode } from "@/stores/audioStore";
+import { RepeatMode } from "@/stores/audio-store";
 import {
   SkipBackIcon,
   SkipForwardIcon,

@@ -1,10 +1,6 @@
 import { api } from "@/lib/api-client";
 import { CreateArtistInput } from "@/schemas";
-import {
-  CreateArtistReturn,
-  GetArtistsReturn,
-  GetArtistBySlugReturn,
-} from "@/types";
+import { Artist, CreateArtistReturn } from "@/types";
 
 const endpoints = {
   all: "/artists",
@@ -13,17 +9,14 @@ const endpoints = {
 } as const;
 
 export const getArtists = async (signal: AbortSignal) => {
-  return await api.get<GetArtistsReturn>(endpoints.all, signal);
+  return await api.get<Artist[]>(endpoints.all, signal);
 };
 
 export const getArtistBySlug = async (
   artistSlug: string,
   signal: AbortSignal
 ) => {
-  return await api.get<GetArtistBySlugReturn>(
-    endpoints.detail(artistSlug),
-    signal
-  );
+  return await api.get<Artist>(endpoints.detail(artistSlug), signal);
 };
 
 export const createArtist = async (data: CreateArtistInput) => {

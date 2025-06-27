@@ -1,9 +1,8 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { Track } from "@/app/generated/prisma";
 
-export const getTracksAction = async (): Promise<Track[] | []> => {
+export const getTracksAction = async () => {
   return await db.track.findMany({
     orderBy: {
       createdAt: "desc",
@@ -11,12 +10,18 @@ export const getTracksAction = async (): Promise<Track[] | []> => {
   });
 };
 
-export const getTrackBySlugAction = async (
-  trackSlug: string
-): Promise<Track | null> => {
+export const getTrackBySlugAction = async (trackSlug: string) => {
   return await db.track.findUnique({
     where: {
       slug: trackSlug,
+    },
+    include: {
+      album: true,
+      artists: {
+        select: {
+          artist: true,
+        },
+      },
     },
   });
 };

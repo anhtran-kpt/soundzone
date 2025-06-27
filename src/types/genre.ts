@@ -1,11 +1,4 @@
-import {
-  createGenreAction,
-  getGenreBySlugAction,
-  getGenresAction,
-} from "@/app/actions";
+import { createGenreAction, getGenreBySlugAction } from "@/app/actions";
 
-export type GetGenresReturn = Awaited<ReturnType<typeof getGenresAction>>;
-export type GetGenreBySlugReturn = Awaited<
-  ReturnType<typeof getGenreBySlugAction>
->;
+export type Genre = Awaited<ReturnType<typeof getGenreBySlugAction>>;
 export type CreateGenreReturn = Awaited<ReturnType<typeof createGenreAction>>;

@@ -10,11 +10,36 @@ export const getPlaylistsAction = async () => {
 };
 
 export const getPlaylistBySlugAction = async (playlistSlug: string) => {
-  return await db.playlist.findUnique({
+  const playlistDetail = await db.playlist.findUnique({
     where: {
       slug: playlistSlug,
     },
+    include: {
+      tracks: {
+        select: {
+          track: {
+            include: {
+              album: true,
+              artists: {
+                select: {
+                  artist: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
+
+  if (!playlistDetail) {
+    throw new Error(`Playlist with the slug ${playlistSlug} not found`);
+  }
+
+  return {
+    ...playlistDetail,
+    tracks: playlistDetail.tracks.map((track) => track.track),
+  };
 };
 
 export const createPlaylistAction = async (data: CreatePlaylistInput) => {
