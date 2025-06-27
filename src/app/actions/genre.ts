@@ -1,7 +1,6 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { Genre } from "../generated/prisma";
 
 export const getGenresAction = async () => {
   return await db.genre.findMany({
@@ -19,7 +18,7 @@ export const getGenreBySlugAction = async (genreSlug: string) => {
   });
 };
 
-export const createGenreAction = async (genreName: string): Promise<Genre> => {
+export const createGenreAction = async (genreName: string) => {
   return await db.$transaction(async (tx) => {
     const slug = await tx.genre.generateSlug(genreName);
     return await tx.genre.create({ data: { name: genreName, slug } });

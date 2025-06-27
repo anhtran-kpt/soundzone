@@ -1,6 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { artistKeys } from "@/lib/query-keys";
-import { artistApi } from "@/lib/api-client";
+import { artistKeys, getArtistBySlug } from "@/lib/tanstack-query";
 
 export const prefetchArtistDetail = async (
   qc: QueryClient,
@@ -8,6 +7,6 @@ export const prefetchArtistDetail = async (
 ) => {
   await qc.prefetchQuery({
     queryKey: artistKeys.detail(artistSlug),
-    queryFn: ({ signal }) => artistApi.getBySlug(artistSlug, signal),
+    queryFn: ({ signal }) => getArtistBySlug(artistSlug, signal),
   });
 };

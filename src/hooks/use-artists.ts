@@ -4,23 +4,27 @@ import {
   useQueryClient,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { artistApi } from "@/lib/api-client";
 import { toast } from "sonner";
-import { artistKeys } from "@/lib/query-keys";
+import {
+  artistKeys,
+  createArtist,
+  getArtistBySlug,
+  getArtists,
+} from "@/lib/tanstack-query";
 import { CreateArtistInput } from "@/schemas";
 
-export function useArtistsQuery() {
+export function useGetArtists() {
   return useQuery({
     queryKey: artistKeys.all,
-    queryFn: ({ signal }) => artistApi.getAll(signal),
+    queryFn: ({ signal }) => getArtists(signal),
     placeholderData: keepPreviousData,
   });
 }
 
-export function useArtistDetail(artistSlug: string) {
+export function useGetArtistBySlug(artistSlug: string) {
   return useQuery({
     queryKey: artistKeys.detail(artistSlug),
-    queryFn: ({ signal }) => artistApi.getBySlug(artistSlug, signal),
+    queryFn: ({ signal }) => getArtistBySlug(artistSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!artistSlug,
   });
@@ -30,7 +34,7 @@ export function useCreateArtistMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateArtistInput) => artistApi.create(data),
+    mutationFn: (data: CreateArtistInput) => createArtist(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: artistKeys.all,

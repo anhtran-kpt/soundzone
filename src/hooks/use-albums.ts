@@ -1,64 +1,50 @@
 import {
   useQuery,
-  useMutation,
-  useQueryClient,
-  UseQueryOptions,
-  UseMutationOptions,
   keepPreviousData,
+  useQueryClient,
+  useMutation,
 } from "@tanstack/react-query";
-import { albumApi, ApiClientError } from "@/lib/api-client";
+import {
+  getAlbums,
+  albumKeys,
+  getAlbumBySlug,
+  createAlbum,
+} from "@/lib/tanstack-query";
+import { CreateAlbumInput } from "@/schemas";
 import { toast } from "sonner";
-import { albumKeys } from "@/lib/query-keys";
 
-export function useAlbumsQuery(
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useGetAlbums() {
   return useQuery({
     queryKey: albumKeys.all,
-    queryFn: ({ signal }) => albumApi.getAlbums(signal),
+    queryFn: ({ signal }) => getAlbums(signal),
     placeholderData: keepPreviousData,
-    ...options,
   });
 }
 
-export function useAlbumQuery(
-  albumSlug: string,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useGetAlbumBySlug(albumSlug: string) {
   return useQuery({
     queryKey: albumKeys.detail(albumSlug),
-    queryFn: ({ signal }) => albumApi.getAlbumBySlug(albumSlug, signal),
+    queryFn: ({ signal }) => getAlbumBySlug(albumSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!albumSlug,
-    ...options,
   });
 }
 
-export function useCreateAlbumMutation(
-  options?: UseMutationOptions<
-    unknown,
-    ApiClientError,
-    Parameters<typeof albumApi.createAlbum>[0]
-  >
-) {
+export function useCreateAlbumMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: albumApi.createAlbum,
-    onSuccess: (data, variables) => {
+    mutationFn: (data: CreateAlbumInput) => createAlbum(data),
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: albumKeys.all,
       });
 
-      // queryClient.setQueryData(queryKeys.albumsDetail(data.album.id), data);
       toast.success("Album created successfully");
-      options?.onSuccess?.(data, variables, undefined);
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       toast.error(`Create album failed: ${error.message}`);
       console.error("Create album failed:", error);
-      options?.onError?.(error, variables, context);
     },
-    ...options,
   });
 }

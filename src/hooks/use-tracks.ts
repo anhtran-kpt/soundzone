@@ -1,31 +1,20 @@
-import {
-  useQuery,
-  UseQueryOptions,
-  keepPreviousData,
-} from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { trackApi } from "@/lib/api-client";
-import { trackKeys } from "@/lib/query-keys";
+import { trackKeys } from "@/lib/tanstack-query";
 
-export function useTracksQuery(
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useTracksQuery() {
   return useQuery({
     queryKey: trackKeys.all,
-    queryFn: ({ signal }) => trackApi.getTracks(signal),
+    queryFn: ({ signal }) => getTracks(signal),
     placeholderData: keepPreviousData,
-    ...options,
   });
 }
 
-export function useTrackQuery(
-  trackSlug: string,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useTrackQuery(trackSlug: string) {
   return useQuery({
     queryKey: trackKeys.detail(trackSlug),
-    queryFn: ({ signal }) => trackApi.getTrackBySlug(trackSlug, signal),
+    queryFn: ({ signal }) => getTrackBySlug(trackSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!trackSlug,
-    ...options,
   });
 }

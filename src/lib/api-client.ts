@@ -1,26 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
-import {
-  ApiResponse,
-  CreateArtistReturn,
-  CreateGenreReturn,
-  GetArtistBySlugReturn,
-  GetArtistsReturn,
-  GetGenreBySlugReturn,
-  GetGenresReturn,
-  CreateAlbumReturn,
-  GetAlbumsReturn,
-  GetAlbumBySlugReturn,
-  GetUserBySlugReturn,
-  GetUsersReturn,
-  SignUpReturn,
-} from "@/types";
-import {
-  CreateArtistInput,
-  CreateGenreInput,
-  SignUp,
-  CreateAlbumInput,
-} from "@/schemas";
+import { ApiResponse } from "@/types";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
@@ -111,76 +91,6 @@ export const api = {
     });
     return response.data;
   },
-};
-
-function createResourceApi<
-  TGetBySlugReturn,
-  TGetAllReturn,
-  TCreateInput,
-  TCreateReturn
->(basePath: string) {
-  return {
-    getAll: (signal: AbortSignal) => api.get<TGetAllReturn>(basePath, signal),
-
-    getBySlug: (slug: string, signal: AbortSignal) =>
-      api.get<TGetBySlugReturn>(`${basePath}/${slug}`, signal),
-
-    create: (data: TCreateInput) => api.post<TCreateReturn>(basePath, data),
-
-    getCustom: <T>(endpoint: string, signal: AbortSignal) =>
-      api.get<T>(`${basePath}${endpoint}`, signal),
-
-    postCustom: <T>(endpoint: string, data?: unknown) =>
-      api.post<T>(`${basePath}${endpoint}`, data),
-  };
-}
-
-const RESOURCE_CONFIGS = {
-  artists: "/artists",
-  tracks: "/tracks",
-  albums: "/albums",
-  genres: "/genres",
-  playlists: "/playlists",
-  users: "/users",
-} as const;
-
-export const artistApi = createResourceApi<
-  GetArtistBySlugReturn,
-  GetArtistsReturn,
-  CreateArtistInput,
-  CreateArtistReturn
->(RESOURCE_CONFIGS.artists);
-
-export const albumApi = createResourceApi<
-  GetAlbumBySlugReturn,
-  GetAlbumsReturn,
-  CreateAlbumInput,
-  CreateAlbumReturn
->(RESOURCE_CONFIGS.albums);
-
-export const genreApi = createResourceApi<
-  GetGenreBySlugReturn,
-  GetGenresReturn,
-  CreateGenreInput,
-  CreateGenreReturn
->(RESOURCE_CONFIGS.genres);
-
-// export const playlistApi = createResourceApi<
-//   Playlist,
-//   { playlists: Playlist[] },
-//   { playlist: unknown },
-//   { playlist: unknown; message: string }
-// >(RESOURCE_CONFIGS.playlists);
-
-export const userApi = {
-  ...createResourceApi<
-    GetUserBySlugReturn,
-    GetUsersReturn,
-    SignUp,
-    SignUpReturn
-  >(RESOURCE_CONFIGS.users),
-
-  signUp: (data: SignUp) => api.post<SignUpReturn>("/auth/sign-up", data),
 };
 
 export default apiClient;

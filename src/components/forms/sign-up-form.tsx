@@ -14,13 +14,13 @@ import {
   Button,
 } from "@/components/ui";
 import { toast } from "sonner";
-import { type SignUp, signUpSchema } from "@/schemas";
+import { SignUpInput, signUpSchema } from "@/schemas";
 import { useSignUpMutation } from "@/hooks/use-users";
 
 export function SignUpForm() {
   const { mutateAsync: signUp } = useSignUpMutation();
 
-  const form = useForm<SignUp>({
+  const form = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
@@ -33,7 +33,7 @@ export function SignUpForm() {
 
   const { clearErrors, formState, control, handleSubmit } = form;
 
-  const onSubmit = async (values: SignUp) => {
+  const onSubmit = async (values: SignUpInput) => {
     clearErrors();
     try {
       await signUp(values);

@@ -1,15 +1,33 @@
-import { useMutation } from "@tanstack/react-query";
-import { userApi } from "@/lib/api-client";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { SignUp } from "@/schemas";
+import { SignUpInput } from "@/schemas";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { getUserBySlug, getUsers, signUp } from "@/lib/tanstack-query";
+import { userKeys } from "@/lib/tanstack-query";
 
-export function useSignUpMutation() {
+export function useGetUsers() {
+  return useQuery({
+    queryKey: userKeys.all,
+    queryFn: ({ signal }) => getUsers(signal),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useGetuserBySlug(userSlug: string) {
+  return useQuery({
+    queryKey: userKeys.detail(userSlug),
+    queryFn: ({ signal }) => getUserBySlug(userSlug, signal),
+    placeholderData: keepPreviousData,
+    enabled: !!userSlug,
+  });
+}
+
+export const useSignUpMutation = () => {
   const router = useRouter();
   return useMutation({
-    mutationFn: (data: SignUp) => userApi.signUp(data),
-    onSuccess: async ({ user }) => {
+    mutationFn: (data: SignUpInput) => signUp(data),
+    onSuccess: async () => {
       toast.success("Signed up successfully");
 
       await signIn("credentials", {
@@ -30,4 +48,4 @@ export function useSignUpMutation() {
       console.error("Signed up failed:", error);
     },
   });
-}
+};

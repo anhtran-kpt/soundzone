@@ -16,12 +16,12 @@ import {
   Button,
 } from "@/components/ui";
 import { toast } from "sonner";
-import { SignIn, signInSchema } from "@/schemas";
+import { SignInInput, signInSchema } from "@/schemas";
 
 export function SignInForm() {
   const router = useRouter();
 
-  const form = useForm<SignIn>({
+  const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -31,7 +31,7 @@ export function SignInForm() {
 
   const { clearErrors, formState, control, handleSubmit } = form;
 
-  const onSubmit = async (values: SignIn) => {
+  const onSubmit = async (values: SignInInput) => {
     clearErrors();
     try {
       const response = await signIn("credentials", {

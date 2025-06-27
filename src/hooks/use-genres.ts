@@ -1,41 +1,29 @@
-import {
-  useQuery,
-  useMutation,
-  UseQueryOptions,
-  keepPreviousData,
-} from "@tanstack/react-query";
-import { genreApi } from "@/lib/api-client";
+import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { genreKeys } from "@/lib/query-keys";
-import { CreateGenre } from "@/schemas";
+import { genreKeys } from "@/lib/tanstack-query";
+import { CreateGenreInput } from "@/schemas";
+import { getGenreBySlug, getGenres, createGenre } from "@/lib/tanstack-query";
 
-export function useGenresQuery(
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useGetGenres() {
   return useQuery({
     queryKey: genreKeys.all,
-    queryFn: ({ signal }) => genreApi.getAll(signal),
+    queryFn: ({ signal }) => getGenres(signal),
     placeholderData: keepPreviousData,
-    ...options,
   });
 }
 
-export function useGenreQuery(
-  genreSlug: string,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
-) {
+export function useGetGenreBySlug(genreSlug: string) {
   return useQuery({
     queryKey: genreKeys.detail(genreSlug),
-    queryFn: ({ signal }) => genreApi.getBySlug(genreSlug, signal),
+    queryFn: ({ signal }) => getGenreBySlug(genreSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!genreSlug,
-    ...options,
   });
 }
 
 export function useCreateGenreMutation() {
   return useMutation({
-    mutationFn: (data: CreateGenre) => genreApi.create(data),
+    mutationFn: (data: CreateGenreInput) => createGenre(data),
     onSuccess: async () => {
       toast.success("Genre created successfully");
     },

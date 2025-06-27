@@ -4,9 +4,9 @@
 import db from "@/lib/prisma/db";
 import {
   signUpSchema,
-  type SignUp,
+  SignUpInput,
   signInSchema,
-  type SignIn,
+  SignInInput,
 } from "@/schemas";
 import { comparePasswords, hashPassword } from "@/lib/next-auth";
 
@@ -20,7 +20,7 @@ export const checkUserExistsAction = async (
   }));
 };
 
-export const signUpAction = async (input: SignUp) => {
+export const signUpAction = async (input: SignUpInput) => {
   const { confirmPassword, ...data } = signUpSchema.parse(input);
 
   const [hashedPassword, slug] = await Promise.all([
@@ -40,7 +40,7 @@ export const signUpAction = async (input: SignUp) => {
   return newUser;
 };
 
-export const signInAction = async (input: SignIn) => {
+export const signInAction = async (input: SignInInput) => {
   const data = signInSchema.parse(input);
 
   const user = await db.user.findUnique({
