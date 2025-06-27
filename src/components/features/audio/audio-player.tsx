@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "../../ui/button";
-import { Separator } from "@/components/ui/separator";
+import {} from "../../ui/button";
+import { Separator, Button } from "@/components/ui";
 import {
   EllipsisIcon,
   HeartIcon,
@@ -18,7 +18,7 @@ import {
 import PlayerControls from "./player-controls";
 import ProgressBar from "./progress-bar";
 import VolumeControl from "./volume-control";
-import TrackInfo from "./track-info";
+import { TrackInfo } from "@/components/shared";
 
 function AudioPlayer() {
   const player = useAudioPlayer();
@@ -34,10 +34,7 @@ function AudioPlayer() {
     <div className="fixed bottom-0 left-0 right-0 bg-accent z-50 px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <TrackInfo
-            track={player.currentTrack}
-            className="min-w-0 flex-shrink"
-          />
+          <TrackInfo track={player.currentTrack} />
           <div className="ml-6 space-x-2">
             <Button variant="ghost" size="icon" className="">
               <HeartIcon className="size-4" />

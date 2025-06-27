@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAudioStore } from "@/stores/audio-store";
-import {
-  GetPlaylistBySlugReturn as Playlist,
-  GetTrackBySlugReturn as Track,
-} from "@/types";
+import { Playlist, Track } from "@/types";
 import { useShallow } from "zustand/react/shallow";
 
 // Selector hooks for optimal re-rendering

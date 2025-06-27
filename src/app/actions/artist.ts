@@ -37,7 +37,11 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
         select: {
           track: {
             include: {
-              album: true,
+              album: {
+                include: {
+                  artist: true,
+                },
+              },
               artists: {
                 select: {
                   artist: true,

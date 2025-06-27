@@ -19,7 +19,11 @@ export const getPlaylistBySlugAction = async (playlistSlug: string) => {
         select: {
           track: {
             include: {
-              album: true,
+              album: {
+                include: {
+                  artist: true,
+                },
+              },
               artists: {
                 select: {
                   artist: true,

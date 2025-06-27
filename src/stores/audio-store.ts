@@ -1,9 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import {
-  GetPlaylistBySlugReturn as Playlist,
-  GetTrackBySlugReturn as Track,
-} from "@/types";
+import { Playlist, Track } from "@/types";
 
 export type RepeatMode = "off" | "one" | "all";
 

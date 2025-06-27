@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { formatDuration } from "@/lib/utils";
-import { GetArtistBySlugReturn } from "@/types";
+import { Track } from "@/types";
 import {
   CirclePlusIcon,
   EllipsisIcon,
@@ -26,7 +26,7 @@ import {
 import { CldImage } from "next-cloudinary";
 
 interface TracksPopularProps {
-  tracks: GetArtistBySlugReturn["tracks"];
+  tracks: Track[];
 }
 
 export default function TracksPopular({ tracks }: TracksPopularProps) {

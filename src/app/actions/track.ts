@@ -16,7 +16,11 @@ export const getTrackBySlugAction = async (trackSlug: string) => {
       slug: trackSlug,
     },
     include: {
-      album: true,
+      album: {
+        include: {
+          artist: true,
+        },
+      },
       artists: {
         select: {
           artist: true,

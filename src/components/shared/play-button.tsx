@@ -1,10 +1,7 @@
 import { PlayIcon } from "lucide-react";
 import { Button } from "../ui";
 import { useAudioPlayer } from "@/hooks";
-import {
-  GetTrackBySlugReturn as Track,
-  GetPlaylistBySlugReturn as Playlist,
-} from "@/types";
+import { Track, Playlist } from "@/types";
 
 interface PlayButtonProps {
   track: Track;
