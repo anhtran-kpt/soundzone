@@ -28,12 +28,11 @@ export default function ProgressBar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 text-sm text-muted-foreground",
+        "flex items-center gap-4 text-sm text-muted-foreground",
         className
       )}
     >
-      <span className="min-w-[40px] text-xs">{formatTime(currentTime)}</span>
-
+      <span className="text-xs">{formatTime(currentTime)}</span>
       <Slider
         value={[progress]}
         onValueChange={handleSeek}
@@ -42,9 +41,7 @@ export default function ProgressBar({
         className="flex-1"
       />
 
-      <span className="min-w-[40px] text-xs text-right">
-        {formatTime(duration)}
-      </span>
+      <span className="text-xs text-right">{formatTime(duration)}</span>
     </div>
   );
 }

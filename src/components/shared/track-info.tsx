@@ -2,6 +2,7 @@ import { Track } from "@/types";
 import { CldImage } from "next-cloudinary";
 import Explicit from "./explicit";
 import CustomLink from "../common/custom-link";
+import { formatArtistNames } from "@/lib/utils";
 
 interface TrackInfoProps {
   track: Track;
@@ -9,8 +10,8 @@ interface TrackInfoProps {
 
 export default function TrackInfo({ track }: TrackInfoProps) {
   return (
-    <div className="grow flex gap-3 items-center">
-      <div className="relative size-14">
+    <div className="flex items-center gap-3 grow min-w-0">
+      <div className="relative size-14 shrink-0">
         <CldImage
           src={track.album.coverPublicId}
           alt={track.title}
@@ -22,21 +23,13 @@ export default function TrackInfo({ track }: TrackInfoProps) {
       <div className="flex flex-col gap-1">
         <CustomLink
           href={`/artists/${track.album.artist.slug}/albums/${track.album.slug}`}
-          className="text-sm font-medium"
+          className="text-sm font-medium truncate"
         >
           {track.title}
         </CustomLink>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 truncate text-xs">
           {track.isExplicit && <Explicit />}
-          {track.artists.map(({ artist }) => (
-            <CustomLink
-              href={`/artists/${artist.slug}`}
-              key={artist.id}
-              className="text-xs"
-            >
-              {artist.name}
-            </CustomLink>
-          ))}
+          <span>{formatArtistNames(track.artists)}</span>
         </div>
       </div>
     </div>

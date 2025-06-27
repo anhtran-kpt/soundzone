@@ -3,7 +3,6 @@ import { useAudioStore } from "@/stores/audio-store";
 import { Playlist, Track } from "@/types";
 import { useShallow } from "zustand/react/shallow";
 
-// Selector hooks for optimal re-rendering
 export const useCurrentTrack = () =>
   useAudioStore(useShallow((state) => state.currentTrack));
 
@@ -44,7 +43,6 @@ export const usePlaylists = () =>
 
 export const useError = () => useAudioStore(useShallow((state) => state.error));
 
-// Compound selectors
 export const usePlaybackState = () =>
   useAudioStore(
     useShallow((state) => ({
@@ -102,25 +100,10 @@ export const useQueueManagement = () =>
     }))
   );
 
-export const usePlaylistManagement = () =>
-  useAudioStore(
-    useShallow((state) => ({
-      playlists: state.playlists,
-      createPlaylist: state.createPlaylist,
-      updatePlaylist: state.updatePlaylist,
-      deletePlaylist: state.deletePlaylist,
-      addTrackToPlaylist: state.addTrackToPlaylist,
-      removeTrackFromPlaylist: state.removeTrackFromPlaylist,
-      loadPlaylist: state.loadPlaylist,
-    }))
-  );
-
-// Main audio player hook
 export const useAudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const setAudioElement = useAudioStore((state) => state.setAudioElement);
 
-  // Initialize audio element
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -137,17 +120,14 @@ export const useAudioPlayer = () => {
     };
   }, [setAudioElement]);
 
-  // Get all player functionality
   const currentTrack = useCurrentTrack();
   const playbackState = usePlaybackState();
   const playerControls = usePlayerControls();
   const volumeControls = useVolumeControls();
   const playerModes = usePlayerModes();
   const queueManagement = useQueueManagement();
-  const playlistManagement = usePlaylistManagement();
   const error = useError();
 
-  // Computed values
   const progress =
     playbackState.duration > 0
       ? (playbackState.currentTime / playbackState.duration) * 100
@@ -156,7 +136,6 @@ export const useAudioPlayer = () => {
   const hasNext = queueManagement.queueIndex < queueManagement.queue.length - 1;
   const hasPrev = queueManagement.queueIndex > 0;
 
-  // Utility functions
   const formatTime = useCallback((seconds: number): string => {
     if (isNaN(seconds)) return "0:00";
 
@@ -181,39 +160,32 @@ export const useAudioPlayer = () => {
   );
 
   return {
-    // State
     currentTrack,
     error,
     progress,
     hasNext,
     hasPrev,
 
-    // Grouped functionality
     playback: playbackState,
     controls: playerControls,
     volume: volumeControls,
     modes: playerModes,
     queue: queueManagement,
-    playlists: playlistManagement,
 
-    // Utility functions
     formatTime,
     playTrack,
     playPlaylist,
 
-    // Raw audio element (if needed)
     audioElement: audioRef.current,
   };
 };
 
-// Hook for keyboard shortcuts
 export const useAudioKeyboardShortcuts = () => {
   const { togglePlay, next, previous, seekBy } = usePlayerControls();
   const { volume, setVolume } = useVolumeControls();
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Ignore if user is typing in an input
       if (
         event.target instanceof HTMLInputElement ||
         event.target instanceof HTMLTextAreaElement
@@ -260,7 +232,6 @@ export const useAudioKeyboardShortcuts = () => {
   }, [togglePlay, next, previous, setVolume, seekBy, volume]);
 };
 
-// Hook for media session API (browser media controls)
 export const useMediaSession = () => {
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
@@ -269,19 +240,9 @@ export const useMediaSession = () => {
   useEffect(() => {
     if ("mediaSession" in navigator && currentTrack) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: currentTrack.name,
-        artist: currentTrack.artists.find((artist) => artist.role === "MAIN")
-          ?.artist.name,
-        album: currentTrack.album.name,
-        artwork: currentTrack.album.coverUrl
-          ? [
-              {
-                src: currentTrack.album.coverUrl,
-                sizes: "300x300",
-                type: "image/webp",
-              },
-            ]
-          : undefined,
+        title: currentTrack.title,
+        artist: currentTrack.album.artist.name,
+        album: currentTrack.album.title,
       });
 
       navigator.mediaSession.setActionHandler("play", play);
@@ -294,13 +255,11 @@ export const useMediaSession = () => {
   }, [currentTrack, isPlaying, play, pause, next, previous]);
 };
 
-// Hook for persisting playback position
 export const usePlaybackPersistence = () => {
   const currentTrack = useCurrentTrack();
   const currentTime = useCurrentTime();
   const { seek } = usePlayerControls();
 
-  // Save position periodically
   useEffect(() => {
     if (currentTrack && currentTime > 0) {
       const key = `playback_${currentTrack.id}`;
@@ -308,7 +267,6 @@ export const usePlaybackPersistence = () => {
     }
   }, [currentTrack, currentTime]);
 
-  // Restore position when track changes
   useEffect(() => {
     if (currentTrack) {
       const key = `playback_${currentTrack.id}`;
@@ -316,7 +274,7 @@ export const usePlaybackPersistence = () => {
 
       if (savedPosition) {
         const position = parseFloat(savedPosition);
-        // Only restore if less than 90% through the track
+
         if (position < currentTrack.duration * 0.9) {
           setTimeout(() => seek(position), 100);
         }

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
 import { Playlist, Track } from "@/types";
+import { getAudioUrl } from "@/lib/utils";
 
 export type RepeatMode = "off" | "one" | "all";
 
@@ -65,13 +66,6 @@ interface AudioActions {
   addToQueue: (track: Track) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
-
-  // Playlist management
-  createPlaylist: (name: string, tracks?: Track[]) => Playlist;
-  updatePlaylist: (id: string, updates: Partial<Playlist>) => void;
-  deletePlaylist: (id: string) => void;
-  addTrackToPlaylist: (playlistId: string, track: Track) => void;
-  removeTrackFromPlaylist: (playlistId: string, trackId: string) => void;
 
   // Internal state management
   setCurrentTime: (time: number) => void;
@@ -295,7 +289,6 @@ export const useAudioStore = create<AudioStore>()(
               queueIndex: 0,
             });
           } else {
-            // Disable shuffle
             const currentTrackId = currentTrack?.id;
             const originalIndex = originalQueue.findIndex(
               (track) => track.id === currentTrackId
@@ -320,12 +313,12 @@ export const useAudioStore = create<AudioStore>()(
           set({ repeatMode: nextMode });
         },
 
-        // Track/Playlist management
         setCurrentTrack: (track, playlist) => {
           const { audioElement } = get();
 
           if (audioElement) {
-            audioElement.src = track.audioUrl;
+            const audioUrl = getAudioUrl(track.audioPublicId);
+            audioElement.src = audioUrl;
             audioElement.load();
           }
 
@@ -387,57 +380,6 @@ export const useAudioStore = create<AudioStore>()(
           });
         },
 
-        // Playlist management
-        createPlaylist: (name, tracks = []) => {
-          const { playlists } = get();
-          const newPlaylist: Playlist = {
-            id: Date.now().toString(),
-            name,
-            tracks,
-          };
-
-          set({ playlists: [...playlists, newPlaylist] });
-          return newPlaylist;
-        },
-
-        updatePlaylist: (id, updates) => {
-          const { playlists } = get();
-          const updatedPlaylists = playlists.map((playlist) =>
-            playlist.id === id ? { ...playlist, ...updates } : playlist
-          );
-          set({ playlists: updatedPlaylists });
-        },
-
-        deletePlaylist: (id) => {
-          const { playlists } = get();
-          set({
-            playlists: playlists.filter((playlist) => playlist.id !== id),
-          });
-        },
-
-        addTrackToPlaylist: (playlistId, track) => {
-          const { playlists, updatePlaylist } = get();
-          const playlist = playlists.find((p) => p.id === playlistId);
-
-          if (playlist) {
-            const updatedTracks = [...playlist.tracks, track];
-            updatePlaylist(playlistId, { tracks: updatedTracks });
-          }
-        },
-
-        removeTrackFromPlaylist: (playlistId, trackId) => {
-          const { playlists, updatePlaylist } = get();
-          const playlist = playlists.find((p) => p.id === playlistId);
-
-          if (playlist) {
-            const updatedTracks = playlist.tracks.filter(
-              (t) => t.id !== trackId
-            );
-            updatePlaylist(playlistId, { tracks: updatedTracks });
-          }
-        },
-
-        // Internal state management
         setCurrentTime: (time) => set({ currentTime: time }),
         setDuration: (duration) => set({ duration }),
         setLoading: (loading) => set({ isLoading: loading }),
