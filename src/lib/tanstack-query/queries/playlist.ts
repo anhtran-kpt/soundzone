@@ -3,13 +3,13 @@ import { CreatePlaylistInput } from "@/schemas";
 import { CreatePlaylistReturn, GetPlaylistsReturn } from "@/types";
 
 const endpoints = {
-  list: "/playlists",
+  all: "/playlists",
   detail: (playlistSlug: string) => `/playlists/${playlistSlug}`,
   create: "/playlists",
 } as const;
 
 export const getPlaylists = async (signal: AbortSignal) => {
-  return await apiClient.get<GetPlaylistsReturn>(endpoints.list, { signal });
+  return await apiClient.get<GetPlaylistsReturn>(endpoints.all, { signal });
 };
 
 export const getPlaylistBySlug = async (

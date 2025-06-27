@@ -1,6 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { trackApi } from "@/lib/api-client";
-import { trackKeys } from "@/lib/tanstack-query";
+import { getTrackBySlug, getTracks, trackKeys } from "@/lib/tanstack-query";
 
 export function useTracksQuery() {
   return useQuery({

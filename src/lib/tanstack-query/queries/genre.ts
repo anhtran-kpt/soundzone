@@ -3,13 +3,13 @@ import { CreateGenreInput } from "@/schemas";
 import { GetGenresReturn, CreateGenreReturn } from "@/types";
 
 const endpoints = {
-  list: "/genres",
+  all: "/genres",
   detail: (genreSlug: string) => `/genres/${genreSlug}`,
   create: "/genres",
 } as const;
 
 export const getGenres = async (signal: AbortSignal) => {
-  return await apiClient.get<GetGenresReturn>(endpoints.list, { signal });
+  return await apiClient.get<GetGenresReturn>(endpoints.all, { signal });
 };
 
 export const getGenreBySlug = async (

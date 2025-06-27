@@ -1,4 +1,5 @@
 import db from "@/lib/prisma/db";
+import { CreatePlaylistInput } from "@/schemas";
 
 export const getPlaylistsAction = async () => {
   return await db.playlist.findMany({
@@ -13,5 +14,11 @@ export const getPlaylistBySlugAction = async (playlistSlug: string) => {
     where: {
       slug: playlistSlug,
     },
+  });
+};
+
+export const createPlaylistAction = async (data: CreatePlaylistInput) => {
+  return await db.playlist.create({
+    data,
   });
 };

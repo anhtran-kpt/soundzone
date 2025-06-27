@@ -3,3 +3,4 @@ export * from "./artist";
 export * from "./user";
 export * from "./genre";
 export * from "./album";
+export * from "./playlist";

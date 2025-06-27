@@ -1,6 +1,5 @@
 import apiClient from "@/lib/api-client";
-import { CreateTrackInput } from "@/schemas";
-import { CreateTrackReturn, GetTracksReturn } from "@/types";
+import { GetTracksReturn } from "@/types";
 
 const endpoints = {
   list: "/tracks",
@@ -18,11 +17,5 @@ export const getTrackBySlug = async (
 ) => {
   return await apiClient.get<GetTracksReturn>(endpoints.detail(trackSlug), {
     signal,
-  });
-};
-
-export const createTrack = async (data: CreateTrackInput) => {
-  return await apiClient.post<CreateTrackReturn>(endpoints.create, {
-    data,
   });
 };

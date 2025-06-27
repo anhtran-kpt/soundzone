@@ -3,13 +3,13 @@ import { CreateArtistInput } from "@/schemas";
 import { CreateArtistReturn, GetArtistsReturn } from "@/types";
 
 const endpoints = {
-  list: "/artists",
+  all: "/artists",
   detail: (artistSlug: string) => `/artists/${artistSlug}`,
   create: "/artists",
 } as const;
 
 export const getArtists = async (signal: AbortSignal) => {
-  return await apiClient.get<GetArtistsReturn>(endpoints.list, { signal });
+  return await apiClient.get<GetArtistsReturn>(endpoints.all, { signal });
 };
 
 export const getArtistBySlug = async (

@@ -112,7 +112,7 @@ model Album {
   releaseType    ReleaseType @default(SINGLE)
   releaseDate    DateTime    @default(now())
   coverPublicId  String
-  bannerPublicId String?
+  bannerPublicId String
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 

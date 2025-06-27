@@ -3,13 +3,13 @@ import { CreateAlbumInput } from "@/schemas";
 import { CreateAlbumReturn, GetAlbumsReturn } from "@/types";
 
 const endpoints = {
-  list: "/albums",
+  all: "/albums",
   detail: (albumSlug: string) => `/albums/${albumSlug}`,
   create: "/albums",
 } as const;
 
 export const getAlbums = async (signal: AbortSignal) => {
-  return await apiClient.get<GetAlbumsReturn>(endpoints.list, { signal });
+  return await apiClient.get<GetAlbumsReturn>(endpoints.all, { signal });
 };
 
 export const getAlbumBySlug = async (
