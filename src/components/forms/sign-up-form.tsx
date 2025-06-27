@@ -15,10 +15,10 @@ import {
 } from "@/components/ui";
 import { toast } from "sonner";
 import { SignUpInput, signUpSchema } from "@/schemas";
-import { useSignUpMutation } from "@/hooks/use-users";
+import { useSignUp } from "@/hooks/use-users";
 
 export function SignUpForm() {
-  const { mutateAsync: signUp } = useSignUpMutation();
+  const { mutateAsync: signUp } = useSignUp();
 
   const form = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),

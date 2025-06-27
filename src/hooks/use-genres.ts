@@ -1,8 +1,8 @@
 import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { genreKeys } from "@/lib/tanstack-query";
+import { genreKeys } from "@/lib/query-keys";
 import { CreateGenreInput } from "@/schemas";
-import { getGenreBySlug, getGenres, createGenre } from "@/lib/tanstack-query";
+import { getGenreBySlug, getGenres, createGenre } from "@/lib/queries";
 
 export function useGetGenres() {
   return useQuery({
@@ -21,7 +21,7 @@ export function useGetGenreBySlug(genreSlug: string) {
   });
 }
 
-export function useCreateGenreMutation() {
+export function useCreateGenre() {
   return useMutation({
     mutationFn: (data: CreateGenreInput) => createGenre(data),
     onSuccess: async () => {

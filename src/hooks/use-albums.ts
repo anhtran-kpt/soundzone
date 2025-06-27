@@ -4,14 +4,10 @@ import {
   useQueryClient,
   useMutation,
 } from "@tanstack/react-query";
-import {
-  getAlbums,
-  albumKeys,
-  getAlbumBySlug,
-  createAlbum,
-} from "@/lib/tanstack-query";
+import { getAlbums, getAlbumBySlug, createAlbum } from "@/lib/queries";
 import { CreateAlbumInput } from "@/schemas";
 import { toast } from "sonner";
+import { albumKeys } from "@/lib/query-keys";
 
 export function useGetAlbums() {
   return useQuery({
@@ -30,7 +26,7 @@ export function useGetAlbumBySlug(albumSlug: string) {
   });
 }
 
-export function useCreateAlbumMutation() {
+export function useCreateAlbum() {
   const queryClient = useQueryClient();
 
   return useMutation({

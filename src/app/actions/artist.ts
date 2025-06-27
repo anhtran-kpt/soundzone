@@ -62,12 +62,14 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
     },
   });
 
-  return artistDetail
-    ? {
-        ...artistDetail,
-        albumsByType: groupAlbumsByType(artistDetail.albums),
-      }
-    : [];
+  if (!artistDetail) {
+    throw new Error(`Artist with slug "${artistSlug}" not found`);
+  }
+
+  return {
+    ...artistDetail,
+    albumsByType: groupAlbumsByType(artistDetail.albums),
+  };
 };
 
 export const createArtistAction = async (

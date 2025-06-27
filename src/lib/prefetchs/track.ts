@@ -1,7 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
-import { getTrackBySlug, trackKeys } from "@/lib/tanstack-query";
+import { getTrackBySlug } from "@/lib/queries";
+import { trackKeys } from "@/lib/query-keys";
 
-export const prefetchTrackDetail = async (
+export const prefetchTrackBySlug = async (
   qc: QueryClient,
   trackSlug: string
 ) => {

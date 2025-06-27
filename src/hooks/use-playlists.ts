@@ -5,13 +5,9 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  playlistKeys,
-  createPlaylist,
-  getPlaylistBySlug,
-  getPlaylists,
-} from "@/lib/tanstack-query";
+import { createPlaylist, getPlaylistBySlug, getPlaylists } from "@/lib/queries";
 import { CreatePlaylistInput } from "@/schemas";
+import { playlistKeys } from "@/lib/query-keys";
 
 export function useGetPlaylists() {
   return useQuery({
@@ -30,7 +26,7 @@ export function useGetPlaylistBySlug(playlistSlug: string) {
   });
 }
 
-export function useCreatePlaylistMutation() {
+export function useCreatePlaylist() {
   const queryClient = useQueryClient();
 
   return useMutation({

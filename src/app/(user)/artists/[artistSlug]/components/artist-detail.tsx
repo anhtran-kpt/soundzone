@@ -3,12 +3,14 @@
 import CustomLink from "@/components/common/custom-link";
 import TracksPopular from "./tracks-popular";
 import ArtistBanner from "./artist-banner";
-import { useArtistDetail } from "@/hooks";
+import { useGetArtistBySlug } from "@/hooks";
 import { notFound } from "next/navigation";
 import Discography from "./discography";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data: artist, isError, error } = useArtistDetail(artistSlug);
+  const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
+
+  console.log(artist);
 
   if (isError) {
     return <div>Error: {error?.message}</div>;

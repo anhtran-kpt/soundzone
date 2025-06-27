@@ -92,5 +92,3 @@ export const api = {
     return response.data;
   },
 };
-
-export default apiClient;

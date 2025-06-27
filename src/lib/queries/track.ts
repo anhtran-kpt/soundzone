@@ -1,5 +1,5 @@
-import apiClient from "@/lib/api-client";
-import { GetTracksReturn } from "@/types";
+import { api } from "@/lib/api-client";
+import { GetTracksReturn, GetTrackBySlugReturn } from "@/types";
 
 const endpoints = {
   list: "/tracks",
@@ -8,14 +8,15 @@ const endpoints = {
 } as const;
 
 export const getTracks = async (signal: AbortSignal) => {
-  return await apiClient.get<GetTracksReturn>(endpoints.list, { signal });
+  return await api.get<GetTracksReturn>(endpoints.list, signal);
 };
 
 export const getTrackBySlug = async (
   trackSlug: string,
   signal: AbortSignal
 ) => {
-  return await apiClient.get<GetTracksReturn>(endpoints.detail(trackSlug), {
-    signal,
-  });
+  return await api.get<GetTrackBySlugReturn>(
+    endpoints.detail(trackSlug),
+    signal
+  );
 };

@@ -5,13 +5,9 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  artistKeys,
-  createArtist,
-  getArtistBySlug,
-  getArtists,
-} from "@/lib/tanstack-query";
+import { createArtist, getArtistBySlug, getArtists } from "@/lib/queries";
 import { CreateArtistInput } from "@/schemas";
+import { artistKeys } from "@/lib/query-keys";
 
 export function useGetArtists() {
   return useQuery({
@@ -30,7 +26,7 @@ export function useGetArtistBySlug(artistSlug: string) {
   });
 }
 
-export function useCreateArtistMutation() {
+export function useCreateArtist() {
   const queryClient = useQueryClient();
 
   return useMutation({

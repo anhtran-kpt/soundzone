@@ -1,6 +1,10 @@
-import apiClient from "@/lib/api-client";
+import { api } from "@/lib/api-client";
 import { CreatePlaylistInput } from "@/schemas";
-import { CreatePlaylistReturn, GetPlaylistsReturn } from "@/types";
+import {
+  CreatePlaylistReturn,
+  GetPlaylistsReturn,
+  GetPlaylistBySlugReturn,
+} from "@/types";
 
 const endpoints = {
   all: "/playlists",
@@ -9,23 +13,21 @@ const endpoints = {
 } as const;
 
 export const getPlaylists = async (signal: AbortSignal) => {
-  return await apiClient.get<GetPlaylistsReturn>(endpoints.all, { signal });
+  return await api.get<GetPlaylistsReturn>(endpoints.all, signal);
 };
 
 export const getPlaylistBySlug = async (
   playlistSlug: string,
   signal: AbortSignal
 ) => {
-  return await apiClient.get<GetPlaylistsReturn>(
+  return await api.get<GetPlaylistBySlugReturn>(
     endpoints.detail(playlistSlug),
-    {
-      signal,
-    }
+    signal
   );
 };
 
 export const createPlaylist = async (data: CreatePlaylistInput) => {
-  return await apiClient.post<CreatePlaylistReturn>(endpoints.create, {
+  return await api.post<CreatePlaylistReturn>(endpoints.create, {
     data,
   });
 };
