@@ -1,7 +1,7 @@
 import { Track } from "@/types";
 import { CldImage } from "next-cloudinary";
 import Explicit from "./explicit";
-import CustomLink from "../common/custom-link";
+import { CustomLink } from "@/components/shared";
 import { formatArtistNames } from "@/lib/utils";
 
 interface TrackInfoProps {

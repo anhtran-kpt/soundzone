@@ -1,12 +1,11 @@
-import { FullAlbum } from "@/lib/types";
+import { Album } from "@/types";
 import { formatDate } from "date-fns";
 import { CldImage } from "next-cloudinary";
-import { Icon } from "../common";
+import { Icon, CustomLink } from "@/components/shared";
 import { PlayIcon } from "lucide-react";
-import { DotIcon } from "lucide-react";
-import CustomLink from "../common/custom-link";
+import Dot from "./dot";
 
-export default function AlbumCard({ album }: { album: FullAlbum }) {
+export default function AlbumCard({ album }: { album: Album }) {
   return (
     <li className="flex flex-col items-center group gap-1.5">
       <div className="relative rounded-lg overflow-hidden w-full h-full aspect-square">
@@ -23,14 +22,14 @@ export default function AlbumCard({ album }: { album: FullAlbum }) {
       </div>
       <div className="flex flex-col items-center">
         <CustomLink
-          href={`/albums/${album.slug}`}
+          href={`/artists/${album.artist.slug}/albums/${album.slug}`}
           className="text-sm font-medium line-clamp-1 text-ellipsis"
         >
           {album.title}
         </CustomLink>
-        <div className="flex text-[13px] text-muted-foreground items-center">
+        <div className="flex text-[13px] text-muted-foreground items-center gap-1.5">
           <span>{formatDate(album.releaseDate, "yyyy")}</span>
-          <Icon icon={DotIcon} size={24} fill="currentColor" />
+          <Dot />
           <span>{album.releaseType === "ALBUM" ? "Album" : "Single"}</span>
         </div>
       </div>

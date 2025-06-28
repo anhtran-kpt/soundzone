@@ -2,13 +2,12 @@
 
 import { Album } from "@/types";
 import { CldImage } from "next-cloudinary";
-import CustomLink from "../common/custom-link";
+import { CustomLink } from "@/components/shared";
 import Dot from "./dot";
 import { getYear } from "date-fns";
 import pretterMs from "pretty-ms";
-import { useMemo, useState, useEffect, CSSProperties } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
-import { cn } from "@/lib/utils";
 
 interface BannerProps {
   album: Album;

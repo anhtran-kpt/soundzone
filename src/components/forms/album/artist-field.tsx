@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/common";
+import { Icon } from "@/components/shared";
 import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
 import { FormControl, FormField, FormMessage } from "@/components/ui/form";
 import { FormItem } from "@/components/ui/form";
@@ -21,7 +21,7 @@ import { PopoverTrigger } from "@/components/ui/popover";
 import { CommandInput } from "@/components/ui/command";
 import { Popover } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useArtists } from "@/lib/queries/artist";
+import { useGetArtists } from "@/hooks";
 import { Input } from "@/components/ui/input";
 import { ArtistImage } from "@/components/shared";
 
@@ -39,7 +39,7 @@ export default function ArtistField({
   canRemove,
 }: ArtistFieldProps) {
   const { control, setValue } = useFormContext();
-  const { data: artists } = useArtists();
+  const { data: artists } = useGetArtists();
 
   return (
     <Card className="relative">

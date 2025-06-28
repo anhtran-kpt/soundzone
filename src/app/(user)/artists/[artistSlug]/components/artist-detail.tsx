@@ -1,6 +1,6 @@
 "use client";
 
-import CustomLink from "@/components/common/custom-link";
+import { CustomLink } from "@/components/shared";
 import TracksPopular from "./tracks-popular";
 import ArtistBanner from "./artist-banner";
 import { useGetArtistBySlug } from "@/hooks";
@@ -9,6 +9,7 @@ import Discography from "./discography";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
+  console.log(artist);
 
   if (isError) {
     return <div>Error: {error?.message}</div>;

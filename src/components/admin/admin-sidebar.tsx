@@ -25,7 +25,7 @@ import {
   useSidebar,
   SidebarSeparator,
 } from "../ui/sidebar";
-import { Icon } from "../common";
+import { Icon } from "@/components/shared";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/assets/logo.svg";

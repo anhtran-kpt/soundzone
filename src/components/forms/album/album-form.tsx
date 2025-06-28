@@ -20,18 +20,18 @@ import { PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, PlusCircle, UploadIcon } from "lucide-react";
 import { format } from "date-fns";
-import { CreateAlbumForm, createAlbumSchema } from "@/lib/validations";
+import { CreateAlbumForm, createAlbumSchema } from "@/schemas";
 import { createAlbumAction } from "@/app/actions/album";
 import { toast } from "sonner";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { Icon } from "@/components/common";
-import { FullArtist } from "@/lib/types";
+import { Icon } from "@/components/shared";
+import { Artist } from "@/types";
 import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TrackField from "./track-field";
 
-export default function AlbumForm({ artist }: { artist: FullArtist }) {
+export default function AlbumForm({ artist }: { artist: Artist }) {
   const [albumBannerPreview, setAlbumBannerPreview] = useState<
     string | undefined
   >(undefined);

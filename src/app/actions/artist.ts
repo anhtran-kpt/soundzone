@@ -53,6 +53,9 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
         },
       },
       albums: {
+        include: {
+          artist: true,
+        },
         orderBy: {
           likedByUsers: {
             _count: "desc",
