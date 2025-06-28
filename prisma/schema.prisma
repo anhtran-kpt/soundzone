@@ -64,14 +64,13 @@ model User {
 }
 
 model Artist {
-  id             String   @id @default(cuid())
-  name           String
-  slug           String   @unique
-  description    String?  @db.Text
-  imagePublicId  String
-  bannerPublicId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String?  @db.Text
+  imagePublicId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   tracks    TrackArtist[]
   albums    Album[]

@@ -13,7 +13,7 @@ interface BannerProps {
   album: Album;
 }
 
-export default function Banner({ album }: BannerProps) {
+export function AlbumBanner({ album }: BannerProps) {
   const fac = useMemo(() => new FastAverageColor(), []);
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export default function Banner({ album }: BannerProps) {
           />
         </div>
         <div className="flex flex-col">
-          <h3>Album</h3>
+          <h3>{album.releaseType === "SINGLE" ? "Single" : "Album"}</h3>
           <h2 className="font-bold text-5xl mt-1 mb-4">{album.title}</h2>
           <div className="inline-flex items-center gap-2">
             <div className="relative size-8 rounded-full">

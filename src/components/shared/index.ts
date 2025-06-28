@@ -6,3 +6,5 @@ export { default as TrackInfo } from "./track-info";
 export { default as Dot } from "./dot";
 export * from "./tracks-list";
 export { default as CustomLink } from "./custom-link";
+export * from "./album-banner";
+export * from "./artist-banner";

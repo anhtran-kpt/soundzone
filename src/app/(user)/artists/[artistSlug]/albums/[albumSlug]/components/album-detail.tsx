@@ -1,7 +1,7 @@
 "use client";
 
 import { TracksList } from "@/components/shared";
-import Banner from "@/components/shared/banner";
+import { AlbumBanner } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { useGetAlbumBySlug, useIsPlaying } from "@/hooks";
 import {
@@ -28,7 +28,7 @@ export default function AlbumDetail({ albumSlug }: { albumSlug: string }) {
 
   return (
     <>
-      <section>{album.bannerPublicId && <Banner album={album} />}</section>
+      <section>{album.bannerPublicId && <AlbumBanner album={album} />}</section>
       <section className="flex gap-6 items-center py-6">
         <Button type="button" size="icon" className="rounded-full size-12">
           {isPlaying ? (

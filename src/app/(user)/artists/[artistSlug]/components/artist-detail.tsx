@@ -1,15 +1,19 @@
 "use client";
 
-import { CustomLink } from "@/components/shared";
+import { CustomLink, ArtistBanner } from "@/components/shared";
 import TracksPopular from "./tracks-popular";
-import ArtistBanner from "./artist-banner";
-import { useGetArtistBySlug } from "@/hooks";
+import { useCurrentTrack, useGetArtistBySlug, useIsPlaying } from "@/hooks";
 import { notFound } from "next/navigation";
 import Discography from "./discography";
+import { Button } from "@/components/ui";
+import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
   console.log(artist);
+
+  const currentTrack = useCurrentTrack();
+  const isPlaying = useIsPlaying();
 
   if (isError) {
     return <div>Error: {error?.message}</div>;
@@ -20,8 +24,24 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <ArtistBanner artist={artist} />
+    <>
+      <section>
+        <ArtistBanner artist={artist} />
+      </section>
+      <section className="flex gap-6 items-center py-6">
+        <Button type="button" size="icon" className="rounded-full size-12">
+          {currentTrack?.album.artistId === artist.id && isPlaying ? (
+            <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />
+          ) : (
+            <PlayIcon strokeWidth={0} fill="currentColor" className="size-6" />
+          )}
+        </Button>
+        <ShuffleIcon />
+        <Button type="button" variant="outline" className="rounded-full">
+          Follow
+        </Button>
+        <EllipsisIcon />
+      </section>
       <TracksPopular tracks={artist.tracks} />
       <section>
         <div className="flex items-center justify-between">
@@ -35,6 +55,6 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
           albumsByType={artist.albumsByType}
         />
       </section>
-    </div>
+    </>
   );
 }
