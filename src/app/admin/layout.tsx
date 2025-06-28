@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <AdminHeader scrollContainerRef={scrollRef} />
-        <main className="flex-1 px-12 py-6">{children}</main>
+        <main className="flex-1 px-12 py-6 flex-col">{children}</main>
       </div>
     </AdminSidebarProvider>
   );

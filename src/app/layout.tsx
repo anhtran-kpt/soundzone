@@ -26,7 +26,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SoundZone" />
       </head>
       <body
-        className={`${nunitoSans.variable} antialiased overflow-hidden text-sm pb-21`}
+        className={`${nunitoSans.variable} antialiased overflow-hidden text-sm`}
       >
         <Providers>
           {children}

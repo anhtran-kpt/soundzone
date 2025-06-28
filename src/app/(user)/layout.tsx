@@ -20,7 +20,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <UserHeader scrollContainerRef={scrollRef} />
-        <main className="flex-1 px-12 py-6">{children}</main>
+        <main className="flex-col flex-1 px-12 py-6 overflow-x-hidden">
+          {children}
+        </main>
       </div>
     </UserSidebarProvider>
   );

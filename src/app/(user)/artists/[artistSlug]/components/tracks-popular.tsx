@@ -34,7 +34,7 @@ export default function TracksPopular({ tracks }: TracksPopularProps) {
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">Popular</h2>
       <ul role="list" className="space-y-2">
-        {tracks.map(({ track }, index) => (
+        {tracks.map((track, index) => (
           <li
             key={track.id}
             className="flex gap-6 px-4 py-2 rounded-sm hover:bg-muted items-center group"

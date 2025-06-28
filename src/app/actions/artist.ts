@@ -3,6 +3,7 @@
 import db from "@/lib/prisma/db";
 import { CreateArtistInput } from "@/schemas";
 import { Album, Artist } from "@/app/generated/prisma";
+import { flattenRelation } from "@/lib/helpers";
 
 type ReleaseGroup = Record<string, Album[]>;
 
@@ -72,6 +73,7 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
 
   return {
     ...artistDetail,
+    tracks: flattenRelation(artistDetail.tracks, "track"),
     albumsByType: groupAlbumsByType(artistDetail.albums),
   };
 };

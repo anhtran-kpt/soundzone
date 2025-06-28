@@ -14,11 +14,27 @@ export const getAlbumsAction = async () => {
 };
 
 export const getAlbumBySlugAction = async (albumSlug: string) => {
-  return await db.album.findUnique({
+  const albumDetail = await db.album.findUnique({
     where: {
       slug: albumSlug,
     },
+    include: {
+      artist: true,
+      tracks: true,
+    },
   });
+
+  if (!albumDetail) {
+    throw new Error(`Album with slug ${albumSlug} not found`);
+  }
+
+  return {
+    ...albumDetail,
+    totalDuration: albumDetail.tracks.reduce(
+      (acc, track) => acc + track.duration,
+      0
+    ),
+  };
 };
 
 export const createAlbumAction = async (data: CreateAlbumInput) => {
