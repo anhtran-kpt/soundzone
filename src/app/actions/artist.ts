@@ -25,6 +25,41 @@ export const getArtistsAction = async () => {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      tracks: {
+        select: {
+          track: {
+            include: {
+              album: {
+                include: {
+                  artist: true,
+                },
+              },
+              artists: {
+                select: {
+                  artist: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      albums: {
+        include: {
+          artist: true,
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+      },
+      _count: {
+        select: {
+          followers: true,
+        },
+      },
+    },
   });
 };
 

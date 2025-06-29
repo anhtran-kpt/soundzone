@@ -2,12 +2,13 @@
 
 import { Album } from "@/types";
 import { CldImage } from "next-cloudinary";
-import { CustomLink } from "@/components/shared";
 import Dot from "./dot";
 import { getYear } from "date-fns";
 import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
+import Link from "next/link";
+import { Button } from "@/components/ui";
 
 interface BannerProps {
   album: Album;
@@ -73,12 +74,14 @@ export function AlbumBanner({ album }: BannerProps) {
                 className="object-cover rounded-full"
               />
             </div>
-            <CustomLink
-              className="font-medium"
-              href={`/artists/${album.artist.slug}`}
-            >
-              {album.artist.name}
-            </CustomLink>
+            <Button type="button" variant="link" asChild>
+              <Link
+                className="font-medium"
+                href={`/artists/${album.artist.slug}`}
+              >
+                {album.artist.name}
+              </Link>
+            </Button>
             <Dot />
             <span>{getYear(album.releaseDate)}</span>
             <Dot />

@@ -1,4 +1,4 @@
-import GenreForm from "@/components/admin/features/genre/genre-form";
+import { GenreForm } from "@/components/admin/genre";
 
 export default function CreateGenrePage() {
   return (

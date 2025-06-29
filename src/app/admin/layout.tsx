@@ -1,6 +1,6 @@
 "use client";
 
-import { AdminHeader } from "@/components/admin";
+import { Header } from "@/components/admin/layout";
 import { useCurrentTrack } from "@/hooks";
 import { cn } from "@/lib/utils";
 import AdminSidebarProvider from "@/providers/admin-sidebar-provider";
@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           currentTrack && "pb-21"
         )}
       >
-        <AdminHeader scrollContainerRef={scrollRef} />
+        <Header scrollContainerRef={scrollRef} />
         <main className="flex-1 px-12 py-6 flex-col">{children}</main>
       </div>
     </AdminSidebarProvider>

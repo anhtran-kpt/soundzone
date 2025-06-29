@@ -103,7 +103,7 @@ export function ArtistForm() {
               name="imagePublicId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Artist image</FormLabel>
+                  <FormLabel>Image</FormLabel>
                   {imagePreview && (
                     <div className="flex justify-center items-center">
                       <div className="relative rounded-lg overflow-hidden size-48 aspect-square">
@@ -154,7 +154,7 @@ export function ArtistForm() {
               name="bannerPublicId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Artist banner</FormLabel>
+                  <FormLabel>Banner</FormLabel>
                   {bannerPreview && (
                     <div className="flex justify-center items-center">
                       <div className="relative rounded-lg overflow-hidden size-48 aspect-square">
@@ -189,7 +189,7 @@ export function ArtistForm() {
                             onClick={() => open()}
                           >
                             <UploadIcon className="size-6 mr-1" />
-                            Upload Cover
+                            Upload Banner
                           </Button>
                         );
                       }}

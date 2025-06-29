@@ -1,6 +1,5 @@
 "use client";
 
-import {} from "../../../ui/button";
 import { Separator, Button } from "@/components/ui";
 import {
   EllipsisIcon,
@@ -18,7 +17,7 @@ import {
 import PlayerControls from "./player-controls";
 import ProgressBar from "./progress-bar";
 import VolumeControl from "./volume-control";
-import { TrackInfo } from "@/components/shared";
+import TrackInfo from "../ui/track-info";
 
 function AudioPlayer() {
   const player = useAudioPlayer();

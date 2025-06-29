@@ -11,54 +11,55 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
-  Avatar,
-  AvatarFallback,
 } from "@/components/ui";
 import { Artist } from "@/types";
-import { formatName } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";
 
 export const ArtistColumns: ColumnDef<Artist>[] = [
+  {
+    header: "#",
+    accessorKey: "#",
+    cell: ({ row }) => {
+      return <span>{row.index + 1}</span>;
+    },
+  },
   {
     header: "",
     accessorKey: "imagePublicId",
     cell: ({ row }) => {
       return (
-        <Avatar>
-          {row.original.imagePublicId ? (
-            <CldImage
-              src={row.original.imagePublicId}
-              alt={row.original.name}
-              fill
-              aspectRatio="1:1"
-              className="rounded-full"
-              crop="fill"
-              sizes="32px"
-            />
-          ) : (
-            <AvatarFallback>
-              {formatName(row.original.name || "")}
-            </AvatarFallback>
-          )}
-        </Avatar>
+        <div className="relative size-8 rounded-full">
+          <CldImage
+            src={row.original.imagePublicId}
+            alt={row.original.name}
+            fill
+            sizes="32px"
+            className="object-cover rounded-full"
+          />
+        </div>
       );
     },
   },
   {
     header: "Name",
     accessorKey: "name",
-  },
-  {
-    header: "Nationality",
-    accessorKey: "nationality",
+    cell: ({ row }) => {
+      return <span>{row.original.name}</span>;
+    },
   },
   {
     header: "Followers",
     accessorKey: "followerCount",
+    cell: ({ row }) => {
+      return <span>{row.original._count.followers}</span>;
+    },
   },
   {
     header: "Monthly Listeners",
     accessorKey: "monthlyListeners",
+    cell: ({ row }) => {
+      return <span>{0}</span>;
+    },
   },
   {
     header: "Albums",
@@ -89,18 +90,18 @@ export const ArtistColumns: ColumnDef<Artist>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link
-                href={`/admin/artists/${row.original.slug}/${row.original.id}`}
-              >
-                View Artist
-              </Link>
+              <Button asChild type="button" variant="ghost">
+                <Link href={`/admin/artists/${row.original.slug}`}>
+                  View artist
+                </Link>
+              </Button>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link
-                href={`/admin/artists/${row.original.slug}/${row.original.id}/edit`}
-              >
-                Edit Artist
-              </Link>
+              <Button asChild type="button" variant="ghost">
+                <Link href={`/admin/artists/${row.original.slug}/edit`}>
+                  Edit artist
+                </Link>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

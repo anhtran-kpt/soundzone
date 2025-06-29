@@ -1,6 +1,6 @@
 "use client";
 
-import { UserHeader } from "@/components/user";
+import { Header } from "@/components/user/layout";
 import { useCurrentTrack } from "@/hooks";
 import { cn } from "@/lib/utils";
 import UserSidebarProvider from "@/providers/user-sidebar-provider";
@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           currentTrack && "pb-21"
         )}
       >
-        <UserHeader scrollContainerRef={scrollRef} />
+        <Header scrollContainerRef={scrollRef} />
         <main className="flex-col flex-1 px-12 py-6 overflow-x-hidden">
           {children}
         </main>

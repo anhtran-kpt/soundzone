@@ -1,14 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, DataTable } from "@/components/ui";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import { columns } from "@/components/admin/features/artist/columns";
-import { useArtists } from "@/lib/queries/artist";
+import { ArtistColumns } from "@/components/admin/artist";
+import { useGetArtists } from "@/hooks";
 
 export default function ArtistsPage() {
-  const { data: artists, isLoading, error } = useArtists();
+  const { data: artists, isLoading, error } = useGetArtists();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,21 +19,19 @@ export default function ArtistsPage() {
     return <div>No artists found</div>;
   }
 
-  console.log(artists);
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Artists</h1>
-        <Link href="/admin/artists/new">
-          <Button>
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Add Artist
-          </Button>
-        </Link>
+        <h3 className="text-lg font-semibold">Artists</h3>
+        <Button asChild type="button" variant="outline">
+          <Link href="/admin/artists/new">
+            <PlusIcon className="mr-1 size-4" />
+            New artist
+          </Link>
+        </Button>
       </div>
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={artists || []} />
+        <DataTable columns={ArtistColumns} data={artists || []} />
       </div>
     </div>
   );

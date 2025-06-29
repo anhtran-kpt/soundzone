@@ -1,9 +1,10 @@
 import { Album } from "@/types";
 import { formatDate } from "date-fns";
 import { CldImage } from "next-cloudinary";
-import { Icon, CustomLink } from "@/components/shared";
 import { PlayIcon } from "lucide-react";
 import Dot from "./dot";
+import Link from "next/link";
+import { Button } from "@/components/ui";
 
 export function AlbumCard({ album }: { album: Album }) {
   return (
@@ -17,16 +18,18 @@ export function AlbumCard({ album }: { album: Album }) {
           sizes="20vw"
         />
         <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-10 rounded-full invisible group-hover:visible bg-primary text-white flex items-center justify-center">
-          <Icon icon={PlayIcon} className="size-5" fill="currentColor" />
+          <PlayIcon className="size-5 fill-current" />
         </button>
       </div>
       <div className="flex flex-col items-center">
-        <CustomLink
-          href={`/artists/${album.artist.slug}/albums/${album.slug}`}
-          className="text-sm font-medium line-clamp-1 text-ellipsis"
-        >
-          {album.title}
-        </CustomLink>
+        <Button asChild type="button" variant="link">
+          <Link
+            href={`/artists/${album.artist.slug}/albums/${album.slug}`}
+            className="text-sm font-medium line-clamp-1 text-ellipsis"
+          >
+            {album.title}
+          </Link>
+        </Button>
         <div className="flex text-[13px] text-muted-foreground items-center gap-1.5">
           <span>{formatDate(album.releaseDate, "yyyy")}</span>
           <Dot />

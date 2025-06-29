@@ -1,5 +1,5 @@
 import { SidebarProvider as ShadcnSidebarProvider } from "@/components/ui/sidebar";
-import { AdminSidebar } from "@/components/admin";
+import { Sidebar } from "@/components/admin/layout";
 
 export default function SidebarProvider({
   children,
@@ -8,7 +8,7 @@ export default function SidebarProvider({
 }) {
   return (
     <ShadcnSidebarProvider>
-      <AdminSidebar />
+      <Sidebar />
       {children}
     </ShadcnSidebarProvider>
   );

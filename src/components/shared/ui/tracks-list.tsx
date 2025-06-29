@@ -23,10 +23,10 @@ import {
 } from "@/components/ui";
 import { formatDuration } from "@/lib/utils";
 import PlayButton from "@/components/shared/ui/play-button";
-import { Icon, CustomLink } from "@/components/shared";
 import Explicit from "./explicit";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface TracksProps {
   tracks: Track[];
@@ -71,13 +71,15 @@ export function TracksList({ tracks }: TracksProps) {
               <div className="flex items-center gap-1.5">
                 {track.isExplicit && <Explicit />}
                 {track.artists.map(({ artist }) => (
-                  <CustomLink
-                    href={`/artists/${artist.slug}`}
-                    key={artist.id}
-                    className="text-xs"
-                  >
-                    {artist.name}
-                  </CustomLink>
+                  <Button asChild variant="link" type="button" key={artist.id}>
+                    <Link
+                      href={`/artists/${artist.slug}`}
+                      key={artist.id}
+                      className="text-xs"
+                    >
+                      {artist.name}
+                    </Link>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -91,7 +93,7 @@ export function TracksList({ tracks }: TracksProps) {
               size="icon"
               className="invisible group-hover:visible"
             >
-              <Icon icon={CirclePlusIcon} className="size-4" />
+              <CirclePlusIcon className="size-4" />
             </Button>
           </div>
           <div className="text-muted-foreground flex items-center gap-2 justify-end">
@@ -100,7 +102,7 @@ export function TracksList({ tracks }: TracksProps) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <Icon icon={EllipsisIcon} className="size-4" />
+                    <EllipsisIcon className="size-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -111,11 +113,7 @@ export function TracksList({ tracks }: TracksProps) {
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>
-                        <Icon
-                          stroke="currentColor"
-                          icon={ListPlusIcon}
-                          className="size-4 mr-2"
-                        />
+                        <ListPlusIcon className="size-4 mr-2" />
                         Add to playlist
                       </DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
@@ -128,11 +126,7 @@ export function TracksList({ tracks }: TracksProps) {
                       </DropdownMenuPortal>
                     </DropdownMenuSub>
                     <DropdownMenuItem>
-                      <Icon
-                        icon={ImportIcon}
-                        className="size-4 mr-2"
-                        color="currentColor"
-                      />
+                      <ImportIcon className="size-4 mr-2" />
                       Save to library
                     </DropdownMenuItem>
                     <DropdownMenuItem>Add to queue</DropdownMenuItem>
