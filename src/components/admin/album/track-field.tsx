@@ -1,52 +1,53 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { FormDescription } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { PlusIcon, UploadIcon } from "lucide-react";
-import Icon from "@/components/shared/ui/icon";
-import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { CldUploadWidget } from "next-cloudinary";
-import { Explicit } from "@/components/shared";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useGenres } from "@/lib/queries/genre";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
-import { FormControl, FormField, FormMessage } from "@/components/ui/form";
-import { FormItem } from "@/components/ui/form";
-import { FormLabel } from "@/components/ui/form";
-import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
-import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
-import { CREDIT_ROLES } from "@/lib/constants";
 import {
+  FormDescription,
+  Input,
+  Button,
+  Switch,
+  Textarea,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  FormControl,
+  FormField,
+  FormMessage,
+  FormItem,
+  FormLabel,
   Command,
   CommandItem,
   CommandGroup,
   CommandList,
   CommandEmpty,
-} from "@/components/ui/command";
-import { PopoverContent } from "@/components/ui/popover";
-import { PopoverTrigger } from "@/components/ui/popover";
-import { CommandInput } from "@/components/ui/command";
-import { Popover } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { useArtists } from "@/lib/queries/artist";
-import { ArtistImage } from "@/components/shared";
-import { Separator } from "@/components/ui/separator";
+  PopoverContent,
+  PopoverTrigger,
+  CommandInput,
+  Popover,
+  Separator,
+} from "@/components/ui";
+import { PlusIcon } from "lucide-react";
+import { CldImage } from "next-cloudinary";
+import Explicit from "@/components/shared/ui/explicit";
+import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
+import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
+import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
+import { CREDIT_ROLES } from "@/lib/constants";
+import { cn, getAudioUrl } from "@/lib/utils";
+import { useGetArtists, useGetGenres } from "@/hooks";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 
 interface TrackFieldProps {
   trackIndex: number;
-  onRemove: () => void;
-  canRemove: boolean;
+  track: {
+    audioPublicId: string;
+    duration: number;
+  };
 }
 
-export function TrackField({
-  trackIndex,
-  onRemove,
-  canRemove,
-}: TrackFieldProps) {
-  const { data: genres } = useGenres();
-  const { data: artists } = useArtists();
+export function TrackField({ trackIndex, track }: TrackFieldProps) {
+  const { data: genres } = useGetGenres();
+  const { data: artists } = useGetArtists();
 
   const {
     control,
@@ -94,25 +95,20 @@ export function TrackField({
   };
 
   return (
-    <Card className="mb-4 rounded-lg">
+    <Card className="rounded-lg">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Track #{trackIndex + 1}</CardTitle>
-          {canRemove && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onRemove}
-            >
-              <Icon icon={Trash2Icon} className="size-4" />
-            </Button>
-          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-4">
-          <div className="flex gap-4">
+          <div className="flex gap-6">
+            <AudioPlayer
+              src={getAudioUrl(track.audioPublicId)}
+              className="rounded shadow max-w-md"
+            />
+
             <FormField
               control={control}
               name={`tracks.${trackIndex}.title`}
@@ -133,69 +129,29 @@ export function TrackField({
 
             <FormField
               control={control}
-              name={`tracks.${trackIndex}.audioMeta`}
+              name={`tracks.${trackIndex}.isExplicit`}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Audio file</FormLabel>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-1">
+                    <FormLabel>
+                      <Explicit />
+                      Explicit content
+                    </FormLabel>
+                    <FormDescription>
+                      This track contains explicit content.
+                    </FormDescription>
+                  </div>
                   <FormControl>
-                    <CldUploadWidget
-                      signatureEndpoint="/api/sign-cloudinary-params"
-                      options={{
-                        folder: "soundzone/tracks",
-                        resourceType: "video",
-                      }}
-                      onSuccess={(results, widget) => {
-                        const info = results.info as CloudinaryUploadWidgetInfo;
-                        field.onChange({
-                          duration: info.duration,
-                          publicId: info.public_id,
-                        });
-                        widget.close();
-                      }}
-                    >
-                      {({ open }) => {
-                        return (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => open()}
-                          >
-                            <Icon icon={UploadIcon} className="size-4 mr-1" />
-                            Upload Audio
-                          </Button>
-                        );
-                      }}
-                    </CldUploadWidget>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isSubmitting}
+                    />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <FormField
-            control={control}
-            name={`tracks.${trackIndex}.isExplicit`}
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-1">
-                  <FormLabel>
-                    <Explicit />
-                    Explicit content
-                  </FormLabel>
-                  <FormDescription>
-                    This track contains explicit content.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
 
           <FormField
             control={control}
@@ -282,12 +238,15 @@ export function TrackField({
                                       field.onChange(artist.id);
                                     }}
                                   >
-                                    <ArtistImage
-                                      imagePublicId={artist.imagePublicId}
-                                      artistName={artist.name}
-                                      className="size-8 mr-2"
-                                      sizes="32px"
-                                    />
+                                    <div className="relative size-8 rounded-full">
+                                      <CldImage
+                                        src={artist.imagePublicId}
+                                        alt={artist.name}
+                                        fill
+                                        sizes="32px"
+                                        className="object-cover rounded-full"
+                                      />
+                                    </div>
                                     {artist.name}
                                     <CheckIcon
                                       className={cn(
@@ -349,7 +308,7 @@ export function TrackField({
                   size="sm"
                   onClick={() => handleRemovePerformer(performerIndex)}
                 >
-                  <Icon icon={Trash2Icon} className="size-4" />
+                  <Trash2Icon className="size-4" />
                 </Button>
               </div>
             ))}
@@ -361,7 +320,7 @@ export function TrackField({
               onClick={() => handleAddPerformer()}
               className="self-center"
             >
-              <Icon icon={PlusIcon} className="size-4" />
+              <PlusIcon className="size-4" />
               Add main credit
             </Button>
           </div>
@@ -431,7 +390,7 @@ export function TrackField({
                   size="sm"
                   onClick={() => handleRemoveOtherCredit(creditIndex)}
                 >
-                  <Icon icon={Trash2Icon} className="size-4" />
+                  <Trash2Icon className="size-4" />
                 </Button>
               </div>
             ))}
@@ -443,7 +402,7 @@ export function TrackField({
               onClick={() => handleAddOtherCredit()}
               className="self-center"
             >
-              <Icon icon={PlusIcon} className="size-4" />
+              <PlusIcon className="size-4" />
               Add other credit
             </Button>
           </div>

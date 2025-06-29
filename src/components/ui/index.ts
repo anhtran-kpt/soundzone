@@ -24,3 +24,4 @@ export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
 export * from "./data-table";
+export * from "./radio-group";

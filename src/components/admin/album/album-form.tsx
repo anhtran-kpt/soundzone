@@ -18,13 +18,14 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  RadioGroup,
+  RadioGroupItem,
 } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
-import { ArtistRole } from "@/app/generated/prisma";
-import {} from "@/components/ui/popover";
+import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, PlusCircleIcon, UploadIcon } from "lucide-react";
+import { CalendarIcon, UploadIcon } from "lucide-react";
 import { format } from "date-fns";
 import { CreateAlbumForm, createAlbumSchema } from "@/schemas";
 import { createAlbumAction } from "@/app/actions/album";
@@ -33,15 +34,19 @@ import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { Artist } from "@/types";
 import { useState } from "react";
 import Image from "next/image";
-import TrackField from "./track-field";
+import { TrackField } from "./track-field";
 
 export function AlbumForm({ artist }: { artist: Artist }) {
-  const [albumBannerPreview, setAlbumBannerPreview] = useState<
-    string | undefined
-  >(undefined);
   const [albumCoverPreview, setAlbumCoverPreview] = useState<
     string | undefined
   >(undefined);
+
+  const [tracks, setTracks] = useState<
+    {
+      audioPublicId: string;
+      duration: number;
+    }[]
+  >([]);
 
   const methods = useForm<CreateAlbumForm>({
     resolver: zodResolver(createAlbumSchema),
@@ -49,17 +54,13 @@ export function AlbumForm({ artist }: { artist: Artist }) {
       title: "",
       description: "",
       releaseDate: new Date(),
+      releaseType: ReleaseType.SINGLE,
       coverPublicId: undefined,
-      bannerPublicId: undefined,
       tracks: [
         {
           title: "",
           isExplicit: false,
           lyrics: "",
-          audioMeta: {
-            duration: undefined,
-            publicId: undefined,
-          },
           genreIds: [],
           performers: [
             {
@@ -85,29 +86,10 @@ export function AlbumForm({ artist }: { artist: Artist }) {
     formState: { isSubmitting },
   } = methods;
 
-  const {
-    fields: trackFields,
-    append: appendTrack,
-    remove: removeTrack,
-  } = useFieldArray({
+  const { fields: trackFields } = useFieldArray({
     control,
     name: "tracks",
   });
-
-  const handleAddTrack = () => {
-    appendTrack({
-      title: "",
-      isExplicit: false,
-      audioMeta: { duration: 0, publicId: "" },
-      genreIds: [],
-      performers: [],
-      credits: [],
-    });
-  };
-
-  const handleRemoveTrack = (trackIndex: number) => {
-    removeTrack(trackIndex);
-  };
 
   const onFormSubmit = async (values: CreateAlbumForm) => {
     try {
@@ -115,14 +97,15 @@ export function AlbumForm({ artist }: { artist: Artist }) {
         title: values.title,
         description: values.description,
         releaseDate: values.releaseDate,
+        releaseType: values.releaseType,
         coverPublicId: values.coverPublicId,
         bannerPublicId: values.bannerPublicId,
         artistId: artist.id,
-        tracks: values.tracks.map((track) => ({
+        tracks: values.tracks.map((track, index) => ({
           title: track.title,
           lyrics: track.lyrics,
-          duration: track.audioMeta.duration,
-          audioPublicId: track.audioMeta.publicId,
+          duration: tracks[index].duration,
+          audioPublicId: tracks[index].audioPublicId,
           isExplicit: track.isExplicit,
           genreIds: track.genreIds,
           performers: track.performers,
@@ -144,245 +127,236 @@ export function AlbumForm({ artist }: { artist: Artist }) {
     <Card>
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
-          Create New Album
+          New Album
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...methods}>
-          <form onSubmit={handleSubmit(onFormSubmit)}>
-            <div className="flex flex-col lg:flex-row gap-6">
-              <div className="space-y-4 flex-2/5">
-                <FormLabel className="mb-2 text-base font-semibold">
-                  Album Details
-                </FormLabel>
-                <Card>
-                  <CardContent className="space-y-4">
-                    <div className="flex gap-4">
-                      <FormField
-                        control={control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel>Album title</FormLabel>
+          <form
+            onSubmit={handleSubmit(onFormSubmit)}
+            className="flex flex-col items-center"
+          >
+            <div className="flex flex-col gap-6">
+              <div className="flex gap-6 items-start">
+                <FormField
+                  control={control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem className="min-w-xs">
+                      <FormLabel>Album title</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter album title"
+                          autoComplete="album-title"
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="releaseType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Album Type</FormLabel>
+                      <FormControl className="h-8">
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex gap-2"
+                        >
+                          <FormItem className="flex items-center gap-3">
                             <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Enter album title"
-                                autoComplete="album-title"
-                                disabled={isSubmitting}
-                              />
+                              <RadioGroupItem value="SINGLE" />
                             </FormControl>
-                            <FormMessage />
+                            <FormLabel className="font-normal">
+                              Single
+                            </FormLabel>
                           </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={control}
-                        name="releaseDate"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Release date</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                  >
-                                    {field.value ? (
-                                      format(field.value, "PPP")
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  fromDate={new Date(1900, 0, 1)}
-                                  toDate={new Date()}
-                                  captionLayout="dropdown"
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
+                          <FormItem className="flex items-center gap-3">
+                            <FormControl>
+                              <RadioGroupItem value="ALBUM" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Album</FormLabel>
                           </FormItem>
-                        )}
-                      />
-                    </div>
+                          <FormItem className="flex items-center gap-3">
+                            <FormControl>
+                              <RadioGroupItem value="EP" />
+                            </FormControl>
+                            <FormLabel className="font-normal">EP</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                    <FormField
-                      control={control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Album description</FormLabel>
+                <FormField
+                  control={control}
+                  name="releaseDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Release date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
                           <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder="Enter album description"
-                              autoComplete="album-description"
-                              disabled={isSubmitting}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={control}
-                      name="coverPublicId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Album cover</FormLabel>
-                          {albumCoverPreview && (
-                            <div className="flex justify-center items-center">
-                              <div className="relative rounded-lg overflow-hidden size-48 aspect-square">
-                                <Image
-                                  src={albumCoverPreview}
-                                  alt="Album cover preview"
-                                  fill
-                                  className="object-cover group-hover:scale-105 transition-transform duration-300 group-hover:brightness-75"
-                                />
-                              </div>
-                            </div>
-                          )}
-                          <FormControl>
-                            <CldUploadWidget
-                              signatureEndpoint="/api/sign-cloudinary-params"
-                              options={{
-                                folder: "soundzone/albums/covers",
-                                resourceType: "image",
-                              }}
-                              onSuccess={(results, widget) => {
-                                const info =
-                                  results.info as CloudinaryUploadWidgetInfo;
-                                field.onChange(info.public_id);
-                                setAlbumCoverPreview(info.secure_url);
-                                widget.close();
-                              }}
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
                             >
-                              {({ open }) => {
-                                return (
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => open()}
-                                  >
-                                    <UploadIcon className="size-6 mr-1" />
-                                    Upload Cover
-                                  </Button>
-                                );
-                              }}
-                            </CldUploadWidget>
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={control}
-                      name="bannerPublicId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Album banner</FormLabel>
-                          {albumBannerPreview && (
-                            <div className="w-full aspect-video relative">
-                              <Image
-                                src={albumBannerPreview}
-                                alt="Album banner preview"
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          )}
-                          <FormControl>
-                            <CldUploadWidget
-                              signatureEndpoint="/api/sign-cloudinary-params"
-                              options={{
-                                folder: "soundzone/albums/banners",
-                                resourceType: "image",
-                              }}
-                              onSuccess={(results, widget) => {
-                                const info =
-                                  results.info as CloudinaryUploadWidgetInfo;
-                                field.onChange(info.public_id);
-                                setAlbumBannerPreview(info.secure_url);
-                                widget.close();
-                              }}
-                            >
-                              {({ open }) => {
-                                return (
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => open()}
-                                  >
-                                    <UploadIcon className="size-6 mr-1" />
-                                    Upload Banner
-                                  </Button>
-                                );
-                              }}
-                            </CldUploadWidget>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            fromDate={new Date(1900, 0, 1)}
+                            toDate={new Date()}
+                            captionLayout="dropdown"
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
-              <div className="flex-3/5">
-                <FormLabel className="mb-2 text-base font-semibold">
-                  {trackFields.length === 1
-                    ? "Track Details"
-                    : "Tracks Details"}
-                </FormLabel>
-                <div className="space-y-6">
-                  {trackFields.map((track, trackIndex) => (
-                    <TrackField
-                      key={track.id}
-                      trackIndex={trackIndex}
-                      onRemove={() => handleRemoveTrack(trackIndex)}
-                      canRemove={trackFields.length > 1}
-                    />
-                  ))}
-                </div>
+              <FormField
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Album description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Enter album description"
+                        autoComplete="album-description"
+                        disabled={isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full mt-2"
-                  onClick={handleAddTrack}
-                >
-                  <PlusCircleIcon className="mr-4 size-6" />
-                  Add track
-                </Button>
+              <FormField
+                control={control}
+                name="coverPublicId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Album cover</FormLabel>
+                    {albumCoverPreview && (
+                      <div className="flex justify-center items-center">
+                        <div className="relative rounded-lg overflow-hidden size-48 aspect-square">
+                          <Image
+                            src={albumCoverPreview}
+                            alt="Album cover preview"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300 group-hover:brightness-75"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <FormControl>
+                      <CldUploadWidget
+                        signatureEndpoint="/api/sign-cloudinary-params"
+                        options={{
+                          folder: "soundzone/albums/covers",
+                          resourceType: "image",
+                        }}
+                        onSuccess={(results, widget) => {
+                          const info =
+                            results.info as CloudinaryUploadWidgetInfo;
+                          field.onChange(info.public_id);
+                          setAlbumCoverPreview(info.secure_url);
+                          widget.close();
+                        }}
+                      >
+                        {({ open }) => {
+                          return (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => open()}
+                            >
+                              <UploadIcon className="size-6 mr-1" />
+                              Upload Cover
+                            </Button>
+                          );
+                        }}
+                      </CldUploadWidget>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full mt-8"
-                >
-                  {isSubmitting ? "Creating new album..." : "Create new album"}
-                </Button>
+              <CldUploadWidget
+                signatureEndpoint="/api/sign-cloudinary-params"
+                options={{
+                  folder: "soundzone/tracks",
+                  resourceType: "video",
+                }}
+                onSuccess={(result) => {
+                  const info = result.info as CloudinaryUploadWidgetInfo;
+
+                  setTracks((prev) => [
+                    ...prev,
+                    {
+                      audioPublicId: info.public_id as string,
+                      duration: info.duration as number,
+                    },
+                  ]);
+                }}
+              >
+                {({ open }) => (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => open()}
+                  >
+                    <UploadIcon className="size-4 mr-1" />
+                    Upload audios
+                  </Button>
+                )}
+              </CldUploadWidget>
+
+              <FormLabel className="mb-2 text-base font-semibold">
+                {trackFields.length === 1 ? "Track Details" : "Tracks Details"}
+              </FormLabel>
+              <div className="space-y-6">
+                {tracks.map((track, trackIndex) => (
+                  <TrackField
+                    key={trackIndex}
+                    trackIndex={trackIndex}
+                    track={track}
+                  />
+                ))}
               </div>
             </div>
+
+            <Button type="submit" disabled={isSubmitting} className="mt-8">
+              {isSubmitting ? "Creating new album..." : "Create new album"}
+            </Button>
           </form>
         </Form>
       </CardContent>

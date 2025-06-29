@@ -1,39 +1,20 @@
-import AlbumForm from "@/components/admin/features/album/album-form";
-import { notFound } from "next/navigation";
-import { getArtistById } from "@/lib/services/artist";
-import { Metadata } from "next";
-import ArtistBanner from "@/app/(user)/artists/[artistSlug]/components/artist-banner";
+import { prefetchArtistBySlug } from "@/lib/prefetchs";
+import { getQueryClient } from "@/lib/get-query-client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { NewAlbumPage } from "@/components/admin/album/new-album-page";
 
-type Props = {
-  params: Promise<{ artistId: string }>;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { artistId } = await params;
-  const artist = await getArtistById(artistId);
-
-  if (!artist) {
-    return { title: "Artist not found" };
-  }
-
-  return {
-    title: `Create new album for ${artist.name}`,
-    description: `Create new album for ${artist.name}`,
-  };
-}
-
-export default async function NewAlbumPage({ params }: Props) {
-  const { artistId } = await params;
-  const artist = await getArtistById(artistId);
-
-  if (!artist) {
-    notFound();
-  }
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ artistSlug: string }>;
+}) {
+  const { artistSlug } = await params;
+  const qc = getQueryClient();
+  await prefetchArtistBySlug(qc, artistSlug);
 
   return (
-    <div className="flex flex-col gap-16">
-      <ArtistBanner artist={artist} />
-      <AlbumForm artist={artist} />
-    </div>
+    <HydrationBoundary state={dehydrate(qc)}>
+      <NewAlbumPage artistSlug={artistSlug} />
+    </HydrationBoundary>
   );
 }
