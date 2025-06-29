@@ -1,5 +1,4 @@
 export * from "./avatar";
-export * from "./badge-checkbox";
 export * from "./button";
 export * from "./calendar";
 export * from "./card";
@@ -24,3 +23,4 @@ export * from "./table";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
+export * from "./data-table";

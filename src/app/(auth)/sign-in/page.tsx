@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { SignInForm } from "@/components/forms/sign-in-form";
+import { SignInForm } from "@/components/shared/features/auth/sign-in-form";
 
 export const metadata: Metadata = {
   title: "Sign in | SoundZone",

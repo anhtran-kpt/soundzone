@@ -1,5 +1,5 @@
-import { DataTable } from "@/components/shared/data-table";
-import { columns } from "@/components/features/album/columns";
+import { DataTable } from "@/components/ui/data-table";
+import { columns } from "@/components/admin/features/album/columns";
 import { getAlbumsByArtistId } from "@/lib/services/album";
 
 export default async function ArtistAlbumsPage({

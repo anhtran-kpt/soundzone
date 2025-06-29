@@ -1,4 +1,4 @@
-import AlbumDetail from "./components/album-detail";
+import AlbumDetail from "../../../../../../components/user/features/artist/album-detail";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { prefetchAlbumBySlug } from "@/lib/prefetchs";

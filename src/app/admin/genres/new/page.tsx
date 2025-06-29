@@ -1,9 +1,9 @@
-import GenreForm from "@/components/forms/genre-form";
+import GenreForm from "@/components/admin/features/genre/genre-form";
 
 export default function CreateGenrePage() {
   return (
     <div className="container py-10">
-      <GenreForm mode="create" />
+      <GenreForm />
     </div>
   );
 }

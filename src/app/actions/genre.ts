@@ -5,7 +5,17 @@ import db from "@/lib/prisma/db";
 export const getGenresAction = async () => {
   return await db.genre.findMany({
     orderBy: {
-      createdAt: "desc",
+      tracks: {
+        _count: "desc",
+      },
+    },
+    include: {
+      tracks: true,
+      _count: {
+        select: {
+          tracks: true,
+        },
+      },
     },
   });
 };
@@ -14,6 +24,14 @@ export const getGenreBySlugAction = async (genreSlug: string) => {
   return await db.genre.findUnique({
     where: {
       slug: genreSlug,
+    },
+    include: {
+      tracks: true,
+      _count: {
+        select: {
+          tracks: true,
+        },
+      },
     },
   });
 };

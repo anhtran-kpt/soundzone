@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/shared/data-table";
-import { columns } from "@/components/features/artist/columns";
+import { DataTable } from "@/components/ui/data-table";
+import { columns } from "@/components/admin/features/artist/columns";
 import { useArtists } from "@/lib/queries/artist";
 
 export default function ArtistsPage() {
