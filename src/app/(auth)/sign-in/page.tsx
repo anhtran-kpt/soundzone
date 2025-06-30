@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { SignInForm } from "@/components/shared/features/auth/sign-in-form";
+import { SignInForm } from "@/components/shared/auth";
 
 export const metadata: Metadata = {
   title: "Sign in | SoundZone",
@@ -12,7 +12,7 @@ export default function SignInPage() {
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
         <span className="sr-only">Home page</span>
-        <h1 className="text-xl font-bold">Soundzone</h1>
+        <h1 className="text-xl font-bold">SoundZone</h1>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <SignInForm />

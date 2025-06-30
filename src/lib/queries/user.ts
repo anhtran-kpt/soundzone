@@ -17,7 +17,5 @@ export const getUserBySlug = async (userSlug: string, signal: AbortSignal) => {
 };
 
 export const signUp = async (data: SignUpInput) => {
-  return await api.post<SignUpReturn>(endpoints.signUp, {
-    data,
-  });
+  return await api.post<SignUpReturn>(endpoints.signUp, data);
 };

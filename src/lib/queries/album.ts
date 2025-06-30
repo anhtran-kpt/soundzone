@@ -20,5 +20,5 @@ export const getAlbumBySlug = async (
 };
 
 export const createAlbum = async (data: CreateAlbumInput) => {
-  return await api.post<CreateAlbumReturn>(endpoints.create, { data });
+  return await api.post<CreateAlbumReturn>(endpoints.create, data);
 };

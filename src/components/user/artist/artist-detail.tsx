@@ -11,7 +11,6 @@ import Link from "next/link";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
-  console.log(artist);
 
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
@@ -29,7 +28,7 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
       <section>
         <ArtistBanner artist={artist} />
       </section>
-      <section className="flex gap-6 items-center py-6">
+      <section className="flex gap-6 items-center py-6 relative">
         <Button type="button" size="icon" className="rounded-full size-12">
           {currentTrack?.album.artistId === artist.id && isPlaying ? (
             <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />

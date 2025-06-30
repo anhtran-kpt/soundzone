@@ -9,9 +9,12 @@ export const SLUG_OPTIONS = {
   trim: true,
 };
 
-export const CREDIT_ROLES = {
+export const ARTIST_ROLES = {
   MAIN_ARTIST: "Main Artist",
   FEATURED_ARTIST: "Featured Artist",
+};
+
+export const CREDIT_ROLES = {
   COMPOSER: "Composer",
   LYRICIST: "Lyricist",
   PRODUCER: "Producer",

@@ -20,7 +20,5 @@ export const getPlaylistBySlug = async (
 };
 
 export const createPlaylist = async (data: CreatePlaylistInput) => {
-  return await api.post<CreatePlaylistReturn>(endpoints.create, {
-    data,
-  });
+  return await api.post<CreatePlaylistReturn>(endpoints.create, data);
 };

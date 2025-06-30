@@ -19,15 +19,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { CreateArtistInput, createArtistSchema } from "@/schemas";
-import { createArtistAction } from "@/app/actions/artist";
 import { toast } from "sonner";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import Image from "next/image";
 import { UploadIcon } from "lucide-react";
+import { useCreateArtist } from "@/hooks";
 
 export function ArtistForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+
+  const { mutateAsync: createArtist } = useCreateArtist();
 
   const form = useForm<CreateArtistInput>({
     resolver: zodResolver(createArtistSchema),
@@ -42,7 +44,8 @@ export function ArtistForm() {
   const onSubmit = async (values: CreateArtistInput) => {
     form.clearErrors();
     try {
-      await createArtistAction(values);
+      await createArtist(values);
+      form.reset();
     } catch (error: unknown) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong"

@@ -30,9 +30,7 @@ export default function ArtistsPage() {
           </Link>
         </Button>
       </div>
-      <div className="container mx-auto py-10">
-        <DataTable columns={ArtistColumns} data={artists || []} />
-      </div>
+      <DataTable columns={ArtistColumns} data={artists || []} />
     </div>
   );
 }

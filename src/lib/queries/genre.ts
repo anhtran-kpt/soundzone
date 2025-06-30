@@ -20,7 +20,5 @@ export const getGenreBySlug = async (
 };
 
 export const createGenre = async (data: CreateGenreInput) => {
-  return await api.post<CreateGenreReturn>(endpoints.create, {
-    data,
-  });
+  return await api.post<CreateGenreReturn>(endpoints.create, data);
 };

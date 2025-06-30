@@ -20,7 +20,5 @@ export const getArtistBySlug = async (
 };
 
 export const createArtist = async (data: CreateArtistInput) => {
-  return await api.post<CreateArtistReturn>(endpoints.create, {
-    data,
-  });
+  return await api.post<CreateArtistReturn>(endpoints.create, data);
 };

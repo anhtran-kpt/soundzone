@@ -2,7 +2,6 @@
 
 import db from "@/lib/prisma/db";
 import { emptyToNull } from "@/lib/utils";
-import { ReleaseType } from "@/app/generated/prisma";
 import { CreateAlbumInput } from "@/schemas/album";
 
 export const getAlbumsAction = async () => {
@@ -51,15 +50,8 @@ export const getAlbumBySlugAction = async (albumSlug: string) => {
 };
 
 export const createAlbumAction = async (data: CreateAlbumInput) => {
-  const {
-    title,
-    description,
-    releaseDate,
-    coverPublicId,
-    bannerPublicId,
-    artistId,
-    tracks,
-  } = data;
+  const { title, releaseDate, releaseType, coverPublicId, artistId, tracks } =
+    data;
 
   return await db.$transaction(async (tx) => {
     const albumSlug = await tx.album.generateSlug(title);
@@ -68,12 +60,9 @@ export const createAlbumAction = async (data: CreateAlbumInput) => {
       data: {
         title,
         slug: albumSlug,
-        description: emptyToNull(description),
-        releaseType:
-          tracks.length === 1 ? ReleaseType.SINGLE : ReleaseType.ALBUM,
+        releaseType,
         releaseDate,
         coverPublicId,
-        bannerPublicId,
         artistId,
       },
     });

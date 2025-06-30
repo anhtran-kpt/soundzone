@@ -1,14 +1,13 @@
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/shared";
 import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
 import { FormControl, FormField, FormMessage } from "@/components/ui/form";
 import { FormItem } from "@/components/ui/form";
 import { FormLabel } from "@/components/ui/form";
 import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
 import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
-import { CREDIT_ROLES } from "@/lib/constants";
+import { ARTIST_ROLES, CREDIT_ROLES } from "@/lib/constants";
 import {
   Command,
   CommandItem,
@@ -23,7 +22,7 @@ import { Popover } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useGetArtists } from "@/hooks";
 import { Input } from "@/components/ui/input";
-import { ArtistImage } from "@/components/shared";
+import { CldImage } from "next-cloudinary";
 
 interface ArtistFieldProps {
   trackIndex: number;
@@ -53,7 +52,7 @@ export function ArtistField({
               size="sm"
               onClick={onRemove}
             >
-              <Icon icon={Trash2Icon} className="size-4" />
+              <Trash2Icon className="size-4" />
             </Button>
           )}
         </div>
@@ -102,12 +101,15 @@ export function ArtistField({
                                 setValue(artistIdFieldName, artist.id);
                               }}
                             >
-                              <ArtistImage
-                                imagePublicId={artist.imagePublicId}
-                                artistName={artist.name}
-                                className="size-8 mr-2"
-                                sizes="32px"
-                              />
+                              <div className="relative size-8 rounded-full">
+                                <CldImage
+                                  src={artist.imagePublicId}
+                                  alt={artist.name}
+                                  fill
+                                  sizes="32px"
+                                  className="object-cover rounded-full"
+                                />
+                              </div>
                               {artist.name}
                               <CheckIcon
                                 className={cn(
@@ -153,7 +155,7 @@ export function ArtistField({
                               );
                         }}
                       >
-                        {CREDIT_ROLES[role]}
+                        {ARTIST_ROLES[role]}
                       </BadgeCheckbox>
                     ))}
                   </div>

@@ -13,7 +13,6 @@ import {
   CardTitle,
   Input,
   Button,
-  Textarea,
   Calendar,
   Popover,
   PopoverContent,
@@ -52,7 +51,6 @@ export function AlbumForm({ artist }: { artist: Artist }) {
     resolver: zodResolver(createAlbumSchema),
     defaultValues: {
       title: "",
-      description: "",
       releaseDate: new Date(),
       releaseType: ReleaseType.SINGLE,
       coverPublicId: undefined,
@@ -95,11 +93,9 @@ export function AlbumForm({ artist }: { artist: Artist }) {
     try {
       const formData = {
         title: values.title,
-        description: values.description,
         releaseDate: values.releaseDate,
         releaseType: values.releaseType,
         coverPublicId: values.coverPublicId,
-        bannerPublicId: values.bannerPublicId,
         artistId: artist.id,
         tracks: values.tracks.map((track, index) => ({
           title: track.title,
@@ -238,25 +234,6 @@ export function AlbumForm({ artist }: { artist: Artist }) {
                   )}
                 />
               </div>
-
-              <FormField
-                control={control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Album description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Enter album description"
-                        autoComplete="album-description"
-                        disabled={isSubmitting}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={control}

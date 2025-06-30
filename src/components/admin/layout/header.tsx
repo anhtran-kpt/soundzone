@@ -32,9 +32,7 @@ export function Header({
   return (
     <motion.header
       className={`sticky top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
-        isScrolled
-          ? "bg-background/90 backdrop-blur-md shadow-sm"
-          : "bg-background"
+        isScrolled ? "bg-transparent backdrop-blur-md shadow-sm" : ""
       }`}
     >
       <div className="flex items-center gap-4 flex-grow">

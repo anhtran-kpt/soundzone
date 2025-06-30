@@ -34,9 +34,8 @@ CREATE TABLE "Artist" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT,
-    "nationality" TEXT,
     "imagePublicId" TEXT NOT NULL,
-    "bannerPublicId" TEXT,
+    "bannerPublicId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -64,12 +63,10 @@ CREATE TABLE "Track" (
 CREATE TABLE "Album" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT,
     "slug" TEXT NOT NULL,
     "releaseType" "ReleaseType" NOT NULL DEFAULT 'SINGLE',
     "releaseDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "coverPublicId" TEXT NOT NULL,
-    "bannerPublicId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "artistId" TEXT NOT NULL,
@@ -81,10 +78,8 @@ CREATE TABLE "Album" (
 CREATE TABLE "Playlist" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT,
     "slug" TEXT NOT NULL,
     "isPublic" BOOLEAN NOT NULL DEFAULT true,
-    "coverPublicId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT,
@@ -108,9 +103,8 @@ CREATE TABLE "Genre" (
 CREATE TABLE "Credit" (
     "id" TEXT NOT NULL,
     "trackId" TEXT NOT NULL,
-    "artistId" TEXT,
     "name" TEXT NOT NULL,
-    "role" "CreditRole" NOT NULL,
+    "roles" "CreditRole"[],
 
     CONSTRAINT "Credit_pkey" PRIMARY KEY ("id")
 );
@@ -261,15 +255,6 @@ CREATE INDEX "Genre_slug_idx" ON "Genre"("slug");
 CREATE INDEX "Credit_trackId_idx" ON "Credit"("trackId");
 
 -- CreateIndex
-CREATE INDEX "Credit_artistId_idx" ON "Credit"("artistId");
-
--- CreateIndex
-CREATE INDEX "Credit_role_idx" ON "Credit"("role");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Credit_trackId_artistId_role_key" ON "Credit"("trackId", "artistId", "role");
-
--- CreateIndex
 CREATE INDEX "PlayHistory_userId_playedAt_idx" ON "PlayHistory"("userId", "playedAt");
 
 -- CreateIndex
@@ -304,9 +289,6 @@ ALTER TABLE "Playlist" ADD CONSTRAINT "Playlist_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "Credit" ADD CONSTRAINT "Credit_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Credit" ADD CONSTRAINT "Credit_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PlayHistory" ADD CONSTRAINT "PlayHistory_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
