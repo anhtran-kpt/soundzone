@@ -1,5 +1,4 @@
 import { api } from "@/lib/api-client";
-import { CreatePlaylistInput } from "@/schemas";
 import { CreatePlaylistReturn, Playlist } from "@/types";
 
 const endpoints = {
@@ -19,6 +18,6 @@ export const getPlaylistBySlug = async (
   return await api.get<Playlist>(endpoints.detail(playlistSlug), signal);
 };
 
-export const createPlaylist = async (data: CreatePlaylistInput) => {
-  return await api.post<CreatePlaylistReturn>(endpoints.create, data);
+export const createPlaylist = async () => {
+  return await api.post<CreatePlaylistReturn>(endpoints.create);
 };

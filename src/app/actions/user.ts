@@ -68,5 +68,14 @@ export const getUserBySlugAction = async (userSlug: string) => {
     where: {
       slug: userSlug,
     },
+    select: {
+      email: true,
+      name: true,
+      role: true,
+      slug: true,
+      playlists: true,
+      followedArtists: true,
+      playHistory: true,
+    },
   });
 };

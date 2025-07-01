@@ -7,16 +7,19 @@ declare module "next-auth" {
       id: string;
       role: UserRole;
       imagePublicId: string;
+      slug: string;
     } & DefaultSession["user"];
   }
 
   interface User extends DefaultUser {
     role: UserRole;
+    slug: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole;
+    slug: string;
   }
 }

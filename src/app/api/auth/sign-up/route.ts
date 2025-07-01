@@ -18,7 +18,5 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     );
   }
 
-  const user = await signUpAction(userData);
-
-  return { user };
+  return await signUpAction(userData);
 });

@@ -14,7 +14,7 @@ export function useGetUsers() {
   });
 }
 
-export function useGetuserBySlug(userSlug: string) {
+export function useGetUserBySlug(userSlug: string) {
   return useQuery({
     queryKey: userKeys.detail(userSlug),
     queryFn: ({ signal }) => getUserBySlug(userSlug, signal),
@@ -27,7 +27,7 @@ export const useSignUp = () => {
   const router = useRouter();
   return useMutation({
     mutationFn: (data: SignUpInput) => signUp(data),
-    onSuccess: async () => {
+    onSuccess: async (user) => {
       toast.success("Signed up successfully");
 
       await signIn("credentials", {

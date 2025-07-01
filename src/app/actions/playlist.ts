@@ -7,6 +7,26 @@ export const getPlaylistsAction = async () => {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      tracks: {
+        select: {
+          track: {
+            include: {
+              album: {
+                include: {
+                  artist: true,
+                },
+              },
+              artists: {
+                select: {
+                  artist: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 };
 
@@ -34,6 +54,7 @@ export const getPlaylistBySlugAction = async (playlistSlug: string) => {
           },
         },
       },
+      user: true,
     },
   });
 
@@ -44,11 +65,36 @@ export const getPlaylistBySlugAction = async (playlistSlug: string) => {
   return {
     ...playlistDetail,
     tracks: flattenRelation(playlistDetail.tracks, "track"),
+    totalDuration: playlistDetail.tracks.reduce(
+      (acc, track) => acc + track.track.duration,
+      0
+    ),
   };
 };
 
-export const createPlaylistAction = async (data: CreatePlaylistInput) => {
-  return await db.playlist.create({
-    data,
+export const createPlaylistAction = async (userId: string) => {
+  return await db.$transaction(async (tx) => {
+    const count = await tx.playlist.count({
+      where: {
+        userId,
+        type: "USER",
+      },
+    });
+
+    const title = `My Playlist #${count + 1}`;
+
+    const slug = await tx.playlist.generateSlug(title);
+
+    return await tx.playlist.create({
+      data: {
+        title,
+        slug,
+        type: "USER",
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    });
   });
 };

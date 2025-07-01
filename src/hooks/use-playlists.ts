@@ -6,8 +6,8 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createPlaylist, getPlaylistBySlug, getPlaylists } from "@/lib/queries";
-import { CreatePlaylistInput } from "@/schemas";
 import { playlistKeys } from "@/lib/query-keys";
+import { useRouter } from "next/navigation";
 
 export function useGetPlaylists() {
   return useQuery({
@@ -28,15 +28,16 @@ export function useGetPlaylistBySlug(playlistSlug: string) {
 
 export function useCreatePlaylist() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: CreatePlaylistInput) => createPlaylist(data),
-    onSuccess: () => {
+    mutationFn: () => createPlaylist(),
+    onSuccess: (playlist) => {
       queryClient.invalidateQueries({
-        queryKey: playlistKeys.all,
+        queryKey: playlistKeys.detail(playlist.slug),
       });
 
-      toast.success("Playlist created successfully");
+      router.push(`/users/${playlist.user?.slug}/playlists/${playlist.slug}`);
     },
     onError: (error) => {
       toast.error(`Create playlist failed: ${error.message}`);
