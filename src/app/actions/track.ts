@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 
 export const getTracksAction = async () => {
@@ -11,7 +12,7 @@ export const getTracksAction = async () => {
 };
 
 export const getTrackBySlugAction = async (trackSlug: string) => {
-  return await db.track.findUnique({
+  const trackDetail = await db.track.findUnique({
     where: {
       slug: trackSlug,
     },
@@ -28,4 +29,13 @@ export const getTrackBySlugAction = async (trackSlug: string) => {
       },
     },
   });
+
+  if (!trackDetail) {
+    throw new Error(`Track with ${trackSlug} not found`);
+  }
+
+  return {
+    ...trackDetail,
+    artists: flattenRelation(trackDetail.artists, "artist"),
+  };
 };

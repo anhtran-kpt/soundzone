@@ -111,7 +111,10 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
 
   return {
     ...artistDetail,
-    tracks: flattenRelation(artistDetail.tracks, "track"),
+    tracks: flattenRelation(artistDetail.tracks, "track").map((track) => ({
+      ...track,
+      artists: flattenRelation(track.artists, "artist"),
+    })),
     albumsByType: groupAlbumsByType(artistDetail.albums),
   };
 };

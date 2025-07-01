@@ -1,3 +1,4 @@
+import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 import { CreatePlaylistInput } from "@/schemas";
 
@@ -42,7 +43,7 @@ export const getPlaylistBySlugAction = async (playlistSlug: string) => {
 
   return {
     ...playlistDetail,
-    tracks: playlistDetail.tracks.map((track) => track.track),
+    tracks: flattenRelation(playlistDetail.tracks, "track"),
   };
 };
 

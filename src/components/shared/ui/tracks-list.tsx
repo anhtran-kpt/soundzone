@@ -7,7 +7,6 @@ import {
   ImportIcon,
   ListPlusIcon,
 } from "lucide-react";
-import { CldImage } from "next-cloudinary";
 import {
   DropdownMenu,
   DropdownMenuSubContent,
@@ -23,18 +22,14 @@ import {
 } from "@/components/ui";
 import { formatDuration } from "@/lib/utils";
 import PlayButton from "@/components/shared/ui/play-button";
-import Explicit from "./explicit";
-import { useCurrentTrack, useIsPlaying } from "@/hooks";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import TrackInfo from "./track-info";
 
 interface TracksProps {
   tracks: Track[];
 }
 
 export function TracksList({ tracks }: TracksProps) {
-  const currentTrack = useCurrentTrack();
-  const isPlaying = useIsPlaying();
+  console.log(tracks);
 
   return (
     <ul role="list" className="space-y-2">
@@ -49,41 +44,7 @@ export function TracksList({ tracks }: TracksProps) {
             </span>
             <PlayButton track={track} />
           </div>
-          <div className="grow flex gap-3 items-center">
-            <div className="relative size-12">
-              <CldImage
-                src={track.album.coverPublicId}
-                alt={track.title}
-                fill
-                className="rounded-md object-cover"
-                sizes="48px"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <h3
-                className={cn(
-                  "text-sm font-medium",
-                  currentTrack?.id === track.id && "text-primary"
-                )}
-              >
-                {track.title}
-              </h3>
-              <div className="flex items-center gap-1.5">
-                {track.isExplicit && <Explicit />}
-                {track.artists.map(({ artist }) => (
-                  <Button asChild variant="link" type="button" key={artist.id}>
-                    <Link
-                      href={`/artists/${artist.slug}`}
-                      key={artist.id}
-                      className="text-xs"
-                    >
-                      {artist.name}
-                    </Link>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <TrackInfo track={track} />
           <div className="text-muted-foreground w-32">
             {/* {track.playHistory.length} */}
           </div>

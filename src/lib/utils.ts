@@ -37,13 +37,3 @@ export const customSlugify = (name: string) => {
 export const getAudioUrl = (publicId: string): string => {
   return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${publicId}.mp3`;
 };
-
-export const formatArtistNames = (
-  artists: { artist: { name: string } }[]
-): string => {
-  const names = artists.map(({ artist }) => artist.name);
-  return new Intl.ListFormat("en", {
-    style: "long",
-    type: "conjunction",
-  }).format(names);
-};
