@@ -21,31 +21,27 @@ import {
   RadioGroupItem,
 } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, UploadIcon } from "lucide-react";
+import { CalendarIcon, PlusIcon, UploadIcon } from "lucide-react";
 import { format } from "date-fns";
 import { CreateAlbumForm, createAlbumSchema } from "@/schemas";
-import { createAlbumAction } from "@/app/actions/album";
 import { toast } from "sonner";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { Artist } from "@/types";
 import { useState } from "react";
 import Image from "next/image";
 import { TrackField } from "./track-field";
+import { useCreateAlbum } from "@/hooks";
+import { useAutoTrackInitializer } from "@/hooks/use-auto-track-initializer";
 
 export function AlbumForm({ artist }: { artist: Artist }) {
   const [albumCoverPreview, setAlbumCoverPreview] = useState<
     string | undefined
   >(undefined);
 
-  const [tracks, setTracks] = useState<
-    {
-      audioPublicId: string;
-      duration: number;
-    }[]
-  >([]);
+  const { mutateAsync: createAlbum } = useCreateAlbum();
 
   const methods = useForm<CreateAlbumForm>({
     resolver: zodResolver(createAlbumSchema),
@@ -58,6 +54,8 @@ export function AlbumForm({ artist }: { artist: Artist }) {
         {
           title: "",
           isExplicit: false,
+          audioPublicId: undefined,
+          duration: undefined,
           lyrics: "",
           genreIds: [],
           performers: [
@@ -84,32 +82,17 @@ export function AlbumForm({ artist }: { artist: Artist }) {
     formState: { isSubmitting },
   } = methods;
 
-  const { fields: trackFields } = useFieldArray({
-    control,
-    name: "tracks",
-  });
+  const {
+    fields: trackFields,
+    append: appendTrack,
+    remove: removeTrack,
+    disableAppend,
+    disableRemove,
+  } = useAutoTrackInitializer(methods.control, artist.id);
 
   const onFormSubmit = async (values: CreateAlbumForm) => {
     try {
-      const formData = {
-        title: values.title,
-        releaseDate: values.releaseDate,
-        releaseType: values.releaseType,
-        coverPublicId: values.coverPublicId,
-        artistId: artist.id,
-        tracks: values.tracks.map((track, index) => ({
-          title: track.title,
-          lyrics: track.lyrics,
-          duration: tracks[index].duration,
-          audioPublicId: tracks[index].audioPublicId,
-          isExplicit: track.isExplicit,
-          genreIds: track.genreIds,
-          performers: track.performers,
-          credits: track.credits,
-        })),
-      };
-
-      await createAlbumAction(formData);
+      await createAlbum({ ...values, artistId: artist.id });
     } catch (error: unknown) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong"
@@ -120,7 +103,7 @@ export function AlbumForm({ artist }: { artist: Artist }) {
   console.log(methods.formState.errors);
 
   return (
-    <Card>
+    <Card className="max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           New Album
@@ -287,47 +270,28 @@ export function AlbumForm({ artist }: { artist: Artist }) {
                 )}
               />
 
-              <CldUploadWidget
-                signatureEndpoint="/api/sign-cloudinary-params"
-                options={{
-                  folder: "soundzone/tracks",
-                  resourceType: "video",
-                }}
-                onSuccess={(result) => {
-                  const info = result.info as CloudinaryUploadWidgetInfo;
-
-                  setTracks((prev) => [
-                    ...prev,
-                    {
-                      audioPublicId: info.public_id as string,
-                      duration: info.duration as number,
-                    },
-                  ]);
-                }}
-              >
-                {({ open }) => (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => open()}
-                  >
-                    <UploadIcon className="size-4 mr-1" />
-                    Upload audios
-                  </Button>
-                )}
-              </CldUploadWidget>
-
               <FormLabel className="mb-2 text-base font-semibold">
                 {trackFields.length === 1 ? "Track Details" : "Tracks Details"}
               </FormLabel>
               <div className="space-y-6">
-                {tracks.map((track, trackIndex) => (
+                {trackFields.map((field, trackIndex) => (
                   <TrackField
-                    key={trackIndex}
+                    key={field.id}
                     trackIndex={trackIndex}
-                    track={track}
+                    removeTrack={removeTrack}
+                    disableRemove={disableRemove}
                   />
                 ))}
+                {!disableAppend && (
+                  <Button
+                    type="button"
+                    onClick={() => appendTrack()}
+                    variant="outline"
+                  >
+                    <PlusIcon />
+                    Add track
+                  </Button>
+                )}
               </div>
             </div>
 

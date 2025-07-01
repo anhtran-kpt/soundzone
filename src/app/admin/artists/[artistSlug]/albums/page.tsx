@@ -1,18 +1,18 @@
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "@/components/admin/features/album/columns";
-import { getAlbumsByArtistId } from "@/lib/services/album";
+import { AlbumColumns } from "@/components/admin/album";
 
 export default async function ArtistAlbumsPage({
   params,
 }: {
-  params: Promise<{ artistId: string }>;
+  params: Promise<{ artistSlug: string }>;
 }) {
-  const { artistId } = await params;
-  const data = await getAlbumsByArtistId(artistId);
+  const { artistSlug } = await params;
+  // const data = await getAlbumsByArtistSlug(artistSlug);
+  return null;
 
-  return (
-    <div>
-      <DataTable columns={columns} data={data} />
-    </div>
-  );
+  // return (
+  //   <div>
+  //     <DataTable columns={AlbumColumns} data={data} />
+  //   </div>
+  // );
 }

@@ -16,7 +16,7 @@ export function ArtistBanner({ artist }: BannerProps) {
         src={artist.bannerPublicId}
         fill
         sizes="100vw"
-        className="object-center object-cover"
+        className="object-center object-cover brightness-80"
         quality={100}
         priority
       />

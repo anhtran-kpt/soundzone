@@ -28,7 +28,7 @@ export function AlbumDetail({ albumSlug }: { albumSlug: string }) {
 
   return (
     <>
-      <section>{album.bannerPublicId && <AlbumBanner album={album} />}</section>
+      {/* <section>{album.bannerPublicId && <AlbumBanner album={album} />}</section> */}
       <section className="flex gap-6 items-center py-6">
         <Button type="button" size="icon" className="rounded-full size-12">
           {isPlaying && currentTrack?.album.id === album.id ? (

@@ -1,14 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MicVocalIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
 } from "@/components/ui";
@@ -87,19 +85,19 @@ export const ArtistColumns: ColumnDef<Artist>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Button asChild type="button" variant="ghost">
                 <Link href={`/admin/artists/${row.original.slug}`}>
-                  View artist
+                  <MicVocalIcon />
+                  Artist detail
                 </Link>
               </Button>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Button asChild type="button" variant="ghost">
-                <Link href={`/admin/artists/${row.original.slug}/edit`}>
-                  Edit artist
+                <Link href={`/admin/artists/${row.original.slug}/albums/new`}>
+                  <PlusIcon />
+                  New album
                 </Link>
               </Button>
             </DropdownMenuItem>

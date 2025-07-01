@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import {
   FormDescription,
   Input,
@@ -25,34 +25,42 @@ import {
   Popover,
   Separator,
 } from "@/components/ui";
-import { PlusIcon } from "lucide-react";
-import { CldImage } from "next-cloudinary";
+import { PlusIcon, UploadIcon } from "lucide-react";
+import { CldImage, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import Explicit from "@/components/shared/ui/explicit";
 import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
 import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
 import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
-import { CREDIT_ROLES } from "@/lib/constants";
+import { ARTIST_ROLES, CREDIT_ROLES } from "@/lib/constants";
 import { cn, getAudioUrl } from "@/lib/utils";
 import { useGetArtists, useGetGenres } from "@/hooks";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface TrackFieldProps {
   trackIndex: number;
-  track: {
-    audioPublicId: string;
-    duration: number;
-  };
+  removeTrack: (trackIndex: number) => void;
+  disableRemove: boolean;
 }
 
-export function TrackField({ trackIndex, track }: TrackFieldProps) {
+export function TrackField({
+  trackIndex,
+  removeTrack,
+  disableRemove,
+}: TrackFieldProps) {
   const { data: genres } = useGetGenres();
   const { data: artists } = useGetArtists();
 
   const {
     control,
+    setValue,
     formState: { isSubmitting },
   } = useFormContext();
+
+  const audioPublicId = useWatch({
+    name: `tracks.${trackIndex}.audioPublicId`,
+  });
 
   const {
     fields: performersFields,
@@ -99,14 +107,74 @@ export function TrackField({ trackIndex, track }: TrackFieldProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Track #{trackIndex + 1}</CardTitle>
+          {!disableRemove && (
+            <Button
+              type="button"
+              onClick={() => removeTrack(trackIndex)}
+              variant="outline"
+            >
+              <Trash2Icon />
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-4">
           <div className="flex gap-6">
-            <AudioPlayer
-              src={getAudioUrl(track.audioPublicId)}
-              className="rounded shadow max-w-md"
+            <FormField
+              control={control}
+              name={`tracks.${trackIndex}.audioPublicId`}
+              render={() => (
+                <FormItem>
+                  <FormLabel>Audio</FormLabel>
+                  {audioPublicId ? (
+                    <AudioPlayer
+                      src={getAudioUrl(audioPublicId)}
+                      className="rounded shadow max-w-md"
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">
+                      No audio uploaded yet.
+                    </p>
+                  )}
+                  <FormControl>
+                    <CldUploadWidget
+                      signatureEndpoint="/api/sign-cloudinary-params"
+                      options={{
+                        folder: "soundzone/tracks",
+                        resourceType: "video",
+                      }}
+                      onSuccess={(result) => {
+                        const info = result.info as CloudinaryUploadWidgetInfo;
+
+                        setValue(
+                          `tracks.${trackIndex}.audioPublicId`,
+                          info?.public_id
+                        );
+                        setValue(
+                          `tracks.${trackIndex}.duration`,
+                          info?.duration
+                        );
+                      }}
+                      onQueuesEnd={(result, { widget }) => {
+                        widget.close();
+                      }}
+                    >
+                      {({ open }) => (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => open()}
+                        >
+                          <UploadIcon className="size-4 mr-1" />
+                          Upload audio file
+                        </Button>
+                      )}
+                    </CldUploadWidget>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <FormField
@@ -292,7 +360,7 @@ export function TrackField({ trackIndex, track }: TrackFieldProps) {
                                     );
                               }}
                             >
-                              {CREDIT_ROLES[role]}
+                              {ARTIST_ROLES[role]}
                             </BadgeCheckbox>
                           ))}
                         </div>
