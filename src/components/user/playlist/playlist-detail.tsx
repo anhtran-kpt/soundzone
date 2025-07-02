@@ -2,16 +2,16 @@
 
 import { PlaylistBanner } from "@/components/shared/ui";
 import { Input } from "@/components/ui";
-import { useGetPlaylistBySlug } from "@/hooks";
+import { useGetPlaylist } from "@/hooks";
 import { SearchIcon } from "lucide-react";
 
-export const PlaylistDetail = ({ playlistSlug }: { playlistSlug: string }) => {
+export const PlaylistDetail = ({ playlistId }: { playlistId: string }) => {
   const {
     data: playlist,
     isLoading,
     error,
     isError,
-  } = useGetPlaylistBySlug(playlistSlug);
+  } = useGetPlaylist(playlistId);
 
   if (isLoading) {
     <div>Loading...</div>;

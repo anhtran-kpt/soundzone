@@ -1,14 +1,11 @@
 import { QueryClient } from "@tanstack/react-query";
-import { getGenreBySlug, getGenres } from "@/lib/queries";
+import { getGenre, getGenres } from "@/lib/queries";
 import { genreKeys } from "@/lib/query-keys";
 
-export const prefetchGenreBySlug = async (
-  qc: QueryClient,
-  genreSlug: string
-) => {
+export const prefetchGenre = async (qc: QueryClient, genreId: string) => {
   await qc.prefetchQuery({
-    queryKey: genreKeys.detail(genreSlug),
-    queryFn: ({ signal }) => getGenreBySlug(genreSlug, signal),
+    queryKey: genreKeys.detail(genreId),
+    queryFn: ({ signal }) => getGenre(genreId, signal),
   });
 };
 

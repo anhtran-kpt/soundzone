@@ -5,7 +5,7 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createArtist, getArtistBySlug, getArtists } from "@/lib/queries";
+import { createArtist, getArtist, getArtists } from "@/lib/queries";
 import { CreateArtistInput } from "@/schemas";
 import { artistKeys } from "@/lib/query-keys";
 
@@ -17,12 +17,12 @@ export function useGetArtists() {
   });
 }
 
-export function useGetArtistBySlug(artistSlug: string) {
+export function useGetArtist(artistId: string) {
   return useQuery({
-    queryKey: artistKeys.detail(artistSlug),
-    queryFn: ({ signal }) => getArtistBySlug(artistSlug, signal),
+    queryKey: artistKeys.detail(artistId),
+    queryFn: ({ signal }) => getArtist(artistId, signal),
     placeholderData: keepPreviousData,
-    enabled: !!artistSlug,
+    enabled: !!artistId,
   });
 }
 

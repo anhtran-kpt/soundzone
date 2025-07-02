@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { SignUpInput } from "@/schemas";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { getUserBySlug, getUsers, signUp } from "@/lib/queries";
+import { getUser, getUsers, signUp } from "@/lib/queries";
 import { userKeys } from "@/lib/query-keys";
 
 export function useGetUsers() {
@@ -14,12 +14,12 @@ export function useGetUsers() {
   });
 }
 
-export function useGetUserBySlug(userSlug: string) {
+export function useGetUser(userId: string) {
   return useQuery({
-    queryKey: userKeys.detail(userSlug),
-    queryFn: ({ signal }) => getUserBySlug(userSlug, signal),
+    queryKey: userKeys.detail(userId),
+    queryFn: ({ signal }) => getUser(userId, signal),
     placeholderData: keepPreviousData,
-    enabled: !!userSlug,
+    enabled: !!userId,
   });
 }
 

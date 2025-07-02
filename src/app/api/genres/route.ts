@@ -11,7 +11,5 @@ export const GET = withApiHandler(async () => {
 export const POST = withApiHandler(async (req: NextRequest) => {
   const { name } = await validateBody(req, genreSchema);
 
-  const genre = await createGenreAction(name);
-
-  return { genre };
+  return await createGenreAction(name);
 });

@@ -20,10 +20,10 @@ export const getGenresAction = async () => {
   });
 };
 
-export const getGenreBySlugAction = async (genreSlug: string) => {
+export const getGenreAction = async (genreId: string) => {
   return await db.genre.findUnique({
     where: {
-      slug: genreSlug,
+      id: genreId,
     },
     include: {
       tracks: true,

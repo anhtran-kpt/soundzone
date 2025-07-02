@@ -63,10 +63,10 @@ export const getUsersAction = async () => {
   });
 };
 
-export const getUserBySlugAction = async (userSlug: string) => {
+export const getUserAction = async (userId: string) => {
   return await db.user.findUnique({
     where: {
-      slug: userSlug,
+      id: userId,
     },
     select: {
       email: true,

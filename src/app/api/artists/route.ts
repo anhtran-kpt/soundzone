@@ -5,15 +5,11 @@ import { createArtistSchema } from "@/schemas";
 import { NextRequest } from "next/server";
 
 export const GET = withApiHandler(async () => {
-  const data = await getArtistsAction();
-
-  return data;
+  return await getArtistsAction();
 });
 
 export const POST = withApiHandler(async (req: NextRequest) => {
   const data = await validateBody(req, createArtistSchema);
 
-  const artist = await createArtistAction(data);
-
-  return { artist };
+  return await createArtistAction(data);
 });

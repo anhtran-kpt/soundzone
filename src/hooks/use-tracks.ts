@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { getTrackBySlug, getTracks } from "@/lib/queries";
+import { getTrack, getTracks } from "@/lib/queries";
 import { trackKeys } from "@/lib/query-keys";
 
 export function useTracksQuery() {
@@ -10,11 +10,11 @@ export function useTracksQuery() {
   });
 }
 
-export function useTrackQuery(trackSlug: string) {
+export function useTrackQuery(trackId: string) {
   return useQuery({
-    queryKey: trackKeys.detail(trackSlug),
-    queryFn: ({ signal }) => getTrackBySlug(trackSlug, signal),
+    queryKey: trackKeys.detail(trackId),
+    queryFn: ({ signal }) => getTrack(trackId, signal),
     placeholderData: keepPreviousData,
-    enabled: !!trackSlug,
+    enabled: !!trackId,
   });
 }

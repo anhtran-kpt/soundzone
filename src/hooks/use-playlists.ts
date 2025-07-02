@@ -5,7 +5,7 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createPlaylist, getPlaylistBySlug, getPlaylists } from "@/lib/queries";
+import { createPlaylist, getPlaylist, getPlaylists } from "@/lib/queries";
 import { playlistKeys } from "@/lib/query-keys";
 import { useRouter } from "next/navigation";
 
@@ -17,12 +17,12 @@ export function useGetPlaylists() {
   });
 }
 
-export function useGetPlaylistBySlug(playlistSlug: string) {
+export function useGetPlaylist(playlistId: string) {
   return useQuery({
-    queryKey: playlistKeys.detail(playlistSlug),
-    queryFn: ({ signal }) => getPlaylistBySlug(playlistSlug, signal),
+    queryKey: playlistKeys.detail(playlistId),
+    queryFn: ({ signal }) => getPlaylist(playlistId, signal),
     placeholderData: keepPreviousData,
-    enabled: !!playlistSlug,
+    enabled: !!playlistId,
   });
 }
 
@@ -34,10 +34,10 @@ export function useCreatePlaylist() {
     mutationFn: () => createPlaylist(),
     onSuccess: (playlist) => {
       queryClient.invalidateQueries({
-        queryKey: playlistKeys.detail(playlist.slug),
+        queryKey: playlistKeys.detail(playlist.id),
       });
 
-      router.push(`/users/${playlist.user?.slug}/playlists/${playlist.slug}`);
+      router.push(`/playlists/${playlist.id}`);
     },
     onError: (error) => {
       toast.error(`Create playlist failed: ${error.message}`);
@@ -53,7 +53,7 @@ export function useAddTrackToPlaylist() {
     mutationFn: (trackId) => addTrackToPlaylist(trackId),
     onSuccess: (playlist) => {
       queryClient.invalidateQueries({
-        queryKey: playlistKeys.detail(playlist.slug),
+        queryKey: playlistKeys.detail(playlist.id),
       });
     },
     onError: (error) => {

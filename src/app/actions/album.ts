@@ -12,10 +12,10 @@ export const getAlbumsAction = async () => {
   });
 };
 
-export const getAlbumBySlugAction = async (albumSlug: string) => {
+export const getAlbumAction = async (albumId: string) => {
   const albumDetail = await db.album.findUnique({
     where: {
-      slug: albumSlug,
+      id: albumId,
     },
     include: {
       artist: true,
@@ -37,7 +37,7 @@ export const getAlbumBySlugAction = async (albumSlug: string) => {
   });
 
   if (!albumDetail) {
-    throw new Error(`Album with slug ${albumSlug} not found`);
+    throw new Error(`Album with id ${albumId} not found`);
   }
 
   return {

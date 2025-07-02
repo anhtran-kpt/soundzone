@@ -14,9 +14,8 @@ import {
   Button,
 } from "@/components/ui";
 import Link from "next/link";
-import { useGetUserBySlug } from "@/hooks/use-users";
+import { useGetUser } from "@/hooks/use-users";
 import { useSession } from "next-auth/react";
-import { customSlugify } from "@/lib/utils";
 import { useCreatePlaylist } from "@/hooks";
 
 export function Sidebar() {
@@ -27,7 +26,7 @@ export function Sidebar() {
     isLoading,
     isError,
     error,
-  } = useGetUserBySlug(sessionData?.user.slug ?? "");
+  } = useGetUser(sessionData?.user.id ?? "");
 
   const { mutateAsync: createPlaylist } = useCreatePlaylist();
 
@@ -80,7 +79,7 @@ export function Sidebar() {
               {user.playlists.map((playlist) => (
                 <SidebarMenuItem key={playlist.id}>
                   <SidebarMenuButton asChild>
-                    <Link href={`/playlists/${playlist.slug}`}>
+                    <Link href={`/playlists/${playlist.id}`}>
                       <span>{playlist.title}</span>
                     </Link>
                   </SidebarMenuButton>

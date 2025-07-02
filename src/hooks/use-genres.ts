@@ -2,7 +2,7 @@ import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { genreKeys } from "@/lib/query-keys";
 import { CreateGenreInput } from "@/schemas";
-import { getGenreBySlug, getGenres, createGenre } from "@/lib/queries";
+import { getGenre, getGenres, createGenre } from "@/lib/queries";
 
 export function useGetGenres() {
   return useQuery({
@@ -12,12 +12,12 @@ export function useGetGenres() {
   });
 }
 
-export function useGetGenreBySlug(genreSlug: string) {
+export function useGetGenre(genreId: string) {
   return useQuery({
-    queryKey: genreKeys.detail(genreSlug),
-    queryFn: ({ signal }) => getGenreBySlug(genreSlug, signal),
+    queryKey: genreKeys.detail(genreId),
+    queryFn: ({ signal }) => getGenre(genreId, signal),
     placeholderData: keepPreviousData,
-    enabled: !!genreSlug,
+    enabled: !!genreId,
   });
 }
 

@@ -1,12 +1,12 @@
 "use client";
 
 import { ArtistBanner } from "@/components/shared/ui";
-import { useGetArtistBySlug } from "@/hooks";
+import { useGetArtist } from "@/hooks";
 import { AlbumForm } from "./album-form";
 import { notFound } from "next/navigation";
 
-export const NewAlbumPage = ({ artistSlug }: { artistSlug: string }) => {
-  const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
+export const NewAlbumPage = ({ artistId }: { artistId: string }) => {
+  const { data: artist, isError, error } = useGetArtist(artistId);
 
   if (isError) {
     return <div>Error: {error.message}</div>;

@@ -6,15 +6,15 @@ import { withApiHandler } from "@/lib/api-handler";
 import { NextRequest } from "next/server";
 
 export const POST = withApiHandler(async (req: NextRequest, { params }) => {
-  const { playlistSlug } = await params;
-  const { trackSlug } = await req.json();
+  const { playlistId } = await params;
+  const { trackId } = await req.json();
 
-  return await addTrackToPlaylistAction(trackSlug, playlistSlug);
+  return await addTrackToPlaylistAction(trackId, playlistId);
 });
 
 export const DELETE = withApiHandler(async (req: NextRequest, { params }) => {
-  const { playlistSlug } = await params;
-  const { trackSlug } = await req.json();
+  const { playlistId } = await params;
+  const { trackId } = await req.json();
 
-  return await removeTrackFromPlaylistAction(trackSlug, playlistSlug);
+  return await removeTrackFromPlaylistAction(trackId, playlistId);
 });

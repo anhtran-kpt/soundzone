@@ -2,15 +2,15 @@
 
 import { ArtistBanner } from "@/components/shared/ui";
 import TracksPopular from "./tracks-popular";
-import { useCurrentTrack, useGetArtistBySlug, useIsPlaying } from "@/hooks";
+import { useCurrentTrack, useGetArtist, useIsPlaying } from "@/hooks";
 import { notFound } from "next/navigation";
 import { Discography } from "./discography";
 import { Button } from "@/components/ui";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
 
-export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data: artist, isError, error } = useGetArtistBySlug(artistSlug);
+export default function ArtistDetail({ artistId }: { artistId: string }) {
+  const { data: artist, isError, error } = useGetArtist(artistId);
 
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();

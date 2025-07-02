@@ -1,4 +1,4 @@
 export const albumKeys = {
   all: ["albums"] as const,
-  detail: (albumSlug: string) => [...albumKeys.all, albumSlug] as const,
+  detail: (albumId: string) => [...albumKeys.all, albumId] as const,
 };

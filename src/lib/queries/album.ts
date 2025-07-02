@@ -4,7 +4,7 @@ import { Album, CreateAlbumReturn } from "@/types";
 
 const endpoints = {
   all: "/albums",
-  detail: (albumSlug: string) => `/albums/${albumSlug}`,
+  detail: (albumId: string) => `/albums/${albumId}`,
   create: "/albums",
 } as const;
 
@@ -12,11 +12,8 @@ export const getAlbums = async (signal: AbortSignal) => {
   return await api.get<Album[]>(endpoints.all, signal);
 };
 
-export const getAlbumBySlug = async (
-  albumSlug: string,
-  signal: AbortSignal
-) => {
-  return await api.get<Album>(endpoints.detail(albumSlug), signal);
+export const getAlbum = async (albumId: string, signal: AbortSignal) => {
+  return await api.get<Album>(endpoints.detail(albumId), signal);
 };
 
 export const createAlbum = async (data: CreateAlbumInput) => {

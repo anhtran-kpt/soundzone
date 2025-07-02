@@ -1,4 +1,4 @@
 export const genreKeys = {
   all: ["genres"] as const,
-  detail: (genreSlug: string) => [...genreKeys.all, genreSlug] as const,
+  detail: (genreId: string) => [...genreKeys.all, genreId] as const,
 };

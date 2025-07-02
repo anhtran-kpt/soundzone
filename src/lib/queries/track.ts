@@ -3,7 +3,7 @@ import { Track } from "@/types";
 
 const endpoints = {
   list: "/tracks",
-  detail: (trackSlug: string) => `/tracks/${trackSlug}`,
+  detail: (trackId: string) => `/tracks/${trackId}`,
   create: "/tracks",
 } as const;
 
@@ -11,9 +11,6 @@ export const getTracks = async (signal: AbortSignal) => {
   return await api.get<Track[]>(endpoints.list, signal);
 };
 
-export const getTrackBySlug = async (
-  trackSlug: string,
-  signal: AbortSignal
-) => {
-  return await api.get<Track>(endpoints.detail(trackSlug), signal);
+export const getTrack = async (trackId: string, signal: AbortSignal) => {
+  return await api.get<Track>(endpoints.detail(trackId), signal);
 };

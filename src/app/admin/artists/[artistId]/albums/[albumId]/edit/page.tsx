@@ -9,7 +9,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { albumSlug } = await params;
-  const album = await albumActions.getBySlug(albumSlug);
+  const album = await albumActions.get(albumSlug);
 
   if (!album) {
     return { title: "Album not found" };
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function EditAlbumPage({ params }: Props) {
   const { albumSlug } = await params;
 
-  const album = await albumActions.getBySlug(albumSlug);
+  const album = await albumActions.get(albumSlug);
 
   if (!album) {
     return notFound();

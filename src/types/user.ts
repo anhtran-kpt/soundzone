@@ -1,5 +1,5 @@
 import {
-  getUserBySlugAction,
+  getUserAction,
   getUsersAction,
   signInAction,
   signUpAction,
@@ -8,6 +8,4 @@ import {
 export type SignInReturn = Awaited<ReturnType<typeof signInAction>>;
 export type SignUpReturn = Awaited<ReturnType<typeof signUpAction>>;
 export type GetUsersReturn = Awaited<ReturnType<typeof getUsersAction>>;
-export type GetUserBySlugReturn = Awaited<
-  ReturnType<typeof getUserBySlugAction>
->;
+export type GetUserReturn = Awaited<ReturnType<typeof getUserAction>>;

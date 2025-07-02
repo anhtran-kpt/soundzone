@@ -63,10 +63,10 @@ export const getArtistsAction = async () => {
   });
 };
 
-export const getArtistBySlugAction = async (artistSlug: string) => {
+export const getArtistAction = async (artistId: string) => {
   const artistDetail = await db.artist.findUnique({
     where: {
-      slug: artistSlug,
+      id: artistId,
     },
     include: {
       tracks: {
@@ -106,7 +106,7 @@ export const getArtistBySlugAction = async (artistSlug: string) => {
   });
 
   if (!artistDetail) {
-    throw new Error(`Artist with slug "${artistSlug}" not found`);
+    throw new Error(`Artist with id "${artistId}" not found`);
   }
 
   return {

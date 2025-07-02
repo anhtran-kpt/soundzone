@@ -4,7 +4,7 @@ import { CreateGenreReturn, Genre } from "@/types";
 
 const endpoints = {
   all: "/genres",
-  detail: (genreSlug: string) => `/genres/${genreSlug}`,
+  detail: (genreId: string) => `/genres/${genreId}`,
   create: "/genres",
 } as const;
 
@@ -12,11 +12,8 @@ export const getGenres = async (signal: AbortSignal) => {
   return await api.get<Genre[]>(endpoints.all, signal);
 };
 
-export const getGenreBySlug = async (
-  genreSlug: string,
-  signal: AbortSignal
-) => {
-  return await api.get<Genre>(endpoints.detail(genreSlug), signal);
+export const getGenre = async (genreId: string, signal: AbortSignal) => {
+  return await api.get<Genre>(endpoints.detail(genreId), signal);
 };
 
 export const createGenre = async (data: CreateGenreInput) => {

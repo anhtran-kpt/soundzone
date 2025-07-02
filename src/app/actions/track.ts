@@ -11,10 +11,10 @@ export const getTracksAction = async () => {
   });
 };
 
-export const getTrackBySlugAction = async (trackSlug: string) => {
+export const getTrackAction = async (trackId: string) => {
   const trackDetail = await db.track.findUnique({
     where: {
-      slug: trackSlug,
+      id: trackId,
     },
     include: {
       album: {
@@ -31,7 +31,7 @@ export const getTrackBySlugAction = async (trackSlug: string) => {
   });
 
   if (!trackDetail) {
-    throw new Error(`Track with ${trackSlug} not found`);
+    throw new Error(`Track with id ${trackId} not found`);
   }
 
   return {
