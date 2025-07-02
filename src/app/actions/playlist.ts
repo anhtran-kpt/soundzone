@@ -1,6 +1,5 @@
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { CreatePlaylistInput } from "@/schemas";
 
 export const getPlaylistsAction = async () => {
   return await db.playlist.findMany({
@@ -94,6 +93,82 @@ export const createPlaylistAction = async (userId: string) => {
       },
       include: {
         user: true,
+      },
+    });
+  });
+};
+
+export const addTrackToPlaylistAction = async (
+  trackId: string,
+  playlistId: string
+) => {
+  return db.$transaction(async (tx) => {
+    if (
+      !(await tx.track.findUnique({
+        where: {
+          id: trackId,
+        },
+      }))
+    ) {
+      throw new Error("Track not found");
+    }
+
+    if (
+      !(await tx.playlistTrack.findUnique({
+        where: {
+          playlistId_trackId: {
+            playlistId,
+            trackId,
+          },
+        },
+      }))
+    ) {
+      throw new Error("Track existed in playlist");
+    }
+
+    const lastTrack = await tx.playlistTrack.findFirst({
+      where: { playlistId },
+      orderBy: { order: "desc" },
+    });
+
+    const newOrder = (lastTrack?.order || 0) + 1;
+
+    const playlistTrack = await tx.playlistTrack.create({
+      data: {
+        playlistId,
+        trackId,
+        order: newOrder,
+      },
+      include: {
+        track: true,
+      },
+    });
+
+    return playlistTrack;
+  });
+};
+
+export const removeTrackFromPlaylistAction = async (
+  trackId: string,
+  playlistId: string
+) => {
+  return db.$transaction(async (tx) => {
+    if (
+      !(await tx.track.findUnique({
+        where: {
+          id: trackId,
+        },
+      }))
+    ) {
+      throw new Error("Track not found");
+    }
+
+    return await tx.playlistTrack.delete({
+      where: {
+        playlistId_trackId: {
+          playlistId,
+          trackId,
+        },
       },
     });
   });

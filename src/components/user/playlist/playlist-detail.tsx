@@ -1,7 +1,9 @@
 "use client";
 
 import { PlaylistBanner } from "@/components/shared/ui";
+import { Input } from "@/components/ui";
 import { useGetPlaylistBySlug } from "@/hooks";
+import { SearchIcon } from "lucide-react";
 
 export const PlaylistDetail = ({ playlistSlug }: { playlistSlug: string }) => {
   const {
@@ -23,7 +25,22 @@ export const PlaylistDetail = ({ playlistSlug }: { playlistSlug: string }) => {
 
   return (
     <>
-      <PlaylistBanner playlist={playlist} />
+      <section>
+        <PlaylistBanner playlist={playlist} />
+      </section>
+      <section className="flex flex-col gap-4">
+        <h3 className="font-semibold text-lg">
+          Let&apos;s find something for your playlist
+        </h3>
+        <div className="flex items-center relative w-full max-w-sm">
+          <Input
+            type="text"
+            placeholder="Search for songs"
+            className="w-full bg-transparent pl-10 pr-6 rounded-lg py-2"
+          />
+          <SearchIcon className="absolute left-3" />
+        </div>
+      </section>
     </>
   );
 };

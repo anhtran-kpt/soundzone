@@ -45,3 +45,20 @@ export function useCreatePlaylist() {
     },
   });
 }
+
+export function useAddTrackToPlaylist() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (trackId) => addTrackToPlaylist(trackId),
+    onSuccess: (playlist) => {
+      queryClient.invalidateQueries({
+        queryKey: playlistKeys.detail(playlist.slug),
+      });
+    },
+    onError: (error) => {
+      toast.error(`Add track failed: ${error.message}`);
+      console.error("Add track failed:", error);
+    },
+  });
+}
