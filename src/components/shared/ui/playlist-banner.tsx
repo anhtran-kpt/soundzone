@@ -7,12 +7,12 @@ import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
 import Link from "next/link";
-import { Avatar, AvatarFallback, Button } from "@/components/ui";
+import { Avatar, AvatarFallback } from "@/components/ui";
 import { formatName } from "@/lib/utils";
 import pluralize from "pluralize";
-import Image from "next/image";
 import { Music4Icon, PenBoxIcon } from "lucide-react";
 import { PlaylistDialog } from "@/components/user/playlist/playlist-dialog";
+import { FALLBACK_PUBLIC_ID } from "@/lib/constants";
 
 interface BannerProps {
   playlist: Playlist;
@@ -47,30 +47,24 @@ export function PlaylistBanner({ playlist }: BannerProps) {
         style={
           bannerColor
             ? {
-                "--tw-gradient-from": `${bannerColor}00`,
-                "--tw-gradient-to": bannerColor,
+                "--tw-gradient-from": bannerColor,
+                "--tw-gradient-to": `${bannerColor}00`,
               }
             : undefined
         }
       />
       <div className="flex gap-5 absolute left-0 bottom-6 items-end">
         <div className="relative size-48 rounded-lg overflow-hidden">
-          {playlist.coverPublicId ? (
-            <CldImage
-              src={playlist.coverPublicId}
-              alt={playlist.title}
-              fill
-              sizes="192px"
-              className="object-cover rounded-lg"
-              onLoad={(e) => setImageUrl((e.target as HTMLImageElement).src)}
-              priority
-            />
-          ) : (
-            <div className="bg-muted/70 inset-0 absolute rounded-lg group">
-              <Music4Icon className="size-12 stroke-current absolute top-1/2 left-1/2 -translate-1/2 group-hover:hidden" />
-              <PenBoxIcon className="size-12 stroke-current absolute top-1/2 left-1/2 -translate-1/2 hidden group-hover:block" />
-            </div>
-          )}
+          <CldImage
+            src={playlist.coverPublicId ?? FALLBACK_PUBLIC_ID!}
+            alt={playlist.title}
+            fill
+            sizes="192px"
+            className="object-cover rounded-lg"
+            onLoad={(e) => setImageUrl((e.target as HTMLImageElement).src)}
+            priority
+          />
+          <Music4Icon className="size-12 stroke-current absolute top-1/2 left-1/2 -translate-1/2" />
         </div>
         <div className="flex flex-col">
           <h3>{playlist.isPublic ? "Public" : "Private"} Playlist</h3>

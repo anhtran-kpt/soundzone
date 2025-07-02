@@ -1,7 +1,7 @@
 import ArtistDetail from "@/components/user/artist/artist-detail";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { prefetchArtistBySlug } from "@/lib/prefetchs";
+import { prefetchArtistBySlug } from "@/lib/prefetchers";
 
 export default async function ArtistPage({
   params,

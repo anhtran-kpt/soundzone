@@ -20,3 +20,6 @@ export const CREDIT_ROLES = {
   PRODUCER: "Producer",
   ENGINEER: "Engineer",
 };
+
+export const FALLBACK_PUBLIC_ID =
+  process.env.NEXT_PUBLIC_FALLBACK_IMAGE_PUBLIC_ID;

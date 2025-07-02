@@ -1,4 +1,4 @@
-import { prefetchArtistBySlug } from "@/lib/prefetchs";
+import { prefetchArtistBySlug } from "@/lib/prefetchers";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { NewAlbumPage } from "@/components/admin/album/new-album-page";

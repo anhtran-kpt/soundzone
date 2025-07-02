@@ -9,3 +9,4 @@ export * from "./play-button";
 export * from "./track-info";
 export * from "./tracks-list";
 export * from "./playlist-banner";
+export * from "./hover-link";

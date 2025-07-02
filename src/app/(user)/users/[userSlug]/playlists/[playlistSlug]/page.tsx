@@ -2,7 +2,7 @@
 
 import { PlaylistDetail } from "@/components/user/playlist/playlist-detail";
 import { getQueryClient } from "@/lib/get-query-client";
-import { prefetchPlaylistBySlug } from "@/lib/prefetchs";
+import { prefetchPlaylistBySlug } from "@/lib/prefetchers";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export default async function Page({

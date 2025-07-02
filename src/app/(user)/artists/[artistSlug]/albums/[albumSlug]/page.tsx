@@ -1,7 +1,7 @@
 import { AlbumDetail } from "@/components/user/artist";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { prefetchAlbumBySlug } from "@/lib/prefetchs";
+import { prefetchAlbumBySlug } from "@/lib/prefetchers";
 
 export default async function AlbumPage({
   params,
