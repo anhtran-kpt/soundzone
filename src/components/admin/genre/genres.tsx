@@ -9,7 +9,11 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export const Genres = () => {
-  const { data: genres, isError, error } = useGetGenres();
+  const { data: genres, isLoading, isError, error } = useGetGenres();
+
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
 
   if (isError) {
     <div>Error: {error.message}</div>;

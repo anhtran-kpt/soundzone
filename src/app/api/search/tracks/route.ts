@@ -1,3 +1,4 @@
+import { searchTracksAction } from "@/app/actions/search";
 import { withApiHandler } from "@/lib/api-handler";
 import { NextRequest } from "next/server";
 
@@ -10,4 +11,6 @@ export const GET = withApiHandler(async (req: NextRequest) => {
   if (!query || query.trim().length === 0) {
     return { tracks: [], total: 0 };
   }
+
+  return await searchTracksAction(query, limit, offset);
 });
