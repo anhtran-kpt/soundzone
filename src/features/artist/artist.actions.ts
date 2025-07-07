@@ -20,7 +20,7 @@ const groupAlbumsByType = (albums: Album[]): ReleaseGroup => {
   }, {});
 };
 
-export const getArtistsAction = async () => {
+export const fetchArtistsAction = async () => {
   return await db.artist.findMany({
     orderBy: {
       createdAt: "desc",
@@ -64,7 +64,7 @@ export const getArtistsAction = async () => {
   });
 };
 
-export const getArtistAction = async (artistId: string) => {
+export const fetchArtistByIdAction = async (artistId: string) => {
   const artistDetail = await db.artist.findUnique({
     where: {
       id: artistId,

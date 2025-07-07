@@ -10,14 +10,12 @@ export interface ApiResponse<T = unknown> {
     field?: string;
   };
   meta?: {
-    timestamp: string;
-    requestId?: string;
-    pagination?: {
-      page: number;
-      limit: number;
-      total: number;
-      totalPages: number;
-    };
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
   };
 }
 
@@ -28,10 +26,7 @@ export function createSuccessResponse<T>(
   return {
     success: true,
     data,
-    meta: {
-      timestamp: new Date().toISOString(),
-      ...meta,
-    },
+    meta,
   };
 }
 
@@ -48,9 +43,6 @@ export function createErrorResponse(
       message,
       details,
       field,
-    },
-    meta: {
-      timestamp: new Date().toISOString(),
     },
   };
 }

@@ -3,7 +3,7 @@
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 
-export const fetchTracksAction = async () => {
+export const getTracks = async () => {
   return await db.track.findMany({
     orderBy: {
       createdAt: "desc",
@@ -11,7 +11,7 @@ export const fetchTracksAction = async () => {
   });
 };
 
-export const fetchTrackByIdAction = async (trackId: string) => {
+export const getTrackById = async (trackId: string) => {
   const trackDetail = await db.track.findUnique({
     where: {
       id: trackId,
@@ -39,4 +39,21 @@ export const fetchTrackByIdAction = async (trackId: string) => {
     ...trackDetail,
     artists: flattenRelation(trackDetail.artists, "artist"),
   };
+};
+
+export const getTracksByArtistId = async (artistId: string) => {
+  return await db.track.findMany({
+    where: {
+      artists: {
+        some: {
+          artistId,
+        },
+      },
+    },
+    orderBy: {
+      playHistory: {
+        _count: "desc",
+      },
+    },
+  });
 };

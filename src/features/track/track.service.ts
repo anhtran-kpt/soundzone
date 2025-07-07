@@ -1,15 +1,24 @@
 import { api } from "@/lib/api-client";
-import { TrackDetail, TrackList } from "./track.type";
+import { TrackDetail, TrackFilters, TrackList } from "./track.type";
 
-const endpoints = {
-  list: "/tracks",
-  detail: (trackId: string) => `/tracks/${trackId}`,
-} as const;
+export const trackService = {
+  async fetchTracks(signal: AbortSignal, filters: TrackFilters) {
+    return await api.getWithMeta<TrackList>("/tracks", signal, filters);
+  },
 
-export const fetchTracks = async (signal: AbortSignal) => {
-  return await api.getWithMeta<TrackList>(endpoints.list, signal);
-};
+  async fetchTrackById(trackId: string, signal: AbortSignal) {
+    return await api.get<TrackDetail>(`/tracks/${trackId}`, signal);
+  },
 
-export const fetchTrackById = async (trackId: string, signal: AbortSignal) => {
-  return await api.get<TrackDetail>(endpoints.detail(trackId), signal);
+  async fetchTracksByArtistId(
+    artistId: string,
+    signal: AbortSignal,
+    filters: TrackFilters
+  ) {
+    return await api.getWithMeta<TrackDetail>(
+      `/tracks/${artistId}`,
+      signal,
+      filters
+    );
+  },
 };

@@ -3,13 +3,43 @@
 import db from "@/lib/prisma/db";
 import { emptyToNull } from "@/lib/utils";
 import { CreateAlbumInput } from "@/schemas/album";
+import { AlbumFilters } from "./album.type";
 
-export const fetchAlbumsAction = async () => {
-  return await db.album.findMany({
-    orderBy: {
-      createdAt: "desc",
+export const fetchAlbumsAction = async (filters: AlbumFilters) => {
+  const { page, limit, artistId } = filters;
+
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    db.album.findMany({
+      where: {
+        artistId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip,
+    }),
+    db.album.count({
+      where: {
+        artistId,
+      },
+    }),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
     },
-  });
+  };
 };
 
 export const fetchAlbumByIdAction = async (albumId: string) => {
