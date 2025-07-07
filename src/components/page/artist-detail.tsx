@@ -1,13 +1,13 @@
 "use client";
 
 import { ArtistBanner } from "@/components/shared/ui";
-import TracksPopular from "./tracks-popular";
 import { useCurrentTrack, useGetArtist, useIsPlaying } from "@/hooks";
 import { notFound } from "next/navigation";
-import { Discography } from "./discography";
+import { Discography } from "../user/artist/discography";
 import { Button } from "@/components/ui";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
+import TrackList from "@/components/ui/track-list";
 
 export default function ArtistDetail({ artistId }: { artistId: string }) {
   const { data: artist, isError, error } = useGetArtist(artistId);
@@ -42,7 +42,8 @@ export default function ArtistDetail({ artistId }: { artistId: string }) {
         </Button>
         <EllipsisIcon />
       </section>
-      <TracksPopular tracks={artist.tracks} />
+      <TrackList tracks={artist.tracks} />
+      {/* <TracksPopular tracks={artist.tracks} /> */}
       <section>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold mb-4">Discography</h2>

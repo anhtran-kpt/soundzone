@@ -1,7 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MicVocalIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import {
+  MicVocalIcon,
+  MoreHorizontalIcon,
+  PlusCircleIcon,
+  PlusIcon,
+} from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -10,10 +15,11 @@ import {
   DropdownMenuTrigger,
   Button,
 } from "@/components/ui";
-import { Artist } from "@/types";
-import { CldImage } from "next-cloudinary";
+import { Track } from "@/types";
+import TrackInfo from "../shared/ui/track-info";
+import { formatDuration } from "@/lib/utils";
 
-export const ArtistColumns: ColumnDef<Artist>[] = [
+export const TrackColumns: ColumnDef<Track>[] = [
   {
     header: "#",
     accessorKey: "#",
@@ -25,52 +31,32 @@ export const ArtistColumns: ColumnDef<Artist>[] = [
     header: "",
     accessorKey: "imagePublicId",
     cell: ({ row }) => {
+      return <TrackInfo track={row.original} />;
+    },
+  },
+  {
+    header: "Plays",
+    accessorKey: "plays",
+    cell: ({ row }) => {
+      return <span>{row.original.playHistory.length}</span>;
+    },
+  },
+  {
+    header: "",
+    accessorKey: "add-to-liked-tracks",
+    cell: ({ row }) => {
+      return <PlusCircleIcon />;
+    },
+  },
+  {
+    header: "Duration",
+    accessorKey: "duration",
+    cell: ({ row }) => {
       return (
-        <div className="relative size-8 rounded-full">
-          <CldImage
-            src={row.original.imagePublicId}
-            alt={row.original.name}
-            fill
-            sizes="32px"
-            className="object-cover rounded-full"
-          />
-        </div>
+        <span className="text-right">
+          {formatDuration(row.original.duration)}
+        </span>
       );
-    },
-  },
-  {
-    header: "Name",
-    accessorKey: "name",
-    cell: ({ row }) => {
-      return <span>{row.original.name}</span>;
-    },
-  },
-  {
-    header: "Followers",
-    accessorKey: "followerCount",
-    cell: ({ row }) => {
-      return <span>{row.original._count.followers}</span>;
-    },
-  },
-  {
-    header: "Monthly Listeners",
-    accessorKey: "monthlyListeners",
-    cell: ({ row }) => {
-      return <span>{0}</span>;
-    },
-  },
-  {
-    header: "Albums",
-    accessorKey: "albums",
-    cell: ({ row }) => {
-      return <div>{row.original.albums.length}</div>;
-    },
-  },
-  {
-    header: "Tracks",
-    accessorKey: "tracks",
-    cell: ({ row }) => {
-      return <div>{row.original.tracks.length}</div>;
     },
   },
   {

@@ -1,4 +1,4 @@
-import ArtistDetail from "@/components/user/artist/artist-detail";
+import ArtistDetail from "@/components/page/artist-detail";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { prefetchArtist } from "@/lib/prefetchers";
@@ -6,17 +6,17 @@ import { prefetchArtist } from "@/lib/prefetchers";
 export default async function ArtistPage({
   params,
 }: {
-  params: Promise<{ artistSlug: string }>;
+  params: Promise<{ artistId: string }>;
 }) {
-  const { artistSlug } = await params;
+  const { artistId } = await params;
 
   const qc = getQueryClient();
 
-  await prefetchArtist(qc, artistSlug);
+  await prefetchArtist(qc, artistId);
 
   return (
     <HydrationBoundary state={dehydrate(qc)}>
-      <ArtistDetail artistSlug={artistSlug} />
+      <ArtistDetail artistId={artistId} />
     </HydrationBoundary>
   );
 }

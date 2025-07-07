@@ -27,6 +27,7 @@ export const getTrackAction = async (trackId: string) => {
           artist: true,
         },
       },
+      playHistory: true,
     },
   });
 

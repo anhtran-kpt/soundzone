@@ -22,7 +22,7 @@ export default function TrackInfo({ track }: TrackInfoProps) {
       </div>
       <div className="flex flex-col gap-1 w-full overflow-hidden">
         <Link
-          href={`/artists/${track.album.artist.slug}/albums/${track.album.slug}`}
+          href={`/artists/${track.album.artist.id}/albums/${track.album.id}`}
           className="text-[0.925rem] font-medium truncate block w-full"
         >
           {track.title}
@@ -30,9 +30,9 @@ export default function TrackInfo({ track }: TrackInfoProps) {
         <div className="flex items-center gap-1.5 truncate text-xs">
           {track.isExplicit && <Explicit />}
           {track.artists.map((artist, index) => (
-            <span key={artist.slug} className="text-muted-foreground truncate">
+            <span key={artist.id} className="text-muted-foreground truncate">
               <Link
-                href={`/artists/${artist.slug}`}
+                href={`/artists/${artist.id}`}
                 className="text-xs hover:text-primary hover:underline underline-offset-3 truncate"
               >
                 {artist.name}
