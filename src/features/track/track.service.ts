@@ -1,24 +1,16 @@
 import { api } from "@/lib/api-client";
-import { TrackDetail, TrackFilters, TrackList } from "./track.type";
+import { TrackDetail, TrackList } from "./track.type";
+import { PaginationParams } from "../shared";
 
-export const trackService = {
-  async fetchTracks(signal: AbortSignal, filters: TrackFilters) {
-    return await api.getWithMeta<TrackList>("/tracks", signal, filters);
-  },
-
-  async fetchTrackById(trackId: string, signal: AbortSignal) {
-    return await api.get<TrackDetail>(`/tracks/${trackId}`, signal);
-  },
-
-  async fetchTracksByArtistId(
-    artistId: string,
+export const TrackService = {
+  fetchList: async (
     signal: AbortSignal,
-    filters: TrackFilters
-  ) {
-    return await api.getWithMeta<TrackDetail>(
-      `/tracks/${artistId}`,
-      signal,
-      filters
-    );
+    params?: Partial<PaginationParams>
+  ) => {
+    return await api.getWithMeta<TrackList>("/tracks", signal, params);
+  },
+
+  fetchById: async (trackId: string, signal: AbortSignal) => {
+    return await api.get<TrackDetail>(`/tracks/${trackId}`, signal);
   },
 };

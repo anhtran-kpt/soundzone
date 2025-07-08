@@ -1,9 +1,4 @@
-import { PaginationOptions } from "../shared";
-import { getTrackById, getTracks } from "./track.actions";
+import { TrackActions } from "./track.actions";
 
-export type TrackDetail = Awaited<ReturnType<typeof getTrackById>>;
-export type TrackList = Awaited<ReturnType<typeof getTracks>>;
-
-export type TrackFilters = {
-  artistId?: string;
-} & PaginationOptions;
+export type TrackDetail = Awaited<ReturnType<typeof TrackActions.getById>>;
+export type TrackList = Awaited<ReturnType<typeof TrackActions.getList>>;

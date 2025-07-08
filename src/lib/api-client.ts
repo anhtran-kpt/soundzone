@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 import { ApiResponse } from "@/types";
+import { PaginationParams } from "@/features/shared";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
@@ -83,7 +84,7 @@ export const api = {
   async getWithMeta<T>(
     url: string,
     signal: AbortSignal,
-    params?: unknown
+    params?: Partial<PaginationParams>
   ): Promise<ApiResponse<T>> {
     const response = await apiClient.get<ApiResponse<T>>(url, {
       params,

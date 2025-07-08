@@ -1,9 +1,4 @@
-import { PaginationOptions } from "../shared";
-import { fetchAlbumByIdAction, fetchAlbumsAction } from "./album.actions";
+import { AlbumActions } from "./album.actions";
 
-export type AlbumDetail = Awaited<ReturnType<typeof fetchAlbumByIdAction>>;
-export type AlbumList = Awaited<ReturnType<typeof fetchAlbumsAction>>;
-
-export type AlbumFilters = {
-  artistId?: string;
-} & PaginationOptions;
+export type AlbumDetail = Awaited<ReturnType<typeof AlbumActions.getById>>;
+export type AlbumList = Awaited<ReturnType<typeof AlbumActions.getList>>;

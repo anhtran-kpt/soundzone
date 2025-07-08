@@ -3,46 +3,38 @@ import {
   usePrefetchQuery,
   useQuery,
 } from "@tanstack/react-query";
-import { trackService } from "./track.service";
-import { TrackFilters } from "./track.type";
+import { TrackService } from "./track.service";
+import { PaginationParams } from "../shared";
 
 const keys = {
-  list: ["tracks"] as const,
-  detail: (trackId: string) => [...keys.list, trackId] as const,
+  all: ["tracks"] as const,
+  lists: () => [...keys.all, "list"] as const,
+  list: (params?: Partial<PaginationParams>) =>
+    [...keys.lists(), { params }] as const,
+  details: () => [...keys.all, "detail"] as const,
+  detail: (trackId: string) => [...keys.details(), trackId] as const,
 } as const;
 
-export const usePrefetchTracks = (filters: TrackFilters) => {
+export const usePrefetchTracks = (params?: Partial<PaginationParams>) => {
   return usePrefetchQuery({
-    queryKey: keys.list,
-    queryFn: ({ signal }) => trackService.fetchTracks(signal, filters),
+    queryKey: keys.list(params),
+    queryFn: ({ signal }) => TrackService.fetchList(signal, params),
   });
 };
 
-export const useFetchTracks = (filters: TrackFilters) => {
+export const useTracks = (params?: Partial<PaginationParams>) => {
   return useQuery({
-    queryKey: keys.list,
-    queryFn: ({ signal }) => trackService.fetchTracks(signal, filters),
+    queryKey: keys.list(params),
+    queryFn: ({ signal }) => TrackService.fetchList(signal, params),
     placeholderData: keepPreviousData,
   });
 };
 
-export const useFetchTrackById = (trackId: string) => {
+export const useTrackById = (trackId: string) => {
   return useQuery({
     queryKey: keys.detail(trackId),
-    queryFn: ({ signal }) => trackService.fetchTrackById(trackId, signal),
+    queryFn: ({ signal }) => TrackService.fetchById(trackId, signal),
     placeholderData: keepPreviousData,
     enabled: !!trackId,
-  });
-};
-
-export const useFetchTracksByArtistId = (
-  artistId: string,
-  filters: TrackFilters
-) => {
-  return useQuery({
-    queryKey: keys.list,
-    queryFn: ({ signal }) =>
-      trackService.fetchTracksByArtistId(artistId, signal, filters),
-    placeholderData: keepPreviousData,
   });
 };

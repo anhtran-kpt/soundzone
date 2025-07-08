@@ -1,21 +1,21 @@
 import { api } from "@/lib/api-client";
-import { AlbumDetail, AlbumFilters, AlbumList } from "./album.type";
+import { AlbumDetail, AlbumList } from "./album.type";
 import { CreateAlbumInput } from "./album.schema";
+import { PaginationParams } from "../shared";
 
-export const fetchAlbumsService = async (
-  signal: AbortSignal,
-  filters: AlbumFilters
-) => {
-  return await api.getWithMeta<AlbumList>("/albums", signal, filters);
-};
+export const AlbumService = {
+  fetchList: async (
+    signal: AbortSignal,
+    params?: Partial<PaginationParams>
+  ) => {
+    return await api.getWithMeta<AlbumList>("/albums", signal, params);
+  },
 
-export const fetchAlbumByIdService = async (
-  albumId: string,
-  signal: AbortSignal
-) => {
-  return await api.get<AlbumDetail>(`/albums/${albumId}`, signal);
-};
+  fetchById: async (albumId: string, signal: AbortSignal) => {
+    return await api.get<AlbumDetail>(`/albums/${albumId}`, signal);
+  },
 
-export const createAlbumService = async (data: CreateAlbumInput) => {
-  return await api.post<AlbumDetail>("/albums", data);
+  create: async (data: CreateAlbumInput) => {
+    return await api.post<AlbumDetail>("/albums", data);
+  },
 };
