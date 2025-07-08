@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import { SALT_ROUNDS } from "./constants";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { UserActions } from "@/features/user";
 import { NextResponse } from "next/server";
+import { signIn } from "@/features/user";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await UserActions.signIn({
+        const user = await signIn({
           email: credentials.email,
           password: credentials.password,
         });

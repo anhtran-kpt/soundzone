@@ -32,6 +32,14 @@ export const ArtistActions = {
     };
   },
 
+  getInfo: async (artistSlug: string) => {
+    return await db.artist.findUnique({
+      where: {
+        slug: artistSlug,
+      },
+    });
+  },
+
   getBySlug: async (artistSlug: string) => {
     const artistDetail = await db.artist.findUnique({
       where: {

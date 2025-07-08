@@ -1,10 +1,9 @@
+import { UseQueryOptions } from "@tanstack/react-query";
 import {
-  keepPreviousData,
-  usePrefetchQuery,
-  useQuery,
-  UseQueryOptions,
-} from "@tanstack/react-query";
-import { UserService } from "./user.service";
+  fetchUserFollowedArtists,
+  fetchUserInfo,
+  fetchUserPlaylists,
+} from "./user.service";
 import { PaginationParams } from "../shared";
 
 const keys = {
@@ -21,60 +20,23 @@ const keys = {
     [...keys.detail(userSlug), "followed-artists"] as const,
 } as const;
 
-export const UserQueries = {
-  fetchInfo: (userSlug: string) =>
-    ({
-      queryKey: keys.info(userSlug),
-      queryFn: ({ signal }) => UserService.fetchInfo(userSlug, signal),
-      enabled: !!userSlug,
-    } satisfies UseQueryOptions),
+export const userInfoQuery = (userSlug: string) =>
+  ({
+    queryKey: keys.info(userSlug),
+    queryFn: ({ signal }) => fetchUserInfo(userSlug, signal),
+    enabled: !!userSlug,
+  } satisfies UseQueryOptions);
 
-  fetchPlaylists: (userSlug: string) =>
-    ({
-      queryKey: keys.playlists(userSlug),
-      queryFn: ({ signal }) => UserService.fetchPlaylists(userSlug, signal),
-      enabled: !!userSlug,
-    } satisfies UseQueryOptions),
+export const userPlaylistsQuery = (userSlug: string) =>
+  ({
+    queryKey: keys.playlists(userSlug),
+    queryFn: ({ signal }) => fetchUserPlaylists(userSlug, signal),
+    enabled: !!userSlug,
+  } satisfies UseQueryOptions);
 
-  fetchFollowedArtists: (userSlug: string) =>
-    ({
-      queryKey: keys.playlists(userSlug),
-      queryFn: ({ signal }) =>
-        UserService.fetchFollowedArtists(userSlug, signal),
-      enabled: !!userSlug,
-    } satisfies UseQueryOptions),
-};
-
-// export const usePrefetchUsers = (params?: Partial<PaginationParams>) => {
-//   return usePrefetchQuery({
-//     queryKey: keys.list(params),
-//     queryFn: ({ signal }) => UserService.fetchList(signal, params),
-//   });
-// };
-
-// export const useUsers = (params?: Partial<PaginationParams>) => {
-//   return useQuery({
-//     queryKey: keys.list(params),
-//     queryFn: ({ signal }) => UserService.fetchList(signal, params),
-//     placeholderData: keepPreviousData,
-//   });
-// };
-
-// export const useUserPlaylists = (userSlug: string) => {
-//   return useQuery({
-//     queryKey: keys.playlists(userSlug),
-//     queryFn: ({ signal }) =>
-//       UserService.fetchPlaylistsByUserSlug(userSlug, signal),
-//     placeholderData: keepPreviousData,
-//     enabled: !!userSlug,
-//   });
-// };
-
-// export const useUserInfo = (userSlug: string) => {
-//   return useQuery({
-//     queryKey: keys.playlists(userSlug),
-//     queryFn: ({ signal }) => UserService.fetchUserInfo(userSlug, signal),
-//     placeholderData: keepPreviousData,
-//     enabled: !!userSlug,
-//   });
-// };
+export const userFollowedArtistsQuery = (userSlug: string) =>
+  ({
+    queryKey: keys.playlists(userSlug),
+    queryFn: ({ signal }) => fetchUserFollowedArtists(userSlug, signal),
+    enabled: !!userSlug,
+  } satisfies UseQueryOptions);

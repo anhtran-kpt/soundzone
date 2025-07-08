@@ -14,7 +14,7 @@ import {
   Button,
 } from "@/components/ui";
 import Link from "next/link";
-import { UserQueries } from "@/features/user";
+import { userFollowedArtistsQuery, userPlaylistsQuery } from "@/features/user";
 import { useSession } from "next-auth/react";
 import { useCreatePlaylist } from "@/features/playlist";
 import { useQueries } from "@tanstack/react-query";
@@ -26,10 +26,7 @@ export function Sidebar() {
   const slug = session?.user.slug ?? "";
 
   const [playlistQuery, artistQuery] = useQueries({
-    queries: [
-      UserQueries.fetchPlaylists(slug),
-      UserQueries.fetchFollowedArtists(slug),
-    ],
+    queries: [userPlaylistsQuery(slug), userFollowedArtistsQuery(slug)],
   });
 
   const { mutateAsync: createPlaylist } = useCreatePlaylist();
