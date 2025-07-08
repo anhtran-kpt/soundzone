@@ -1,5 +1,5 @@
 import { createArtistAction, getArtistsAction } from "@/app/actions";
-import { withApiHandler } from "@/lib/api-handler";
+import { withApiHandler } from "@/lib/api/api-handler";
 import { validateBody } from "@/lib/validation";
 import { createArtistSchema } from "@/schemas";
 import { NextRequest } from "next/server";

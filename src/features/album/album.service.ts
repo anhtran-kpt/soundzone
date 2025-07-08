@@ -1,4 +1,4 @@
-import { api } from "@/lib/api-client";
+import { api } from "@/lib/api/api-client";
 import { AlbumDetail, AlbumList } from "./album.type";
 import { CreateAlbumInput } from "./album.schema";
 import { PaginationParams } from "../shared";

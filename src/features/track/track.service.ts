@@ -1,4 +1,4 @@
-import { api } from "@/lib/api-client";
+import { api } from "@/lib/api/api-client";
 import { TrackDetail, TrackList } from "./track.type";
 import { PaginationParams } from "../shared";
 

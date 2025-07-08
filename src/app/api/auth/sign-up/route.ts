@@ -1,10 +1,10 @@
 import { signUpAction } from "@/app/actions/user";
-import { withApiHandler } from "@/lib/api-handler";
+import { withApiHandler } from "@/lib/api/api-handler";
 import { signUpSchema } from "@/schemas";
 import { NextRequest } from "next/server";
 import { checkUserExistsAction } from "@/app/actions/user";
 import { ApiErrorCode } from "@/types";
-import { ApiError } from "@/lib/api-handler";
+import { ApiError } from "@/lib/api/api-handler";
 import { validateBody } from "@/lib/validation";
 
 export const POST = withApiHandler(async (req: NextRequest) => {

@@ -1,5 +1,5 @@
 import { createAlbumAction, getAlbumsAction } from "@/app/actions";
-import { withApiHandler } from "@/lib/api-handler";
+import { withApiHandler } from "@/lib/api/api-handler";
 import { validateBody } from "@/lib/validation";
 import { createAlbumInputSchema } from "@/schemas";
 import { NextRequest } from "next/server";

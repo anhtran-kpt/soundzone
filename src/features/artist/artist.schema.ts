@@ -1,4 +1,4 @@
-import { baseFields } from "@/schemas/shared";
+import { baseFields } from "../shared";
 import { z } from "zod";
 
 export const artistSchema = z.object({

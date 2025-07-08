@@ -7,7 +7,7 @@ import {
   createErrorResponse,
   formatZodError,
   ApiErrorCode,
-} from "@/types/api";
+} from "@/lib/api/api";
 
 type ApiHandler<T = unknown> = (
   req: NextRequest,

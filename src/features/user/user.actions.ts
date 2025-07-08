@@ -5,12 +5,12 @@ import db from "@/lib/prisma/db";
 import { DEFAULT_PARAMS } from "@/lib/constants";
 import { PaginationParams } from "../shared";
 
-export const ArtistActions = {
+export const UserActions = {
   getList: async (params?: Partial<PaginationParams>) => {
     const page = params?.page ?? DEFAULT_PARAMS.page;
     const limit = params?.limit ?? DEFAULT_PARAMS.limit;
 
-    const data = await db.artist.findMany({
+    const data = await db.user.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -34,10 +34,10 @@ export const ArtistActions = {
     };
   },
 
-  getById: async (artistId: string) => {
-    const artistDetail = await db.artist.findUnique({
+  getById: async (userId: string) => {
+    const userDetail = await db.user.findUnique({
       where: {
-        id: artistId,
+        id: userId,
       },
       include: {
         album: {
@@ -54,13 +54,13 @@ export const ArtistActions = {
       },
     });
 
-    if (!artistDetail) {
-      throw new Error(`Artist with id ${artistId} not found`);
+    if (!userDetail) {
+      throw new Error(`User with id ${userId} not found`);
     }
 
     return {
-      ...artistDetail,
-      artists: flattenRelation(artistDetail.artists, "artist"),
+      ...userDetail,
+      artists: flattenRelation(userDetail.artists, "artist"),
     };
   },
 };

@@ -1,4 +1,4 @@
-import { baseFields } from "./shared";
+import { baseFields } from "../shared";
 import { z } from "zod";
 
 export const genreSchema = z.object({

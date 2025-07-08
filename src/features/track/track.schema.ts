@@ -10,7 +10,7 @@ const baseTrackSchema = z.object({
   isExplicit: z.boolean(),
 });
 
-const createTrackSchema = baseTrackSchema.extend({
+export const createTrackSchema = baseTrackSchema.extend({
   genreIds: z.array(z.string()).min(1, "At least one genre is required"),
   performers: z.array(
     z.object({

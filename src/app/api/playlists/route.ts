@@ -1,5 +1,5 @@
 import { createPlaylistAction, getPlaylistsAction } from "@/app/actions";
-import { withApiHandler } from "@/lib/api-handler";
+import { withApiHandler } from "@/lib/api/api-handler";
 import { getCurrentUser } from "@/lib/next-auth";
 
 export const GET = withApiHandler(async () => {

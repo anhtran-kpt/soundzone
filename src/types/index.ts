@@ -1,4 +1,4 @@
-export * from "./api";
+export * from "../lib/api/api";
 export * from "./album";
 export * from "./artist";
 export * from "./genre";
