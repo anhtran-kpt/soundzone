@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import slugify from "slugify";
 import { DEFAULT_PARAMS, SLUG_OPTIONS } from "./constants";
 import { PaginationParams } from "@/features/shared";
+import { NextRequest } from "next/server";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,6 +40,11 @@ export const getAudioUrl = (publicId: string): string => {
   return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${publicId}.mp3`;
 };
 
-export const parseParams = (params?: Partial<PaginationParams>) => {
-  return { ...DEFAULT_PARAMS, ...params };
+export const parsePaginationParams = (req: NextRequest): PaginationParams => {
+  const params = req.nextUrl.searchParams;
+
+  return {
+    page: parseInt(params.get("page") || DEFAULT_PARAMS.page, 10),
+    limit: parseInt(params.get("limit") || DEFAULT_PARAMS.limit, 10),
+  };
 };

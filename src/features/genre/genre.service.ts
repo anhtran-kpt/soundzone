@@ -10,7 +10,7 @@ export const GenreService = {
     return await api.getWithMeta<GenreList>("/genres", signal, params);
   },
 
-  fetchById: async (genreId: string, signal: AbortSignal) => {
+  fetchBySlug: async (genreId: string, signal: AbortSignal) => {
     return await api.get<GenreDetail>(`/genres/${genreId}`, signal);
   },
 };

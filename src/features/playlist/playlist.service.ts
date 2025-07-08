@@ -10,7 +10,11 @@ export const PlaylistService = {
     return await api.getWithMeta<PlaylistList>("/playlists", signal, params);
   },
 
-  fetchById: async (playlistId: string, signal: AbortSignal) => {
+  fetchBySlug: async (playlistId: string, signal: AbortSignal) => {
     return await api.get<PlaylistDetail>(`/playlists/${playlistId}`, signal);
+  },
+
+  create: async (userId: string) => {
+    return await api.post<PlaylistDetail>("/playlists", userId);
   },
 };

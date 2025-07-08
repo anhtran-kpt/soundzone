@@ -3,11 +3,10 @@
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
-import { parseParams } from "@/lib/utils";
 
 export const PlaylistActions = {
-  getList: async (params?: Partial<PaginationParams>) => {
-    const { page, limit } = parseParams(params);
+  getList: async (params: PaginationParams) => {
+    const { page, limit } = params;
 
     const data = await db.playlist.findMany({
       orderBy: {
@@ -33,7 +32,7 @@ export const PlaylistActions = {
     };
   },
 
-  getById: async (playlistId: string) => {
+  getBySlug: async (playlistId: string) => {
     const playlistDetail = await db.playlist.findUnique({
       where: {
         id: playlistId,

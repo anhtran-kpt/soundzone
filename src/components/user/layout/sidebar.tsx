@@ -14,32 +14,32 @@ import {
   Button,
 } from "@/components/ui";
 import Link from "next/link";
-import { useGetUser } from "@/hooks/use-users";
+import { UserQueries } from "@/features/user";
 import { useSession } from "next-auth/react";
-import { useCreatePlaylist } from "@/hooks";
+import { useCreatePlaylist } from "@/features/playlist";
+import { useQueries } from "@tanstack/react-query";
 
 export function Sidebar() {
   const { state, toggleSidebar } = useSidebar();
-  const { data: sessionData } = useSession();
-  const {
-    data: user,
-    isLoading,
-    isError,
-    error,
-  } = useGetUser(sessionData?.user.id ?? "");
+  const { data: session, status } = useSession();
+
+  const slug = session?.user.slug ?? "";
+
+  const [playlistQuery, artistQuery] = useQueries({
+    queries: [
+      UserQueries.fetchPlaylists(slug),
+      UserQueries.fetchFollowedArtists(slug),
+    ],
+  });
 
   const { mutateAsync: createPlaylist } = useCreatePlaylist();
 
-  if (isLoading) {
+  if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!sessionData || !user) {
-    return <div>Please sign in</div>;
+  if (!session) {
+    return <div>Please login to use the sidebar</div>;
   }
 
   return (
@@ -65,7 +65,7 @@ export function Sidebar() {
             type="button"
             variant="outline"
             className="rounded-full"
-            onClick={() => createPlaylist()}
+            onClick={() => createPlaylist(slug)}
           >
             <PlusIcon className="size-4" />
             Create playlist
@@ -76,15 +76,19 @@ export function Sidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {user.playlists.map((playlist) => (
-                <SidebarMenuItem key={playlist.id}>
-                  <SidebarMenuButton asChild>
-                    <Link href={`/playlists/${playlist.id}`}>
-                      <span>{playlist.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {playlistQuery.isLoading ? (
+                <SidebarMenuItem>Loading playlists...</SidebarMenuItem>
+              ) : (
+                playlistQuery.data?.data?.map((playlist) => (
+                  <SidebarMenuItem key={playlist.id}>
+                    <SidebarMenuButton asChild>
+                      <Link href={`/playlists/${playlist.slug}`}>
+                        {playlist.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

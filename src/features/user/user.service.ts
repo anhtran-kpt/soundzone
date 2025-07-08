@@ -1,6 +1,7 @@
 import { api } from "@/lib/api/api-client";
-import { UserDetail, UserList } from "./user.type";
+import { UserInfo, UserList } from "./user.type";
 import { PaginationParams } from "../shared";
+import { PlaylistList } from "../playlist";
 
 export const UserService = {
   fetchList: async (
@@ -10,7 +11,18 @@ export const UserService = {
     return await api.getWithMeta<UserList>("/users", signal, params);
   },
 
-  fetchById: async (userId: string, signal: AbortSignal) => {
-    return await api.get<UserDetail>(`/users/${userId}`, signal);
+  fetchInfo: async (userSlug: string, signal: AbortSignal) => {
+    return await api.get<UserInfo>(`/users/${userSlug}`, signal);
+  },
+
+  fetchPlaylists: async (userSlug: string, signal: AbortSignal) => {
+    return await api.get<PlaylistList>(`/users/${userSlug}/playlists`, signal);
+  },
+
+  fetchFollowedArtists: async (userSlug: string, signal: AbortSignal) => {
+    return await api.get<PlaylistList>(
+      `/users/${userSlug}/following-artists`,
+      signal
+    );
   },
 };

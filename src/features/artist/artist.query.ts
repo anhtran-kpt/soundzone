@@ -30,10 +30,10 @@ export const useArtists = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const useArtistById = (artistId: string) => {
+export const useArtistBySlug = (artistId: string) => {
   return useQuery({
     queryKey: keys.detail(artistId),
-    queryFn: ({ signal }) => ArtistService.fetchById(artistId, signal),
+    queryFn: ({ signal }) => ArtistService.fetchBySlug(artistId, signal),
     placeholderData: keepPreviousData,
     enabled: !!artistId,
   });

@@ -30,10 +30,10 @@ export const useTracks = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const useTrackById = (trackId: string) => {
+export const useTrackBySlug = (trackId: string) => {
   return useQuery({
     queryKey: keys.detail(trackId),
-    queryFn: ({ signal }) => TrackService.fetchById(trackId, signal),
+    queryFn: ({ signal }) => TrackService.fetchBySlug(trackId, signal),
     placeholderData: keepPreviousData,
     enabled: !!trackId,
   });

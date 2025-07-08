@@ -6,8 +6,8 @@ import { CreateAlbumInput } from "./album.schema";
 import { PaginationParams } from "../shared";
 
 export const AlbumActions = {
-  getList: async (params?: Partial<PaginationParams>) => {
-    const { page, limit } = parseParams(params);
+  getList: async (params: PaginationParams) => {
+    const { page, limit } = params;
 
     const data = await db.album.findMany({
       orderBy: {
@@ -33,7 +33,7 @@ export const AlbumActions = {
     };
   },
 
-  getById: async (albumId: string) => {
+  getBySlug: async (albumId: string) => {
     const albumDetail = await db.album.findUnique({
       where: {
         id: albumId,

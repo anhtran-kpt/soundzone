@@ -11,7 +11,7 @@ export const AlbumService = {
     return await api.getWithMeta<AlbumList>("/albums", signal, params);
   },
 
-  fetchById: async (albumId: string, signal: AbortSignal) => {
+  fetchBySlug: async (albumId: string, signal: AbortSignal) => {
     return await api.get<AlbumDetail>(`/albums/${albumId}`, signal);
   },
 

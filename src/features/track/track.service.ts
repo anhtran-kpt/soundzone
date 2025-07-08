@@ -10,7 +10,7 @@ export const TrackService = {
     return await api.getWithMeta<TrackList>("/tracks", signal, params);
   },
 
-  fetchById: async (trackId: string, signal: AbortSignal) => {
+  fetchBySlug: async (trackId: string, signal: AbortSignal) => {
     return await api.get<TrackDetail>(`/tracks/${trackId}`, signal);
   },
 };

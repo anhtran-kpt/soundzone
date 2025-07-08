@@ -25,6 +25,6 @@ export const FALLBACK_PUBLIC_ID =
   process.env.NEXT_PUBLIC_FALLBACK_IMAGE_PUBLIC_ID;
 
 export const DEFAULT_PARAMS = {
-  page: 1,
-  limit: 10,
+  page: "1",
+  limit: "10",
 };

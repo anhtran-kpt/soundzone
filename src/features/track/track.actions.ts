@@ -3,11 +3,10 @@
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
-import { parseParams } from "@/lib/utils";
 
 export const TrackActions = {
-  getList: async (params?: Partial<PaginationParams>) => {
-    const { page, limit } = parseParams(params);
+  getList: async (params: PaginationParams) => {
+    const { page, limit } = params;
 
     const data = await db.track.findMany({
       orderBy: {
@@ -33,7 +32,7 @@ export const TrackActions = {
     };
   },
 
-  getById: async (trackId: string) => {
+  getBySlug: async (trackId: string) => {
     const trackDetail = await db.track.findUnique({
       where: {
         id: trackId,

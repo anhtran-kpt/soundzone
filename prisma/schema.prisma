@@ -125,7 +125,7 @@ model Album {
 model Playlist {
   id            String   @id @default(cuid())
   title         String
-  slug          String   @unique
+  slug          String
   isPublic      Boolean  @default(true)
   description   String?  @db.Text
   coverPublicId String?
@@ -138,6 +138,7 @@ model Playlist {
   likedByUsers UserLikedPlaylist[]
   tracks       PlaylistTrack[]
 
+  @@unique([userId, slug])
   @@index([slug])
   @@index([userId])
 }

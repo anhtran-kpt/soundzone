@@ -2,7 +2,6 @@
 
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { DEFAULT_PARAMS } from "@/lib/constants";
 import { PaginationParams } from "../shared";
 import { comparePasswords, hashPassword } from "@/lib/next-auth";
 import {
@@ -11,7 +10,6 @@ import {
   SignUpInput,
   signUpSchema,
 } from "./user.schema";
-import { parseParams } from "@/lib/utils";
 
 export const UserActions = {
   isExists: async (email: string) => {
@@ -58,8 +56,59 @@ export const UserActions = {
     return user;
   },
 
-  getList: async (params?: Partial<PaginationParams>) => {
-    const { page, limit } = parseParams(params);
+  getInfo: async (userSlug: string) => {
+    return await db.user.findUnique({
+      where: {
+        slug: userSlug,
+      },
+    });
+  },
+
+  getFollowedArtists: async (userSlug: string) => {
+    const user = await db.user.findUnique({
+      where: {
+        slug: userSlug,
+      },
+      include: {
+        followedArtists: {
+          include: {
+            artist: {
+              select: {
+                slug: true,
+                id: true,
+                name: true,
+                imagePublicId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return user?.followedArtists.map((f) => f.artist) ?? [];
+  },
+
+  getPlaylists: async (userSlug: string) => {
+    const user = await db.user.findUnique({
+      where: {
+        slug: userSlug,
+      },
+      include: {
+        playlists: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    return user?.playlists ?? [];
+  },
+
+  getList: async (params: PaginationParams) => {
+    const { page, limit } = params;
 
     const data = await db.user.findMany({
       orderBy: {
@@ -85,7 +134,7 @@ export const UserActions = {
     };
   },
 
-  getById: async (userId: string) => {
+  getBySlug: async (userId: string) => {
     const userDetail = await db.user.findUnique({
       where: {
         id: userId,

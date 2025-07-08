@@ -3,11 +3,10 @@
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
-import { parseParams } from "@/lib/utils";
 
 export const GenreActions = {
-  getList: async (params?: Partial<PaginationParams>) => {
-    const { page, limit } = parseParams(params);
+  getList: async (params: PaginationParams) => {
+    const { page, limit } = params;
 
     const data = await db.genre.findMany({
       orderBy: {
@@ -33,7 +32,7 @@ export const GenreActions = {
     };
   },
 
-  getById: async (genreId: string) => {
+  getBySlug: async (genreId: string) => {
     const genreDetail = await db.genre.findUnique({
       where: {
         id: genreId,

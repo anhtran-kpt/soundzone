@@ -30,10 +30,10 @@ export const useGenres = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const useGenreById = (genreId: string) => {
+export const useGenreBySlug = (genreId: string) => {
   return useQuery({
     queryKey: keys.detail(genreId),
-    queryFn: ({ signal }) => GenreService.fetchById(genreId, signal),
+    queryFn: ({ signal }) => GenreService.fetchBySlug(genreId, signal),
     placeholderData: keepPreviousData,
     enabled: !!genreId,
   });

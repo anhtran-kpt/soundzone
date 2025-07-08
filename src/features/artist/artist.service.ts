@@ -10,7 +10,7 @@ export const ArtistService = {
     return await api.getWithMeta<ArtistList>("/artists", signal, params);
   },
 
-  fetchById: async (artistId: string, signal: AbortSignal) => {
+  fetchBySlug: async (artistId: string, signal: AbortSignal) => {
     return await api.get<ArtistDetail>(`/artists/${artistId}`, signal);
   },
 };

@@ -1,5 +1,6 @@
 import {
   keepPreviousData,
+  useMutation,
   usePrefetchQuery,
   useQuery,
 } from "@tanstack/react-query";
@@ -12,7 +13,7 @@ const keys = {
   list: (params?: Partial<PaginationParams>) =>
     [...keys.lists(), { params }] as const,
   details: () => [...keys.all, "detail"] as const,
-  detail: (playlistId: string) => [...keys.details(), playlistId] as const,
+  detail: (playlistSlug: string) => [...keys.details(), playlistSlug] as const,
 } as const;
 
 export const usePrefetchPlaylists = (params?: Partial<PaginationParams>) => {
@@ -30,11 +31,17 @@ export const usePlaylists = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const usePlaylistById = (playlistId: string) => {
+export const usePlaylistBySlug = (playlistSlug: string) => {
   return useQuery({
-    queryKey: keys.detail(playlistId),
-    queryFn: ({ signal }) => PlaylistService.fetchById(playlistId, signal),
+    queryKey: keys.detail(playlistSlug),
+    queryFn: ({ signal }) => PlaylistService.fetchBySlug(playlistSlug, signal),
     placeholderData: keepPreviousData,
-    enabled: !!playlistId,
+    enabled: !!playlistSlug,
+  });
+};
+
+export const useCreatePlaylist = () => {
+  return useMutation({
+    mutationFn: (userSlug: string) => PlaylistService.create(userSlug),
   });
 };

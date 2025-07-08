@@ -34,10 +34,10 @@ export const useAlbums = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const useAlbumById = (albumId: string) => {
+export const useAlbumBySlug = (albumId: string) => {
   return useQuery({
     queryKey: keys.detail(albumId),
-    queryFn: ({ signal }) => AlbumService.fetchById(albumId, signal),
+    queryFn: ({ signal }) => AlbumService.fetchBySlug(albumId, signal),
     placeholderData: keepPreviousData,
     enabled: !!albumId,
   });
