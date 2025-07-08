@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
-import { ApiResponse } from "@/types";
+import { ApiResponse } from "./api";
 import { PaginationParams } from "@/features/shared";
 
 const apiClient = axios.create({

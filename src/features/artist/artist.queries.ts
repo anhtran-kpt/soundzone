@@ -1,29 +1,18 @@
-import {
-  keepPreviousData,
-  usePrefetchQuery,
-  useQuery,
-  UseQueryOptions,
-} from "@tanstack/react-query";
-import { ArtistService } from "./artist.service";
-import { PaginationParams } from "../shared";
+import { useQuery } from "@tanstack/react-query";
+import { fetchArtistInfo } from "./artist.service";
 
 const keys = {
   all: ["artists"] as const,
-  lists: () => [...keys.all, "list"] as const,
-  list: (params?: Partial<PaginationParams>) =>
-    [...keys.lists(), { params }] as const,
-  details: () => [...keys.all, "detail"] as const,
-  detail: (artistId: string) => [...keys.details(), artistId] as const,
+  detail: (artistSlug: string) => [...keys.all, artistSlug, "detail"] as const,
   info: (artistSlug: string) => [...keys.all, artistSlug, "info"] as const,
 } as const;
 
-export const ArtistQueries = {
-  fetchInfo: (artistSlug: string) =>
-    ({
-      queryKey: keys.info(artistSlug),
-      queryFn: ({ signal }) => ArtistService.fetchInfo(artistSlug, signal),
-      enabled: !!artistSlug,
-    } satisfies UseQueryOptions),
+export const useArtistInfo = (artistSlug: string) => {
+  return useQuery({
+    queryKey: keys.info(artistSlug),
+    queryFn: ({ signal }) => fetchArtistInfo(artistSlug, signal),
+    enabled: !!artistSlug,
+  });
 };
 
 // export const usePrefetchArtists = (params?: Partial<PaginationParams>) => {

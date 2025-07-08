@@ -14,10 +14,9 @@ import {
   Button,
 } from "@/components/ui";
 import Link from "next/link";
-import { userFollowedArtistsQuery, userPlaylistsQuery } from "@/features/user";
+import { useUserFollowedArtists, useUserPlaylists } from "@/features/user";
 import { useSession } from "next-auth/react";
 import { useCreatePlaylist } from "@/features/playlist";
-import { useQueries } from "@tanstack/react-query";
 
 export function Sidebar() {
   const { state, toggleSidebar } = useSidebar();
@@ -25,9 +24,11 @@ export function Sidebar() {
 
   const slug = session?.user.slug ?? "";
 
-  const [playlistQuery, artistQuery] = useQueries({
-    queries: [userPlaylistsQuery(slug), userFollowedArtistsQuery(slug)],
-  });
+  const { data: playlists, isLoading: isPlaylistLoading } =
+    useUserPlaylists(slug);
+
+  const { data: artists, isLoading: isArtistLoading } =
+    useUserFollowedArtists(slug);
 
   const { mutateAsync: createPlaylist } = useCreatePlaylist();
 
@@ -73,14 +74,27 @@ export function Sidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {playlistQuery.isLoading ? (
+              {isPlaylistLoading ? (
                 <SidebarMenuItem>Loading playlists...</SidebarMenuItem>
               ) : (
-                playlistQuery.data?.data?.map((playlist) => (
+                playlists?.map((playlist) => (
                   <SidebarMenuItem key={playlist.id}>
                     <SidebarMenuButton asChild>
                       <Link href={`/playlists/${playlist.slug}`}>
                         {playlist.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              )}
+              {isArtistLoading ? (
+                <SidebarMenuItem>Loading followed artists...</SidebarMenuItem>
+              ) : (
+                artists?.map((artist) => (
+                  <SidebarMenuItem key={artist.id}>
+                    <SidebarMenuButton asChild>
+                      <Link href={`/artists/${artist.slug}`}>
+                        {artist.name}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

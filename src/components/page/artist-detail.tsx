@@ -9,34 +9,30 @@ import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
 import TrackList from "@/components/ui/track-list";
 import { useQueries } from "@tanstack/react-query";
-import { ArtistQueries } from "@/features/artist";
+import { useArtistInfo } from "@/features/artist";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const [artistQuery] = useQueries({
-    queries: [ArtistQueries.fetchInfo(artistSlug)],
-  });
-
-  const artistData = artistQuery.data;
+  const { data: artist, isLoading } = useArtistInfo(artistSlug);
 
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
 
-  // if (isError) {
-  //   return <div>Error: {error?.message}</div>;
-  // }
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
 
-  if (!artistData) {
+  if (!artist) {
     return notFound();
   }
 
   return (
     <>
       <section>
-        <ArtistBanner artist={artistData} />
+        <ArtistBanner artist={artist} />
       </section>
       {/* <section className="flex gap-6 items-center py-6 relative">
         <Button type="button" size="icon" className="rounded-full size-12">
-          {currentTrack?.album.artistId === artistData.id && isPlaying ? (
+          {currentTrack?.album.artistId === artist.id && isPlaying ? (
             <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />
           ) : (
             <PlayIcon strokeWidth={0} fill="currentColor" className="size-6" />
@@ -54,7 +50,7 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold mb-4">Discography</h2>
           <Button asChild type="button" variant="link">
-            <Link href={`/artists/${artistData.slug}/discography`}>
+            <Link href={`/artists/${artist.slug}/discography`}>
               Show all
             </Link>
           </Button>
