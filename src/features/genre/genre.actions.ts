@@ -2,13 +2,12 @@
 
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { DEFAULT_PARAMS } from "@/lib/constants";
 import { PaginationParams } from "../shared";
+import { parseParams } from "@/lib/utils";
 
 export const GenreActions = {
   getList: async (params?: Partial<PaginationParams>) => {
-    const page = params?.page ?? DEFAULT_PARAMS.page;
-    const limit = params?.limit ?? DEFAULT_PARAMS.limit;
+    const { page, limit } = parseParams(params);
 
     const data = await db.genre.findMany({
       orderBy: {
@@ -62,5 +61,12 @@ export const GenreActions = {
       ...genreDetail,
       artists: flattenRelation(genreDetail.artists, "artist"),
     };
+  },
+
+  createGenreActio: async (genreName: string) => {
+    return await db.$transaction(async (tx) => {
+      const slug = await tx.genre.generateSlug(genreName);
+      return await tx.genre.create({ data: { name: genreName, slug } });
+    });
   },
 };

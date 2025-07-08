@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useWatch, Control, useFieldArray } from "react-hook-form";
 import { ArtistRole, ReleaseType } from "@/app/generated/prisma";
-import { CreateAlbumForm } from "@/schemas";
+import { CreateAlbumForm } from "@/features/album";
 
 const createEmptyTrack = (artistId: string): CreateAlbumForm["tracks"][0] => ({
   title: "",

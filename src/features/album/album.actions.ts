@@ -1,15 +1,13 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { emptyToNull } from "@/lib/utils";
-import { CreateAlbumInput } from "@/schemas/album";
+import { emptyToNull, parseParams } from "@/lib/utils";
+import { CreateAlbumInput } from "./album.schema";
 import { PaginationParams } from "../shared";
-import { DEFAULT_PARAMS } from "@/lib/constants";
 
 export const AlbumActions = {
   getList: async (params?: Partial<PaginationParams>) => {
-    const page = params?.page ?? DEFAULT_PARAMS.page;
-    const limit = params?.limit ?? DEFAULT_PARAMS.limit;
+    const { page, limit } = parseParams(params);
 
     const data = await db.album.findMany({
       orderBy: {

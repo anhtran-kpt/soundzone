@@ -1,5 +1,5 @@
 import { ReleaseType } from "@/app/generated/prisma";
-import { baseFields } from "@/schemas/shared";
+import { baseFields } from "../shared";
 import { z } from "zod";
 import { createTrackSchema } from "../track";
 

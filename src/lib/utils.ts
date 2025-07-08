@@ -1,7 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import slugify from "slugify";
-import { SLUG_OPTIONS } from "./constants";
+import { DEFAULT_PARAMS, SLUG_OPTIONS } from "./constants";
+import { PaginationParams } from "@/features/shared";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,4 +37,8 @@ export const customSlugify = (name: string) => {
 
 export const getAudioUrl = (publicId: string): string => {
   return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/${publicId}.mp3`;
+};
+
+export const parseParams = (params?: Partial<PaginationParams>) => {
+  return { ...DEFAULT_PARAMS, ...params };
 };

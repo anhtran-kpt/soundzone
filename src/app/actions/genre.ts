@@ -35,10 +35,3 @@ export const getGenreAction = async (genreId: string) => {
     },
   });
 };
-
-export const createGenreAction = async (genreName: string) => {
-  return await db.$transaction(async (tx) => {
-    const slug = await tx.genre.generateSlug(genreName);
-    return await tx.genre.create({ data: { name: genreName, slug } });
-  });
-};

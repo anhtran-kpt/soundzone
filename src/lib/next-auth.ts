@@ -4,13 +4,13 @@ import bcrypt from "bcryptjs";
 import { SALT_ROUNDS } from "./constants";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { signInAction } from "@/app/actions/user";
+import { UserActions } from "@/features/user";
 import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 7 * 24 * 60 * 60, // 7 days
+    maxAge: 7 * 24 * 60 * 60,
   },
   pages: {
     signIn: "/sign-in",
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await signInAction({
+        const user = await UserActions.signIn({
           email: credentials.email,
           password: credentials.password,
         });

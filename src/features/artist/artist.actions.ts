@@ -2,13 +2,12 @@
 
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { DEFAULT_PARAMS } from "@/lib/constants";
 import { PaginationParams } from "../shared";
+import { parseParams } from "@/lib/utils";
 
 export const ArtistActions = {
   getList: async (params?: Partial<PaginationParams>) => {
-    const page = params?.page ?? DEFAULT_PARAMS.page;
-    const limit = params?.limit ?? DEFAULT_PARAMS.limit;
+    const { page, limit } = parseParams(params);
 
     const data = await db.artist.findMany({
       orderBy: {

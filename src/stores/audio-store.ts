@@ -1,14 +1,15 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import { Playlist, Track } from "@/types";
+import type { PlaylistDetail } from "@/features/playlist";
+import type { TrackDetail } from "@/features/track";
 import { getAudioUrl } from "@/lib/utils";
 
 export type RepeatMode = "off" | "one" | "all";
 
 interface AudioState {
   // Current playback state
-  currentTrack: Track | null;
-  currentPlaylist: Playlist | null;
+  currentTrack: TrackDetail | null;
+  currentPlaylist: PlaylistDetail | null;
   currentTrackIndex: number;
 
   // Playback status
@@ -24,11 +25,11 @@ interface AudioState {
   repeatMode: RepeatMode;
 
   // Playlists management
-  playlists: Playlist[];
+  playlists: PlaylistDetail[];
 
   // Queue management
-  queue: Track[];
-  originalQueue: Track[]; // Backup for shuffle
+  queue: TrackDetail[];
+  originalQueue: TrackDetail[]; // Backup for shuffle
   queueIndex: number;
 
   // Error handling
@@ -61,9 +62,9 @@ interface AudioActions {
   toggleRepeat: () => void;
 
   // Track/Playlist management
-  setCurrentTrack: (track: Track, playlist?: Playlist) => void;
-  loadPlaylist: (playlist: Playlist, startIndex?: number) => void;
-  addToQueue: (track: Track) => void;
+  setCurrentTrack: (track: TrackDetail, playlist?: PlaylistDetail) => void;
+  loadPlaylist: (playlist: PlaylistDetail, startIndex?: number) => void;
+  addToQueue: (track: TrackDetail) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
 
