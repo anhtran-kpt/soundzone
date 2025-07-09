@@ -15,53 +15,78 @@ import {
 } from "@/features/artist/artist-queries";
 import { SectionHeading } from "@/new-components/ui/section-heading";
 import { FollowButton } from "@/new-components/features/follow-button";
+import { TrackListSkeleton } from "@/new-components/ui/track-list-skeleton";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data: artistInfo, isLoading } = useArtistInfo(artistSlug);
+  const { data: artistInfo, isLoading: isArtistInfoLoading } =
+    useArtistInfo(artistSlug);
   const { data: popularTracks, isLoading: isPopularTrackLoading } =
     useArtistPopularTracks(artistSlug, { limit: 5 });
 
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
-
-  if (!artistInfo) {
-    return notFound();
-  }
+  console.log(popularTracks);
 
   return (
-    <>
+    <div className="space-y-3">
       <section>
-        <ArtistBanner artist={artistInfo} />
+        {!isArtistInfoLoading && (
+          <ArtistBanner
+            name={artistInfo.name}
+            bannerPublicId={artistInfo.bannerPublicId}
+          />
+        )}
       </section>
       <section className="flex gap-6 items-center py-6 relative">
-        <Button type="button" size="icon" className="rounded-full size-12">
-          {currentTrack?.album.artistId === artistInfo.id && isPlaying ? (
-            <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />
-          ) : (
-            <PlayIcon strokeWidth={0} fill="currentColor" className="size-6" />
-          )}
-        </Button>
+        {!isArtistInfoLoading && (
+          <Button type="button" size="icon" className="rounded-full size-12">
+            {currentTrack?.album.artistId === artistInfo.id && isPlaying ? (
+              <PauseIcon
+                strokeWidth={0}
+                fill="currentColor"
+                className="size-6"
+              />
+            ) : (
+              <PlayIcon
+                strokeWidth={0}
+                fill="currentColor"
+                className="size-6"
+              />
+            )}
+          </Button>
+        )}
         <ShuffleIcon />
         <FollowButton artistSlug={artistSlug} />
         <EllipsisIcon />
       </section>
       <section>
         <SectionHeading title="Popular" />
-        {popularTracks && (
+        {isPopularTrackLoading || !popularTracks ? (
+          <TrackListSkeleton count={5} />
+        ) : (
           <TrackList
             tracks={popularTracks.data.data}
-            hasNext={popularTracks.meta?.hasNext}
+            hasNext={popularTracks.meta?.hasNext ?? false}
           />
         )}
+        <Button variant="link" className="text-white mt-2">
+          See more
+        </Button>
       </section>
       <section>
-        <SectionHeading title="Discography" />
+        <div className="flex items-center justify-between">
+          <SectionHeading title="Discography" />
+          <Button asChild type="button" variant="link">
+            <Link href={`/artists/${artistSlug}/albums`}>Show all</Link>
+          </Button>
+        </div>
+        {/* <Discography
+          popularRelease={artist.albums}
+          albumsByType={artist.albumsByType}
+        /> */}
       </section>
-      {/* <TracksPopular tracks={artist.tracks} /> */}
+
       {/* <section>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold mb-4">Discography</h2>
@@ -71,11 +96,8 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
             </Link>
           </Button>
         </div>
-        <Discography
-          popularRelease={artist.albums}
-          albumsByType={artist.albumsByType}
-        />
+       
       </section> */}
-    </>
+    </div>
   );
 }

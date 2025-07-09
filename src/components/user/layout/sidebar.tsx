@@ -26,7 +26,10 @@ import { useUserFollowedArtists, useUserPlaylists } from "@/features/user";
 import { useSession } from "next-auth/react";
 import { useCreatePlaylist } from "@/features/playlist";
 import { usePathname } from "next/navigation";
-import { PlaylistItem } from "@/components/shared/sidebar/playlist-item";
+import { CldImage } from "next-cloudinary";
+import { FALLBACK_IMAGE } from "@/lib/constants";
+import Dot from "@/components/shared/ui/dot";
+import { Title } from "@/new-components/ui/title";
 
 const items = [
   {
@@ -133,8 +136,30 @@ export function Sidebar() {
               ) : (
                 playlists?.map((playlist) => (
                   <SidebarMenuItem key={playlist.id}>
-                    <SidebarMenuButton asChild>
-                      <PlaylistItem playlist={playlist} />
+                    <SidebarMenuButton asChild size="lg">
+                      <Link
+                        href={`/playlists/${playlist.slug}`}
+                        className="flex items-center gap-3"
+                      >
+                        <div className="relative size-10 shrink-0 rounded-sm overflow-hidden">
+                          <CldImage
+                            src={playlist.coverPublicId ?? FALLBACK_IMAGE!}
+                            alt={playlist.title}
+                            fill
+                            className="size-10 rounded-sm"
+                            sizes="40px"
+                            priority
+                          />
+                        </div>
+                        <div className="space-y-0.5">
+                          <Title title={playlist.title} />
+                          <div className="text-muted-foreground text-xs flex items-center gap-1">
+                            Playlist
+                            <Dot />
+                            {playlist.user?.name}
+                          </div>
+                        </div>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))
@@ -149,9 +174,27 @@ export function Sidebar() {
               ) : (
                 artists?.map((artist) => (
                   <SidebarMenuItem key={artist.id}>
-                    <SidebarMenuButton asChild>
-                      <Link href={`/artists/${artist.slug}`}>
-                        {artist.name}
+                    <SidebarMenuButton asChild size="lg">
+                      <Link
+                        href={`/artists/${artist.slug}`}
+                        className="flex items-center gap-3"
+                      >
+                        <div className="relative size-10 shrink-0 rounded-full overflow-hidden">
+                          <CldImage
+                            src={artist.imagePublicId}
+                            alt={artist.name}
+                            fill
+                            className="size-10 rounded-full"
+                            sizes="40px"
+                            priority
+                          />
+                        </div>
+                        <div className="space-y-0.5">
+                          <Title title={artist.name} />
+                          <p className="text-muted-foreground text-xs">
+                            Artist
+                          </p>
+                        </div>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

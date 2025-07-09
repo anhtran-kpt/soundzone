@@ -1,19 +1,19 @@
 "use client";
 
-import { Artist } from "@/types";
 import { CldImage } from "next-cloudinary";
 import { BadgeCheckIcon } from "lucide-react";
 
 interface BannerProps {
-  artist: Artist;
+  name: string;
+  bannerPublicId: string;
 }
 
-export function ArtistBanner({ artist }: BannerProps) {
+export function ArtistBanner({ name, bannerPublicId }: BannerProps) {
   return (
     <div className="relative h-96 -mx-12 -mt-21">
       <CldImage
-        alt={artist.name}
-        src={artist.bannerPublicId}
+        alt={name}
+        src={bannerPublicId}
         fill
         sizes="100vw"
         className="object-center object-cover brightness-80"
@@ -25,7 +25,7 @@ export function ArtistBanner({ artist }: BannerProps) {
           <BadgeCheckIcon className="stroke-white fill-sky-500 size-8" />
           Verified Artist
         </div>
-        <h2 className="font-extrabold text-6xl mt-1 mb-4">{artist.name}</h2>
+        <h2 className="font-extrabold text-6xl mt-1 mb-4">{name}</h2>
         <p className="font-medium">871.312 monthly listeners</p>
       </div>
     </div>

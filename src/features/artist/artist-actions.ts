@@ -4,6 +4,7 @@ import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
 import { requireAuth } from "@/lib/next-auth";
 import { artistInfoSelect } from "./artist-presets";
+import { albumInfoSelect } from "../album/album.preset";
 
 export const getArtistPopularTracks = async (
   artistSlug: string,
@@ -79,6 +80,70 @@ export const getArtistPopularTracks = async (
       hasNext: page < totalPages,
       hasPrev: page > 1,
     },
+  };
+};
+
+export const getArtistDiscography = async (artistSlug: string) => {
+  const artist = await db.artist.findUniqueOrThrow({
+    where: {
+      slug: artistSlug,
+    },
+  });
+
+  const [popularReleases, albums, singlesAndEps] = await db.$transaction([
+    db.album.findMany({
+      where: {
+        artistId: artist.id,
+      },
+      orderBy: {
+        likedByUsers: {
+          _count: "desc",
+        },
+      },
+      take: 5,
+      select: albumInfoSelect,
+    }),
+
+    db.album.findMany({
+      where: {
+        artistId: artist.id,
+        releaseType: "ALBUM",
+      },
+      orderBy: {
+        likedByUsers: {
+          _count: "desc",
+        },
+      },
+      take: 5,
+      select: albumInfoSelect,
+    }),
+
+    db.album.findMany({
+      where: {
+        artistId: artist.id,
+        AND: [
+          {
+            releaseType: "SINGLE",
+          },
+          {
+            releaseType: "EP",
+          },
+        ],
+      },
+      orderBy: {
+        likedByUsers: {
+          _count: "desc",
+        },
+      },
+      take: 5,
+      select: albumInfoSelect,
+    }),
+  ]);
+
+  return {
+    popularReleases,
+    albums,
+    singlesAndEps,
   };
 };
 

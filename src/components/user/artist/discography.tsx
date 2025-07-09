@@ -3,6 +3,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { AlbumCard } from "@/components/shared/ui";
 
+interface DiscographyProps {
+  popularReleases: string;
+}
+
 export function Discography({ popularRelease, albumsByType }) {
   return (
     <Tabs defaultValue="Popular Releases" className="w-full gap-6">
