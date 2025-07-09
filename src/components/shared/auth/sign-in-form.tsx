@@ -16,7 +16,7 @@ import {
   Button,
 } from "@/components/ui";
 import { toast } from "sonner";
-import { SignInInput, signInSchema } from "@/schemas";
+import { SignInInput, signInSchema } from "@/features/user";
 
 export function SignInForm() {
   const router = useRouter();

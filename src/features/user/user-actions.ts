@@ -9,7 +9,8 @@ import {
   signInSchema,
   SignUpInput,
   signUpSchema,
-} from "./user.schema";
+} from "./user-schemas";
+import { userInfoSelect } from "./user-presets";
 
 export const isUserExists = async (email: string) => {
   return !!(await db.user.findUnique({
@@ -56,10 +57,11 @@ export const signIn = async (input: SignInInput) => {
 };
 
 export const getUserInfo = async (userSlug: string) => {
-  return await db.user.findUnique({
+  return await db.user.findUniqueOrThrow({
     where: {
       slug: userSlug,
     },
+    select: userInfoSelect,
   });
 };
 

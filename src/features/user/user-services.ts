@@ -1,5 +1,15 @@
 import { api } from "@/lib/api/api-client";
-import { UserFollowedArtists, UserInfo, UserPlaylists } from "./user.type";
+import {
+  UserFollowedArtists,
+  UserInfo,
+  UserPlaylists,
+  UserSignUp,
+} from "./user-types";
+import { SignUpInput } from "./user-schemas";
+
+export const signUpUser = async (data: SignUpInput) => {
+  return api.post<UserSignUp>("/auth/sign-up", data);
+};
 
 export const fetchUserInfo = async (userSlug: string, signal: AbortSignal) => {
   return await api.get<UserInfo>(`/users/${userSlug}`, signal);

@@ -14,8 +14,7 @@ import {
   Button,
 } from "@/components/ui";
 import { toast } from "sonner";
-import { SignUpInput, signUpSchema } from "@/schemas";
-import { useSignUp } from "@/hooks/use-users";
+import { SignUpInput, signUpSchema, useSignUp } from "@/features/user";
 
 export function SignUpForm() {
   const { mutateAsync: signUp } = useSignUp();

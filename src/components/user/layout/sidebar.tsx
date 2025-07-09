@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Disc3Icon,
+  PlusIcon,
+  TrendingUpIcon,
+} from "lucide-react";
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -12,15 +18,31 @@ import {
   SidebarMenuButton,
   useSidebar,
   Button,
+  SidebarSeparator,
 } from "@/components/ui";
 import Link from "next/link";
 import { useUserFollowedArtists, useUserPlaylists } from "@/features/user";
 import { useSession } from "next-auth/react";
 import { useCreatePlaylist } from "@/features/playlist";
+import { usePathname } from "next/navigation";
+
+const items = [
+  {
+    title: "Discover",
+    url: "/",
+    icon: Disc3Icon,
+  },
+  {
+    title: "Trending",
+    url: "/trending",
+    icon: TrendingUpIcon,
+  },
+];
 
 export function Sidebar() {
   const { state, toggleSidebar } = useSidebar();
   const { data: session, status } = useSession();
+  const pathname = usePathname();
 
   const slug = session?.user.slug ?? "";
 
@@ -74,6 +96,31 @@ export function Sidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={
+                      item.url === "/"
+                        ? pathname === "/"
+                        : pathname === item.url ||
+                          pathname.startsWith(`${item.url}/`)
+                    }
+                  >
+                    <Link href={item.url}>
+                      <item.icon className="size-6" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
               {isPlaylistLoading ? (
                 <SidebarMenuItem>Loading playlists...</SidebarMenuItem>
               ) : (
@@ -87,6 +134,13 @@ export function Sidebar() {
                   </SidebarMenuItem>
                 ))
               )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
               {isArtistLoading ? (
                 <SidebarMenuItem>Loading followed artists...</SidebarMenuItem>
               ) : (
