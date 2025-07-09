@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  fetchArtistDiscography,
   fetchArtistInfo,
   fetchArtistPopularTracks,
   followArtist,
@@ -17,6 +18,8 @@ const artistKeys = {
     [...artistKeys.all, artistSlug, "info"] as const,
   popularTracks: (artistSlug: string, params?: Partial<PaginationParams>) =>
     [...artistKeys.all, artistSlug, "popular-tracks", params] as const,
+  discography: (artistSlug: string) =>
+    [...artistKeys.all, artistSlug, "discography"] as const,
   followers: (artistSlug: string) =>
     [...artistKeys.all, artistSlug, "followers"] as const,
   isFollowing: (artistSlug: string) =>
@@ -39,6 +42,14 @@ export const useArtistPopularTracks = (
     queryKey: artistKeys.popularTracks(artistSlug, params),
     queryFn: ({ signal }) =>
       fetchArtistPopularTracks(artistSlug, signal, params),
+    enabled: !!artistSlug,
+  });
+};
+
+export const useArtistDiscography = (artistSlug: string) => {
+  return useQuery({
+    queryKey: artistKeys.discography(artistSlug),
+    queryFn: ({ signal }) => fetchArtistDiscography(artistSlug, signal),
     enabled: !!artistSlug,
   });
 };

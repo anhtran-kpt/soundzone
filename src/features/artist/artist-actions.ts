@@ -4,7 +4,7 @@ import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
 import { requireAuth } from "@/lib/next-auth";
 import { artistInfoSelect } from "./artist-presets";
-import { albumInfoSelect } from "../album/album.preset";
+import { albumInfoSelect } from "../album/album-presets";
 
 export const getArtistPopularTracks = async (
   artistSlug: string,
@@ -90,60 +90,56 @@ export const getArtistDiscography = async (artistSlug: string) => {
     },
   });
 
-  const [popularReleases, albums, singlesAndEps] = await db.$transaction([
-    db.album.findMany({
-      where: {
-        artistId: artist.id,
-      },
-      orderBy: {
-        likedByUsers: {
-          _count: "desc",
+  const [popularReleases, albumReleases, singleAndEpReleases] =
+    await db.$transaction([
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
         },
-      },
-      take: 5,
-      select: albumInfoSelect,
-    }),
-
-    db.album.findMany({
-      where: {
-        artistId: artist.id,
-        releaseType: "ALBUM",
-      },
-      orderBy: {
-        likedByUsers: {
-          _count: "desc",
-        },
-      },
-      take: 5,
-      select: albumInfoSelect,
-    }),
-
-    db.album.findMany({
-      where: {
-        artistId: artist.id,
-        AND: [
-          {
-            releaseType: "SINGLE",
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
           },
-          {
-            releaseType: "EP",
-          },
-        ],
-      },
-      orderBy: {
-        likedByUsers: {
-          _count: "desc",
         },
-      },
-      take: 5,
-      select: albumInfoSelect,
-    }),
-  ]);
+        take: 5,
+        select: albumInfoSelect,
+      }),
+
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
+          releaseType: "ALBUM",
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+        take: 5,
+        select: albumInfoSelect,
+      }),
+
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
+          releaseType: {
+            in: ["SINGLE", "EP"],
+          },
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+        take: 5,
+        select: albumInfoSelect,
+      }),
+    ]);
 
   return {
     popularReleases,
-    albums,
-    singlesAndEps,
+    albumReleases,
+    singleAndEpReleases,
   };
 };
 

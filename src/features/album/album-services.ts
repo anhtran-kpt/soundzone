@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/api-client";
-import { AlbumDetail, AlbumList } from "./album.type";
-import { CreateAlbumInput } from "./album.schema";
+import { AlbumDetail, AlbumList } from "./album-types";
+import { CreateAlbumInput } from "./album-schemas";
 import { PaginationParams } from "../shared";
 
 export const AlbumService = {

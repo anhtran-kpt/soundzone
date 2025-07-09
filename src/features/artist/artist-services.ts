@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/api-client";
-import { ArtistInfo } from "./artist-types";
+import { ArtistDiscography, ArtistInfo } from "./artist-types";
 import { PaginationParams } from "../shared";
 
 export const fetchArtistInfo = async (
@@ -18,6 +18,16 @@ export const fetchArtistPopularTracks = async (
     `/artists/${artistSlug}/popular-tracks`,
     signal,
     params
+  );
+};
+
+export const fetchArtistDiscography = async (
+  artistSlug: string,
+  signal: AbortSignal
+) => {
+  return await api.get<ArtistDiscography>(
+    `/artists/${artistSlug}/discography`,
+    signal
   );
 };
 

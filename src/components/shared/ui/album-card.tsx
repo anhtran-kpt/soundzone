@@ -1,4 +1,4 @@
-import { Album } from "@/types";
+import { AlbumInfo } from "@/features/album/album-types";
 import { formatDate } from "date-fns";
 import { CldImage } from "next-cloudinary";
 import { PlayIcon } from "lucide-react";
@@ -6,7 +6,7 @@ import Dot from "./dot";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 
-export function AlbumCard({ album }: { album: Album }) {
+export function AlbumCard({ album }: { album: AlbumInfo }) {
   return (
     <li className="flex flex-col items-center group gap-1.5">
       <div className="relative rounded-lg overflow-hidden w-full h-full aspect-square">

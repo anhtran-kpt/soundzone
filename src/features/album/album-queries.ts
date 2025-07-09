@@ -5,9 +5,9 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { AlbumService } from "./album.service";
+import { AlbumService } from "./album-services";
 import { toast } from "sonner";
-import { CreateAlbumInput } from "./album.schema";
+import { CreateAlbumInput } from "./album-schemas";
 import { PaginationParams } from "../shared";
 
 const keys = {

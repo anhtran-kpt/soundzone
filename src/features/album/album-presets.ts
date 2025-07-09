@@ -7,5 +7,9 @@ export const albumInfoSelect = {
   releaseType: true,
   releaseDate: true,
   coverPublicId: true,
-  artistId: true,
-} satisfies Prisma.AlbumSelectScalar;
+  artist: {
+    select: {
+      slug: true,
+    },
+  },
+} satisfies Prisma.AlbumSelect;
