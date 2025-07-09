@@ -9,7 +9,10 @@ import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
 import TrackList from "@/components/ui/track-list";
 import { useQueries } from "@tanstack/react-query";
-import { useArtistInfo, useArtistPopularTracks } from "@/features/artist";
+import {
+  useArtistInfo,
+  useArtistPopularTracks,
+} from "@/features/artist/artist-queries";
 import { SectionHeading } from "@/new-components/ui/section-heading";
 import { FollowButton } from "@/new-components/features/follow-button";
 

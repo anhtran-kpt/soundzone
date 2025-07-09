@@ -21,13 +21,14 @@ export const fetchArtistPopularTracks = async (
   );
 };
 
-export const toggleFollow = async (
-  artistSlug: string,
-  isFollowing: boolean
-) => {
-  if (!isFollowing) {
-    return await api.post(`/artist/${artistSlug}/followers`);
-  } else {
-    return await api.delete(`/artist/${artistSlug}/followers`);
-  }
+export const isFollowing = async (artistSlug: string, signal: AbortSignal) => {
+  return api.get<boolean>(`/artists/${artistSlug}/followers/me`, signal);
+};
+
+export const followArtist = async (artistSlug: string) => {
+  return await api.post(`/artists/${artistSlug}/followers`);
+};
+
+export const unfollowArtist = async (artistSlug: string) => {
+  return await api.delete(`/artists/${artistSlug}/followers`);
 };

@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
+import { isFollowing } from "@/features/artist/artist-actions";
 import { withApiHandler } from "@/lib/api/api-handler";
-import { getArtistInfo } from "@/features/artist/artist-actions";
+import { NextRequest } from "next/server";
 
 export const GET = withApiHandler(async (req: NextRequest, { params }) => {
   const { artistSlug } = await params;
 
-  return await getArtistInfo(artistSlug);
+  return await isFollowing(artistSlug);
 });

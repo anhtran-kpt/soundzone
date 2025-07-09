@@ -1,8 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api/api-client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useIsUserFollowing,
+  useToggleFollow,
+} from "@/features/artist/artist-queries";
+import { Loader2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 interface FollowButtonProps {
@@ -10,63 +13,36 @@ interface FollowButtonProps {
 }
 
 export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
-  const queryKey = ["artists", artistSlug, "followers"];
-  const queryClient = useQueryClient();
-  const session = useSession();
+  const { data: session, status } = useSession();
+  const { data: isFollowing, isLoading } = useIsUserFollowing(artistSlug);
 
-  const { data: isFollowing } = useQuery({
-    queryKey,
-    queryFn: ({ signal }) =>
-      api.get<boolean>(`/artists/${artistSlug}/followers`, signal),
-  });
+  const mutation = useToggleFollow();
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      if (isFollowing) {
-        await api.delete(`/artists/${artistSlug}/followers`);
-      } else {
-        await api.post(`/artists/${artistSlug}/followers`);
-      }
-    },
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey,
-      });
+  const handleToggleFollow = () => {
+    if (!session?.user.slug || isFollowing === undefined) return;
 
-      const previous = queryClient.getQueryData<boolean>(queryKey);
-
-      queryClient.setQueryData(queryKey, !isFollowing);
-
-      return { previous };
-    },
-    onError: (_err, _data, context) => {
-      if (context?.previous !== undefined) {
-        queryClient.setQueryData(queryKey, context.previous);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: [
-          "users",
-          session.data?.user.slug,
-          "detail",
-          "followed-artists",
-        ],
-      });
-    },
-  });
+    mutation.mutate({
+      artistSlug,
+      userSlug: session.user.slug,
+      isFollowing,
+    });
+  };
 
   return (
     <Button
       type="button"
       variant="outline"
       className="rounded-full"
-      onClick={() => mutation.mutate()}
+      onClick={handleToggleFollow}
+      disabled={status === "loading" || isLoading || mutation.isPending}
     >
-      {isFollowing ? "Following" : "Follow"}
+      {status === "loading" || isLoading ? (
+        <Loader2Icon className="animate-spin" />
+      ) : isFollowing ? (
+        "Following"
+      ) : (
+        "Follow"
+      )}
     </Button>
   );
 };

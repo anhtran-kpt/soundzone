@@ -12,19 +12,19 @@ import { SignUpInput } from "./user-schemas";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
-const keys = {
+export const userKeys = {
   all: ["users"] as const,
-  info: (userSlug: string) => [...keys.all, userSlug, "info"] as const,
-  detail: (userSlug: string) => [...keys.all, userSlug, "detail"] as const,
+  info: (userSlug: string) => [...userKeys.all, userSlug, "info"] as const,
+  detail: (userSlug: string) => [...userKeys.all, userSlug, "detail"] as const,
   playlists: (userSlug: string) =>
-    [...keys.detail(userSlug), "playlists"] as const,
+    [...userKeys.detail(userSlug), "playlists"] as const,
   followedArtists: (userSlug: string) =>
-    [...keys.detail(userSlug), "followed-artists"] as const,
+    [...userKeys.detail(userSlug), "followed-artists"] as const,
 } as const;
 
 export const useUserInfo = (userSlug: string) => {
   return useQuery({
-    queryKey: keys.info(userSlug),
+    queryKey: userKeys.info(userSlug),
     queryFn: ({ signal }) => fetchUserInfo(userSlug, signal),
     enabled: !!userSlug,
   });
@@ -32,7 +32,7 @@ export const useUserInfo = (userSlug: string) => {
 
 export const useUserPlaylists = (userSlug: string) => {
   return useQuery({
-    queryKey: keys.playlists(userSlug),
+    queryKey: userKeys.playlists(userSlug),
     queryFn: ({ signal }) => fetchUserPlaylists(userSlug, signal),
     enabled: !!userSlug,
   });
@@ -40,7 +40,7 @@ export const useUserPlaylists = (userSlug: string) => {
 
 export const useUserFollowedArtists = (userSlug: string) => {
   return useQuery({
-    queryKey: keys.followedArtists(userSlug),
+    queryKey: userKeys.followedArtists(userSlug),
     queryFn: ({ signal }) => fetchUserFollowedArtists(userSlug, signal),
     enabled: !!userSlug,
   });
