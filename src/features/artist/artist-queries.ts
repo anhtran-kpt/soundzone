@@ -1,6 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchArtistInfo, fetchArtistPopularTracks } from "./artist-services";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  fetchArtistInfo,
+  fetchArtistPopularTracks,
+  toggleFollow,
+} from "./artist-services";
 import { PaginationParams } from "../shared";
+import { toast } from "sonner";
 
 const keys = {
   all: ["artists"] as const,
@@ -30,26 +35,12 @@ export const useArtistPopularTracks = (
   });
 };
 
-// export const usePrefetchArtists = (params?: Partial<PaginationParams>) => {
-//   return usePrefetchQuery({
-//     queryKey: keys.list(params),
-//     queryFn: ({ signal }) => ArtistService.fetchList(signal, params),
-//   });
-// };
-
-// export const useArtists = (params?: Partial<PaginationParams>) => {
-//   return useQuery({
-//     queryKey: keys.list(params),
-//     queryFn: ({ signal }) => ArtistService.fetchList(signal, params),
-//     placeholderData: keepPreviousData,
-//   });
-// };
-
-// export const useArtistBySlug = (artistId: string) => {
-//   return useQuery({
-//     queryKey: keys.detail(artistId),
-//     queryFn: ({ signal }) => ArtistService.fetchBySlug(artistId, signal),
-//     placeholderData: keepPreviousData,
-//     enabled: !!artistId,
-//   });
-// };
+export const useToggleFollow = () => {
+  return useMutation({
+    mutationFn: () => toggleFollow(artistId, isFollowing),
+    onError: (error) => {
+      toast.error(`Follow failed: ${error.message}`);
+      console.error("Follow failed:", error);
+    },
+  });
+};

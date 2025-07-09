@@ -2,6 +2,8 @@
 
 import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
+import { requireAuth } from "@/lib/next-auth";
+import { artistInfoSelect } from "./artist-presets";
 
 export const getArtistPopularTracks = async (
   artistSlug: string,
@@ -36,6 +38,7 @@ export const getArtistPopularTracks = async (
           select: {
             title: true,
             id: true,
+            coverPublicId: true,
           },
         },
         artists: {
@@ -80,9 +83,62 @@ export const getArtistPopularTracks = async (
 };
 
 export const getArtistInfo = async (artistSlug: string) => {
-  return await db.artist.findUnique({
+  return await db.artist.findUniqueOrThrow({
     where: {
       slug: artistSlug,
+    },
+    select: artistInfoSelect,
+  });
+};
+
+export const isFollowing = async (artistSlug: string) => {
+  const session = await requireAuth();
+
+  const artist = await db.artist.findUniqueOrThrow({
+    where: {
+      slug: artistSlug,
+    },
+  });
+
+  return !!(await db.userFollowedArtist.findFirst({
+    where: {
+      userId: session.user.id,
+      artistId: artist.id,
+    },
+    select: { id: true },
+  }));
+};
+
+export const followArtist = async (artistSlug: string) => {
+  const session = await requireAuth();
+
+  const artist = await db.artist.findUniqueOrThrow({
+    where: {
+      slug: artistSlug,
+    },
+  });
+
+  await db.userFollowedArtist.create({
+    data: {
+      userId: session.user.id,
+      artistId: artist.id,
+    },
+  });
+};
+
+export const unfollowArtist = async (artistSlug: string) => {
+  const session = await requireAuth();
+
+  const artist = await db.artist.findUniqueOrThrow({
+    where: {
+      slug: artistSlug,
+    },
+  });
+
+  await db.userFollowedArtist.deleteMany({
+    where: {
+      userId: session.user.id,
+      artistId: artist.id,
     },
   });
 };

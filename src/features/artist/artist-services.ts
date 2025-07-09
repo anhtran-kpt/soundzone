@@ -20,3 +20,14 @@ export const fetchArtistPopularTracks = async (
     params
   );
 };
+
+export const toggleFollow = async (
+  artistSlug: string,
+  isFollowing: boolean
+) => {
+  if (!isFollowing) {
+    return await api.post(`/artist/${artistSlug}/followers`);
+  } else {
+    return await api.delete(`/artist/${artistSlug}/followers`);
+  }
+};

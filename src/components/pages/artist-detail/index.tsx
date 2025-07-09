@@ -11,9 +11,10 @@ import TrackList from "@/components/ui/track-list";
 import { useQueries } from "@tanstack/react-query";
 import { useArtistInfo, useArtistPopularTracks } from "@/features/artist";
 import { SectionHeading } from "@/new-components/ui/section-heading";
+import { FollowButton } from "@/new-components/features/follow-button";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
-  const { data: artist, isLoading } = useArtistInfo(artistSlug);
+  const { data: artistInfo, isLoading } = useArtistInfo(artistSlug);
   const { data: popularTracks, isLoading: isPopularTrackLoading } =
     useArtistPopularTracks(artistSlug, { limit: 5 });
 
@@ -24,29 +25,25 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
     return <div>Loading</div>;
   }
 
-  if (!artist) {
+  if (!artistInfo) {
     return notFound();
   }
-
-  console.log(popularTracks);
 
   return (
     <>
       <section>
-        <ArtistBanner artist={artist} />
+        <ArtistBanner artist={artistInfo} />
       </section>
       <section className="flex gap-6 items-center py-6 relative">
         <Button type="button" size="icon" className="rounded-full size-12">
-          {currentTrack?.album.artistId === artist.id && isPlaying ? (
+          {currentTrack?.album.artistId === artistInfo.id && isPlaying ? (
             <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />
           ) : (
             <PlayIcon strokeWidth={0} fill="currentColor" className="size-6" />
           )}
         </Button>
         <ShuffleIcon />
-        <Button type="button" variant="outline" className="rounded-full">
-          Follow
-        </Button>
+        <FollowButton artistSlug={artistSlug} />
         <EllipsisIcon />
       </section>
       <section>
