@@ -1,4 +1,4 @@
-import ArtistDetail from "@/components/page/artist-detail";
+import ArtistDetail from "@/components/pages/artist-detail";
 
 export default async function ArtistPage({
   params,

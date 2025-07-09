@@ -19,12 +19,14 @@ import {
   useSidebar,
   Button,
   SidebarSeparator,
+  SidebarMenuSkeleton,
 } from "@/components/ui";
 import Link from "next/link";
 import { useUserFollowedArtists, useUserPlaylists } from "@/features/user";
 import { useSession } from "next-auth/react";
 import { useCreatePlaylist } from "@/features/playlist";
 import { usePathname } from "next/navigation";
+import { PlaylistItem } from "@/components/shared/sidebar/playlist-item";
 
 const items = [
   {
@@ -122,27 +124,28 @@ export function Sidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {isPlaylistLoading ? (
-                <SidebarMenuItem>Loading playlists...</SidebarMenuItem>
+                <>
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                </>
               ) : (
                 playlists?.map((playlist) => (
                   <SidebarMenuItem key={playlist.id}>
                     <SidebarMenuButton asChild>
-                      <Link href={`/playlists/${playlist.slug}`}>
-                        {playlist.title}
-                      </Link>
+                      <PlaylistItem playlist={playlist} />
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))
               )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarSeparator />
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
               {isArtistLoading ? (
-                <SidebarMenuItem>Loading followed artists...</SidebarMenuItem>
+                <>
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                  <SidebarMenuSkeleton />
+                </>
               ) : (
                 artists?.map((artist) => (
                   <SidebarMenuItem key={artist.id}>

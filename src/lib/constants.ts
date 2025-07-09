@@ -21,8 +21,7 @@ export const CREDIT_ROLES = {
   ENGINEER: "Engineer",
 };
 
-export const FALLBACK_PUBLIC_ID =
-  process.env.NEXT_PUBLIC_FALLBACK_IMAGE_PUBLIC_ID;
+export const FALLBACK_IMAGE = process.env.NEXT_PUBLIC_FALLBACK_IMAGE;
 
 export const DEFAULT_PARAMS = {
   page: "1",

@@ -17,7 +17,6 @@ export function ArtistBanner({ artist }: BannerProps) {
         fill
         sizes="100vw"
         className="object-center object-cover brightness-80"
-        quality={100}
         priority
       />
 
@@ -26,7 +25,7 @@ export function ArtistBanner({ artist }: BannerProps) {
           <BadgeCheckIcon className="stroke-white fill-sky-500 size-8" />
           Verified Artist
         </div>
-        <h2 className="font-bold text-6xl mt-1 mb-4">{artist.name}</h2>
+        <h2 className="font-extrabold text-6xl mt-1 mb-4">{artist.name}</h2>
         <p className="font-medium">871.312 monthly listeners</p>
       </div>
     </div>

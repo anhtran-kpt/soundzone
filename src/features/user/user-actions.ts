@@ -100,6 +100,13 @@ export const getUserPlaylists = async (userSlug: string) => {
           id: true,
           title: true,
           slug: true,
+          coverPublicId: true,
+          user: {
+            select: {
+              name: true,
+              slug: true,
+            },
+          },
         },
       },
     },

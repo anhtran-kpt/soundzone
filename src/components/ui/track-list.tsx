@@ -27,9 +27,10 @@ import { WaveformIcon } from "./wave-form";
 
 interface TrackListProps {
   tracks: Track[];
+  hasNext: boolean;
 }
 
-const TrackList = ({ tracks }: TrackListProps) => {
+const TrackList = ({ tracks, hasNext }: TrackListProps) => {
   const { playTrack, currentTrack } = useAudioPlayer();
   const isPlaying = useIsPlaying();
 
@@ -107,7 +108,7 @@ const TrackList = ({ tracks }: TrackListProps) => {
               </div>
             </div>
           </div>
-          <div className="w-24 shrink-0">{track.playHistory.length}</div>
+          {/* <div className="w-24 shrink-0">{track.playHistory.length}</div> */}
           <Button
             type="button"
             variant="ghost"
