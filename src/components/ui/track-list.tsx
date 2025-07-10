@@ -1,4 +1,3 @@
-import { TrackInfo } from "@/features/track/track-types";
 import { cn, formatDuration } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -27,7 +26,30 @@ import { WaveformIcon } from "./wave-form";
 import Link from "next/link";
 
 interface TrackListProps {
-  tracks: TrackInfo[];
+  tracks: {
+    audioPublicId: string;
+    duration: number;
+    id: string;
+    isExplicit: boolean;
+    lyrics: string;
+    slug: string;
+    title: string;
+    trackNumber: number;
+    album: {
+      title: string;
+      slug: string;
+      coverPublicId: string;
+    };
+    artists: {
+      artist: {
+        slug: string;
+        name: string;
+      };
+    }[];
+    _count: {
+      playHistory: number;
+    };
+  }[];
 }
 
 const TrackList = ({ tracks }: TrackListProps) => {
@@ -93,14 +115,15 @@ const TrackList = ({ tracks }: TrackListProps) => {
                 {track.isExplicit && <Explicit />}
                 {track.artists.map(({ artist }, index) => (
                   <span
-                    key={artist.id}
+                    key={artist.slug}
                     className="text-muted-foreground truncate"
                   >
-                    <Button type="button" variant="link">
-                      <Link
-                        href={`/artists/${artist}`}
-                        className="text-xs hover:text-primary hover:underline underline-offset-3 truncate"
-                      >
+                    <Button
+                      variant="link"
+                      asChild
+                      className="p-0 text-xs h-fit"
+                    >
+                      <Link href={`/artists/${artist.slug}`}>
                         {artist.name}
                       </Link>
                     </Button>
@@ -110,7 +133,7 @@ const TrackList = ({ tracks }: TrackListProps) => {
               </div>
             </div>
           </div>
-          <div className="w-24 shrink-0">{track._count.playHistory.length}</div>
+          <div className="w-24 shrink-0">{track._count.playHistory}</div>
           <Button
             type="button"
             variant="ghost"

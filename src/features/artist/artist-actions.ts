@@ -39,13 +39,17 @@ export const getArtistPopularTracks = async (
           select: {
             title: true,
             id: true,
+            slug: true,
             coverPublicId: true,
           },
         },
         artists: {
-          include: {
+          select: {
             artist: {
-              select: artistInfoSelect,
+              select: {
+                slug: true,
+                name: true,
+              },
             },
           },
         },

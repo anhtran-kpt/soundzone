@@ -3,7 +3,10 @@
 import { ArtistBanner } from "@/components/shared/ui";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import { notFound } from "next/navigation";
-import { Discography } from "@/new-components/ui/discography";
+import {
+  DiscographySection,
+  DiscographySectionSkeleton,
+} from "@/new-components/sections/artist-detail/discography-section";
 import { Button } from "@/components/ui";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
@@ -16,6 +19,10 @@ import {
 import { SectionHeading } from "@/new-components/ui/section-heading";
 import { FollowButton } from "@/new-components/features/follow-button";
 import { TrackListSkeleton } from "@/new-components/ui/track-list-skeleton";
+import {
+  AboutSection,
+  AboutSectionSkeleton,
+} from "@/new-components/sections/artist-detail/about-section";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artistInfo, isLoading: isArtistInfoLoading } =
@@ -63,40 +70,27 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
         <EllipsisIcon />
       </section>
       <section>
-        <SectionHeading title="Popular" />
+        <SectionHeading>Popular</SectionHeading>
         {isPopularTrackLoading || !popularTracks ? (
           <TrackListSkeleton count={5} />
         ) : (
-          <TrackList
-            tracks={popularTracks.data}
-            hasNext={popularTracks.meta?.hasNext ?? false}
-          />
+          <TrackList tracks={popularTracks.data} />
         )}
-        <Button variant="link" type="button" className="text-white mt-2">
-          See more
-        </Button>
       </section>
-      <section>
-        <div className="flex items-center justify-between">
-          <SectionHeading title="Discography" />
-          <Button asChild type="button" variant="link">
-            <Link href={`/artists/${artistSlug}/albums`}>Show all</Link>
-          </Button>
-        </div>
-        {!isDiscographyLoading && <Discography discography={discography} />}
-      </section>
-
-      {/* <section>
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold mb-4">Discography</h2>
-          <Button asChild type="button" variant="link">
-            <Link href={`/artists/${artist.slug}/discography`}>
-              Show all
-            </Link>
-          </Button>
-        </div>
-       
-      </section> */}
+      {isDiscographyLoading || !discography ? (
+        <DiscographySectionSkeleton />
+      ) : (
+        <DiscographySection />
+      )}
+      {isArtistInfoLoading || !artistInfo ? (
+        <AboutSectionSkeleton />
+      ) : (
+        <AboutSection
+          imagePublicId={artistInfo?.imagePublicId}
+          name={artistInfo?.name}
+          description={artistInfo?.description ?? ""}
+        />
+      )}
     </div>
   );
 }
