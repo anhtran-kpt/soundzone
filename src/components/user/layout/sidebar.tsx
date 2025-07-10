@@ -97,31 +97,31 @@ export function Sidebar() {
           </Button>
         </div>
       </SidebarHeader>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={
+                    item.url === "/"
+                      ? pathname === "/"
+                      : pathname === item.url ||
+                        pathname.startsWith(`${item.url}/`)
+                  }
+                >
+                  <Link href={item.url}>
+                    <item.icon className="size-6" />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={
-                      item.url === "/"
-                        ? pathname === "/"
-                        : pathname === item.url ||
-                          pathname.startsWith(`${item.url}/`)
-                    }
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="size-6" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
         <SidebarSeparator />
         <SidebarGroup>
           <SidebarGroupContent>

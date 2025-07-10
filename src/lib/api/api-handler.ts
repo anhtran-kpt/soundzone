@@ -26,6 +26,20 @@ export function withApiHandler<T>(handler: ApiHandler<T>) {
         return NextResponse.json(result);
       }
 
+      if (
+        result &&
+        typeof result === "object" &&
+        "data" in result &&
+        "meta" in result
+      ) {
+        const response = {
+          success: true,
+          data: result.data,
+          meta: result.meta,
+        };
+        return NextResponse.json(response);
+      }
+
       const response = createSuccessResponse(result);
       return NextResponse.json(response);
     } catch (error) {
@@ -36,7 +50,6 @@ export function withApiHandler<T>(handler: ApiHandler<T>) {
         return NextResponse.json(response, { status: 400 });
       }
 
-      // Prisma errors
       if (error instanceof PrismaClientKnownRequestError) {
         const response = handlePrismaError(error);
         return NextResponse.json(response, {

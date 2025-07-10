@@ -3,12 +3,11 @@
 import { ArtistBanner } from "@/components/shared/ui";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import { notFound } from "next/navigation";
-import { Discography } from "../../../new-components/ui/discography";
+import { Discography } from "@/new-components/ui/discography";
 import { Button } from "@/components/ui";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 import Link from "next/link";
 import TrackList from "@/components/ui/track-list";
-import { useQueries } from "@tanstack/react-query";
 import {
   useArtistDiscography,
   useArtistInfo,
@@ -69,7 +68,7 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
           <TrackListSkeleton count={5} />
         ) : (
           <TrackList
-            tracks={popularTracks.data.data}
+            tracks={popularTracks.data}
             hasNext={popularTracks.meta?.hasNext ?? false}
           />
         )}

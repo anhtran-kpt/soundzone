@@ -3,7 +3,7 @@ import {
   usePrefetchQuery,
   useQuery,
 } from "@tanstack/react-query";
-import { TrackService } from "./track.service";
+import { TrackService } from "./track-services";
 import { PaginationParams } from "../shared";
 
 const keys = {

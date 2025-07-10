@@ -1,4 +1,4 @@
-import { Track } from "@/types";
+import { TrackInfo } from "@/features/track/track-types";
 import { cn, formatDuration } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -24,13 +24,13 @@ import { CldImage } from "next-cloudinary";
 import Explicit from "@/components/shared/ui/explicit";
 import { useAudioPlayer, useIsPlaying } from "@/hooks";
 import { WaveformIcon } from "./wave-form";
+import Link from "next/link";
 
 interface TrackListProps {
-  tracks: Track[];
-  hasNext: boolean;
+  tracks: TrackInfo[];
 }
 
-const TrackList = ({ tracks, hasNext }: TrackListProps) => {
+const TrackList = ({ tracks }: TrackListProps) => {
   const { playTrack, currentTrack } = useAudioPlayer();
   const isPlaying = useIsPlaying();
 
@@ -91,24 +91,26 @@ const TrackList = ({ tracks, hasNext }: TrackListProps) => {
               </span>
               <div className="flex items-center gap-1.5 truncate text-xs">
                 {track.isExplicit && <Explicit />}
-                {/* {track.artists.map((artist, index) => (
-                    <span
-                      key={artist.id}
-                      className="text-muted-foreground truncate"
-                    >
+                {track.artists.map(({ artist }, index) => (
+                  <span
+                    key={artist.id}
+                    className="text-muted-foreground truncate"
+                  >
+                    <Button type="button" variant="link">
                       <Link
-                        href={`/artists/${artist.id}`}
+                        href={`/artists/${artist}`}
                         className="text-xs hover:text-primary hover:underline underline-offset-3 truncate"
                       >
                         {artist.name}
                       </Link>
-                      {index < track.artists.length - 1 ? ", " : ""}
-                    </span>
-                  ))} */}
+                    </Button>
+                    {index < track.artists.length - 1 ? ", " : ""}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
-          {/* <div className="w-24 shrink-0">{track.playHistory.length}</div> */}
+          <div className="w-24 shrink-0">{track._count.playHistory.length}</div>
           <Button
             type="button"
             variant="ghost"
