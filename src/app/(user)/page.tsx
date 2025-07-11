@@ -1,5 +1,14 @@
-import { NewRelease } from "@/components/sections";
+"use client";
+
+import { useAlbumList } from "@/features/album/album-queries";
+import { AlbumList } from "@/new-components/ui/album-list";
 
 export default function DiscoverPage() {
-  return <div className="flex flex-col">{/* <NewRelease /> */}</div>;
+  const { data, isLoading } = useAlbumList();
+
+  return (
+    <div className="flex flex-col">
+      <section>{data && <AlbumList albums={data.data} />}</section>
+    </div>
+  );
 }

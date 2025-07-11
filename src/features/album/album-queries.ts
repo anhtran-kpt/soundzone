@@ -5,59 +5,50 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { AlbumService } from "./album-services";
-import { toast } from "sonner";
-import { CreateAlbumInput } from "./album-schemas";
-import { PaginationParams } from "../shared";
+import { fetchAlbumInfo, fetchAlbumList } from "./album-services";
+import { PaginationParams } from "../shared/shared.type";
 
-const keys = {
+export const albumKeys = {
   all: ["albums"] as const,
-  lists: () => [...keys.all, "list"] as const,
   list: (params?: Partial<PaginationParams>) =>
-    [...keys.lists(), { params }] as const,
-  details: () => [...keys.all, "detail"] as const,
-  detail: (albumId: string) => [...keys.details(), albumId] as const,
+    [...albumKeys.all, "list", params] as const,
+  detail: (albumSlug: string) =>
+    [...albumKeys.all, albumSlug, "detail"] as const,
+  info: (albumSlug: string) => [...albumKeys.all, albumSlug, "info"] as const,
 } as const;
 
-export const usePrefetchAlbums = (params?: Partial<PaginationParams>) => {
-  return usePrefetchQuery({
-    queryKey: keys.list(params),
-    queryFn: ({ signal }) => AlbumService.fetchList(signal, params),
-  });
-};
-
-export const useAlbums = (params?: Partial<PaginationParams>) => {
+export const useAlbumList = (params?: Partial<PaginationParams>) => {
   return useQuery({
-    queryKey: keys.list(params),
-    queryFn: ({ signal }) => AlbumService.fetchList(signal, params),
+    queryKey: albumKeys.list(params),
+    queryFn: ({ signal }) => fetchAlbumList(signal, params),
     placeholderData: keepPreviousData,
   });
 };
 
-export const useAlbumBySlug = (albumId: string) => {
+export const useAlbumInfo = (albumSlug: string) => {
   return useQuery({
-    queryKey: keys.detail(albumId),
-    queryFn: ({ signal }) => AlbumService.fetchBySlug(albumId, signal),
+    queryKey: albumKeys.info(albumSlug),
+    queryFn: ({ signal }) => fetchAlbumInfo(albumSlug, signal),
     placeholderData: keepPreviousData,
-    enabled: !!albumId,
+    enabled: !!albumSlug,
   });
 };
 
-export const useCreateAlbum = () => {
-  const queryClient = useQueryClient();
+// export const useCreateAlbum = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: CreateAlbumInput) => AlbumService.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: keys.lists(),
-      });
+//   return useMutation({
+//     mutationFn: (data: CreateAlbumInput) => AlbumService.create(data),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({
+//         queryKey: albumKeys.lists(),
+//       });
 
-      toast.success("Album created successfully");
-    },
-    onError: (error) => {
-      toast.error(`Create album failed: ${error.message}`);
-      console.error("Create album failed:", error);
-    },
-  });
-};
+//       toast.success("Album created successfully");
+//     },
+//     onError: (error) => {
+//       toast.error(`Create album failed: ${error.message}`);
+//       console.error("Create album failed:", error);
+//     },
+//   });
+// };

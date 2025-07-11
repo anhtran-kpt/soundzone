@@ -6,13 +6,14 @@ import { CreateAlbumInput } from "./album-schemas";
 import { PaginationParams } from "../shared";
 import { albumInfoSelect } from "./album-presets";
 
-export const getList = async (params: PaginationParams) => {
+export const getAlbumList = async (params: PaginationParams) => {
   const { page, limit } = params;
 
   const data = await db.album.findMany({
     orderBy: {
       createdAt: "desc",
     },
+    select: albumInfoSelect,
     skip: (page - 1) * limit,
     take: limit,
   });
@@ -30,43 +31,6 @@ export const getList = async (params: PaginationParams) => {
       hasNext: page < totalPages,
       hasPrev: page > 1,
     },
-  };
-};
-
-export const getBySlug = async (albumId: string) => {
-  const albumDetail = await db.album.findUnique({
-    where: {
-      id: albumId,
-    },
-    include: {
-      artist: true,
-      tracks: {
-        include: {
-          album: {
-            include: {
-              artist: true,
-            },
-          },
-          artists: {
-            select: {
-              artist: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!albumDetail) {
-    throw new Error(`Album with id ${albumId} not found`);
-  }
-
-  return {
-    ...albumDetail,
-    totalDuration: albumDetail.tracks.reduce(
-      (acc, track) => acc + track.duration,
-      0
-    ),
   };
 };
 

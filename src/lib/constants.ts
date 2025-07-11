@@ -21,6 +21,12 @@ export const CREDIT_ROLES = {
   ENGINEER: "Engineer",
 };
 
+export const RELEASE_TYPES = {
+  ALBUM: "Album",
+  EP: "Ep",
+  SINGLE: "Single",
+};
+
 export const FALLBACK_IMAGE = process.env.NEXT_PUBLIC_FALLBACK_IMAGE;
 
 export const DEFAULT_PARAMS = {
