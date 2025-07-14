@@ -1,3 +1,5 @@
+"use client";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { CldImage } from "next-cloudinary";
 
@@ -11,7 +13,7 @@ export const TrackCover = ({ size = "md", alt, publicId }: TrackCoverProps) => {
   return (
     <div
       className={`relative ${
-        size === "md" ? "size-14" : "size-16"
+        size === "md" ? "size-12" : "size-16"
       } shrink-0 overflow-hidden aspect-square`}
     >
       <CldImage
@@ -19,7 +21,7 @@ export const TrackCover = ({ size = "md", alt, publicId }: TrackCoverProps) => {
         alt={alt}
         fill
         className="rounded-md object-cover"
-        sizes={size === "md" ? "56px" : "64px"}
+        sizes={size === "md" ? "48px" : "64px"}
         priority
       />
     </div>
@@ -30,12 +32,12 @@ export const TrackCoverSkeleton = ({ size }: Pick<TrackCoverProps, "size">) => {
   return (
     <div
       className={`relative ${
-        size === "md" ? "size-14" : "size-16"
+        size === "md" ? "size-12" : "size-16"
       } shrink-0 overflow-hidden aspect-square`}
     >
       <Skeleton
         className={`${
-          size === "md" ? "56px" : "64px"
+          size === "md" ? "size-12" : "size-16"
         } aspect-square rounded-md`}
       />
     </div>

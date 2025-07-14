@@ -5,6 +5,7 @@ import { PaginationParams } from "../shared";
 import { requireAuth } from "@/lib/next-auth";
 import { artistInfoSelect } from "./artist-presets";
 import { albumInfoSelect } from "../album/album-presets";
+import { flattenRelation } from "@/lib/helpers";
 
 export const getArtistPopularTracks = async (
   artistSlug: string,
@@ -75,7 +76,10 @@ export const getArtistPopularTracks = async (
   const totalPages = Math.ceil(total / limit);
 
   return {
-    data: tracks,
+    data: tracks.map((track) => ({
+      ...track,
+      artists: flattenRelation(track.artists, "artist"),
+    })),
     meta: {
       page,
       limit,

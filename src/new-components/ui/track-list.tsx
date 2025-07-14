@@ -1,29 +1,14 @@
+"use client";
+
 import { cn, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuGroup,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-  DropdownMenuSubTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  EllipsisIcon,
-  ImportIcon,
-  ListPlusIcon,
-  PlayIcon,
-  PlusCircleIcon,
-} from "lucide-react";
+import { PlayIcon, PlusCircleIcon } from "lucide-react";
 import { useAudioPlayer, useIsPlaying } from "@/hooks";
 import { WaveformIcon } from "../../components/ui/wave-form";
 import { TrackCard } from "./track-card";
 import { TrackInfo } from "@/features/track/track-types";
+import { TrackDropdown } from "./track-dropdown";
 
 interface TrackListProps {
   tracks: TrackInfo[];
@@ -37,99 +22,62 @@ export const TrackList = ({ tracks }: TrackListProps) => {
     return <div>No tracks found.</div>;
   }
 
+  console.log(tracks);
+
   return (
-    <ul role="list" className="w-full">
-      {tracks.map((track, index) => (
-        <li
-          key={track.id}
-          className="flex items-center gap-6 py-2 px-4 text-muted-foreground group hover:text-white hover:bg-muted rounded-md"
-        >
-          <div
-            className={cn(
-              "w-4 text-base font-semibold text-center",
-              currentTrack?.id === track.id && "text-primary"
-            )}
+    <>
+      <ul role="list" className="w-full">
+        {tracks.map((track, index) => (
+          <li
+            key={track.id}
+            className="flex items-center gap-6 py-2 px-4 text-muted-foreground group hover:text-foreground hover:bg-muted rounded-md"
           >
-            {isPlaying && currentTrack?.id === track.id ? (
-              <WaveformIcon />
-            ) : (
-              <>
-                <span className="group-hover:hidden">{index + 1}</span>
-                <Button
-                  type="button"
-                  onClick={() => playTrack(track)}
-                  variant="secondary"
-                  size="icon"
-                  className="hidden group-hover:block"
-                >
-                  <PlayIcon className="fill-current stroke-0 size-4" />
-                </Button>
-              </>
-            )}
-          </div>
-          <TrackCard track={track} isActive={currentTrack.id === track.id} />
-          <div className="w-24 shrink-0">{track._count.playHistory}</div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="invisible group-hover:visible shrink-0"
-          >
-            <PlusCircleIcon />
-          </Button>
-          <span className="w-12 text-right shrink-0">
-            {formatDuration(track.duration)}
-          </span>
-          <span className="shrink-0">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" type="button">
-                  <EllipsisIcon className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" side="bottom" align="start">
-                <DropdownMenuGroup>
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <ListPlusIcon className="size-4 mr-2" />
-                      Add to playlist
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuItem>Email</DropdownMenuItem>
-                        <DropdownMenuItem>Message</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>More...</DropdownMenuItem>
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                  <DropdownMenuItem>
-                    <ImportIcon className="size-4 mr-2" />
-                    Save to library
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>Add to queue</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>Go to album</DropdownMenuItem>
-                  <DropdownMenuItem>View credits</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Share</DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem>Copy link</DropdownMenuItem>
-                      <DropdownMenuItem>Embed</DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </span>
-        </li>
-      ))}
-    </ul>
+            <div
+              className={cn(
+                "w-4 text-base font-semibold text-center",
+                currentTrack?.id === track.id && "text-primary"
+              )}
+            >
+              {isPlaying && currentTrack?.id === track.id ? (
+                <WaveformIcon />
+              ) : (
+                <>
+                  <span className="group-hover:hidden">{index + 1}</span>
+                  <Button
+                    type="button"
+                    onClick={() => playTrack(track)}
+                    variant="secondary"
+                    size="icon"
+                    className="hidden group-hover:block"
+                  >
+                    <PlayIcon className="fill-current stroke-0 size-4" />
+                  </Button>
+                </>
+              )}
+            </div>
+            <TrackCard track={track} isActive={currentTrack?.id === track.id} />
+            <div className="w-24 shrink-0">{track._count.playHistory}</div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="invisible group-hover:visible shrink-0"
+            >
+              <PlusCircleIcon />
+            </Button>
+            <span className="w-12 text-right shrink-0">
+              {formatDuration(track.duration)}
+            </span>
+            <span className="shrink-0">
+              <TrackDropdown />
+            </span>
+          </li>
+        ))}
+      </ul>
+      <Button variant="link" type="button" className="text-white mt-2">
+        See more
+      </Button>
+    </>
   );
 };
 

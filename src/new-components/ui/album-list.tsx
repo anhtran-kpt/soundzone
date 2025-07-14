@@ -1,3 +1,5 @@
+"use client";
+
 import { AlbumInfo } from "@/features/album/album-types";
 import { AlbumCard, AlbumCardSkeleton } from "./album-card";
 

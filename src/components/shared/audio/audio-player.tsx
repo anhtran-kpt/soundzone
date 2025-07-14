@@ -33,7 +33,7 @@ function AudioPlayer() {
     <div className="fixed bottom-0 left-0 w-full bg-accent z-50 px-4 py-2">
       <div className="flex items-center justify-between gap-12">
         <div className="flex items-center">
-          <TrackCard track={player.currentTrack} isActive={false} />
+          <TrackCard track={player.currentTrack} />
           <div className="ml-6 space-x-2">
             <Button variant="ghost" size="icon" className="">
               <HeartIcon className="size-4" />

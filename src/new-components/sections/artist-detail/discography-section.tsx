@@ -8,41 +8,43 @@ import { Section } from "@/new-components/ui/section";
 import { useArtistDiscography } from "@/features/artist/artist-queries";
 
 export function DiscographySection({ artistSlug }: { artistSlug: string }) {
-  const { data: discography, isLoading: isDiscographyLoading } =
-    useArtistDiscography(artistSlug);
+  const { data, isLoading } = useArtistDiscography(artistSlug);
 
   const availableTabs = useMemo(() => {
+    if (!data) return [];
+
     const tabs = [];
 
-    if (discography.popularReleases && discography.popularReleases.length > 0) {
+    if (data.popularReleases && data.popularReleases.length > 0) {
       tabs.push({
         key: "Popular Releases",
         label: "Popular Releases",
-        data: discography.popularReleases,
+        data: data.popularReleases,
       });
     }
 
-    if (discography.albumReleases && discography.albumReleases.length > 0) {
+    if (data.albumReleases && data.albumReleases.length > 0) {
       tabs.push({
         key: "Albums",
         label: "Albums",
-        data: discography.albumReleases,
+        data: data.albumReleases,
       });
     }
 
-    if (
-      discography.singleAndEpReleases &&
-      discography.singleAndEpReleases.length > 0
-    ) {
+    if (data.singleAndEpReleases && data.singleAndEpReleases.length > 0) {
       tabs.push({
         key: "Singles & EPs",
         label: "Singles & EPs",
-        data: discography.singleAndEpReleases,
+        data: data.singleAndEpReleases,
       });
     }
 
     return tabs;
-  }, [discography]);
+  }, [data]);
+
+  if (isLoading) {
+    return <DiscographySectionSkeleton />;
+  }
 
   if (availableTabs.length === 0) {
     return null;
@@ -88,18 +90,20 @@ export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
   );
 
   return (
-    <Tabs defaultValue="Popular Releases" className="w-full gap-6">
-      <TabsList>
-        <TabsTrigger value="Popular Releases">Popular Releases</TabsTrigger>
-        <TabsTrigger value="Albums">Albums</TabsTrigger>
-        <TabsTrigger value="Singles">Singles & EPs</TabsTrigger>
-      </TabsList>
+    <Section heading="Discography">
+      <Tabs defaultValue="Popular Releases" className="w-full gap-6">
+        <TabsList>
+          <TabsTrigger value="Popular Releases">Popular Releases</TabsTrigger>
+          <TabsTrigger value="Albums">Albums</TabsTrigger>
+          <TabsTrigger value="Singles">Singles & EPs</TabsTrigger>
+        </TabsList>
 
-      <TabsContent value="Popular Releases">
-        {renderSkeletonCards()}
-      </TabsContent>
-      <TabsContent value="Albums">{renderSkeletonCards()}</TabsContent>
-      <TabsContent value="Singles">{renderSkeletonCards()}</TabsContent>
-    </Tabs>
+        <TabsContent value="Popular Releases">
+          {renderSkeletonCards()}
+        </TabsContent>
+        <TabsContent value="Albums">{renderSkeletonCards()}</TabsContent>
+        <TabsContent value="Singles">{renderSkeletonCards()}</TabsContent>
+      </Tabs>
+    </Section>
   );
 }

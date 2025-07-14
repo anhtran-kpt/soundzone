@@ -31,7 +31,7 @@ export function Header({
 
   return (
     <motion.header
-      className={`sticky top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
+      className={`fixed top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
         isScrolled ? "bg-transparent backdrop-blur-md shadow-sm" : ""
       }`}
     >

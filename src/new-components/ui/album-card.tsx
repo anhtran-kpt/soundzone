@@ -1,3 +1,5 @@
+"use client";
+
 import Dot from "@/components/shared/ui/dot";
 import { Button } from "@/components/ui/button";
 import { AlbumInfo } from "@/features/album/album-types";

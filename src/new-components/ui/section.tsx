@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 interface SectionProps {
-  heading: string;
+  heading?: string;
   href?: string;
   children: ReactNode;
 }
