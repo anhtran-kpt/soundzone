@@ -58,12 +58,12 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
       <Button variant="link" type="button" className="text-white mt-2">
         See more
       </Button>
-      <PopularSection tracks={popularTracks?.data} />
-      {isDiscographyLoading || !discography ? (
+      <PopularSection artistSlug={artistSlug} />
+      {/* {isDiscographyLoading || !discography ? (
         <DiscographySectionSkeleton />
       ) : (
         <DiscographySection discography={discography} artistSlug={artistSlug} />
-      )}
+      )} */}
       {isArtistInfoLoading || !artistInfo ? (
         <AboutSectionSkeleton />
       ) : (

@@ -32,7 +32,7 @@ import { usePathname } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { FALLBACK_IMAGE } from "@/lib/constants";
 import Dot from "@/components/shared/ui/dot";
-import { Title } from "@/new-components/ui/title";
+import { CardTitle } from "@/new-components/ui/card-title";
 
 const items = [
   {
@@ -125,7 +125,7 @@ export function Sidebar() {
                             />
                           </div>
                           <div className="space-y-0.5">
-                            <Title title={playlist.title} />
+                            <CardTitle title={playlist.title} />
                             <div className="text-muted-foreground text-xs flex items-center gap-1">
                               Playlist
                               <Dot />
@@ -163,7 +163,7 @@ export function Sidebar() {
                             />
                           </div>
                           <div className="space-y-0.5">
-                            <Title title={artist.name} />
+                            <CardTitle title={artist.name} />
                             <p className="text-muted-foreground text-xs">
                               Artist
                             </p>

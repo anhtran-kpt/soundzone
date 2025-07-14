@@ -14,7 +14,9 @@ export const Section = ({ heading, children, href }: SectionProps) => {
   return (
     <section>
       <div className="flex items-center justify-between">
-        <h2 className="font-bold text-2xl select-none mb-4">{heading}</h2>
+        <h2 className="font-bold text-2xl select-none mb-4 capitalize">
+          {heading}
+        </h2>
         {href && (
           <Button asChild type="button" variant="link">
             <Link href={href}>Show all</Link>

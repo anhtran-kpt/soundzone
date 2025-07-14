@@ -3,6 +3,7 @@
 import db from "@/lib/prisma/db";
 import { PaginationParams } from "../shared";
 import { trackInfoSelect } from "./track-presets";
+import { flattenRelation } from "@/lib/helpers";
 
 export const getList = async (params: PaginationParams) => {
   const { page, limit } = params;
@@ -32,10 +33,15 @@ export const getList = async (params: PaginationParams) => {
 };
 
 export const getTrackInfo = async (trackSlug: string) => {
-  return await db.track.findUniqueOrThrow({
+  const trackInfo = await db.track.findUniqueOrThrow({
     where: {
       slug: trackSlug,
     },
     select: trackInfoSelect,
   });
+
+  return {
+    ...trackInfo,
+    artists: flattenRelation(trackInfo.artists, "artist"),
+  };
 };

@@ -15,11 +15,11 @@ import {
   DropdownMenuTrigger,
   Button,
 } from "@/components/ui";
-import { Track } from "@/types";
-import TrackInfo from "../shared/ui/track-info";
 import { formatDuration } from "@/lib/utils";
+import { TrackCard } from "@/new-components/ui/track-card";
+import { TrackInfo } from "@/features/track/track-types";
 
-export const TrackColumns: ColumnDef<Track>[] = [
+export const TrackColumns: ColumnDef<TrackInfo>[] = [
   {
     header: "#",
     accessorKey: "#",
@@ -31,7 +31,7 @@ export const TrackColumns: ColumnDef<Track>[] = [
     header: "",
     accessorKey: "imagePublicId",
     cell: ({ row }) => {
-      return <TrackInfo track={row.original} />;
+      return <TrackCard track={row.original} isActive={false} />;
     },
   },
   {

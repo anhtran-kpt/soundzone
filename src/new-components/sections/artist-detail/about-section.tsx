@@ -37,7 +37,7 @@ export const AboutSection = ({
 
 export const AboutSectionSkeleton = () => {
   return (
-    <Section heading="about">
+    <Section heading="About">
       <div className="rounded-lg bg-card flex items-center justify-between gap-12 px-12 py-8">
         <div className="flex flex-col items-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">

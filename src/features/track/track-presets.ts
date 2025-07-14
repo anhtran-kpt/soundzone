@@ -22,4 +22,9 @@ export const trackInfoSelect = {
       },
     },
   },
+  _count: {
+    select: {
+      playHistory: true,
+    },
+  },
 } satisfies Prisma.TrackSelect;

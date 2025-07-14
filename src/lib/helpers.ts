@@ -11,3 +11,9 @@ export function flattenRelation<
 export function getColumnClass<T>(cell: Cell<T, unknown>) {
   return cell.column.columnDef.meta?.className ?? "";
 }
+
+export function interleaveComma(elements: React.ReactNode[]) {
+  return elements.flatMap((el, i) =>
+    i < elements.length - 1 ? [el, ", "] : [el]
+  );
+}

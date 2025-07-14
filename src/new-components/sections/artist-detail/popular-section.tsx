@@ -1,8 +1,6 @@
-import { TracksList } from "@/components/shared/ui";
-
 import { Section } from "@/new-components/ui/section";
 import { useArtistPopularTracks } from "@/features/artist/artist-queries";
-import { TrackListSkeleton } from "@/new-components/skeletons/track-list-skeleton";
+import { TrackList, TrackListSkeleton } from "@/new-components/ui/track-list";
 
 export const PopularSection = ({ artistSlug }: { artistSlug: string }) => {
   const { data: tracks, isLoading } = useArtistPopularTracks(artistSlug, {
@@ -11,10 +9,10 @@ export const PopularSection = ({ artistSlug }: { artistSlug: string }) => {
 
   return (
     <Section heading="Popular">
-      {!isLoading ? (
+      {isLoading ? (
         <TrackListSkeleton count={5} />
       ) : (
-        <TracksList tracks={tracks} />
+        <TrackList tracks={tracks?.data} />
       )}
     </Section>
   );

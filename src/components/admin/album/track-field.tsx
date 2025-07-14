@@ -27,7 +27,7 @@ import {
 } from "@/components/ui";
 import { PlusIcon, UploadIcon } from "lucide-react";
 import { CldImage, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import Explicit from "@/components/shared/ui/explicit";
+import Explicit from "@/new-components/ui/explicit-icon";
 import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
 import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
 import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
