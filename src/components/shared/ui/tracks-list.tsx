@@ -1,6 +1,6 @@
 "use client";
 
-import { Track } from "@/types";
+import type { TrackInfo as Track } from "@/features/track/track-types";
 import {
   CirclePlusIcon,
   EllipsisIcon,

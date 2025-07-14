@@ -1,81 +1,81 @@
 "use client";
 
-import {
-  Button,
-  Skeleton,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui";
-import { AlbumCard } from "@/components/shared/ui";
-import { ArtistDiscography } from "@/features/artist/artist-types";
-import { SectionHeading } from "@/new-components/ui/section-heading";
-import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlbumList } from "@/new-components/ui/album-list";
+import { useMemo } from "react";
+import { Section } from "@/new-components/ui/section";
+import { useArtistDiscography } from "@/features/artist/artist-queries";
 
-export function DiscographySection({
-  discography,
-}: {
-  discography: ArtistDiscography;
-}) {
+export function DiscographySection({ artistSlug }: { artistSlug: string }) {
+  const { data: discography, isLoading: isDiscographyLoading } =
+    useArtistDiscography(artistSlug);
+
+  const availableTabs = useMemo(() => {
+    const tabs = [];
+
+    if (discography.popularReleases && discography.popularReleases.length > 0) {
+      tabs.push({
+        key: "Popular Releases",
+        label: "Popular Releases",
+        data: discography.popularReleases,
+      });
+    }
+
+    if (discography.albumReleases && discography.albumReleases.length > 0) {
+      tabs.push({
+        key: "Albums",
+        label: "Albums",
+        data: discography.albumReleases,
+      });
+    }
+
+    if (
+      discography.singleAndEpReleases &&
+      discography.singleAndEpReleases.length > 0
+    ) {
+      tabs.push({
+        key: "Singles & EPs",
+        label: "Singles & EPs",
+        data: discography.singleAndEpReleases,
+      });
+    }
+
+    return tabs;
+  }, [discography]);
+
+  if (availableTabs.length === 0) {
+    return null;
+  }
+
+  const defaultTab = availableTabs[0].key;
+
   return (
-    <section>
-      <div className="flex items-center justify-between">
-        <SectionHeading>Discography</SectionHeading>
-        <Button asChild type="button" variant="link">
-          <Link href={`/artists/${artistSlug}/albums`}>Show all</Link>
-        </Button>
-      </div>
-      <Tabs defaultValue="Popular Releases" className="w-full gap-6">
+    <Section heading="Discography" href={`/artists/${artistSlug}/albums`}>
+      <Tabs defaultValue={defaultTab} className="w-full gap-6">
         <TabsList>
-          <TabsTrigger value="Popular Releases">Popular Releases</TabsTrigger>
-          <TabsTrigger value="Albums">Albums</TabsTrigger>
-          <TabsTrigger value="Singles">Singles & EPs</TabsTrigger>
+          {availableTabs.map((tab) => (
+            <TabsTrigger key={tab.key} value={tab.key}>
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent value="Popular Releases">
-          <ul
-            role="list"
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
-          >
-            {discography.popularReleases.map((album) => (
-              <AlbumCard key={album.id} album={album} />
-            ))}
-          </ul>
-        </TabsContent>
-        <TabsContent value="Albums">
-          <ul
-            role="list"
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
-          >
-            {discography.albumReleases.map((album) => (
-              <AlbumCard key={album.id} album={album} />
-            ))}
-          </ul>
-        </TabsContent>
-        <TabsContent value="Singles">
-          <ul
-            role="list"
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
-          >
-            {discography.singleAndEpReleases.map((album) => (
-              <AlbumCard key={album.id} album={album} />
-            ))}
-          </ul>
-        </TabsContent>
-      </Tabs>
 
-      <Button variant="link" type="button" className="text-white mt-2">
-        See more
-      </Button>
-    </section>
+        {availableTabs.map((tab) => (
+          <TabsContent key={tab.key} value={tab.key}>
+            <AlbumList albums={tab.data} />
+          </TabsContent>
+        ))}
+      </Tabs>
+    </Section>
   );
 }
 
-export function DiscographySectionSkeleton({ count = 6 }: { count?: number }) {
+export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
   const renderSkeletonCards = () => (
     <ul
       role="list"
-      className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6"
+      className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
     >
       {Array.from({ length: count }).map((_, i) => (
         <li key={i} className="space-y-2">

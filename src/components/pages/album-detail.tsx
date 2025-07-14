@@ -2,7 +2,7 @@
 
 import { TracksList } from "@/components/shared/ui";
 import { Button } from "@/components/ui";
-import { useCurrentTrack, useGetAlbum, useIsPlaying } from "@/hooks";
+import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import {
   DownloadIcon,
   EllipsisIcon,
@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export function AlbumDetail({ albumId }: { albumId: string }) {
-  const { data: album, isError, error } = useGetAlbum(albumId);
+export function AlbumDetail({ albumSlug }: { albumSlug: string }) {
+  const { data: album, isError, error } = useGetAlbum(albumSlug);
   const isPlaying = useIsPlaying();
   const currentTrack = useCurrentTrack();
 

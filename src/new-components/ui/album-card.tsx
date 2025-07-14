@@ -6,6 +6,7 @@ import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import { PlayIcon } from "lucide-react";
 import { RELEASE_TYPES } from "@/lib/constants";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AlbumCard = ({ album }: { album: AlbumInfo }) => {
   return (
@@ -56,4 +57,27 @@ export const AlbumCard = ({ album }: { album: AlbumInfo }) => {
   );
 };
 
-export const AlbumCardSkeleton = () => {};
+export const AlbumCardSkeleton = () => {
+  return (
+    <li className="flex flex-col group gap-2 overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden size-full aspect-square">
+        <Skeleton className="w-full h-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-12 rounded-full invisible">
+          <Skeleton className="size-12 rounded-full" />
+        </div>
+      </div>
+
+      <div className="flex flex-col items-start w-full min-w-0">
+        <div className="h-6 w-full">
+          <Skeleton className="h-4 w-3/4" />
+        </div>
+
+        <div className="flex text-[13px] items-center gap-1.5 mt-0.5">
+          <Skeleton className="h-3 w-12" />
+          <span className="text-muted-foreground">•</span>
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+    </li>
+  );
+};

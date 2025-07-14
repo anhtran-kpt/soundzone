@@ -2,40 +2,26 @@
 
 import { ArtistBanner } from "@/components/shared/ui";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
-import { notFound } from "next/navigation";
 import {
   DiscographySection,
   DiscographySectionSkeleton,
 } from "@/new-components/sections/artist-detail/discography-section";
 import { Button } from "@/components/ui";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
-import Link from "next/link";
-import TrackList from "@/components/ui/track-list";
-import {
-  useArtistDiscography,
-  useArtistInfo,
-  useArtistPopularTracks,
-} from "@/features/artist/artist-queries";
-import { SectionHeading } from "@/new-components/ui/section-heading";
+import { useArtistInfo } from "@/features/artist/artist-queries";
 import { FollowButton } from "@/new-components/features/follow-button";
-import { TrackListSkeleton } from "@/new-components/ui/track-list-skeleton";
 import {
   AboutSection,
   AboutSectionSkeleton,
 } from "@/new-components/sections/artist-detail/about-section";
+import { PopularSection } from "@/new-components/sections/artist-detail/popular-section";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data: artistInfo, isLoading: isArtistInfoLoading } =
     useArtistInfo(artistSlug);
-  const { data: popularTracks, isLoading: isPopularTrackLoading } =
-    useArtistPopularTracks(artistSlug, { limit: 5 });
-  const { data: discography, isLoading: isDiscographyLoading } =
-    useArtistDiscography(artistSlug);
 
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
-
-  console.log(popularTracks);
 
   return (
     <div className="space-y-3">
@@ -69,18 +55,14 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
         <FollowButton artistSlug={artistSlug} />
         <EllipsisIcon />
       </section>
-      <section>
-        <SectionHeading>Popular</SectionHeading>
-        {isPopularTrackLoading || !popularTracks ? (
-          <TrackListSkeleton count={5} />
-        ) : (
-          <TrackList tracks={popularTracks.data} />
-        )}
-      </section>
+      <Button variant="link" type="button" className="text-white mt-2">
+        See more
+      </Button>
+      <PopularSection tracks={popularTracks?.data} />
       {isDiscographyLoading || !discography ? (
         <DiscographySectionSkeleton />
       ) : (
-        <DiscographySection />
+        <DiscographySection discography={discography} artistSlug={artistSlug} />
       )}
       {isArtistInfoLoading || !artistInfo ? (
         <AboutSectionSkeleton />

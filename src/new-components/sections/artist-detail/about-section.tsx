@@ -1,7 +1,7 @@
 import { CldImage } from "next-cloudinary";
-import { SectionHeading } from "../../ui/section-heading";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TextSkeleton } from "@/new-components/ui/text-skeleton";
+import { Section } from "@/new-components/ui/section";
 
 interface AboutSectionProps {
   imagePublicId: string;
@@ -15,8 +15,7 @@ export const AboutSection = ({
   description,
 }: AboutSectionProps) => {
   return (
-    <section>
-      <SectionHeading>About</SectionHeading>
+    <Section heading="About">
       <div className="rounded-lg bg-card flex items-center justify-between gap-12 px-12 py-8">
         <div className="flex flex-col text-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">
@@ -32,14 +31,13 @@ export const AboutSection = ({
         </div>
         <div className="text-card-foreground">{description}</div>
       </div>
-    </section>
+    </Section>
   );
 };
 
 export const AboutSectionSkeleton = () => {
   return (
-    <section>
-      <SectionHeading>About</SectionHeading>
+    <Section heading="about">
       <div className="rounded-lg bg-card flex items-center justify-between gap-12 px-12 py-8">
         <div className="flex flex-col items-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">
@@ -49,6 +47,6 @@ export const AboutSectionSkeleton = () => {
         </div>
         <TextSkeleton lines={5} />
       </div>
-    </section>
+    </Section>
   );
 };
