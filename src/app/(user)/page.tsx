@@ -1,7 +1,7 @@
 "use client";
 
 import { useAlbumList } from "@/features/album/album-queries";
-import { AlbumList } from "@/new-components/ui/album-list";
+import { AlbumList } from "@/components/ui/album-list";
 
 export default function DiscoverPage() {
   const { data, isLoading } = useAlbumList();

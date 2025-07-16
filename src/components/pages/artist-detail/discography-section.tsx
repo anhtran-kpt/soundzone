@@ -2,11 +2,11 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlbumList } from "@/new-components/ui/album-list";
+import { AlbumList } from "@/components/ui/album-list";
 import { useMemo } from "react";
 import { ArtistDetailPage } from "@/lib/types";
-import SectionHeading from "@/new-components/ui/section-heading";
-import { NavLink } from "@/new-components/features/nav-link";
+import SectionHeading from "@/components/ui/section-heading";
+import { NavLink } from "@/components/features/nav-link";
 
 type DiscographyProps = {
   discography: ArtistDetailPage["discography"];

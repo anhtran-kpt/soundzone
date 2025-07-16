@@ -1,6 +1,6 @@
 "use server";
 
-import { PlaylistDetail } from "@/components/user/playlist/playlist-detail";
+import { PlaylistDetail } from "@/components/pages/playlist-detail";
 import { getQueryClient } from "@/lib/tanstack-query/get-query-client";
 import { prefetchPlaylist } from "@/lib/prefetchers";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

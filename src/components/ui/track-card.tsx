@@ -3,7 +3,7 @@
 import { TrackInfo } from "@/features/track/track-types";
 import { TrackCover, TrackCoverSkeleton } from "./track-cover";
 import { CardTitle, CardTitleSkeleton } from "./card-title";
-import Explicit from "@/new-components/ui/explicit-icon";
+import Explicit from "@/components/ui/explicit-icon";
 import { HoverLink } from "@/components/shared/ui";
 import { Skeleton } from "@/components/ui";
 

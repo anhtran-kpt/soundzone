@@ -1,6 +1,6 @@
 import AlbumDetail from "@/components/pages/album-detail";
 
-export default async function AlbumPage({
+export default async function AlbumDetailPage({
   params,
 }: {
   params: Promise<{ albumSlug: string }>;

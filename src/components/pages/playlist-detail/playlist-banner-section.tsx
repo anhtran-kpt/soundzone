@@ -2,7 +2,7 @@
 
 import { Playlist } from "@/types";
 import { CldImage } from "next-cloudinary";
-import Dot from "./dot";
+import Dot from "../../ui/dot";
 import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui";
 import { formatName } from "@/lib/utils";
 import pluralize from "pluralize";
 import { Music4Icon, PenBoxIcon } from "lucide-react";
-import { PlaylistDialog } from "@/components/user/playlist/playlist-dialog";
+import { PlaylistDialog } from "@/components/pages/playlist-detail/playlist-dialog";
 import { FALLBACK_PUBLIC_ID } from "@/lib/constants";
 
 interface BannerProps {

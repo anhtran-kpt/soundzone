@@ -1,7 +1,7 @@
 "use client";
 
-import { TrackList, TrackListSkeleton } from "@/new-components/ui/track-list";
-import SectionHeading from "@/new-components/ui/section-heading";
+import { TrackList, TrackListSkeleton } from "@/components/ui/track-list";
+import SectionHeading from "@/components/ui/section-heading";
 import { ArtistDetailPage } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 

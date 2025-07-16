@@ -16,7 +16,7 @@ import {
   Button,
 } from "@/components/ui";
 import { formatDuration } from "@/lib/utils";
-import { TrackCard } from "@/new-components/ui/track-card";
+import { TrackCard } from "@/components/ui/track-card";
 import { TrackInfo } from "@/features/track/track-types";
 
 export const TrackColumns: ColumnDef<TrackInfo>[] = [

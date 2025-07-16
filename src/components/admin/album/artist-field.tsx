@@ -5,7 +5,7 @@ import { Trash2Icon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
 import { FormControl, FormField, FormMessage } from "@/components/ui/form";
 import { FormItem } from "@/components/ui/form";
 import { FormLabel } from "@/components/ui/form";
-import { BadgeCheckbox } from "@/components/shared/ui/badge-checkbox";
+import { BadgeCheckbox } from "@/components/ui/badge-checkbox";
 import { ArtistRole, CreditRole } from "@/app/generated/prisma/client";
 import { ARTIST_ROLES, CREDIT_ROLES } from "@/lib/constants";
 import {

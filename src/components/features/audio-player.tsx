@@ -15,9 +15,9 @@ import {
   useAudioPlayer,
 } from "@/hooks/use-audio-player";
 import PlayerControls from "./player-controls";
-import ProgressBar from "./progress-bar";
-import VolumeControl from "./volume-control";
-import { TrackCard } from "@/new-components/ui/track-card";
+import ProgressBar from "../shared/audio/progress-bar";
+import VolumeControl from "../shared/audio/volume-control";
+import { TrackCard } from "@/components/ui/track-card";
 
 function AudioPlayer() {
   const player = useAudioPlayer();

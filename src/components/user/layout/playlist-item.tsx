@@ -1,4 +1,4 @@
-import Dot from "@/components/shared/ui/dot";
+import Dot from "@/components/ui/dot";
 import { FALLBACK_PUBLIC_ID } from "@/lib/constants";
 import { Playlist } from "@/types";
 import { CldImage } from "next-cloudinary";

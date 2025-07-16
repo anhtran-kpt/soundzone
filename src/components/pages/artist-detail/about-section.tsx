@@ -2,9 +2,9 @@
 
 import { CldImage } from "next-cloudinary";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TextSkeleton } from "@/new-components/ui/text-skeleton";
+import { TextSkeleton } from "@/components/ui/text-skeleton";
 import { ArtistDetailPage } from "@/lib/types";
-import SectionHeading from "@/new-components/ui/section-heading";
+import SectionHeading from "@/components/ui/section-heading";
 
 type AboutProps = {
   about: ArtistDetailPage["about"];

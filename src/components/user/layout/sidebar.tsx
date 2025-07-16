@@ -31,8 +31,8 @@ import { useCreatePlaylist } from "@/features/playlist";
 import { usePathname } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { FALLBACK_IMAGE } from "@/lib/constants";
-import Dot from "@/components/shared/ui/dot";
-import { CardTitle } from "@/new-components/ui/card-title";
+import Dot from "@/components/ui/dot";
+import { CardTitle } from "@/components/ui/card-title";
 
 const items = [
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import Dot from "@/components/shared/ui/dot";
+import Dot from "@/components/ui/dot";
 import { Button } from "@/components/ui/button";
 import { AlbumInfo } from "@/features/album/album-types";
 import { formatDate } from "date-fns";

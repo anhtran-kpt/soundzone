@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import { ArtistDetailPage } from "@/lib/types";
-import { FollowButton } from "@/new-components/features/follow-button";
+import { FollowButton } from "@/components/features/follow-button";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 
 type ActionsSectionProps = {

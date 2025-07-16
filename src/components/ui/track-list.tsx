@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlayIcon, PlusCircleIcon } from "lucide-react";
 import { useAudioPlayer, useIsPlaying } from "@/hooks";
-import { WaveformIcon } from "../../components/ui/wave-form";
+import { WaveformIcon } from "./wave-form";
 import { TrackCard } from "./track-card";
 import { TrackInfo } from "@/features/track/track-types";
 import { TrackDropdown } from "./track-dropdown";

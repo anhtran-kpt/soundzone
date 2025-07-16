@@ -1,7 +1,7 @@
 "use client";
 
 import { CldImage } from "next-cloudinary";
-import Dot from "@/components/shared/ui/dot";
+import Dot from "@/components/ui/dot";
 import { getYear } from "date-fns";
 import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
