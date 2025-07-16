@@ -5,6 +5,7 @@ import { emptyToNull } from "@/lib/utils";
 import { CreateAlbumInput } from "./album-schemas";
 import { PaginationParams } from "../shared";
 import { albumInfoSelect } from "./album-presets";
+import { artistInfoSelect } from "../artist/artist-presets";
 
 export const getAlbumList = async (params: PaginationParams) => {
   const { page, limit } = params;
@@ -41,6 +42,49 @@ export const getAlbumInfo = async (albumSlug: string) => {
     },
     select: albumInfoSelect,
   });
+};
+
+export const getAlbumDetail = async (albumSlug: string) => {
+  const album = await db.album.findUniqueOrThrow({
+    where: {
+      slug: albumSlug,
+    },
+    select: {
+      title: true,
+      releaseType: true,
+      releaseDate: true,
+      artist: {
+        select: artistInfoSelect,
+      },
+      tracks: {
+        select: {
+          title: true,
+          audioPublicId: true,
+          duration: true,
+          slug: true,
+          isExplicit: true,
+          trackNumber: true,
+          _count: {
+            select: {
+              playHistory: true,
+            },
+          },
+          artists: {
+            select: {
+              artist: {
+                select: {
+                  name: true,
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return album;
 };
 
 export const create = async (data: CreateAlbumInput) => {

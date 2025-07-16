@@ -12,6 +12,7 @@ import { SearchBar } from "./search-bar";
 import { ModeToggle } from "@/components/shared/ui";
 import { useScroll, motion, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function Header({
   scrollContainerRef,
@@ -31,9 +32,12 @@ export function Header({
 
   return (
     <motion.header
-      className={`fixed top-0 z-10 px-12 py-3 flex items-center justify-between transition-colors ${
-        isScrolled ? "bg-transparent backdrop-blur-md shadow-sm" : ""
-      }`}
+      className={cn(
+        "sticky top-0 z-50 px-12 py-3 flex items-center justify-between transition-colors",
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
+      )}
     >
       <div className="flex items-center gap-4 flex-grow">
         <div className="space-x-2">

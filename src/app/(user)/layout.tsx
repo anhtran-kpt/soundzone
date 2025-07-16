@@ -13,14 +13,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <UserSidebarProvider>
       <div
-        ref={scrollRef}
         className={cn(
-          "flex flex-col h-screen w-full overflow-y-auto scroll-smooth",
+          "flex flex-col h-screen w-full relative",
           currentTrack && "pb-21"
         )}
       >
         <Header scrollContainerRef={scrollRef} />
-        <main className="flex-col flex-1 px-12 py-6 overflow-x-hidden space-y-6">
+        <main
+          ref={scrollRef}
+          className="flex-col flex-1 px-12 py-6 overflow-x-hidden overflow-y-auto scroll-smooth space-y-6"
+        >
           {children}
         </main>
       </div>
