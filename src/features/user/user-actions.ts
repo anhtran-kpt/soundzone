@@ -1,8 +1,6 @@
 "use server";
 
-import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { PaginationParams } from "../shared";
 import { comparePasswords, hashPassword } from "@/lib/next-auth";
 import {
   SignInInput,
@@ -11,6 +9,7 @@ import {
   signUpSchema,
 } from "./user-schemas";
 import { userInfoSelect } from "./user-presets";
+import { flattenRelation } from "@/lib/helpers";
 
 export const isUserExists = async (email: string) => {
   return !!(await db.user.findUnique({
@@ -65,14 +64,14 @@ export const getUserInfo = async (userSlug: string) => {
   });
 };
 
-export const getUserFollowedArtists = async (userSlug: string) => {
-  const user = await db.user.findUnique({
+export const getUserSidebar = async (userSlug: string) => {
+  const user = await db.user.findUniqueOrThrow({
     where: {
       slug: userSlug,
     },
     include: {
       followedArtists: {
-        include: {
+        select: {
           artist: {
             select: {
               slug: true,
@@ -83,18 +82,6 @@ export const getUserFollowedArtists = async (userSlug: string) => {
           },
         },
       },
-    },
-  });
-
-  return user?.followedArtists.map((f) => f.artist) ?? [];
-};
-
-export const getUserPlaylists = async (userSlug: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      slug: userSlug,
-    },
-    include: {
       playlists: {
         select: {
           id: true,
@@ -112,7 +99,10 @@ export const getUserPlaylists = async (userSlug: string) => {
     },
   });
 
-  return user?.playlists ?? [];
+  return {
+    playlists: user.playlists,
+    followedArtists: flattenRelation(user.followedArtists, "artist"),
+  };
 };
 
 // export const getList = async (params: PaginationParams) => {

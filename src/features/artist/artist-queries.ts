@@ -18,26 +18,6 @@ export const useArtistInfo = (artistSlug: string) => {
   });
 };
 
-export const useArtistPopularTracks = (
-  artistSlug: string,
-  params?: Partial<PaginationParams>
-) => {
-  return useQuery({
-    queryKey: artistKeys.popularTracks(artistSlug, params),
-    queryFn: ({ signal }) =>
-      fetchArtistPopularTracks(artistSlug, signal, params),
-    enabled: !!artistSlug,
-  });
-};
-
-export const useArtistDiscography = (artistSlug: string) => {
-  return useQuery({
-    queryKey: artistKeys.discography(artistSlug),
-    queryFn: ({ signal }) => fetchArtistDiscography(artistSlug, signal),
-    enabled: !!artistSlug,
-  });
-};
-
 export const useIsUserFollowing = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.isFollowing(artistSlug),

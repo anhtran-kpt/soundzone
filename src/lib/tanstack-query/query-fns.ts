@@ -1,5 +1,5 @@
 import { api } from "../api/api-client";
-import { AlbumDetailPage, ArtistDetailPage } from "../types";
+import { AlbumDetailPage, ArtistDetailPage, UserSidebar } from "../types";
 
 export const fetchArtistDetailPage = async (
   artistSlug: string,
@@ -20,4 +20,11 @@ export const fetchAlbumDetailPage = async (
     `/pages/artists/${artistSlug}/albums/${albumSlug}`,
     signal
   );
+};
+
+export const fetchUserSidebar = async (
+  userSlug: string,
+  signal: AbortSignal
+) => {
+  return await api.get<UserSidebar>(`/users/${userSlug}/user-sidebar`, signal);
 };

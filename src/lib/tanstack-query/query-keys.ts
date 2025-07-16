@@ -12,3 +12,18 @@ export const pageKeys = {
   discovery: () => [...pageKeys.all, "discovery"] as const,
   trending: () => [...pageKeys.all, "trending"] as const,
 };
+
+export const userKeys = {
+  all: ["users"] as const,
+  userDetail: (userSlug: string) => [...userKeys.all, userSlug] as const,
+  sidebar: (userSlug: string) =>
+    [...userKeys.userDetail(userSlug), "sidebar"] as const,
+};
+
+export const artistKeys = {
+  all: ["artist"] as const,
+  artistDetail: (artistSlug: string) =>
+    [...artistKeys.all, artistSlug] as const,
+  sidebar: (artistSlug: string) =>
+    [...artistKeys.artistDetail(artistSlug), "sidebar"] as const,
+};
