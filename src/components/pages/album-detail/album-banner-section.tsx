@@ -7,13 +7,10 @@ import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
 import Link from "next/link";
-import { Button, Skeleton } from "@/components/ui";
-import { Section } from "@/new-components/ui/section";
-import { useAlbumDetail } from "@/features/album/album-queries";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
-  const { data: album, isLoading } = useAlbumDetail(albumSlug);
-
   const fac = useMemo(() => new FastAverageColor(), []);
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -35,12 +32,8 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
     }
   }, [imageUrl, fac]);
 
-  if (isLoading || !album) {
-    return <AlbumBannerSkeleton />;
-  }
-
   return (
-    <Section>
+    <section>
       <div className="relative h-80">
         <div
           className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-b from-[var(--tw-gradient-from)] to-[var(--tw-gradient-to)]"
@@ -99,13 +92,13 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 };
 
-export const AlbumBannerSkeleton = () => {
+export const AlbumBannerSectionSkeleton = () => {
   return (
-    <Section>
+    <section>
       <div className="relative h-80">
         <Skeleton className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-b from-[var(--tw-gradient-from)] to-[var(--tw-gradient-to)]" />
         <div className="flex gap-5 absolute left-0 bottom-6 items-end">
@@ -130,6 +123,6 @@ export const AlbumBannerSkeleton = () => {
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 };

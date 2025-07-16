@@ -4,8 +4,8 @@ import { TrackInfo } from "@/features/track/track-types";
 import { TrackCover, TrackCoverSkeleton } from "./track-cover";
 import { CardTitle, CardTitleSkeleton } from "./card-title";
 import Explicit from "@/components/ui/explicit-icon";
-import { HoverLink } from "@/components/shared/ui";
-import { Skeleton } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NavLink } from "../features/nav-link";
 
 interface TrackCardProps {
   track: TrackInfo;
@@ -22,9 +22,7 @@ export const TrackCard = ({ track, isActive }: TrackCardProps) => {
           {track.isExplicit && <Explicit />}
           {track.artists.map((artist, index) => (
             <span key={artist.slug}>
-              <HoverLink href={`/artists/${artist.slug}`}>
-                {artist.name}
-              </HoverLink>
+              <NavLink href={`/artists/${artist.slug}`}>{artist.name}</NavLink>
               {index < track.artists.length - 1 && ", "}
             </span>
           ))}

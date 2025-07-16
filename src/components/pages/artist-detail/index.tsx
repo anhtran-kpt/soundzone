@@ -1,6 +1,6 @@
 "use client";
 
-import { BannerSection, BannerSectionSkeleton } from "@/components/shared/ui";
+import { BannerSection, BannerSectionSkeleton } from "./banner-section";
 import {
   DiscographySection,
   DiscographySectionSkeleton,

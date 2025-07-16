@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  Disc3Icon,
-  PlusIcon,
-  TrendingUpIcon,
-} from "lucide-react";
+import { Disc3Icon, PlusIcon, TrendingUpIcon } from "lucide-react";
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -17,13 +11,11 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
-  Button,
   SidebarSeparator,
   SidebarMenuSkeleton,
   SidebarFooter,
-  SidebarGroupAction,
-  SidebarGroupLabel,
-} from "@/components/ui";
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useUserFollowedArtists, useUserPlaylists } from "@/features/user";
 import { useSession } from "next-auth/react";

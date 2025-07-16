@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import { ArtistDetailPage } from "@/lib/types";

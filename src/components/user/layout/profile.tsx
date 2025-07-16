@@ -7,11 +7,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuContent,
   DropdownMenuShortcut,
-  Avatar,
-  AvatarFallback,
   DropdownMenu,
   DropdownMenuTrigger,
-} from "@/components/ui";
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { formatName } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";

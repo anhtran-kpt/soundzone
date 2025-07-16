@@ -6,10 +6,10 @@ import {
   BellIcon,
   SettingsIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { Profile } from "./profile";
 import { SearchBar } from "./search-bar";
-import { ModeToggle } from "@/components/shared/ui";
+import { ModeToggle } from "@/components/features/mode-toggle";
 import { useScroll, motion, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";

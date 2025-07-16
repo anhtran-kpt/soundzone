@@ -36,7 +36,10 @@ export const getAlbumList = async (params: PaginationParams) => {
   };
 };
 
-export const getAlbumDetail = async (albumSlug: string) => {
+export const getAlbumDetailPage = async (
+  artistSlug: string,
+  albumSlug: string
+) => {
   const album = await db.album.findUniqueOrThrow({
     where: {
       slug: albumSlug,
