@@ -10,22 +10,6 @@ import {
 import { PaginationParams } from "../shared";
 import { userKeys } from "../user";
 
-const artistKeys = {
-  all: ["artists"] as const,
-  detail: (artistSlug: string) =>
-    [...artistKeys.all, artistSlug, "detail"] as const,
-  info: (artistSlug: string) =>
-    [...artistKeys.all, artistSlug, "info"] as const,
-  popularTracks: (artistSlug: string, params?: Partial<PaginationParams>) =>
-    [...artistKeys.all, artistSlug, "popular-tracks", params] as const,
-  discography: (artistSlug: string) =>
-    [...artistKeys.all, artistSlug, "discography"] as const,
-  followers: (artistSlug: string) =>
-    [...artistKeys.all, artistSlug, "followers"] as const,
-  isFollowing: (artistSlug: string) =>
-    [...artistKeys.all, artistSlug, "followers", "me"] as const,
-} as const;
-
 export const useArtistInfo = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.info(artistSlug),

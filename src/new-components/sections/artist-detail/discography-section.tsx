@@ -4,56 +4,41 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlbumList } from "@/new-components/ui/album-list";
 import { useMemo } from "react";
-import { Section } from "@/new-components/ui/section";
-import { useArtistDiscography } from "@/features/artist/artist-queries";
+import { ArtistDetailPage } from "@/lib/types";
+import SectionHeading from "@/new-components/ui/section-heading";
+import { NavLink } from "@/new-components/features/nav-link";
 
-export function DiscographySection({ artistSlug }: { artistSlug: string }) {
-  const { data, isLoading } = useArtistDiscography(artistSlug);
+type DiscographyProps = {
+  discography: ArtistDetailPage["discography"];
+};
 
+export const DiscographySection = ({
+  discography: {
+    popularReleases,
+    albumReleases,
+    singleAndEpReleases,
+    artistSlug,
+  },
+}: DiscographyProps) => {
   const availableTabs = useMemo(() => {
-    if (!data) return [];
+    return [
+      { key: "popular", label: "Popular", data: popularReleases },
+      { key: "albums", label: "Albums", data: albumReleases },
+      { key: "singles", label: "Singles & EPs", data: singleAndEpReleases },
+    ].filter((tab) => tab.data && tab.data.length > 0);
+  }, [popularReleases, albumReleases, singleAndEpReleases]);
 
-    const tabs = [];
-
-    if (data.popularReleases && data.popularReleases.length > 0) {
-      tabs.push({
-        key: "Popular Releases",
-        label: "Popular Releases",
-        data: data.popularReleases,
-      });
-    }
-
-    if (data.albumReleases && data.albumReleases.length > 0) {
-      tabs.push({
-        key: "Albums",
-        label: "Albums",
-        data: data.albumReleases,
-      });
-    }
-
-    if (data.singleAndEpReleases && data.singleAndEpReleases.length > 0) {
-      tabs.push({
-        key: "Singles & EPs",
-        label: "Singles & EPs",
-        data: data.singleAndEpReleases,
-      });
-    }
-
-    return tabs;
-  }, [data]);
-
-  if (isLoading) {
-    return <DiscographySectionSkeleton />;
-  }
-
-  if (availableTabs.length === 0) {
-    return null;
-  }
+  if (availableTabs.length === 0) return null;
 
   const defaultTab = availableTabs[0].key;
 
   return (
-    <Section heading="Discography" href={`/artists/${artistSlug}/albums`}>
+    <section>
+      <div className="flex justify-between items-center">
+        <SectionHeading heading="Discography" />
+        <NavLink href={`/artists/${artistSlug}/discography`}>Show all</NavLink>
+      </div>
+
       <Tabs defaultValue={defaultTab} className="w-full gap-6">
         <TabsList>
           {availableTabs.map((tab) => (
@@ -69,9 +54,9 @@ export function DiscographySection({ artistSlug }: { artistSlug: string }) {
           </TabsContent>
         ))}
       </Tabs>
-    </Section>
+    </section>
   );
-}
+};
 
 export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
   const renderSkeletonCards = () => (
@@ -90,7 +75,11 @@ export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
   );
 
   return (
-    <Section heading="Discography">
+    <section>
+      <div className="flex justify-between items-center">
+        <SectionHeading heading="Discography" />
+        <Skeleton className="h-4 w-6" />
+      </div>
       <Tabs defaultValue="Popular Releases" className="w-full gap-6">
         <TabsList>
           <TabsTrigger value="Popular Releases">Popular Releases</TabsTrigger>
@@ -104,6 +93,6 @@ export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
         <TabsContent value="Albums">{renderSkeletonCards()}</TabsContent>
         <TabsContent value="Singles">{renderSkeletonCards()}</TabsContent>
       </Tabs>
-    </Section>
+    </section>
   );
 }

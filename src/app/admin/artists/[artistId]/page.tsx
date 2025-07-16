@@ -1,5 +1,5 @@
 import ArtistDetail from "@/components/page/artist-detail";
-import { getQueryClient } from "@/lib/get-query-client";
+import { getQueryClient } from "@/lib/tanstack-query/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { prefetchArtist } from "@/lib/prefetchers";
 

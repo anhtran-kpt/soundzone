@@ -2,24 +2,25 @@
 
 import { Skeleton } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { useArtistInfo } from "@/features/artist/artist-queries";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
+import { ArtistDetailPage } from "@/lib/types";
 import { FollowButton } from "@/new-components/features/follow-button";
 import { EllipsisIcon, PauseIcon, PlayIcon, ShuffleIcon } from "lucide-react";
 
-export const ActionsSection = ({ artistSlug }: { artistSlug: string }) => {
-  const { data: artist, isLoading } = useArtistInfo(artistSlug);
+type ActionsSectionProps = {
+  actions: ArtistDetailPage["actions"];
+};
+
+export const ActionsSection = ({
+  actions: { artistId, artistSlug },
+}: ActionsSectionProps) => {
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
-
-  if (isLoading || !artist) {
-    return <ActionsSectionSkeleton />;
-  }
 
   return (
     <section className="flex gap-6 items-center relative">
       <Button type="button" size="icon" className="rounded-full size-12">
-        {currentTrack?.album.artistId === artist.id && isPlaying ? (
+        {currentTrack?.album.artistId === artistId && isPlaying ? (
           <PauseIcon strokeWidth={0} fill="currentColor" className="size-6" />
         ) : (
           <PlayIcon strokeWidth={0} fill="currentColor" className="size-6" />

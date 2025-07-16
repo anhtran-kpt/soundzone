@@ -1,0 +1,14 @@
+export const pageKeys = {
+  all: ["pages"] as const,
+  artists: () => [...pageKeys.all, "artists"] as const,
+  artistDetail: (artistSlug: string) =>
+    [...pageKeys.artists(), artistSlug] as const,
+  artistAlbums: (artistSlug: string) =>
+    [...pageKeys.artistDetail(artistSlug), "albums"] as const,
+  artistAlbumDetail: (artistSlug: string, albumSlug: string) =>
+    [...pageKeys.artistAlbums(artistSlug), albumSlug] as const,
+  artistDiscography: (artistSlug: string) =>
+    [...pageKeys.artistDetail(artistSlug), "discography"] as const,
+  discovery: () => [...pageKeys.all, "discovery"] as const,
+  trending: () => [...pageKeys.all, "trending"] as const,
+};

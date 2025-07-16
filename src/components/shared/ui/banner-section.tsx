@@ -2,22 +2,22 @@
 
 import { CldImage } from "next-cloudinary";
 import { BadgeCheckIcon } from "lucide-react";
-import { useArtistInfo } from "@/features/artist/artist-queries";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArtistDetailPage } from "@/lib/types";
 
-export const ArtistBanner = ({ artistSlug }: { artistSlug: string }) => {
-  const { data: artistInfo, isLoading } = useArtistInfo(artistSlug);
+type BannerSectionProps = {
+  banner: ArtistDetailPage["banner"];
+};
 
-  if (isLoading || !artistInfo) {
-    return <ArtistBannerSkeleton />;
-  }
-
+export const BannerSection = ({
+  banner: { name, bannerPublicId, followers },
+}: BannerSectionProps) => {
   return (
     <section>
       <div className="relative h-96 -mx-12 -mt-21">
         <CldImage
-          alt={artistInfo.name}
-          src={artistInfo.bannerPublicId}
+          alt={name}
+          src={bannerPublicId}
           fill
           sizes="100vw"
           className="object-center object-cover brightness-80"
@@ -29,15 +29,15 @@ export const ArtistBanner = ({ artistSlug }: { artistSlug: string }) => {
             <BadgeCheckIcon className="stroke-white fill-sky-500 size-8" />
             Verified Artist
           </div>
-          <p className="font-extrabold text-6xl mt-1 mb-4">{artistInfo.name}</p>
-          <p className="font-medium">871.312 monthly listeners</p>
+          <p className="font-extrabold text-6xl mt-1 mb-4">{name}</p>
+          <p className="font-medium">{followers} followers</p>
         </div>
       </div>
     </section>
   );
 };
 
-export const ArtistBannerSkeleton = () => {
+export const BannerSectionSkeleton = () => {
   return (
     <section>
       <div className="relative h-96 -mx-12 -mt-21">

@@ -3,40 +3,42 @@
 import { CldImage } from "next-cloudinary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TextSkeleton } from "@/new-components/ui/text-skeleton";
-import { Section } from "@/new-components/ui/section";
-import { useArtistInfo } from "@/features/artist/artist-queries";
+import { ArtistDetailPage } from "@/lib/types";
+import SectionHeading from "@/new-components/ui/section-heading";
 
-export const AboutSection = ({ artistSlug }: { artistSlug: string }) => {
-  const { data, isLoading } = useArtistInfo(artistSlug);
+type AboutProps = {
+  about: ArtistDetailPage["about"];
+};
 
-  if (isLoading || !data) {
-    return <AboutSectionSkeleton />;
-  }
-
+export const AboutSection = ({
+  about: { name, followers, imagePublicId, description },
+}: AboutProps) => {
   return (
-    <Section heading="About">
+    <section>
+      <SectionHeading heading="About" />
       <div className="rounded-lg bg-card flex items-center justify-between gap-12 px-12 py-8">
         <div className="flex flex-col text-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">
             <CldImage
-              src={data.imagePublicId}
-              alt={data.name}
+              src={imagePublicId}
+              alt={name}
               fill
               sizes="224px"
               className="object-cover rounded-full border-white border-2"
             />
           </div>
-          <p className="font-medium">871.312 monthly listeners</p>
+          <p className="font-medium">{followers} followers</p>
         </div>
-        <div className="text-card-foreground">{data.description}</div>
+        <div className="text-card-foreground">{description}</div>
       </div>
-    </Section>
+    </section>
   );
 };
 
 export const AboutSectionSkeleton = () => {
   return (
-    <Section heading="About">
+    <section>
+      <SectionHeading heading="About" />
       <div className="rounded-lg bg-card flex items-center justify-between gap-12 px-12 py-8">
         <div className="flex flex-col items-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">
@@ -46,6 +48,6 @@ export const AboutSectionSkeleton = () => {
         </div>
         <TextSkeleton lines={5} />
       </div>
-    </Section>
+    </section>
   );
 };

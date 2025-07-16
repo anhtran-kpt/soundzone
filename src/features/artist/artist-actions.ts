@@ -76,7 +76,7 @@ export const getArtistPopularTracks = async (
   const totalPages = Math.ceil(total / limit);
 
   return {
-    data: tracks.map((track) => ({
+    tracks: tracks.map((track) => ({
       ...track,
       artists: flattenRelation(track.artists, "artist"),
     })),
@@ -210,4 +210,133 @@ export const unfollowArtist = async (artistSlug: string) => {
       artistId: artist.id,
     },
   });
+};
+
+export const getArtistDetailPage = async (artistSlug: string) => {
+  const artist = await db.artist.findUniqueOrThrow({
+    where: {
+      slug: artistSlug,
+    },
+    include: {
+      _count: {
+        select: {
+          followers: true,
+        },
+      },
+      tracks: {
+        select: {
+          track: {
+            select: {
+              _count: {
+                select: {
+                  playHistory: true,
+                },
+              },
+              title: true,
+              id: true,
+              lyrics: true,
+              slug: true,
+              duration: true,
+              isExplicit: true,
+              audioPublicId: true,
+              trackNumber: true,
+              artists: {
+                select: {
+                  artist: {
+                    select: {
+                      name: true,
+                      slug: true,
+                    },
+                  },
+                },
+              },
+              album: {
+                select: {
+                  coverPublicId: true,
+                  title: true,
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const popular = await getArtistPopularTracks(artist.slug, {
+    page: 1,
+    limit: 5,
+  });
+
+  const [popularReleases, albumReleases, singleAndEpReleases] =
+    await db.$transaction([
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+        take: 5,
+        select: albumInfoSelect,
+      }),
+
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
+          releaseType: "ALBUM",
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+        take: 5,
+        select: albumInfoSelect,
+      }),
+
+      db.album.findMany({
+        where: {
+          artistId: artist.id,
+          releaseType: {
+            in: ["SINGLE", "EP"],
+          },
+        },
+        orderBy: {
+          likedByUsers: {
+            _count: "desc",
+          },
+        },
+        take: 5,
+        select: albumInfoSelect,
+      }),
+    ]);
+
+  return {
+    banner: {
+      name: artist.name,
+      bannerPublicId: artist.bannerPublicId,
+      followers: artist._count.followers,
+    },
+    actions: {
+      artistId: artist.id,
+      artistSlug: artist.slug,
+    },
+    popular,
+    discography: {
+      artistSlug: artist.slug,
+      popularReleases,
+      albumReleases,
+      singleAndEpReleases,
+    },
+    about: {
+      name: artist.name,
+      imagePublicId: artist.imagePublicId,
+      followers: artist._count.followers,
+      description: artist.description,
+    },
+  };
 };

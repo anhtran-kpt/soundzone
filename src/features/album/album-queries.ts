@@ -2,15 +2,6 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchAlbumDetail, fetchAlbumList } from "./album-services";
 import { PaginationParams } from "../shared/shared.type";
 
-export const albumKeys = {
-  all: ["albums"] as const,
-  list: (params?: Partial<PaginationParams>) =>
-    [...albumKeys.all, "list", params] as const,
-  detail: (albumSlug: string) =>
-    [...albumKeys.all, albumSlug, "detail"] as const,
-  info: (albumSlug: string) => [...albumKeys.all, albumSlug, "info"] as const,
-} as const;
-
 export const useAlbumList = (params?: Partial<PaginationParams>) => {
   return useQuery({
     queryKey: albumKeys.list(params),

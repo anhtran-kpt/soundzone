@@ -12,10 +12,9 @@ import { TrackDropdown } from "./track-dropdown";
 
 interface TrackListProps {
   tracks: TrackInfo[];
-  hasNext?: boolean;
 }
 
-export const TrackList = ({ tracks, hasNext = false }: TrackListProps) => {
+export const TrackList = ({ tracks }: TrackListProps) => {
   const { playTrack, currentTrack } = useAudioPlayer();
   const isPlaying = useIsPlaying();
 
@@ -73,11 +72,6 @@ export const TrackList = ({ tracks, hasNext = false }: TrackListProps) => {
           </li>
         ))}
       </ul>
-      {hasNext && (
-        <Button variant="link" type="button" className="text-white mt-2">
-          See more
-        </Button>
-      )}
     </>
   );
 };
