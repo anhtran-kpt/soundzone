@@ -1,4 +1,3 @@
-export * from "./album-banner";
 export * from "./album-card";
 export * from "./artist-banner";
 export * from "./badge-checkbox";

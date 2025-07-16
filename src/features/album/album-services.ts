@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/api-client";
-import { AlbumInfo, AlbumList } from "./album-types";
+import { AlbumDetail, AlbumList } from "./album-types";
 import { PaginationParams } from "../shared/shared.type";
 
 export const fetchAlbumList = async (
@@ -9,11 +9,11 @@ export const fetchAlbumList = async (
   return await api.getWithMeta<AlbumList>("/albums", signal, params);
 };
 
-export const fetchAlbumInfo = async (
+export const fetchAlbumDetail = async (
   albumSlug: string,
   signal: AbortSignal
 ) => {
-  return await api.get<AlbumInfo>(`/albums/${albumSlug}`, signal);
+  return await api.get<AlbumDetail>(`/albums/${albumSlug}`, signal);
 };
 
 // export const create = async (data: CreateAlbumInput) => {

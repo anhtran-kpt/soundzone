@@ -6,6 +6,7 @@ import { CreateAlbumInput } from "./album-schemas";
 import { PaginationParams } from "../shared";
 import { albumInfoSelect } from "./album-presets";
 import { artistInfoSelect } from "../artist/artist-presets";
+import { flattenRelation } from "@/lib/helpers";
 
 export const getAlbumList = async (params: PaginationParams) => {
   const { page, limit } = params;
@@ -35,35 +36,34 @@ export const getAlbumList = async (params: PaginationParams) => {
   };
 };
 
-export const getAlbumInfo = async (albumSlug: string) => {
-  return await db.album.findUniqueOrThrow({
-    where: {
-      slug: albumSlug,
-    },
-    select: albumInfoSelect,
-  });
-};
-
 export const getAlbumDetail = async (albumSlug: string) => {
   const album = await db.album.findUniqueOrThrow({
     where: {
       slug: albumSlug,
     },
     select: {
+      id: true,
       title: true,
       releaseType: true,
       releaseDate: true,
+      coverPublicId: true,
       artist: {
         select: artistInfoSelect,
       },
       tracks: {
         select: {
+          id: true,
           title: true,
           audioPublicId: true,
           duration: true,
           slug: true,
           isExplicit: true,
           trackNumber: true,
+          album: {
+            select: {
+              coverPublicId: true,
+            },
+          },
           _count: {
             select: {
               playHistory: true,
@@ -84,7 +84,14 @@ export const getAlbumDetail = async (albumSlug: string) => {
     },
   });
 
-  return album;
+  return {
+    ...album,
+    totalDuration: album.tracks.reduce((acc, track) => acc + track.duration, 0),
+    tracks: album.tracks.map((track) => ({
+      ...track,
+      artists: flattenRelation(track.artists, "artist"),
+    })),
+  };
 };
 
 export const create = async (data: CreateAlbumInput) => {

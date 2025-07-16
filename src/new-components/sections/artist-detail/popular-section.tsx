@@ -9,13 +9,13 @@ export const PopularSection = ({ artistSlug }: { artistSlug: string }) => {
     limit: 5,
   });
 
-  if (isLoading) {
+  if (isLoading || data) {
     return <TrackListSkeleton count={5} />;
   }
 
   return (
     <Section heading="Popular">
-      <TrackList tracks={data?.data} />
+      <TrackList tracks={data?.data} hasNext={data?.meta?.hasNext} />
     </Section>
   );
 };

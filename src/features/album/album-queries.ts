@@ -1,11 +1,5 @@
-import {
-  keepPreviousData,
-  useMutation,
-  usePrefetchQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { fetchAlbumInfo, fetchAlbumList } from "./album-services";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchAlbumDetail, fetchAlbumList } from "./album-services";
 import { PaginationParams } from "../shared/shared.type";
 
 export const albumKeys = {
@@ -25,10 +19,10 @@ export const useAlbumList = (params?: Partial<PaginationParams>) => {
   });
 };
 
-export const useAlbumInfo = (albumSlug: string) => {
+export const useAlbumDetail = (albumSlug: string) => {
   return useQuery({
     queryKey: albumKeys.info(albumSlug),
-    queryFn: ({ signal }) => fetchAlbumInfo(albumSlug, signal),
+    queryFn: ({ signal }) => fetchAlbumDetail(albumSlug, signal),
     placeholderData: keepPreviousData,
     enabled: !!albumSlug,
   });

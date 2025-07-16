@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { useAlbumInfo } from "@/features/album/album-queries";
+import { useAlbumDetail } from "@/features/album/album-queries";
 import { useCurrentTrack, useIsPlaying } from "@/hooks";
 import {
   DownloadIcon,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export const ActionsSection = ({ albumSlug }: { albumSlug: string }) => {
-  const { data: album, isLoading } = useAlbumInfo(albumSlug);
+  const { data: album, isLoading } = useAlbumDetail(albumSlug);
   const currentTrack = useCurrentTrack();
   const isPlaying = useIsPlaying();
 

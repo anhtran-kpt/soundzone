@@ -1,4 +1,4 @@
-import { getAlbumInfo, getAlbumList } from "./album-actions";
+import { getAlbumDetail, getAlbumList } from "./album-actions";
 
-export type AlbumInfo = Awaited<ReturnType<typeof getAlbumInfo>>;
+export type AlbumDetail = Awaited<ReturnType<typeof getAlbumDetail>>;
 export type AlbumList = Awaited<ReturnType<typeof getAlbumList>>;
