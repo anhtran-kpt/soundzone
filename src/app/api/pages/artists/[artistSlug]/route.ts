@@ -1,4 +1,4 @@
-import { getArtistDetailPage } from "@/features/artist/artist-actions";
+import { getArtistDetailPage } from "@/app/actions/page/get-artist-detail-page";
 import { withApiHandler } from "@/lib/api/api-handler";
 import { NextRequest } from "next/server";
 

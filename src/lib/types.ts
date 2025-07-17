@@ -1,5 +1,5 @@
 import { getAlbumDetailPage } from "@/features/album/album-actions";
-import { getArtistDetailPage } from "@/features/artist/artist-actions";
+import { getArtistDetailPage } from "@/app/actions/page/get-artist-detail-page";
 import { getUserSidebar } from "@/features/user";
 
 export type ArtistDetailPage = Awaited<ReturnType<typeof getArtistDetailPage>>;
