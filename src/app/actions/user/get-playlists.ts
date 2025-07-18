@@ -1,28 +1,23 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { isUserExists } from "./is-user-exists";
+import { isEntityExists } from "../shared/is-entity-exists";
+import { withErrorHandler } from "../shared/with-error-handler";
 
-export const getPlaylists = async (userSlug: string) => {
-  try {
-    const user = await isUserExists(userSlug);
+export const getPlaylists = withErrorHandler(async (userSlug: string) => {
+  const user = await isEntityExists("user", "slug", userSlug);
 
-    const playlists = await db.playlist.findMany({
-      where: {
-        userId: user.id,
-      },
-      select: {
-        title: true,
-        coverPublicId: true,
-        slug: true,
-        id: true,
-      },
-    });
+  const playlists = await db.playlist.findMany({
+    where: {
+      userId: user.id,
+    },
+    select: {
+      title: true,
+      coverPublicId: true,
+      slug: true,
+      id: true,
+    },
+  });
 
-    return playlists;
-  } catch (error) {
-    console.error("[GET_PLAYLISTS]", error);
-
-    throw new Error("[GET_PLAYLISTS]: Something went wrong!");
-  }
-};
+  return playlists;
+});

@@ -1,11 +1,12 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { isUserExists } from "./is-user-exists";
+import { isEntityExists } from "../shared/is-entity-exists";
+import { withErrorHandler } from "../shared/with-error-handler";
 
-export const getFollowingArtists = async (userSlug: string) => {
-  try {
-    const user = await isUserExists(userSlug);
+export const getFollowingArtists = withErrorHandler(
+  async (userSlug: string) => {
+    const user = await isEntityExists("user", "slug", userSlug);
 
     const artists = await db.artist.findMany({
       where: {
@@ -24,9 +25,5 @@ export const getFollowingArtists = async (userSlug: string) => {
     });
 
     return artists;
-  } catch (error) {
-    console.error("[GET_FOLLOWING_ARTIST]", error);
-
-    throw new Error("[GET_FOLLOWING_ARTIST]: Something went wrong!");
   }
-};
+);

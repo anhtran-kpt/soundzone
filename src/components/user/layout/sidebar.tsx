@@ -126,14 +126,14 @@ export function Sidebar() {
                               <div className="text-muted-foreground text-xs flex items-center gap-1">
                                 Playlist
                                 <Dot />
-                                {playlist.user?.name}
+                                {session?.user.name}
                               </div>
                             </div>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
-                    {data?.followedArtists.map((artist) => (
+                    {data?.followingArtists.map((artist) => (
                       <SidebarMenuItem key={artist.id}>
                         <SidebarMenuButton asChild size="lg">
                           <Link

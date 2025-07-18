@@ -3,31 +3,20 @@
 import { PaginationParams } from "@/features/shared";
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
+import { isEntityExists } from "../shared/is-entity-exists";
+import { withErrorHandler } from "../shared/with-error-handler";
 
-export const getPopularTracks = async (
-  artistSlug: string,
-  params: PaginationParams
-) => {
-  try {
+export const getPopularTracks = withErrorHandler(
+  async (artistSlug: string, params: PaginationParams) => {
     const { page, limit } = params;
     const skip = (page - 1) * limit;
 
-    const artist = await db.artist.findUnique({
-      where: {
-        slug: artistSlug,
-      },
-    });
-
-    if (!artist) {
-      return { error: "Artist not found!" };
-    }
+    const artist = await isEntityExists("artist", "slug", artistSlug);
 
     const tracks = await db.track.findMany({
       where: {
         artists: {
-          some: {
-            artistId: artist.id,
-          },
+          some: { artistId: artist.id },
         },
       },
       omit: {
@@ -37,17 +26,12 @@ export const getPopularTracks = async (
       },
       include: {
         album: {
-          select: {
-            slug: true,
-          },
+          select: { slug: true },
         },
         artists: {
           select: {
             artist: {
-              select: {
-                slug: true,
-                name: true,
-              },
+              select: { slug: true, name: true },
             },
           },
         },
@@ -65,9 +49,5 @@ export const getPopularTracks = async (
       ...track,
       artists: flattenRelation(track.artists, "artist"),
     }));
-  } catch (error) {
-    console.error("[GET POPULAR TRACKS]", error);
-
-    return { error: "Something went wrong!" };
   }
-};
+);

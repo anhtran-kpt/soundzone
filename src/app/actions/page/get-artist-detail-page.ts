@@ -1,21 +1,16 @@
 "use server";
 
-import db from "@/lib/prisma/db";
 import { getArtistInfo } from "../artist/get-artist-info";
 import { getDiscography } from "../artist/get-discography";
 import { getPopularTracks } from "../artist/get-popular-tracks";
+import { isEntityExists } from "../shared/is-entity-exists";
+import { withErrorHandler } from "../shared/with-error-handler";
 
-export const getArtistDetailPage = async (artistSlug: string) => {
-  try {
-    const artist = await db.artist.findUnique({
-      where: {
-        slug: artistSlug,
-      },
+export const getArtistDetailPage = withErrorHandler(
+  async (artistSlug: string) => {
+    await isEntityExists("artist", "slug", artistSlug, {
+      logContext: "[GET_ARTIST_DETAIL_PAGE]",
     });
-
-    if (!artist) {
-      throw new Error("[GET_ARTIST_DETAIL_PAGE]: Artist not found!");
-    }
 
     const [artistInfo, popular, discography] = await Promise.all([
       getArtistInfo(artistSlug),
@@ -41,9 +36,5 @@ export const getArtistDetailPage = async (artistSlug: string) => {
         description: artistInfo.description,
       },
     };
-  } catch (error) {
-    console.error("[GET ARTIST DETAIL PAGE]", error);
-
-    throw new Error("[GET_ARTIST_DETAIL_PAGE]: Something went wrong!");
   }
-};
+);

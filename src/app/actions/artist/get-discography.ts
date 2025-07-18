@@ -2,35 +2,22 @@
 
 import { PaginationParams } from "@/features/shared";
 import db from "@/lib/prisma/db";
+import { isEntityExists } from "../shared/is-entity-exists";
+import { withErrorHandler } from "../shared/with-error-handler";
 
-export const getDiscography = async (
-  artistSlug: string,
-  params: PaginationParams
-) => {
-  try {
+export const getDiscography = withErrorHandler(
+  async (artistSlug: string, params: PaginationParams) => {
     const { page, limit } = params;
     const skip = (page - 1) * limit;
 
-    const artist = await db.artist.findUnique({
-      where: {
-        slug: artistSlug,
-      },
-    });
-
-    if (!artist) {
-      return { error: "Artist not found!" };
-    }
+    const artist = await isEntityExists("artist", "slug", artistSlug);
 
     const [popularReleases, albumReleases, singleAndEpReleases] =
       await db.$transaction([
         db.album.findMany({
-          where: {
-            artistId: artist.id,
-          },
+          where: { artistId: artist.id },
           orderBy: {
-            likedByUsers: {
-              _count: "desc",
-            },
+            likedByUsers: { _count: "desc" },
           },
           take: limit,
           skip,
@@ -42,9 +29,7 @@ export const getDiscography = async (
             releaseType: "ALBUM",
           },
           orderBy: {
-            likedByUsers: {
-              _count: "desc",
-            },
+            likedByUsers: { _count: "desc" },
           },
           take: limit,
           skip,
@@ -53,14 +38,10 @@ export const getDiscography = async (
         db.album.findMany({
           where: {
             artistId: artist.id,
-            releaseType: {
-              in: ["SINGLE", "EP"],
-            },
+            releaseType: { in: ["SINGLE", "EP"] },
           },
           orderBy: {
-            likedByUsers: {
-              _count: "desc",
-            },
+            likedByUsers: { _count: "desc" },
           },
           take: limit,
           skip,
@@ -72,9 +53,5 @@ export const getDiscography = async (
       albumReleases,
       singleAndEpReleases,
     };
-  } catch (error) {
-    console.error("[GET DISCOGRAPHY]", error);
-
-    return { error: "Something went wrong!" };
   }
-};
+);
