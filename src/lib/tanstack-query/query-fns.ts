@@ -26,5 +26,5 @@ export const fetchUserSidebar = async (
   userSlug: string,
   signal: AbortSignal
 ) => {
-  return await api.get<UserSidebar>(`/users/${userSlug}/user-sidebar`, signal);
+  return await api.get<UserSidebar>(`/users/${userSlug}/sidebar`, signal);
 };

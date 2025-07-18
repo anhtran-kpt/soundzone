@@ -12,7 +12,7 @@ export const getArtistDetailPage = withErrorHandler(
       logContext: "[GET_ARTIST_DETAIL_PAGE]",
     });
 
-    const [artistInfo, popular, discography] = await Promise.all([
+    const [artistInfo, popularTracks, discography] = await Promise.all([
       getArtistInfo(artistSlug),
       getPopularTracks(artistSlug, { page: 1, limit: 5 }),
       getDiscography(artistSlug, { page: 1, limit: 5 }),
@@ -27,7 +27,7 @@ export const getArtistDetailPage = withErrorHandler(
       actions: {
         artistId: artistInfo.id,
       },
-      popular,
+      popularTracks,
       discography,
       about: {
         name: artistInfo.name,

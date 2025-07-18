@@ -1,4 +1,4 @@
-import { getUserSidebar } from "@/features/user";
+import { getUserSidebar } from "@/app/actions/user/get-user-sidebar";
 import { withApiHandler } from "@/lib/api/api-handler";
 import { NextRequest } from "next/server";
 

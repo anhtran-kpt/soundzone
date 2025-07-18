@@ -5,7 +5,7 @@ import { SALT_ROUNDS } from "./constants";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { signIn } from "@/features/user";
+import { signIn } from "@/app/actions/user/sign-in";
 
 export const authOptions: NextAuthOptions = {
   session: {
