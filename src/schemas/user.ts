@@ -1,5 +1,5 @@
 import z from "zod";
-import { baseFields } from "../shared";
+import { baseFields } from "./shared";
 
 export const signInSchema = z.object({
   email: baseFields.email,

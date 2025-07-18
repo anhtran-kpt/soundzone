@@ -26,7 +26,9 @@ import Dot from "@/components/ui/dot";
 import { CardTitle } from "@/components/ui/card-title";
 import { useQuery } from "@tanstack/react-query";
 import { userKeys } from "@/lib/tanstack-query/query-keys";
-import { fetchUserSidebar } from "@/lib/tanstack-query/query-fns";
+import fetcher from "@/lib/api/fetcher";
+import { UserSidebar } from "@/lib/types";
+import { endpoints } from "@/lib/api/endpoints";
 
 const items = [
   {
@@ -46,12 +48,12 @@ export function Sidebar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
-  const slug = session?.user.slug ?? "";
+  const userSlug = session?.user.slug ?? "";
 
   const { data, isLoading } = useQuery({
-    queryKey: userKeys.sidebar(slug),
-    queryFn: ({ signal }) => fetchUserSidebar(slug, signal),
-    enabled: !!slug,
+    queryKey: userKeys.sidebar(userSlug),
+    queryFn: fetcher<UserSidebar>(endpoints.user.sidebar(userSlug)),
+    enabled: !!userSlug,
   });
 
   const { mutateAsync: createPlaylist } = useCreatePlaylist();
@@ -170,7 +172,7 @@ export function Sidebar() {
       <SidebarFooter>
         <Button
           type="button"
-          onClick={() => createPlaylist(slug)}
+          onClick={() => createPlaylist(userSlug)}
           size="sm"
           variant="outline"
         >

@@ -3,7 +3,7 @@
 import db from "@/lib/prisma/db";
 import { withErrorHandler } from "../shared/with-error-handler";
 import { hashPassword } from "@/lib/next-auth";
-import { SignUpInput, signUpSchema } from "@/features/user/user-schemas";
+import { SignUpInput, signUpSchema } from "@/schemas/user";
 
 export const signUp = withErrorHandler(async (input: SignUpInput) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

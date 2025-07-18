@@ -1,6 +1,11 @@
 import { UserRole } from "@/app/generated/prisma";
 import { DefaultSession, DefaultUser } from "next-auth";
 
+export type PaginationParams = {
+  page: number;
+  limit: number;
+};
+
 declare module "next-auth" {
   interface Session {
     user: {

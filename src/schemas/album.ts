@@ -1,7 +1,7 @@
 import { ReleaseType } from "@/app/generated/prisma";
-import { baseFields } from "../shared";
+import { baseFields } from "./shared";
 import { z } from "zod";
-import { createTrackSchema } from "../track";
+import { createTrackSchema } from "./track";
 
 export const albumSchema = z.object({
   title: baseFields.title,

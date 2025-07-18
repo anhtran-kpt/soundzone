@@ -6,17 +6,22 @@ import {
   DiscographySectionSkeleton,
 } from "./discography-section";
 import { AboutSection, AboutSectionSkeleton } from "./about-section";
-import { PopularSection, PopularSectionSkeleton } from "./popular-section";
+import {
+  PopularTracksSection,
+  PopularTracksSectionSkeleton,
+} from "./popular-tracks-section";
 import { ActionsSection, ActionsSectionSkeleton } from "./actions-section";
 import { useQuery } from "@tanstack/react-query";
 import { pageKeys } from "@/lib/tanstack-query/query-keys";
-import { fetchArtistDetailPage } from "@/lib/tanstack-query/query-fns";
 import WithSkeleton from "@/components/features/withSkeleton";
+import fetcher from "@/lib/api/fetcher";
+import { ArtistDetailPage } from "@/lib/types";
+import { endpoints } from "@/lib/api/endpoints";
 
 export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
   const { data, isLoading } = useQuery({
     queryKey: pageKeys.artistDetail(artistSlug),
-    queryFn: ({ signal }) => fetchArtistDetailPage(artistSlug, signal),
+    queryFn: fetcher<ArtistDetailPage>(endpoints.page.artistDetail(artistSlug)),
     enabled: !!artistSlug,
   });
 
@@ -39,9 +44,9 @@ export default function ArtistDetail({ artistSlug }: { artistSlug: string }) {
       <WithSkeleton
         isLoading={isLoading}
         data={data}
-        selector={(d) => ({ popular: d.popular })}
-        Skeleton={<PopularSectionSkeleton />}
-        Component={PopularSection}
+        selector={(d) => ({ popularTracks: d.popularTracks })}
+        Skeleton={<PopularTracksSectionSkeleton />}
+        Component={PopularTracksSection}
       />
       <WithSkeleton
         isLoading={isLoading}

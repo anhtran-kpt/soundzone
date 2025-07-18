@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseFields } from "../shared";
+import { baseFields } from "./shared";
 import { ArtistRole, CreditRole } from "@/app/generated/prisma";
 
 const baseTrackSchema = z.object({
