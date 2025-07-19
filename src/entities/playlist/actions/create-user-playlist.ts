@@ -4,7 +4,7 @@ import db from "@/lib/prisma/db";
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { requireAuth } from "@/lib/next-auth";
 
-export const createPlaylist = withErrorHandler(async () => {
+export const createUserPlaylist = withErrorHandler(async () => {
   const { user } = await requireAuth();
 
   return await db.$transaction(async (tx) => {

@@ -18,11 +18,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { endpoints } from "@/lib/api/endpoints";
-import { poster } from "@/lib/api/poster";
 import { SidebarPlaylists } from "@/components/features/sidebar-playlists";
 import { SidebarFollowingArtists } from "@/components/features/sidebar-following-artists";
+import { useCreateUserPlaylist } from "@/entities/playlist/mutations";
 
 const items = [
   {
@@ -38,21 +36,13 @@ const items = [
 ];
 
 export function Sidebar() {
-  const { state, toggleSidebar } = useSidebar();
+  // const { state, toggleSidebar } = useSidebar();
   const { data: session, status } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
 
   const userSlug = session?.user.slug ?? "";
 
-  const { mutateAsync: createPlaylist } = useMutation({
-    mutationFn: poster<void, CreatePlaylistReturn>(endpoints.playlist.create()),
-    onSuccess(data) {
-      router.push(
-        endpoints.user.playlistDetail({ userSlug, playlistSlug: data.slug })
-      );
-    },
-  });
+  const { mutateAsync: createPlaylist } = useCreateUserPlaylist(userSlug);
 
   return (
     <ShadcnSidebar collapsible="icon">
