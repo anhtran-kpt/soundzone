@@ -2,7 +2,12 @@ import { artistEndpoints } from "../artist-endpoints";
 import fetcher from "@/lib/api/fetcher";
 import { artistKeys } from "../artist-keys";
 import { useQuery } from "@tanstack/react-query";
-import { TArtistInfo, TArtistFollowers } from "../artist-types";
+import {
+  TArtistInfo,
+  TArtistFollowers,
+  TArtistPopularTracks,
+  TArtistDiscography,
+} from "../artist-types";
 
 export const useArtistFollowers = (artistSlug: string) => {
   return useQuery({
@@ -21,6 +26,17 @@ export const useArtistInfo = (artistSlug: string) => {
 export const useArtistPopularTracks = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.popularTracks(artistSlug),
-    queryFn: fetcher < TArtist,
+    queryFn: fetcher<TArtistPopularTracks>(
+      artistEndpoints.popularTracks(artistSlug)
+    ),
+  });
+};
+
+export const useArtistDiscography = (artistSlug: string) => {
+  return useQuery({
+    queryKey: artistKeys.discography(artistSlug),
+    queryFn: fetcher<TArtistDiscography>(
+      artistEndpoints.discography(artistSlug)
+    ),
   });
 };

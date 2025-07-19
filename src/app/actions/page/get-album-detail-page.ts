@@ -1,6 +1,6 @@
 "use server";
 
-import { isEntityExists } from "../shared/is-entity-exists";
+import { isEntityExists } from "../../../entities/shared/is-entity-exists";
 import { withErrorHandler } from "../shared/with-error-handler";
 
 // export const getAlbumDetailPage = withErrorHandler(

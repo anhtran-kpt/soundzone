@@ -1,12 +1,12 @@
 "use server";
 
-import { PaginationParams } from "@/features/shared";
+import { isEntityExists } from "@/entities/shared/is-entity-exists";
+import { PaginationParams } from "@/entities/shared/shared-types";
+import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { isEntityExists } from "../../../app/actions/shared/is-entity-exists";
-import { withErrorHandler } from "../../../app/actions/shared/with-error-handler";
 
-export const getPopularTracks = withErrorHandler(
+export const getArtistPopularTracks = withErrorHandler(
   async (artistSlug: string, params: PaginationParams) => {
     const { page, limit } = params;
     const skip = (page - 1) * limit;

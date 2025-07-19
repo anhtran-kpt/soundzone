@@ -1,10 +1,10 @@
 "use server";
 
 import { getFollowers } from "../../../entities/artist/actions";
-import { getArtistInfo } from "../../../entities/artist/actions/get-info";
-import { getDiscography } from "../../../entities/artist/actions/get-discography";
-import { getPopularTracks } from "../../../entities/artist/actions/get-popular-tracks";
-import { isEntityExists } from "../shared/is-entity-exists";
+import { getArtistInfo } from "../../../entities/artist/actions/get-artist-info";
+import { getDiscography } from "../../../entities/artist/actions/get-artist-discography";
+import { getPopularTracks } from "../../../entities/artist/actions/get-artist-popular-tracks";
+import { isEntityExists } from "../../../entities/shared/is-entity-exists";
 import { withErrorHandler } from "../shared/with-error-handler";
 
 export const getArtistDetailPage = withErrorHandler(

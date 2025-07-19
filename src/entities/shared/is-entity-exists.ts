@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { withErrorHandler } from "./with-error-handler";
+import { withErrorHandler } from "@/entities/shared/with-error-handler";
 
 type PrismaModel = keyof typeof db;
 

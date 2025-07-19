@@ -1,9 +1,15 @@
 import {
-  getFollowers,
-  getInfo,
-  getPopularTracks,
+  getArtistDiscography,
+  getArtistFollowers,
+  getArtistInfo,
+  getArtistPopularTracks,
 } from "@/entities/artist/actions";
 
-export type TArtistFollowers = Awaited<ReturnType<typeof getFollowers>>;
-export type TArtistInfo = Awaited<ReturnType<typeof getInfo>>;
-export type TArtistPopularTracks = Awaited<ReturnType<typeof getPopularTracks>>;
+export type TArtistFollowers = Awaited<ReturnType<typeof getArtistFollowers>>;
+export type TArtistInfo = Awaited<ReturnType<typeof getArtistInfo>>;
+export type TArtistPopularTracks = Awaited<
+  ReturnType<typeof getArtistPopularTracks>
+>;
+export type TArtistDiscography = Awaited<
+  ReturnType<typeof getArtistDiscography>
+>;

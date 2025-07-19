@@ -1,8 +1,8 @@
 "use server";
 
+import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { requireAuth } from "@/lib/next-auth";
 import db from "@/lib/prisma/db";
-import { withErrorHandler } from "../../../app/actions/shared/with-error-handler";
 
 export const isFollowing = withErrorHandler(async (artistSlug: string) => {
   const session = await requireAuth();
