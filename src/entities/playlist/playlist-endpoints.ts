@@ -7,8 +7,5 @@ export const playlistEndpoints = {
   discography: (playlistSlug: string) =>
     `/playlists/${playlistSlug}/discography`,
   banner: (playlistSlug: string) => `/playlists/${playlistSlug}/banner`,
-  popularTracks: (playlistSlug: string) =>
-    `/playlists/${playlistSlug}/popularTracks`,
-
   userPlaylists: (userSlug: string) => `/users/${userSlug}/playlists`,
 };

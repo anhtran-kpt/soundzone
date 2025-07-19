@@ -1,16 +1,15 @@
-export const artistKeys = {
-  all: ["artists"] as const,
-  artist: (artistSlug: string) => [...artistKeys.all, artistSlug] as const,
-  info: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "info"] as const,
-  detail: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "detail"] as const,
-  followers: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "followers"] as const,
-  discography: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "discography"] as const,
-  banner: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "banner"] as const,
-  popularTracks: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "popularTracks"] as const,
+export const albumKeys = {
+  all: ["albums"] as const,
+  album: (albumSlug: string) => [...albumKeys.all, albumSlug] as const,
+  info: (albumSlug: string) => [...albumKeys.album(albumSlug), "info"] as const,
+  detail: (albumSlug: string) =>
+    [...albumKeys.album(albumSlug), "detail"] as const,
+  followers: (albumSlug: string) =>
+    [...albumKeys.album(albumSlug), "followers"] as const,
+  discography: (albumSlug: string) =>
+    [...albumKeys.album(albumSlug), "discography"] as const,
+  banner: (albumSlug: string) =>
+    [...albumKeys.album(albumSlug), "banner"] as const,
+  popularTracks: (albumSlug: string) =>
+    [...albumKeys.album(albumSlug), "popularTracks"] as const,
 };

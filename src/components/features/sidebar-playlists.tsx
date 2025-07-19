@@ -1,6 +1,6 @@
 "use client";
 
-import { usePlaylists } from "@/entities/user/queries";
+import { useUserPlaylists } from "@/entities/user/queries";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -11,9 +11,11 @@ import ErrorMessage from "./error-message";
 import Link from "next/link";
 import { CardTitle } from "../ui/card-title";
 import Dot from "../ui/dot";
+import { CldImage } from "next-cloudinary";
+import { FALLBACK_IMAGE } from "@/lib/constants";
 
 export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
-  const { data: playlists, isLoading, error } = usePlaylists(userSlug);
+  const { data: playlists, isLoading, error } = useUserPlaylists(userSlug);
 
   if (isLoading) {
     return (
@@ -55,7 +57,7 @@ export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
                   {playlist.user && (
                     <>
                       <Dot />
-                      playlist.user.name
+                      {playlist.user.name}
                     </>
                   )}
                 </div>

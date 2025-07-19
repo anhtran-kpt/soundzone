@@ -6,5 +6,6 @@ export const artistEndpoints = {
   detail: (artistSlug: string) => `/artists/${artistSlug}/detail`,
   discography: (artistSlug: string) => `/artists/${artistSlug}/discography`,
   banner: (artistSlug: string) => `/artists/${artistSlug}/banner`,
-  popularTracks: (artistSlug: string) => `/artists/${artistSlug}/popularTracks`,
+  popularTracks: (artistSlug: string) =>
+    `/artists/${artistSlug}/popular-tracks`,
 };

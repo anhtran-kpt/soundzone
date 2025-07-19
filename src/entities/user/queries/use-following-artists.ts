@@ -10,5 +10,6 @@ export const useFollowingArtists = (userSlug: string) => {
     queryFn: fetcher<TUserFollowingArtists>(
       userEndpoints.followingArtists(userSlug)
     ),
+    enabled: !!userSlug,
   });
 };

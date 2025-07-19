@@ -4,7 +4,7 @@ export const userKeys = {
   info: (userSlug: string) => [...userKeys.user(userSlug), "info"] as const,
   detail: (userSlug: string) => [...userKeys.user(userSlug), "detail"] as const,
   followingArtists: (userSlug: string) =>
-    [...userKeys.user(userSlug), "followingArtists"] as const,
+    [...userKeys.user(userSlug), "following-artists"] as const,
   playlists: (userSlug: string) =>
     [...userKeys.user(userSlug), "playlists"] as const,
 };

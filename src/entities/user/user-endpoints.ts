@@ -11,5 +11,6 @@ export const userEndpoints = {
     userSlug: string;
     playlistSlug: string;
   }) => `/users/${userSlug}/playlists/${playlistSlug}`,
-  followingArtists: (userSlug: string) => `/users/${userSlug}/followingArtists`,
+  followingArtists: (userSlug: string) =>
+    `/users/${userSlug}/following-artists`,
 };
