@@ -2,8 +2,8 @@
 
 import { PaginationParams } from "@/features/shared";
 import db from "@/lib/prisma/db";
-import { isEntityExists } from "../shared/is-entity-exists";
-import { withErrorHandler } from "../shared/with-error-handler";
+import { isEntityExists } from "../../../app/actions/shared/is-entity-exists";
+import { withErrorHandler } from "../../../app/actions/shared/with-error-handler";
 
 export const getDiscography = withErrorHandler(
   async (artistSlug: string, params: PaginationParams) => {

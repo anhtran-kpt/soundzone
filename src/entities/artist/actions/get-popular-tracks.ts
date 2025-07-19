@@ -3,8 +3,8 @@
 import { PaginationParams } from "@/features/shared";
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
-import { isEntityExists } from "../shared/is-entity-exists";
-import { withErrorHandler } from "../shared/with-error-handler";
+import { isEntityExists } from "../../../app/actions/shared/is-entity-exists";
+import { withErrorHandler } from "../../../app/actions/shared/with-error-handler";
 
 export const getPopularTracks = withErrorHandler(
   async (artistSlug: string, params: PaginationParams) => {

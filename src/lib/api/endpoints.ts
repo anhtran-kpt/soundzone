@@ -23,11 +23,12 @@ export const endpoints = {
   },
   artist: {
     base: "/artists",
-    bySlug: (slug: string) => `/artists/${slug}`,
-    albums: (slug: string) => `/artists/${slug}/albums`,
-    follow: (slug: string) => `/artists/${slug}/follow`,
-    unfollow: (slug: string) => `/artists/${slug}/unfollow`,
+    bySlug: (artistSlug: string) => `/artists/${artistSlug}`,
+    albums: (artistSlug: string) => `/artists/${artistSlug}/albums`,
+    follow: (artistSlug: string) => `/artists/${artistSlug}/follow`,
+    unfollow: (artistSlug: string) => `/artists/${artistSlug}/unfollow`,
     isFollowing: (artistSlug: string) => `/artists/${artistSlug}/is-following`,
+    followers: (artistSlug: string) => `/artists/${artistSlug}/followers`,
   },
   album: {
     base: "/albums",

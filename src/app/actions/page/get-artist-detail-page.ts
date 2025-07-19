@@ -1,8 +1,9 @@
 "use server";
 
-import { getArtistInfo } from "../artist/get-artist-info";
-import { getDiscography } from "../artist/get-discography";
-import { getPopularTracks } from "../artist/get-popular-tracks";
+import { getFollowers } from "../../../entities/artist/actions";
+import { getArtistInfo } from "../../../entities/artist/actions/get-info";
+import { getDiscography } from "../../../entities/artist/actions/get-discography";
+import { getPopularTracks } from "../../../entities/artist/actions/get-popular-tracks";
 import { isEntityExists } from "../shared/is-entity-exists";
 import { withErrorHandler } from "../shared/with-error-handler";
 
@@ -12,17 +13,19 @@ export const getArtistDetailPage = withErrorHandler(
       logContext: "[GET_ARTIST_DETAIL_PAGE]",
     });
 
-    const [artistInfo, popularTracks, discography] = await Promise.all([
-      getArtistInfo(artistSlug),
-      getPopularTracks(artistSlug, { page: 1, limit: 5 }),
-      getDiscography(artistSlug, { page: 1, limit: 5 }),
-    ]);
+    const [followers, artistInfo, popularTracks, discography] =
+      await Promise.all([
+        getFollowers(artistSlug),
+        getArtistInfo(artistSlug),
+        getPopularTracks(artistSlug, { page: 1, limit: 5 }),
+        getDiscography(artistSlug, { page: 1, limit: 5 }),
+      ]);
 
     return {
       banner: {
         name: artistInfo.name,
         bannerPublicId: artistInfo.bannerPublicId,
-        followers: artistInfo.followers,
+        followers,
       },
       actions: {
         artistId: artistInfo.id,
@@ -31,7 +34,7 @@ export const getArtistDetailPage = withErrorHandler(
       discography,
       about: {
         name: artistInfo.name,
-        followers: artistInfo.followers,
+        followers,
         imagePublicId: artistInfo.imagePublicId,
         description: artistInfo.description,
       },
