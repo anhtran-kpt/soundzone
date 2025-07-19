@@ -5,5 +5,6 @@ export const artistEndpoints = {
   followers: (artistSlug: string) => `/artists/${artistSlug}/followers`,
   detail: (artistSlug: string) => `/artists/${artistSlug}/detail`,
   discography: (artistSlug: string) => `/artists/${artistSlug}/discography`,
+  banner: (artistSlug: string) => `/artists/${artistSlug}/banner`,
   popularTracks: (artistSlug: string) => `/artists/${artistSlug}/popularTracks`,
 };

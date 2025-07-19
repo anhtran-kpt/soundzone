@@ -9,6 +9,8 @@ export const artistKeys = {
     [...artistKeys.artist(artistSlug), "followers"] as const,
   discography: (artistSlug: string) =>
     [...artistKeys.artist(artistSlug), "discography"] as const,
+  banner: (artistSlug: string) =>
+    [...artistKeys.artist(artistSlug), "banner"] as const,
   popularTracks: (artistSlug: string) =>
     [...artistKeys.artist(artistSlug), "popularTracks"] as const,
 };

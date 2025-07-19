@@ -1,4 +1,4 @@
-import ArtistDetail from "@/components/pages/artist-detail";
+import { ArtistBanner } from "@/components/sections/artist-banner";
 
 export default async function ArtistDetailPage({
   params,
@@ -7,5 +7,9 @@ export default async function ArtistDetailPage({
 }) {
   const { artistSlug } = await params;
 
-  return <ArtistDetail artistSlug={artistSlug} />;
+  return (
+    <>
+      <ArtistBanner artistSlug={artistSlug} />
+    </>
+  );
 }
