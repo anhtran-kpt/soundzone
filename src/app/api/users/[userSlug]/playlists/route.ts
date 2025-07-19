@@ -1,4 +1,4 @@
-import { getPlaylists } from "@/app/actions/user";
+import { getPlaylists } from "@/entities/user/actions";
 import { withApiHandler } from "@/lib/api/api-handler";
 import { NextRequest } from "next/server";
 

@@ -16,6 +16,11 @@ export const getPlaylists = withErrorHandler(async (userSlug: string) => {
       coverPublicId: true,
       slug: true,
       id: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 

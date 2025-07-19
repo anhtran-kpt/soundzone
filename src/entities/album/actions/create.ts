@@ -1,11 +1,11 @@
 "use server";
 
-import { CreateAlbumInput } from "@/features/album/album-schemas";
-import { withErrorHandler } from "../shared/with-error-handler";
+import { CreateAlbumInput } from "@/entities/album/album-schemas";
+import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import db from "@/lib/prisma/db";
 import { emptyToNull } from "@/lib/utils";
 
-export const createAlbum = withErrorHandler(async (data: CreateAlbumInput) => {
+export const create = withErrorHandler(async (data: CreateAlbumInput) => {
   const { title, releaseDate, releaseType, coverPublicId, artistId, tracks } =
     data;
 

@@ -8,7 +8,7 @@ export const getFollowingArtists = withErrorHandler(
   async (userSlug: string) => {
     const user = await isEntityExists("user", "slug", userSlug);
 
-    const artists = await db.artist.findMany({
+    return await db.artist.findMany({
       where: {
         followers: {
           some: {
@@ -23,7 +23,5 @@ export const getFollowingArtists = withErrorHandler(
         id: true,
       },
     });
-
-    return artists;
   }
 );

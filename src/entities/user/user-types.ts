@@ -1,9 +1,6 @@
-import {
-  getArtistDiscography,
-  getArtistFollowers,
-  getArtistInfo,
-  getArtistPopularTracks,
-} from "@/entities/artist/actions";
-import { getPlaylists } from "./actions";
+import { getFollowingArtists, getPlaylists } from "./actions";
 
 export type TUserPlaylist = Awaited<ReturnType<typeof getPlaylists>>;
+export type TUserFollowingArtists = Awaited<
+  ReturnType<typeof getFollowingArtists>
+>;

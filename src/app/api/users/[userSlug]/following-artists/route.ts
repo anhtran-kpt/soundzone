@@ -1,4 +1,4 @@
-import { getFollowingArtists } from "@/app/actions/user";
+import { getFollowingArtists } from "@/entities/user/actions";
 import { withApiHandler } from "@/lib/api/api-handler";
 import { NextRequest } from "next/server";
 

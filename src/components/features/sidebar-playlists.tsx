@@ -8,6 +8,9 @@ import {
   SidebarMenuSkeleton,
 } from "../ui/sidebar";
 import ErrorMessage from "./error-message";
+import Link from "next/link";
+import { CardTitle } from "../ui/card-title";
+import Dot from "../ui/dot";
 
 export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
   const { data: playlists, isLoading, error } = usePlaylists(userSlug);
@@ -49,8 +52,12 @@ export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
                 <CardTitle title={playlist.title} />
                 <div className="text-muted-foreground text-xs flex items-center gap-1">
                   Playlist
-                  <Dot />
-                  {session?.user.name}
+                  {playlist.user && (
+                    <>
+                      <Dot />
+                      playlist.user.name
+                    </>
+                  )}
                 </div>
               </div>
             </Link>
