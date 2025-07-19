@@ -1,5 +1,3 @@
-"use server";
-
 export function withErrorHandler<TArgs extends unknown[], TResult>(
   actionOrHandler: string | ((...args: TArgs) => Promise<TResult>),
   maybeHandler?: (...args: TArgs) => Promise<TResult>

@@ -16,14 +16,16 @@ export const pageKeys = {
 export const userKeys = {
   all: ["users"] as const,
   userDetail: (userSlug: string) => [...userKeys.all, userSlug] as const,
-  sidebar: (userSlug: string) =>
-    [...userKeys.userDetail(userSlug), "sidebar"] as const,
+  playlists: (userSlug: string) =>
+    [...userKeys.all, userSlug, "playlists"] as const,
+  followingArtists: (userSlug: string) =>
+    [...userKeys.all, userSlug, "followingArtists"] as const,
 };
 
 export const artistKeys = {
   all: ["artist"] as const,
   artistDetail: (artistSlug: string) =>
     [...artistKeys.all, artistSlug] as const,
-  sidebar: (artistSlug: string) =>
-    [...artistKeys.artistDetail(artistSlug), "sidebar"] as const,
+  isFollowing: (artistSlug: string) =>
+    [...artistKeys.all, artistSlug, "is-following"] as const,
 };

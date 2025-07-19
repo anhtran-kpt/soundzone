@@ -11,9 +11,15 @@ export const endpoints = {
     bySlug: (userSlug: string) => `/users/${userSlug}`,
     profile: (userSlug: string) => `/users/${userSlug}/profile`,
     playlists: (userSlug: string) => `/users/${userSlug}/playlists`,
+    playlistDetail: ({
+      userSlug,
+      playlistSlug,
+    }: {
+      userSlug: string;
+      playlistSlug: string;
+    }) => `/users/${userSlug}/playlists/${playlistSlug}`,
     followingArtists: (userSlug: string) =>
       `/users/${userSlug}/following-artists`,
-    sidebar: (userSlug: string) => `/users/${userSlug}/sidebar`,
   },
   artist: {
     base: "/artists",
@@ -21,6 +27,7 @@ export const endpoints = {
     albums: (slug: string) => `/artists/${slug}/albums`,
     follow: (slug: string) => `/artists/${slug}/follow`,
     unfollow: (slug: string) => `/artists/${slug}/unfollow`,
+    isFollowing: (artistSlug: string) => `/artists/${artistSlug}/is-following`,
   },
   album: {
     base: "/albums",
@@ -28,6 +35,7 @@ export const endpoints = {
   },
   playlist: {
     base: "/playlists",
+    create: () => "/playlists",
     bySlug: (slug: string) => `/playlists/${slug}`,
   },
 };

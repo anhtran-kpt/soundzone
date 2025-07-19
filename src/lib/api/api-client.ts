@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 import { ApiResponse } from "./api";
-import { PaginationParams } from "@/features/shared";
+import { PaginationParams } from "@/types/shared";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
