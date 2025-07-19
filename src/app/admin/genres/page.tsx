@@ -1,4 +1,4 @@
-import { getQueryClient } from "@/lib/tanstack-query/get-query-client";
+import { getQueryClient } from "@/lib/get-query-client";
 import { prefetchGenres } from "@/lib/prefetchers";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Genres } from "@/components/admin/genre";

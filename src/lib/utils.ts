@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import slugify from "slugify";
 import { DEFAULT_PARAMS, SLUG_OPTIONS } from "./constants";
-import { PaginationParams } from "@/features/shared";
+import { PaginationParams } from "@/entities/shared/shared-types";
 import { NextRequest } from "next/server";
 
 export function cn(...inputs: ClassValue[]) {

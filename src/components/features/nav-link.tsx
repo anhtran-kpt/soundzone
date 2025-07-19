@@ -1,4 +1,4 @@
-import { getQueryClient } from "@/lib/tanstack-query/get-query-client";
+import { getQueryClient } from "@/lib/get-query-client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ReactNode } from "react";

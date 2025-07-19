@@ -1,5 +1,5 @@
 import { prefetchArtist } from "@/lib/prefetchers";
-import { getQueryClient } from "@/lib/tanstack-query/get-query-client";
+import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { NewAlbumPage } from "@/components/admin/album/new-album-page";
 

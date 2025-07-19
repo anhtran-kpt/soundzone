@@ -3,7 +3,7 @@
 import db from "@/lib/prisma/db";
 import { withErrorHandler } from "../shared/with-error-handler";
 import { comparePasswords } from "@/lib/next-auth";
-import { SignInInput, signInSchema } from "@/schemas/user";
+import { SignInInput, signInSchema } from "@/entities/user/user-schemas";
 
 export const signIn = withErrorHandler(async (input: SignInInput) => {
   const data = signInSchema.parse(input);
