@@ -5,7 +5,7 @@ import db from "@/lib/prisma/db";
 import { isEntityExists } from "@/entities/shared/is-entity-exists";
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 
-export const getArtistDiscography = withErrorHandler(
+export const getDiscography = withErrorHandler(
   async (artistSlug: string, params: PaginationParams) => {
     const { page, limit } = params;
     const skip = (page - 1) * limit;

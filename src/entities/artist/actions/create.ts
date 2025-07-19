@@ -2,4 +2,4 @@
 
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 
-export const updateArtist = withErrorHandler(async () => {});
+export const create = withErrorHandler(async () => {});

@@ -6,7 +6,7 @@ import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
 
-export const getArtistPopularTracks = withErrorHandler(
+export const getPopularTracks = withErrorHandler(
   async (artistSlug: string, params: PaginationParams) => {
     const { page, limit } = params;
     const skip = (page - 1) * limit;

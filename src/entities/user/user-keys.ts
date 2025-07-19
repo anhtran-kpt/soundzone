@@ -1,16 +1,10 @@
-export const artistKeys = {
-  all: ["artists"] as const,
-  artist: (artistSlug: string) => [...artistKeys.all, artistSlug] as const,
-  info: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "info"] as const,
-  detail: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "detail"] as const,
-  followers: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "followers"] as const,
-  discography: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "discography"] as const,
-  banner: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "banner"] as const,
-  popularTracks: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "popularTracks"] as const,
+export const userKeys = {
+  all: ["users"] as const,
+  user: (userSlug: string) => [...userKeys.all, userSlug] as const,
+  info: (userSlug: string) => [...userKeys.user(userSlug), "info"] as const,
+  detail: (userSlug: string) => [...userKeys.user(userSlug), "detail"] as const,
+  followingArtists: (userSlug: string) =>
+    [...userKeys.user(userSlug), "followingArtists"] as const,
+  playlists: (userSlug: string) =>
+    [...userKeys.user(userSlug), "playlists"] as const,
 };

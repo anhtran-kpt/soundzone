@@ -1,10 +1,8 @@
-export const artistEndpoints = {
-  all: "/artists",
-  artist: (artistSlug: string) => `/artists/${artistSlug}`,
-  info: (artistSlug: string) => `/artists/${artistSlug}/info`,
-  followers: (artistSlug: string) => `/artists/${artistSlug}/followers`,
-  detail: (artistSlug: string) => `/artists/${artistSlug}/detail`,
-  discography: (artistSlug: string) => `/artists/${artistSlug}/discography`,
-  banner: (artistSlug: string) => `/artists/${artistSlug}/banner`,
-  popularTracks: (artistSlug: string) => `/artists/${artistSlug}/popularTracks`,
+export const userEndpoints = {
+  all: "/users",
+  user: (userSlug: string) => `/users/${userSlug}`,
+  info: (userSlug: string) => `/users/${userSlug}/info`,
+  detail: (userSlug: string) => `/users/${userSlug}/detail`,
+  playlists: (userSlug: string) => `/users/${userSlug}/playlists`,
+  followingArtists: (userSlug: string) => `/users/${userSlug}/followingArtists`,
 };

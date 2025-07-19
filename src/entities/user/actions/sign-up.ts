@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/prisma/db";
-import { withErrorHandler } from "../shared/with-error-handler";
+import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { hashPassword } from "@/lib/next-auth";
 import { SignUpInput, signUpSchema } from "@/entities/user/user-schemas";
 

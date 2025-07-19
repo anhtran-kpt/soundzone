@@ -3,7 +3,7 @@
 import db from "@/lib/prisma/db";
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 
-export const getArtistInfo = withErrorHandler(async (artistSlug: string) => {
+export const getInfo = withErrorHandler(async (artistSlug: string) => {
   const artist = await db.artist.findUnique({
     where: { slug: artistSlug },
     include: {
