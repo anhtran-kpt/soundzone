@@ -5,7 +5,7 @@ import db from "@/lib/prisma/db";
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { isEntityExists } from "@/entities/shared/is-entity-exists";
 
-export const unfollowArtist = withErrorHandler(async (artistSlug: string) => {
+export const unfollow = withErrorHandler(async (artistSlug: string) => {
   const session = await requireAuth();
   const artist = await isEntityExists("artist", "slug", artistSlug);
 

@@ -4,7 +4,7 @@ import { artistKeys } from "../artist-keys";
 import { useQuery } from "@tanstack/react-query";
 import { TArtistInfo } from "../artist-types";
 
-export const useArtistInfo = (artistSlug: string) => {
+export const useInfo = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.info(artistSlug),
     queryFn: fetcher<TArtistInfo>(artistEndpoints.info(artistSlug)),

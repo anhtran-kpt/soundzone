@@ -12,5 +12,5 @@ export const artistKeys = {
   banner: (artistSlug: string) =>
     [...artistKeys.artist(artistSlug), "banner"] as const,
   popularTracks: (artistSlug: string) =>
-    [...artistKeys.artist(artistSlug), "popularTracks"] as const,
+    [...artistKeys.artist(artistSlug), "popular-tracks"] as const,
 };

@@ -18,8 +18,8 @@ export const TrackList = ({ tracks }: TrackListProps) => {
   const { playTrack, currentTrack } = useAudioPlayer();
   const isPlaying = useIsPlaying();
 
-  if (tracks.length === 0) {
-    return <div>No tracks found.</div>;
+  if (!tracks) {
+    return <TrackListSkeleton />;
   }
 
   return (

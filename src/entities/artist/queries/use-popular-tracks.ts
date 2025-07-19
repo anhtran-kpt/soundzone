@@ -4,7 +4,7 @@ import { artistKeys } from "../artist-keys";
 import { useQuery } from "@tanstack/react-query";
 import { TArtistPopularTracks } from "../artist-types";
 
-export const useArtistPopularTracks = (artistSlug: string) => {
+export const usePopularTracks = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.popularTracks(artistSlug),
     queryFn: fetcher<TArtistPopularTracks>(

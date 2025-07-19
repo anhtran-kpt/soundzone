@@ -4,7 +4,7 @@ import fetcher from "@/lib/api/fetcher";
 import { artistEndpoints } from "../artist-endpoints";
 import { TArtistBanner } from "../artist-types";
 
-export const useArtistBanner = (artistSlug: string) => {
+export const useBanner = (artistSlug: string) => {
   return useQuery({
     queryKey: artistKeys.banner(artistSlug),
     queryFn: fetcher<TArtistBanner>(artistEndpoints.banner(artistSlug)),

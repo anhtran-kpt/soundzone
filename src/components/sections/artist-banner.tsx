@@ -1,13 +1,13 @@
 "use client";
 
-import { useArtistBanner } from "@/entities/artist/queries";
+import { useBanner } from "@/entities/artist/queries";
 import ErrorMessage from "../features/error-message";
 import { BadgeCheckIcon } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 import { Skeleton } from "../ui/skeleton";
 
 export const ArtistBanner = ({ artistSlug }: { artistSlug: string }) => {
-  const { data, isLoading, error } = useArtistBanner(artistSlug);
+  const { data, isLoading, error } = useBanner(artistSlug);
 
   if (isLoading) {
     return <ArtistBannerSkeleton />;

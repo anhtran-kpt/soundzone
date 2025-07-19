@@ -1,4 +1,5 @@
 import { ArtistBanner } from "@/components/sections/artist-banner";
+import { PopularTracks } from "@/components/sections/popular-tracks";
 
 export default async function ArtistDetailPage({
   params,
@@ -10,6 +11,7 @@ export default async function ArtistDetailPage({
   return (
     <>
       <ArtistBanner artistSlug={artistSlug} />
+      <PopularTracks artistSlug={artistSlug} />
     </>
   );
 }
