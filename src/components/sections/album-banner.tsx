@@ -6,11 +6,15 @@ import { getYear } from "date-fns";
 import pretterMs from "pretty-ms";
 import { useMemo, useState, useEffect } from "react";
 import { FastAverageColor } from "fast-average-color";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBanner } from "@/entities/album/queries";
+import { TAlbumSlugs } from "@/entities/album/album-types";
+import ErrorMessage from "../features/error-message";
+import { NavLink } from "../features/nav-link";
 
-export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
+export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
+  const { data: album, status, error } = useBanner({ artistSlug, albumSlug });
+
   const fac = useMemo(() => new FastAverageColor(), []);
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -32,6 +36,14 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
     }
   }, [imageUrl, fac]);
 
+  if (status === "pending") {
+    return <AlbumBannerSkeleton />;
+  }
+
+  if (status === "error") {
+    return <ErrorMessage error={error} />;
+  }
+
   return (
     <section>
       <div className="relative h-80">
@@ -39,10 +51,10 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
           className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-b from-[var(--tw-gradient-from)] to-[var(--tw-gradient-to)]"
           style={
             bannerColor
-              ? {
+              ? ({
                   "--tw-gradient-from": `${bannerColor}00`,
                   "--tw-gradient-to": bannerColor,
-                }
+                } as React.CSSProperties)
               : undefined
           }
         />
@@ -71,14 +83,9 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
                   className="object-cover rounded-full"
                 />
               </div>
-              <Button type="button" variant="link" asChild>
-                <Link
-                  className="font-medium"
-                  href={`/artists/${album.artist.slug}`}
-                >
-                  {album.artist.name}
-                </Link>
-              </Button>
+              <NavLink href={`/artists/${artistSlug}`}>
+                {album.artist.name}
+              </NavLink>
               <Dot />
               <span>{getYear(album.releaseDate)}</span>
               <Dot />
@@ -96,7 +103,7 @@ export const AlbumBannerSection = ({ albumSlug }: { albumSlug: string }) => {
   );
 };
 
-export const AlbumBannerSectionSkeleton = () => {
+export const AlbumBannerSkeleton = () => {
   return (
     <section>
       <div className="relative h-80">
@@ -113,9 +120,7 @@ export const AlbumBannerSectionSkeleton = () => {
                 <Skeleton className="size-8 rounded-full" />
               </div>
               <Skeleton className="h-4 w-16" />
-
               <Skeleton className="h-4 w-16" />
-
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-16" />

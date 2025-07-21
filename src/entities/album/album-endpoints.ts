@@ -1,9 +1,9 @@
+import { TAlbumSlugs } from "./album-types";
+
 export const albumEndpoints = {
-  all: "/albums",
-  album: (albumSlug: string) => `/albums/${albumSlug}`,
-  info: (albumSlug: string) => `/albums/${albumSlug}/info`,
-  followers: (albumSlug: string) => `/albums/${albumSlug}/followers`,
-  detail: (albumSlug: string) => `/albums/${albumSlug}/detail`,
-  discography: (albumSlug: string) => `/albums/${albumSlug}/discography`,
-  banner: (albumSlug: string) => `/albums/${albumSlug}/banner`,
+  all: ({ artistSlug }: TAlbumSlugs) => `/artists/${artistSlug}/albums`,
+  album: ({ artistSlug, albumSlug }: TAlbumSlugs) =>
+    `/artists/${artistSlug}albums/${albumSlug}`,
+  banner: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
+    `/artists/${artistSlug}/albums/${albumSlug}/banner`,
 };
