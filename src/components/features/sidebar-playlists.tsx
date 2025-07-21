@@ -9,7 +9,7 @@ import {
 } from "../ui/sidebar";
 import ErrorMessage from "./error-message";
 import Link from "next/link";
-import { CardTitle } from "../ui/card-title";
+import { Title } from "../ui/title";
 import Dot from "../ui/dot";
 import { CldImage } from "next-cloudinary";
 import { FALLBACK_IMAGE } from "@/lib/constants";
@@ -51,7 +51,7 @@ export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
                 />
               </div>
               <div className="space-y-0.5">
-                <CardTitle title={playlist.title} />
+                <Title title={playlist.title} />
                 <div className="text-muted-foreground text-xs flex items-center gap-1">
                   Playlist
                   {playlist.user && (

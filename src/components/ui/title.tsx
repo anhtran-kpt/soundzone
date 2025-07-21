@@ -3,7 +3,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-export const CardTitle = ({
+export const Title = ({
   title,
   isActive,
 }: {
@@ -22,6 +22,6 @@ export const CardTitle = ({
   );
 };
 
-export const CardTitleSkeleton = () => {
+export const TitleSkeleton = () => {
   return <Skeleton className="h-4 w-32" />;
 };

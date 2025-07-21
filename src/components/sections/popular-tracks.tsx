@@ -9,11 +9,11 @@ export const PopularTracks = ({ artistSlug }: { artistSlug: string }) => {
   const { data, isLoading, error } = usePopularTracks(artistSlug);
 
   if (isLoading) {
-    <PopularTracksSkeleton />;
+    return <PopularTracksSkeleton />;
   }
 
   if (error) {
-    <ErrorMessage error={error} />;
+    return <ErrorMessage error={error} />;
   }
 
   console.log(data);

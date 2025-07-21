@@ -9,7 +9,7 @@ import {
 } from "../ui/sidebar";
 import ErrorMessage from "./error-message";
 import Link from "next/link";
-import { CardTitle } from "../ui/card-title";
+import { Title } from "../ui/title";
 import { ArtistImage } from "./artist-image";
 
 export const SidebarFollowingArtists = ({ userSlug }: { userSlug: string }) => {
@@ -44,7 +44,7 @@ export const SidebarFollowingArtists = ({ userSlug }: { userSlug: string }) => {
                 size="small"
               />
               <div className="space-y-0.5">
-                <CardTitle title={artist.name} />
+                <Title title={artist.name} />
                 <p className="text-muted-foreground text-xs">Artist</p>
               </div>
             </Link>

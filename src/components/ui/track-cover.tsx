@@ -4,16 +4,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CldImage } from "next-cloudinary";
 
 interface TrackCoverProps {
-  size?: "md" | "lg";
+  type?: "list" | "player";
   alt: string;
   publicId: string;
 }
 
-export const TrackCover = ({ size = "md", alt, publicId }: TrackCoverProps) => {
+export const TrackCover = ({
+  type = "list",
+  alt,
+  publicId,
+}: TrackCoverProps) => {
   return (
     <div
       className={`relative ${
-        size === "md" ? "size-12" : "size-16"
+        type === "list" ? "size-12" : "size-16"
       } shrink-0 overflow-hidden aspect-square`}
     >
       <CldImage
@@ -21,23 +25,23 @@ export const TrackCover = ({ size = "md", alt, publicId }: TrackCoverProps) => {
         alt={alt}
         fill
         className="rounded-md object-cover"
-        sizes={size === "md" ? "48px" : "64px"}
+        sizes={type === "list" ? "48px" : "64px"}
         priority
       />
     </div>
   );
 };
 
-export const TrackCoverSkeleton = ({ size }: Pick<TrackCoverProps, "size">) => {
+export const TrackCoverSkeleton = ({ type }: Pick<TrackCoverProps, "type">) => {
   return (
     <div
       className={`relative ${
-        size === "md" ? "size-12" : "size-16"
+        type === "list" ? "size-12" : "size-16"
       } shrink-0 overflow-hidden aspect-square`}
     >
       <Skeleton
         className={`${
-          size === "md" ? "size-12" : "size-16"
+          type === "list" ? "size-12" : "size-16"
         } aspect-square rounded-md`}
       />
     </div>

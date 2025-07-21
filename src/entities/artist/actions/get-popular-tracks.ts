@@ -26,13 +26,18 @@ export const getPopularTracks = withErrorHandler(
       },
       include: {
         album: {
-          select: { slug: true },
+          select: { slug: true, coverPublicId: true },
         },
         artists: {
           select: {
             artist: {
               select: { slug: true, name: true },
             },
+          },
+        },
+        _count: {
+          select: {
+            playHistory: true,
           },
         },
       },

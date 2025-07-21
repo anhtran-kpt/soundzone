@@ -40,9 +40,9 @@ export function Sidebar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
-  const userSlug = session?.user.slug ?? "";
+  const userSlug = session?.user.slug;
 
-  const { mutateAsync: createPlaylist } = useCreateUserPlaylist(userSlug);
+  const { mutateAsync: createPlaylist } = useCreateUserPlaylist(userSlug ?? "");
 
   return (
     <ShadcnSidebar collapsible="icon">
@@ -81,8 +81,8 @@ export function Sidebar() {
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
-                <SidebarPlaylists userSlug={userSlug} />
-                <SidebarFollowingArtists userSlug={userSlug} />
+                {userSlug && <SidebarPlaylists userSlug={userSlug} />}
+                {userSlug && <SidebarFollowingArtists userSlug={userSlug} />}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

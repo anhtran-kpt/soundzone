@@ -16,9 +16,12 @@ import {
   useAudioPlayer,
 } from "@/hooks/use-audio-player";
 import PlayerControls from "./player-controls";
-import { TrackCard } from "@/components/ui/track-card";
 import ProgressBar from "./progress-bar";
 import VolumeControl from "./volume-control";
+import { TrackCover } from "../ui/track-cover";
+import { Title } from "../ui/title";
+import ExplicitIcon from "../ui/explicit-icon";
+import { NavLink } from "./nav-link";
 
 function AudioPlayer() {
   const player = useAudioPlayer();
@@ -34,7 +37,26 @@ function AudioPlayer() {
     <div className="fixed bottom-0 left-0 w-full bg-accent z-50 px-4 py-2">
       <div className="flex items-center justify-between gap-12">
         <div className="flex items-center">
-          <TrackCard track={player.currentTrack} />
+          <div className="flex items-center gap-3 grow min-w-0">
+            <TrackCover
+              publicId={player.currentTrack.album.coverPublicId}
+              alt={player.currentTrack.title}
+            />
+            <div className="flex flex-col gap-0.5 w-full overflow-hidden">
+              <Title title={player.currentTrack.title} isActive={true} />
+              <div className="flex items-center text-sm gap-x-1 text-muted-foreground truncate">
+                {player.currentTrack.isExplicit && <ExplicitIcon />}
+                {player.currentTrack.artists.map((artist, index) => (
+                  <span key={artist.slug}>
+                    <NavLink href={`/artists/${artist.slug}`}>
+                      {artist.name}
+                    </NavLink>
+                    {index < player.currentTrack.artists.length - 1 && ", "}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="ml-6 space-x-2">
             <Button variant="ghost" size="icon" className="">
               <HeartIcon className="size-4" />
