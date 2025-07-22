@@ -65,7 +65,7 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
                   <span key={artist.slug}>
                     <NavLink
                       href={`/artists/${artist.slug}`}
-                      className="text-13px"
+                      className="text-[calc(13rem/16)]"
                     >
                       {artist.name}
                     </NavLink>

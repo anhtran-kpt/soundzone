@@ -12,7 +12,7 @@ export default async function AlbumDetailPage({
   return (
     <>
       <AlbumBanner artistSlug={artistSlug} albumSlug={albumSlug} />
-      <AlbumActions />
+      <AlbumActions artistSlug={artistSlug} albumSlug={albumSlug} />
       <AlbumTracks artistSlug={artistSlug} albumSlug={albumSlug} />
     </>
   );

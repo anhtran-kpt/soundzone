@@ -9,4 +9,6 @@ export const albumKeys = {
     [...albumKeys.album({ artistSlug, albumSlug }), "banner"] as const,
   tracks: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
     [...albumKeys.album({ artistSlug, albumSlug }), "tracks"] as const,
+  actions: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
+    [...albumKeys.album({ artistSlug, albumSlug }), "actions"] as const,
 };

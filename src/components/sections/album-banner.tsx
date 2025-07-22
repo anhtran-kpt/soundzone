@@ -2,7 +2,7 @@
 
 import { CldImage } from "next-cloudinary";
 import Dot from "@/components/ui/dot";
-import { getYear } from "date-fns";
+import { formatDate } from "date-fns";
 import pretterMs from "pretty-ms";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -41,13 +41,13 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
           }
         />
         <div className="flex gap-5 absolute left-0 bottom-6 items-end">
-          <div className="relative size-48 rounded-lg">
+          <div className="relative size-48 rounded-sm">
             <CldImage
               src={album.coverPublicId}
               alt={album.title}
               fill
               sizes="192px"
-              className="object-cover rounded-lg"
+              className="object-cover rounded-sm"
               onLoad={(e) => setImageUrl((e.target as HTMLImageElement).src)}
               priority
             />
@@ -56,22 +56,24 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
             <h3>{album.releaseType === "SINGLE" ? "Single" : "Album"}</h3>
             <h2 className="font-bold text-5xl mt-1 mb-4">{album.title}</h2>
             <div className="inline-flex items-center gap-2">
-              <div className="relative size-8 rounded-full">
+              <div className="relative size-6 rounded-full">
                 <CldImage
                   src={album.artist.imagePublicId}
                   alt={album.artist.name}
                   fill
-                  sizes="32px"
+                  sizes="24px"
                   className="object-cover rounded-full"
                 />
               </div>
-              <NavLink href={`/artists/${artistSlug}`}>
+              <NavLink href={`/artists/${artistSlug}`} className="text-sm">
                 {album.artist.name}
               </NavLink>
               <Dot />
-              <span>{getYear(album.releaseDate)}</span>
+              <span className="text-muted-foreground">
+                {formatDate(album.releaseDate, "PP")}
+              </span>
               <Dot />
-              <span>
+              <span className="text-muted-foreground">
                 {album.tracks.length > 1
                   ? `${album.tracks.length} songs`
                   : `1 song`}
@@ -94,9 +96,9 @@ export const AlbumBannerSkeleton = () => {
           <div className="relative size-48 rounded-lg">
             <Skeleton className="size-48 rounded-lg" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-4">
             <Skeleton className="h-4 w-8" />
-            <Skeleton className="font-bold text-5xl mt-1 mb-4" />
+            <Skeleton className="w-32 h-12 mt-1 mb-4" />
             <div className="inline-flex items-center gap-2">
               <div className="relative size-8 rounded-full">
                 <Skeleton className="size-8 rounded-full" />

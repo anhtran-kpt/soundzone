@@ -8,8 +8,26 @@ import {
   ShuffleIcon,
 } from "lucide-react";
 import { IconButton } from "../features/icon-button";
+import { useActions } from "@/entities/album/queries";
+import ErrorMessage from "../features/error-message";
 
-export const AlbumActions = () => {
+export const AlbumActions = ({
+  albumSlug,
+  artistSlug,
+}: {
+  albumSlug: string;
+  artistSlug: string;
+}) => {
+  const { data: album, status, error } = useActions({ albumSlug, artistSlug });
+
+  if (status === "pending") {
+    return <AlbumActionsSkeleton />;
+  }
+
+  if (status === "error") {
+    return <ErrorMessage error={error} />;
+  }
+
   return (
     <section className="flex items-center gap-5">
       <IconButton
@@ -17,11 +35,44 @@ export const AlbumActions = () => {
         size="xl"
         className="bg-primary p-3.5"
         iconClassName="stroke-0 fill-foreground"
+        tooltipContent={"Play this album"}
       />
-      <IconButton icon={ShuffleIcon} size="xl" />
-      <IconButton icon={PlusCircle} size="xl" />
-      <IconButton icon={DownloadIcon} size="xl" />
-      <IconButton icon={EllipsisIcon} size="xl" />
+      <IconButton
+        icon={ShuffleIcon}
+        size="xl"
+        tooltipContent={
+          <>
+            Enable shuffle for <strong>{album.title}</strong>
+          </>
+        }
+      />
+      <IconButton
+        icon={PlusCircle}
+        size="xl"
+        tooltipContent={
+          <>
+            Save to <strong>Your Library</strong>
+          </>
+        }
+      />
+      <IconButton
+        icon={DownloadIcon}
+        size="xl"
+        tooltipContent={
+          <>
+            Download <strong>{album.title}</strong>
+          </>
+        }
+      />
+      <IconButton
+        icon={EllipsisIcon}
+        size="xl"
+        tooltipContent={
+          <>
+            More options for <strong>{album.title}</strong>
+          </>
+        }
+      />
     </section>
   );
 };
