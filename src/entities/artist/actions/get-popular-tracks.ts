@@ -52,7 +52,11 @@ export const getPopularTracks = withErrorHandler(
 
     return tracks.map((track) => ({
       ...track,
-      artists: flattenRelation(track.artists, "artist"),
+      coverPublicId: track.album.coverPublicId,
+      artists: flattenRelation(track.artists, "artist").filter(
+        (artist) => artist.slug !== artistSlug
+      ),
+      plays: track._count.playHistory,
     }));
   }
 );

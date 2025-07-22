@@ -35,7 +35,7 @@ export const ArtistBanner = ({ artistSlug }: { artistSlug: string }) => {
           }
         />
         <div className="absolute left-12 bottom-6 flex items-end gap-5">
-          <div className="relative rounded-full overflow-hidden size-48">
+          <div className="relative rounded-full overflow-hidden size-48 border-2 border-foreground">
             <CldImage
               src={artist.imagePublicId}
               alt={artist.name}
@@ -64,7 +64,7 @@ export const ArtistBannerSkeleton = () => {
   return (
     <section>
       <div className="relative h-96 -mx-12 -mt-21">
-        <Skeleton className="w-full h-full" />
+        <Skeleton className="w-full h-full rounded-none" />
         <div className="flex flex-col gap-4 absolute left-12 bottom-6 text-white">
           <Skeleton className="w-20 h-4" />
           <Skeleton className="w-32 h-12" />

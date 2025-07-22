@@ -1,8 +1,8 @@
-import { artistEndpoints } from "../artist-endpoints";
 import fetcher from "@/lib/api/fetcher";
-import { artistKeys } from "../artist-keys";
 import { useQuery } from "@tanstack/react-query";
-import { TPopularTracks } from "../artist-types";
+import { TPopularTracks } from "../track-types";
+import { artistKeys } from "@/entities/artist/artist-keys";
+import { artistEndpoints } from "@/entities/artist/artist-endpoints";
 
 export const usePopularTracks = (artistSlug: string) => {
   return useQuery({

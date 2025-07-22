@@ -1,27 +1,26 @@
 "use client";
 
-import { TrackList, TrackListSkeleton } from "@/components/ui/track-list";
 import SectionHeading from "@/components/ui/section-heading";
 import { usePopularTracks } from "@/entities/artist/queries";
 import ErrorMessage from "../features/error-message";
+import { TrackGrid } from "../features/track-grid";
+import { TrackListSkeleton } from "../ui/track-list";
 
 export const PopularTracks = ({ artistSlug }: { artistSlug: string }) => {
-  const { data, isLoading, error } = usePopularTracks(artistSlug);
+  const { data, status, error } = usePopularTracks(artistSlug);
 
-  if (isLoading) {
+  if (status === "pending") {
     return <PopularTracksSkeleton />;
   }
 
-  if (error) {
+  if (status === "error") {
     return <ErrorMessage error={error} />;
   }
-
-  console.log(data);
 
   return (
     <section>
       <SectionHeading heading="Popular" />
-      <TrackList tracks={data} />
+      <TrackGrid type="popular" tracks={data} />
     </section>
   );
 };
