@@ -13,7 +13,7 @@ export const Title = ({
   return (
     <p
       className={cn(
-        "font-medium text-[0.925rem] truncate text-foreground",
+        "font-medium text-base truncate text-foreground",
         isActive && "text-primary"
       )}
     >

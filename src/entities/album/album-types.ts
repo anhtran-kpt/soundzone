@@ -1,4 +1,4 @@
-import { create, getBanner } from "./actions";
+import { create, getBanner, getTracks } from "./actions";
 
 export type TAlbumSlugs = {
   albumSlug?: string;
@@ -7,3 +7,4 @@ export type TAlbumSlugs = {
 
 export type TCreateAlbum = Awaited<ReturnType<typeof create>>;
 export type TGetAlbumBanner = Awaited<ReturnType<typeof getBanner>>;
+export type TGetAlbumTracks = Awaited<ReturnType<typeof getTracks>>;

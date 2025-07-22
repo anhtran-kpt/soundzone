@@ -24,7 +24,7 @@ export const TrackCover = ({
         src={publicId}
         alt={alt}
         fill
-        className="rounded-md object-cover"
+        className="rounded-sm object-cover"
         sizes={type === "list" ? "48px" : "64px"}
         priority
       />
@@ -42,7 +42,7 @@ export const TrackCoverSkeleton = ({ type }: Pick<TrackCoverProps, "type">) => {
       <Skeleton
         className={`${
           type === "list" ? "size-12" : "size-16"
-        } aspect-square rounded-md`}
+        } aspect-square rounded-sm`}
       />
     </div>
   );

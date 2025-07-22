@@ -4,37 +4,19 @@ import { CldImage } from "next-cloudinary";
 import Dot from "@/components/ui/dot";
 import { getYear } from "date-fns";
 import pretterMs from "pretty-ms";
-import { useMemo, useState, useEffect } from "react";
-import { FastAverageColor } from "fast-average-color";
+import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBanner } from "@/entities/album/queries";
 import { TAlbumSlugs } from "@/entities/album/album-types";
 import ErrorMessage from "../features/error-message";
 import { NavLink } from "../features/nav-link";
+import { useImageGradient } from "@/hooks/use-image-gradient";
 
 export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
   const { data: album, status, error } = useBanner({ artistSlug, albumSlug });
 
-  const fac = useMemo(() => new FastAverageColor(), []);
-
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [bannerColor, setBannerColor] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (imageUrl) {
-      fac
-        .getColorAsync(imageUrl, {
-          algorithm: "sqrt",
-          ignoredColor: [
-            [255, 255, 255, 255],
-            [0, 0, 0, 255],
-          ],
-        })
-        .then((color) => {
-          setBannerColor(color.hex);
-        });
-    }
-  }, [imageUrl, fac]);
+  const { gradient } = useImageGradient(imageUrl);
 
   if (status === "pending") {
     return <AlbumBannerSkeleton />;
@@ -50,10 +32,10 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
         <div
           className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-b from-[var(--tw-gradient-from)] to-[var(--tw-gradient-to)]"
           style={
-            bannerColor
+            gradient
               ? ({
-                  "--tw-gradient-from": `${bannerColor}00`,
-                  "--tw-gradient-to": bannerColor,
+                  "--tw-gradient-from": gradient.from,
+                  "--tw-gradient-to": gradient.to,
                 } as React.CSSProperties)
               : undefined
           }

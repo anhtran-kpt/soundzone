@@ -6,4 +6,6 @@ export const albumEndpoints = {
     `/artists/${artistSlug}albums/${albumSlug}`,
   banner: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
     `/artists/${artistSlug}/albums/${albumSlug}/banner`,
+  tracks: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
+    `/artists/${artistSlug}/albums/${albumSlug}/tracks`,
 };
