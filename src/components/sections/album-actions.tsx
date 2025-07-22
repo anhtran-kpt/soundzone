@@ -35,7 +35,11 @@ export const AlbumActions = ({
         size="xl"
         className="bg-primary p-3.5"
         iconClassName="stroke-0 fill-foreground"
-        tooltipContent={"Play this album"}
+        tooltipContent={
+          <>
+            Play <strong>{album.title}</strong>
+          </>
+        }
       />
       <IconButton
         icon={ShuffleIcon}

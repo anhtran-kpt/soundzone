@@ -10,4 +10,6 @@ export const albumEndpoints = {
     `/artists/${artistSlug}/albums/${albumSlug}/tracks`,
   actions: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
     `/artists/${artistSlug}/albums/${albumSlug}/actions`,
+  discography: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
+    `/artists/${artistSlug}/albums/${albumSlug}/discography`,
 };

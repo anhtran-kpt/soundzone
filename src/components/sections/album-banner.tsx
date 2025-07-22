@@ -69,11 +69,9 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
                 {album.artist.name}
               </NavLink>
               <Dot />
-              <span className="text-muted-foreground">
-                {formatDate(album.releaseDate, "PP")}
-              </span>
+              <span className="">{formatDate(album.releaseDate, "PP")}</span>
               <Dot />
-              <span className="text-muted-foreground">
+              <span className="">
                 {album.tracks.length > 1
                   ? `${album.tracks.length} songs`
                   : `1 song`}

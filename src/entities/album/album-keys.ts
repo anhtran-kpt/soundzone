@@ -11,4 +11,6 @@ export const albumKeys = {
     [...albumKeys.album({ artistSlug, albumSlug }), "tracks"] as const,
   actions: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
     [...albumKeys.album({ artistSlug, albumSlug }), "actions"] as const,
+  discography: ({ albumSlug, artistSlug }: TAlbumSlugs) =>
+    [...albumKeys.album({ artistSlug, albumSlug }), "discography"] as const,
 };

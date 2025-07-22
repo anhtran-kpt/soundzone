@@ -28,7 +28,7 @@ export const NavLink = ({ href, children, className }: NavLinkProps) => {
       onMouseEnter={handleMouseEnter}
       prefetch={true}
       className={cn(
-        "text-xs hover:text-primary hover:underline underline-offset-3 truncate font-medium",
+        "text-[calc(13rem/16)] hover:text-primary hover:underline underline-offset-3 truncate font-medium",
         className
       )}
     >
