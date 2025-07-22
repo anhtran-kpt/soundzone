@@ -2,10 +2,12 @@
 
 import { useTracks } from "@/entities/album/queries";
 import ErrorMessage from "../features/error-message";
-import { TrackCover } from "../ui/track-cover";
 import { Title } from "../ui/title";
 import ExplicitIcon from "../ui/explicit-icon";
 import { NavLink } from "../features/nav-link";
+import { cn, formatDuration } from "@/lib/utils";
+import { IconButton } from "../features/icon-button";
+import { Clock3Icon, EllipsisIcon, PlusCircleIcon } from "lucide-react";
 
 interface AlbumTracksProps {
   albumSlug: string;
@@ -13,6 +15,8 @@ interface AlbumTracksProps {
 }
 
 export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
+  const gridClass =
+    "grid w-full items-center grid-cols-[3rem_1fr_9rem_6rem_4rem_3rem]";
   const { data: tracks, error, status } = useTracks({ albumSlug, artistSlug });
 
   if (status === "pending") {
@@ -26,17 +30,34 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
   return (
     <section>
       <ul role="list" className="space-y-1 w-full">
+        <div
+          className={cn(
+            gridClass,
+            "text-muted-foreground font-medium pb-2 mb-4 border-b border-border pr-6"
+          )}
+        >
+          <div className="text-center">#</div>
+          <div className="pl-2 text-left">Title</div>
+          <div className="text-right">Plays</div>
+          <div className="text-right"></div>
+          <div className="flex justify-end">
+            <Clock3Icon size={16} />
+          </div>
+          <div className=""></div>
+        </div>
         {tracks.map((track, trackIndex) => (
-          <li
+          <div
             key={track.slug}
-            className="py-2 flex items-center hover:bg-muted rounded-sm"
+            className={cn(
+              gridClass,
+              "py-2 pr-6 items-center group hover:bg-muted rounded-sm text-muted-foreground hover:text-foreground"
+            )}
           >
-            <div className="w-14 text-center">
-              <span className="text-base font-semibold text-muted-foreground">
-                {trackIndex + 1}
-              </span>
+            <div className="text-center text-base font-semibold">
+              {trackIndex + 1}
             </div>
-            <div className="flex flex-col gap-0.5">
+
+            <div className="flex flex-col gap-0.5 pl-2">
               <Title title={track.title} />
               <div className="flex gap-1.5 items-center">
                 {!track.isExplicit && <ExplicitIcon />}
@@ -44,7 +65,7 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
                   <span key={artist.slug}>
                     <NavLink
                       href={`/artists/${artist.slug}`}
-                      className="text-sm"
+                      className="text-13px"
                     >
                       {artist.name}
                     </NavLink>
@@ -53,7 +74,36 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
                 ))}
               </div>
             </div>
-          </li>
+
+            <div className="text-right">{track.plays}</div>
+
+            <div className="invisible group-hover:visible text-right">
+              <IconButton
+                icon={PlusCircleIcon}
+                className="text-current"
+                size="sm"
+                tooltipContent={
+                  <>
+                    Add to <strong>Liked Songs</strong>
+                  </>
+                }
+              />
+            </div>
+
+            <div className="text-right">{formatDuration(track.duration)}</div>
+
+            <div className="text-right">
+              <IconButton
+                icon={EllipsisIcon}
+                className="text-current"
+                tooltipContent={
+                  <>
+                    More options for <strong>{track.title}</strong>
+                  </>
+                }
+              />
+            </div>
+          </div>
         ))}
       </ul>
     </section>

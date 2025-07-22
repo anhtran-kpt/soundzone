@@ -2,6 +2,8 @@
 
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { ReactNode } from "react";
 
 interface IconButtonProps {
   icon: LucideIcon;
@@ -9,6 +11,7 @@ interface IconButtonProps {
   className?: string;
   iconClassName?: string;
   size?: "sm" | "md" | "lg" | "xl";
+  tooltipContent?: ReactNode;
 }
 
 export const IconButton = ({
@@ -17,6 +20,7 @@ export const IconButton = ({
   className,
   iconClassName,
   size = "md",
+  tooltipContent,
 }: IconButtonProps) => {
   let iconSize;
 
@@ -38,7 +42,7 @@ export const IconButton = ({
       break;
   }
 
-  return (
+  const button = (
     <button
       onClick={onClick}
       type="button"
@@ -49,5 +53,16 @@ export const IconButton = ({
     >
       <Icon width={iconSize} height={iconSize} className={cn(iconClassName)} />
     </button>
+  );
+
+  if (!tooltipContent) return button;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent>
+        <p>{tooltipContent}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };

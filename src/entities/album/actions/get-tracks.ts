@@ -31,6 +31,9 @@ export const getTracks = withErrorHandler(async (albumSlug: string) => {
           id: true,
           slug: true,
           isExplicit: true,
+          _count: {
+            select: { playHistory: true },
+          },
         },
       },
     },
@@ -40,5 +43,6 @@ export const getTracks = withErrorHandler(async (albumSlug: string) => {
     ...track,
     coverPublicId: album.coverPublicId,
     artists: flattenRelation(track.artists, "artist"),
+    plays: track._count.playHistory,
   }));
 });
