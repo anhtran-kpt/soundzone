@@ -1,9 +1,9 @@
-import { getDiscography } from "@/entities/album/actions";
+import { getBanner } from "@/entities/artist/actions";
 import { withApiHandler } from "@/lib/api/api-handler";
 import { NextRequest } from "next/server";
 
 export const GET = withApiHandler(async (req: NextRequest, { params }) => {
-  const { albumSlug, artistSlug } = await params;
+  const { artistSlug } = await params;
 
-  return await getDiscography({ albumSlug, artistSlug });
+  return await getBanner(artistSlug);
 });

@@ -7,7 +7,12 @@ import ExplicitIcon from "../ui/explicit-icon";
 import { NavLink } from "../features/nav-link";
 import { cn, formatDuration } from "@/lib/utils";
 import { IconButton } from "../features/icon-button";
-import { Clock3Icon, EllipsisIcon, PlusCircleIcon } from "lucide-react";
+import {
+  Clock3Icon,
+  EllipsisIcon,
+  PlayIcon,
+  PlusCircleIcon,
+} from "lucide-react";
 
 interface AlbumTracksProps {
   albumSlug: string;
@@ -29,7 +34,7 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
 
   return (
     <section>
-      <ul role="list" className="space-y-1 w-full">
+      <div className="space-y-1 w-full">
         <div
           className={cn(
             gridClass,
@@ -53,14 +58,20 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
               "py-2 pr-6 items-center group hover:bg-muted rounded-sm text-muted-foreground hover:text-foreground"
             )}
           >
-            <div className="text-center text-base font-semibold">
-              {trackIndex + 1}
+            <div className="flex justify-center items-center text-base font-semibold">
+              <span className="group-hover:hidden">{trackIndex + 1}</span>
+              <IconButton
+                icon={PlayIcon}
+                size="sm"
+                iconClassName="fill-foreground stroke-0"
+                className="hidden group-hover:block"
+              />
             </div>
 
             <div className="flex flex-col gap-0.5 pl-2">
               <Title title={track.title} />
               <div className="flex gap-1.5 items-center">
-                {!track.isExplicit && <ExplicitIcon />}
+                {track.isExplicit && <ExplicitIcon />}
                 {track.artists.map((artist, artistIndex) => (
                   <span key={artist.slug}>
                     <NavLink
@@ -92,7 +103,7 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
 
             <div className="text-right">{formatDuration(track.duration)}</div>
 
-            <div className="text-right">
+            <div className="invisible group-hover:visible text-right">
               <IconButton
                 icon={EllipsisIcon}
                 className="text-current"
@@ -105,7 +116,7 @@ export const AlbumTracks = ({ albumSlug, artistSlug }: AlbumTracksProps) => {
             </div>
           </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 };

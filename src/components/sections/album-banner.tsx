@@ -30,14 +30,13 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
     <section>
       <div className="relative h-80">
         <div
-          className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-b from-[var(--tw-gradient-from)] to-[var(--tw-gradient-to)]"
+          className="absolute inset-0 -mx-12 -mt-24 bg-gradient-to-t from-[var(--tw-gradient-from)] via-[var(--tw-gradient-via)] to-[var(--tw-gradient-to)]"
           style={
-            gradient
-              ? ({
-                  "--tw-gradient-from": gradient.from,
-                  "--tw-gradient-to": gradient.to,
-                } as React.CSSProperties)
-              : undefined
+            {
+              "--tw-gradient-from": gradient?.from,
+              "--tw-gradient-via": gradient?.via,
+              "--tw-gradient-to": gradient?.to,
+            } as React.CSSProperties
           }
         />
         <div className="flex gap-5 absolute left-0 bottom-6 items-end">
@@ -53,8 +52,10 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
             />
           </div>
           <div className="flex flex-col">
-            <h3>{album.releaseType === "SINGLE" ? "Single" : "Album"}</h3>
-            <h2 className="font-bold text-5xl mt-1 mb-4">{album.title}</h2>
+            <span className="font-medium">
+              {album.releaseType === "SINGLE" ? "Single" : "Album"}
+            </span>
+            <span className="font-bold text-5xl mt-2 mb-4">{album.title}</span>
             <div className="inline-flex items-center gap-2">
               <div className="relative size-6 rounded-full">
                 <CldImage

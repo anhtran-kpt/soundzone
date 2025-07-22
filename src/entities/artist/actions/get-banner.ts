@@ -7,13 +7,13 @@ import db from "@/lib/prisma/db";
 export const getBanner = withErrorHandler(async (artistSlug: string) => {
   const { id } = await isEntityExists("artist", "slug", artistSlug);
 
-  return await db.artist.findUnique({
+  const artist = await db.artist.findUniqueOrThrow({
     where: {
       id,
     },
     select: {
       name: true,
-      bannerPublicId: true,
+      imagePublicId: true,
       _count: {
         select: {
           followers: true,
@@ -21,4 +21,9 @@ export const getBanner = withErrorHandler(async (artistSlug: string) => {
       },
     },
   });
+
+  return {
+    ...artist,
+    followers: artist._count.followers,
+  };
 });

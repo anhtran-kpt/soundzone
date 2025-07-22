@@ -17,10 +17,22 @@ export const getDiscography = withErrorHandler(
 
     const artist = await isEntityExists("artist", "slug", artistSlug);
 
-    const [albums, total] = await Promise.all([
+    const [artistInfo, albums, total] = await Promise.all([
+      db.artist.findUniqueOrThrow({
+        where: {
+          id: artist.id,
+        },
+        select: {
+          name: true,
+        },
+      }),
+
       db.album.findMany({
         where: {
           artistId: artist.id,
+          slug: {
+            not: albumSlug,
+          },
         },
         select: {
           title: true,
@@ -31,19 +43,21 @@ export const getDiscography = withErrorHandler(
         skip: (page - 1) * limit,
         take: limit,
       }),
+
       db.album.count({
         where: {
           artistId: artist.id,
+          slug: {
+            not: albumSlug,
+          },
         },
       }),
     ]);
 
     return {
-      data: albums,
-      meta: {
-        hasPrev: page > 1,
-        hasNext: page * limit < total,
-      },
+      artistName: artistInfo.name,
+      albums,
+      hasNext: page * limit < total,
     };
   }
 );
