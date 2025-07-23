@@ -9,3 +9,4 @@ export * from "./is-following";
 export * from "./get-banner";
 export * from "./get-actions";
 export * from "./get-about";
+export * from "./get-others";

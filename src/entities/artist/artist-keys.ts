@@ -19,4 +19,6 @@ export const artistKeys = {
     [...artistKeys.artist(artistSlug), "is-following"] as const,
   about: (artistSlug: string) =>
     [...artistKeys.artist(artistSlug), "about"] as const,
+  others: (artistSlug: string) =>
+    [...artistKeys.artist(artistSlug), "others"] as const,
 };

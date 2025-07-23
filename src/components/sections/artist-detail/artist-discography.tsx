@@ -6,7 +6,7 @@ import SectionHeading from "@/components/ui/section-heading";
 import { NavLink } from "@/components/features/nav-link";
 import { useDiscography } from "@/entities/artist/queries";
 import ErrorMessage from "../../features/error-message";
-import { AlbumGrid } from "@/components/features/album-grid";
+import { AlbumGrid, AlbumGridSkeleton } from "@/components/features/album-grid";
 
 export const ArtistDiscography = ({ artistSlug }: { artistSlug: string }) => {
   const { data, status, error } = useDiscography(artistSlug);
@@ -55,22 +55,7 @@ export const ArtistDiscography = ({ artistSlug }: { artistSlug: string }) => {
   );
 };
 
-export function ArtistDiscographySkeleton({ count = 5 }: { count?: number }) {
-  const renderSkeletonCards = () => (
-    <ul
-      role="list"
-      className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <li key={i} className="space-y-2">
-          <Skeleton className="w-full aspect-square rounded-md" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-3 w-1/2" />
-        </li>
-      ))}
-    </ul>
-  );
-
+export function ArtistDiscographySkeleton() {
   return (
     <section>
       <div className="flex justify-between items-center">
@@ -85,10 +70,14 @@ export function ArtistDiscographySkeleton({ count = 5 }: { count?: number }) {
         </TabsList>
 
         <TabsContent value="Popular Releases">
-          {renderSkeletonCards()}
+          <AlbumGridSkeleton count={5} />
         </TabsContent>
-        <TabsContent value="Albums">{renderSkeletonCards()}</TabsContent>
-        <TabsContent value="Singles">{renderSkeletonCards()}</TabsContent>
+        <TabsContent value="Albums">
+          <AlbumGridSkeleton count={5} />
+        </TabsContent>
+        <TabsContent value="Singles">
+          <AlbumGridSkeleton count={5} />
+        </TabsContent>
       </Tabs>
     </section>
   );

@@ -8,6 +8,7 @@ import {
   follow,
   unfollow,
   getAbout,
+  getOthers,
 } from "@/entities/artist/actions";
 
 export type TArtistInfo = Awaited<ReturnType<typeof getInfo>>;
@@ -19,3 +20,4 @@ export type TIsFollowing = Awaited<ReturnType<typeof isFollowing>>;
 export type TFollow = Awaited<ReturnType<typeof follow>>;
 export type TUnfollow = Awaited<ReturnType<typeof unfollow>>;
 export type TArtistAbout = Awaited<ReturnType<typeof getAbout>>;
+export type TArtistOthers = Awaited<ReturnType<typeof getOthers>>;

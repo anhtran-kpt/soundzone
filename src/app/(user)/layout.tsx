@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Header scrollContainerRef={scrollRef} />
         <main
           ref={scrollRef}
-          className="flex-col flex-1 px-12 py-6 overflow-x-hidden overflow-y-auto scroll-smooth space-y-6"
+          className="flex-col flex-1 px-12 py-6 overflow-x-hidden overflow-y-auto scroll-smooth space-y-8"
         >
           {children}
         </main>

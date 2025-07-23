@@ -12,4 +12,5 @@ export const artistEndpoints = {
   follow: (artistSlug: string) => `/artists/${artistSlug}/follow`,
   unfollow: (artistSlug: string) => `/artists/${artistSlug}/unfollow`,
   about: (artistSlug: string) => `/artists/${artistSlug}/about`,
+  others: (artistSlug: string) => `/artists/${artistSlug}/others`,
 };
