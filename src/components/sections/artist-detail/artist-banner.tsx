@@ -46,7 +46,7 @@ export const ArtistBanner = ({ artistSlug }: { artistSlug: string }) => {
               priority
             />
           </div>
-          <div className="flex flex-col gap-2 text-white">
+          <div className="flex flex-col gap-2 text-foreground">
             <div className="flex gap-2 items-center">
               <BadgeCheckIcon className="stroke-white fill-sky-500 size-8" />
               Verified Artist
@@ -64,11 +64,16 @@ export const ArtistBannerSkeleton = () => {
   return (
     <section>
       <div className="relative h-96 -mx-12 -mt-21">
-        <Skeleton className="w-full h-full rounded-none" />
-        <div className="flex flex-col gap-4 absolute left-12 bottom-6 text-white">
-          <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-32 h-12" />
-          <Skeleton className="w-16 h-4" />
+        <Skeleton className="absolute inset-0 -mx-12 -mt-24" />
+        <div className="absolute left-12 bottom-6 flex items-end gap-5">
+          <div className="relative rounded-full overflow-hidden size-48">
+            <Skeleton className="size-full rounded-full" />
+          </div>
+          <div className="flex flex-col gap-4">
+            <Skeleton className="w-48 h-6" />
+            <Skeleton className="w-36 h-15" />
+            <Skeleton className="w-12 h-5" />
+          </div>
         </div>
       </div>
     </section>

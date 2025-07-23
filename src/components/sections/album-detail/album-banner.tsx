@@ -40,13 +40,13 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
           }
         />
         <div className="flex gap-5 absolute left-0 bottom-6 items-end">
-          <div className="relative size-48 rounded-sm">
+          <div className="relative size-48 rounded-md">
             <CldImage
               src={album.coverPublicId}
               alt={album.title}
               fill
               sizes="192px"
-              className="object-cover rounded-sm"
+              className="object-cover rounded-md"
               onLoad={(e) => setImageUrl((e.target as HTMLImageElement).src)}
               priority
             />
@@ -102,8 +102,6 @@ export const AlbumBannerSkeleton = () => {
               <div className="relative size-8 rounded-full">
                 <Skeleton className="size-8 rounded-full" />
               </div>
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-16" />

@@ -1,25 +1,21 @@
 import { PlayIcon } from "lucide-react";
-import { Button } from "../../ui";
-import { useAudioPlayer } from "@/hooks";
-import { Track, Playlist } from "@/types";
+import { IconButton } from "./icon-button";
+import { cn } from "@/lib/utils";
 
 interface PlayButtonProps {
-  track: Track;
-  playlist?: Playlist;
+  onClick?: () => void;
+  className?: string;
 }
 
-export default function PlayButton({ track, playlist }: PlayButtonProps) {
-  const { playTrack } = useAudioPlayer();
-
+export default function PlayButton({ onClick, className }: PlayButtonProps) {
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="icon"
-      className="hidden group-hover:flex items-center justify-center size-4"
-      onClick={() => playTrack(track, playlist)}
-    >
-      <PlayIcon strokeWidth={0} fill="currentColor" />
-    </Button>
+    <IconButton
+      icon={PlayIcon}
+      onClick={onClick}
+      size="lg"
+      className={cn("bg-primary p-3", className)}
+      iconClassName="stroke-0 fill-foreground"
+      tooltipContent="Play"
+    />
   );
 }

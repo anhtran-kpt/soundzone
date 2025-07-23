@@ -1,11 +1,12 @@
 "use client";
 
-import { EllipsisIcon, PlayIcon, ShuffleIcon } from "lucide-react";
+import { EllipsisIcon, ShuffleIcon } from "lucide-react";
 import { IconButton } from "../../features/icon-button";
 import { useActions } from "@/entities/artist/queries";
 import ErrorMessage from "../../features/error-message";
 import { FollowButton } from "../../features/follow-button";
 import { Skeleton } from "../../ui/skeleton";
+import PlayButton from "@/components/features/play-button";
 
 export const ArtistActions = ({ artistSlug }: { artistSlug: string }) => {
   const { data: artist, status, error } = useActions(artistSlug);
@@ -20,13 +21,7 @@ export const ArtistActions = ({ artistSlug }: { artistSlug: string }) => {
 
   return (
     <section className="flex items-center gap-5">
-      <IconButton
-        icon={PlayIcon}
-        size="xl"
-        className="bg-primary p-3.5"
-        iconClassName="stroke-0 fill-foreground"
-        tooltipContent="Play"
-      />
+      <PlayButton />
       <IconButton
         icon={ShuffleIcon}
         size="xl"
@@ -53,7 +48,7 @@ export const ArtistActions = ({ artistSlug }: { artistSlug: string }) => {
 export const ArtistActionsSkeleton = () => {
   return (
     <section className="flex items-center gap-5">
-      <Skeleton className="rounded-full size-14" />
+      <Skeleton className="rounded-full size-12" />
       <Skeleton className="rounded-full size-9" />
       <Skeleton className="rounded-full h-9 w-24" />
       <Skeleton className="rounded-full size-9" />

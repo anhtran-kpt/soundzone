@@ -19,5 +19,6 @@ export const getOthers = withErrorHandler(async (artistSlug: string) => {
       id: true,
       imagePublicId: true,
     },
+    take: 5,
   });
 });

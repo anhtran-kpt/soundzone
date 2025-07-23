@@ -2,13 +2,14 @@
 
 import { Album } from "@/app/generated/prisma";
 import { CldImage } from "next-cloudinary";
-import { PlayIcon } from "lucide-react";
 import { RELEASE_TYPES } from "@/lib/constants";
 import { formatDate } from "date-fns";
 import Dot from "../ui/dot";
 import { NavLink } from "./nav-link";
-import { IconButton } from "./icon-button";
 import { Skeleton } from "../ui/skeleton";
+import { GridWrapper } from "./grid-wrapper";
+import PlayButton from "./play-button";
+import { cn } from "@/lib/utils";
 
 interface AlbumGridProps {
   albums: Album[];
@@ -16,7 +17,7 @@ interface AlbumGridProps {
 
 export const AlbumGrid = ({ albums }: AlbumGridProps) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <GridWrapper>
       {albums.map((album) => (
         <div
           key={album.slug}
@@ -30,11 +31,13 @@ export const AlbumGrid = ({ albums }: AlbumGridProps) => {
               className="object-cover group-hover:scale-105 transition-transform duration-300 group-hover:brightness-75"
               sizes="20vw"
             />
-            <IconButton
-              icon={PlayIcon}
-              size="xl"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 invisible group-hover:visible bg-primary p-3.5"
-              iconClassName="stroke-0 fill-foreground"
+            <PlayButton
+              className={cn(
+                "absolute bottom-2 right-2",
+                "opacity-0 translate-y-2 scale-95",
+                "transition-all duration-300",
+                "group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100"
+              )}
             />
           </div>
           <div className="flex flex-col items-start w-full min-w-0">
@@ -53,13 +56,13 @@ export const AlbumGrid = ({ albums }: AlbumGridProps) => {
           </div>
         </div>
       ))}
-    </div>
+    </GridWrapper>
   );
 };
 
 export const AlbumGridSkeleton = ({ count = 5 }: { count: number }) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <GridWrapper>
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex flex-col group gap-2 overflow-hidden">
           <div className="relative rounded-md overflow-hidden size-full aspect-square">
@@ -71,6 +74,6 @@ export const AlbumGridSkeleton = ({ count = 5 }: { count: number }) => {
           </div>
         </div>
       ))}
-    </div>
+    </GridWrapper>
   );
 };

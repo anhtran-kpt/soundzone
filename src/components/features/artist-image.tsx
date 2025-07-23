@@ -25,7 +25,10 @@ export const ArtistImage = ({
         src={imagePublicId}
         alt={name}
         fill
-        className={cn("rounded-full", size === "small" ? "size-10" : "size-64")}
+        className={cn(
+          "rounded-full object-cover",
+          size === "small" ? "size-10" : "size-64"
+        )}
         sizes={size === "small" ? "40px" : "256px"}
         priority
       />

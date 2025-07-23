@@ -39,7 +39,7 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
           )}
         >
           <div className="text-center">#</div>
-          <div className="pl-2 text-left">Title</div>
+          <div className="text-left">Title</div>
           <div className="text-right">Plays</div>
           <div className="text-right"></div>
           <div className="flex justify-end">
@@ -87,11 +87,11 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
               </div>
             )}
 
-            <div className="flex gap-1">
+            <div className="flex gap-3">
               {type === "popular" && (
                 <TrackCover alt={track.title} publicId={track.coverPublicId} />
               )}
-              <div className="flex flex-col gap-0.5 pl-2 justify-center">
+              <div className="flex flex-col gap-0.5 justify-center">
                 <Title title={trackTitle} isActive={isActive} />
                 <div className="flex gap-1.5 items-center">
                   {track.isExplicit && <ExplicitIcon />}

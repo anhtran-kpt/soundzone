@@ -34,22 +34,25 @@ export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
   const toggleFollowMutation = useMutation({
     mutationFn: async ({ artistSlug, isFollowing }: ToggleFollowParams) => {
       if (isFollowing) {
-        return poster<string, void>(artistEndpoints.unfollow(artistSlug));
+        return poster<string, void>(artistEndpoints.unfollow(artistSlug))();
       } else {
-        return poster<string, void>(artistEndpoints.follow(artistSlug));
+        return poster<string, void>(artistEndpoints.follow(artistSlug))();
       }
     },
 
     onMutate: async ({ artistSlug, isFollowing }: ToggleFollowParams) => {
       await queryClient.cancelQueries({
-        queryKey: artistKeys.followers(artistSlug),
+        queryKey: artistKeys.isFollowing(artistSlug),
       });
 
       const previous = queryClient.getQueryData<boolean>(
-        artistKeys.followers(artistSlug)
+        artistKeys.isFollowing(artistSlug)
       );
 
-      queryClient.setQueryData(artistKeys.followers(artistSlug), !isFollowing);
+      queryClient.setQueryData(
+        artistKeys.isFollowing(artistSlug),
+        !isFollowing
+      );
 
       return { previous, artistSlug };
     },
@@ -57,7 +60,7 @@ export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
     onError: (_err, _data, context) => {
       if (context?.previous !== undefined && context?.artistSlug) {
         queryClient.setQueryData(
-          artistKeys.followers(context.artistSlug),
+          artistKeys.isFollowing(context.artistSlug),
           context.previous
         );
       }
@@ -65,7 +68,7 @@ export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
 
     onSettled: (_data, _err, { artistSlug, userSlug }: ToggleFollowParams) => {
       queryClient.invalidateQueries({
-        queryKey: artistKeys.followers(artistSlug),
+        queryKey: artistKeys.isFollowing(artistSlug),
       });
 
       queryClient.invalidateQueries({

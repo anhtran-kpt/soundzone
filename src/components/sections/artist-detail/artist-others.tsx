@@ -1,9 +1,13 @@
 "use client";
 
 import ErrorMessage from "@/components/features/error-message";
+import { GridWrapper } from "@/components/features/grid-wrapper";
 import { NavLink } from "@/components/features/nav-link";
+import PlayButton from "@/components/features/play-button";
 import SectionHeading from "@/components/ui/section-heading";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useOthers } from "@/entities/artist/queries";
+import { cn } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";
 
 export const ArtistOthers = ({ artistSlug }: { artistSlug: string }) => {
@@ -20,15 +24,24 @@ export const ArtistOthers = ({ artistSlug }: { artistSlug: string }) => {
   return (
     <section>
       <SectionHeading heading="Fans also like" />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <GridWrapper>
         {artists.map((artist) => (
-          <div key={artist.slug} className="space-y-4">
-            <div className="relative rounded-full overflow-hidden aspect-square">
+          <div key={artist.slug} className="space-y-4 group">
+            <div className="relative rounded-full aspect-square">
               <CldImage
                 alt={artist.name}
                 src={artist.imagePublicId}
                 fill
-                className="object-cover"
+                className="object-cover rounded-full"
+                sizes="20vw"
+              />
+              <PlayButton
+                className={cn(
+                  "absolute bottom-2 right-2",
+                  "opacity-0 translate-y-2 scale-95",
+                  "transition-all duration-300",
+                  "group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100"
+                )}
               />
             </div>
             <NavLink
@@ -42,7 +55,7 @@ export const ArtistOthers = ({ artistSlug }: { artistSlug: string }) => {
             </p>
           </div>
         ))}
-      </div>
+      </GridWrapper>
     </section>
   );
 };
@@ -51,6 +64,17 @@ export const ArtistOthersSkeleton = () => {
   return (
     <section>
       <SectionHeading heading="Fans also like" />
+      <GridWrapper>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="">
+            <div className="relative rounded-full overflow-hidden aspect-square mb-4">
+              <Skeleton className="size-full" />
+            </div>
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-12 mt-4" />
+          </div>
+        ))}
+      </GridWrapper>
     </section>
   );
 };
