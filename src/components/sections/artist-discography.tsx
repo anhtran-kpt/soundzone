@@ -3,30 +3,27 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlbumList } from "@/components/ui/album-list";
-import { useMemo } from "react";
-import { ArtistDetailPage } from "@/lib/types";
 import SectionHeading from "@/components/ui/section-heading";
 import { NavLink } from "@/components/features/nav-link";
+import { useDiscography } from "@/entities/artist/queries";
+import ErrorMessage from "../features/error-message";
 
-type DiscographyProps = {
-  discography: ArtistDetailPage["discography"];
-};
+export const ArtistDiscography = ({ artistSlug }: { artistSlug: string }) => {
+  const { data, status, error } = useDiscography(artistSlug);
 
-export const DiscographySection = ({
-  discography: {
-    popularReleases,
-    albumReleases,
-    singleAndEpReleases,
-    artistSlug,
-  },
-}: DiscographyProps) => {
-  const availableTabs = useMemo(() => {
-    return [
-      { key: "popular", label: "Popular", data: popularReleases },
-      { key: "albums", label: "Albums", data: albumReleases },
-      { key: "singles", label: "Singles & EPs", data: singleAndEpReleases },
-    ].filter((tab) => tab.data && tab.data.length > 0);
-  }, [popularReleases, albumReleases, singleAndEpReleases]);
+  if (status === "pending") {
+    return <ArtistDiscographySkeleton />;
+  }
+
+  if (status === "error") {
+    return <ErrorMessage error={error} />;
+  }
+
+  const availableTabs = [
+    { key: "popular", label: "Popular", data: data.popularReleases },
+    { key: "albums", label: "Albums", data: data.albumReleases },
+    { key: "singles", label: "Singles & EPs", data: data.singleAndEpReleases },
+  ].filter((tab) => tab.data && tab.data.length > 0);
 
   if (availableTabs.length === 0) return null;
 
@@ -58,7 +55,7 @@ export const DiscographySection = ({
   );
 };
 
-export function DiscographySectionSkeleton({ count = 5 }: { count?: number }) {
+export function ArtistDiscographySkeleton({ count = 5 }: { count?: number }) {
   const renderSkeletonCards = () => (
     <ul
       role="list"

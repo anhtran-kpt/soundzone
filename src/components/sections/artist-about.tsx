@@ -3,16 +3,21 @@
 import { CldImage } from "next-cloudinary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TextSkeleton } from "@/components/ui/text-skeleton";
-import { ArtistDetailPage } from "@/lib/types";
 import SectionHeading from "@/components/ui/section-heading";
+import ErrorMessage from "../features/error-message";
+import { useAbout } from "@/entities/artist/queries/use-about";
 
-type AboutProps = {
-  about: ArtistDetailPage["about"];
-};
+export const ArtistAbout = ({ artistSlug }: { artistSlug: string }) => {
+  const { data, status, error } = useAbout(artistSlug);
 
-export const AboutSection = ({
-  about: { name, followers, imagePublicId, description },
-}: AboutProps) => {
+  if (status === "pending") {
+    return <ArtistAboutSkeleton />;
+  }
+
+  if (status === "error") {
+    return <ErrorMessage error={error} />;
+  }
+
   return (
     <section>
       <SectionHeading heading="About" />
@@ -20,22 +25,22 @@ export const AboutSection = ({
         <div className="flex flex-col text-center shrink-0 gap-4">
           <div className="relative size-56 rounded-full overflow-hidden">
             <CldImage
-              src={imagePublicId}
-              alt={name}
+              src={data.imagePublicId}
+              alt={data.name}
               fill
               sizes="224px"
               className="object-cover rounded-full border-white border-2"
             />
           </div>
-          <p className="font-medium">{followers} followers</p>
+          <p className="font-medium">{data.followers} followers</p>
         </div>
-        <div className="text-card-foreground">{description}</div>
+        <div className="text-card-foreground">{data.description}</div>
       </div>
     </section>
   );
 };
 
-export const AboutSectionSkeleton = () => {
+export const ArtistAboutSkeleton = () => {
   return (
     <section>
       <SectionHeading heading="About" />

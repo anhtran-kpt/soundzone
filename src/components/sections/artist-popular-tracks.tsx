@@ -6,11 +6,11 @@ import ErrorMessage from "../features/error-message";
 import { TrackGrid } from "../features/track-grid";
 import { TrackListSkeleton } from "../ui/track-list";
 
-export const PopularTracks = ({ artistSlug }: { artistSlug: string }) => {
+export const ArtistPopularTracks = ({ artistSlug }: { artistSlug: string }) => {
   const { data, status, error } = usePopularTracks(artistSlug);
 
   if (status === "pending") {
-    return <PopularTracksSkeleton />;
+    return <ArtistPopularTracksSkeleton />;
   }
 
   if (status === "error") {
@@ -25,7 +25,7 @@ export const PopularTracks = ({ artistSlug }: { artistSlug: string }) => {
   );
 };
 
-export const PopularTracksSkeleton = () => {
+export const ArtistPopularTracksSkeleton = () => {
   return (
     <section>
       <SectionHeading heading="Popular" />

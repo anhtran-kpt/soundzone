@@ -1,6 +1,8 @@
 import { ArtistActions } from "@/components/sections/artist-actions";
 import { ArtistBanner } from "@/components/sections/artist-banner";
-import { PopularTracks } from "@/components/sections/popular-tracks";
+import { ArtistPopularTracks } from "@/components/sections/artist-popular-tracks";
+import { ArtistDiscography } from "@/components/sections/artist-discography";
+import { ArtistAbout } from "@/components/sections/artist-about";
 
 export default async function ArtistDetailPage({
   params,
@@ -13,7 +15,9 @@ export default async function ArtistDetailPage({
     <>
       <ArtistBanner artistSlug={artistSlug} />
       <ArtistActions artistSlug={artistSlug} />
-      <PopularTracks artistSlug={artistSlug} />
+      <ArtistPopularTracks artistSlug={artistSlug} />
+      <ArtistDiscography artistSlug={artistSlug} />
+      <ArtistAbout artistSlug={artistSlug} />
     </>
   );
 }
