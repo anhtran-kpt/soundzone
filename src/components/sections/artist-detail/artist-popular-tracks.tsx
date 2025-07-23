@@ -2,9 +2,8 @@
 
 import SectionHeading from "@/components/ui/section-heading";
 import { usePopularTracks } from "@/entities/artist/queries";
-import ErrorMessage from "../features/error-message";
-import { TrackGrid } from "../features/track-grid";
-import { TrackListSkeleton } from "../ui/track-list";
+import ErrorMessage from "../../features/error-message";
+import { TrackGrid, TrackGridSkeleton } from "../../features/track-grid";
 
 export const ArtistPopularTracks = ({ artistSlug }: { artistSlug: string }) => {
   const { data, status, error } = usePopularTracks(artistSlug);
@@ -29,7 +28,7 @@ export const ArtistPopularTracksSkeleton = () => {
   return (
     <section>
       <SectionHeading heading="Popular" />
-      <TrackListSkeleton count={5} />
+      <TrackGridSkeleton count={5} />
     </section>
   );
 };

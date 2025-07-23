@@ -1,10 +1,10 @@
 "use client";
 
 import { useDiscography } from "@/entities/album/queries";
-import { NavLink } from "../features/nav-link";
-import SectionHeading from "../ui/section-heading";
-import ErrorMessage from "../features/error-message";
-import { Skeleton } from "../ui/skeleton";
+import { NavLink } from "../../features/nav-link";
+import SectionHeading from "../../ui/section-heading";
+import ErrorMessage from "../../features/error-message";
+import { Skeleton } from "../../ui/skeleton";
 
 export const AlbumDiscography = ({
   artistSlug,

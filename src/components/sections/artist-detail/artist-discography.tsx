@@ -2,11 +2,11 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlbumList } from "@/components/ui/album-list";
 import SectionHeading from "@/components/ui/section-heading";
 import { NavLink } from "@/components/features/nav-link";
 import { useDiscography } from "@/entities/artist/queries";
-import ErrorMessage from "../features/error-message";
+import ErrorMessage from "../../features/error-message";
+import { AlbumGrid } from "@/components/features/album-grid";
 
 export const ArtistDiscography = ({ artistSlug }: { artistSlug: string }) => {
   const { data, status, error } = useDiscography(artistSlug);
@@ -47,7 +47,7 @@ export const ArtistDiscography = ({ artistSlug }: { artistSlug: string }) => {
 
         {availableTabs.map((tab) => (
           <TabsContent key={tab.key} value={tab.key}>
-            <AlbumList albums={tab.data} />
+            <AlbumGrid albums={tab.data} />
           </TabsContent>
         ))}
       </Tabs>

@@ -4,7 +4,7 @@ import { CldImage } from "next-cloudinary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TextSkeleton } from "@/components/ui/text-skeleton";
 import SectionHeading from "@/components/ui/section-heading";
-import ErrorMessage from "../features/error-message";
+import ErrorMessage from "../../features/error-message";
 import { useAbout } from "@/entities/artist/queries/use-about";
 
 export const ArtistAbout = ({ artistSlug }: { artistSlug: string }) => {

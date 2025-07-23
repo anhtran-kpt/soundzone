@@ -7,10 +7,10 @@ import {
   PlusCircle,
   ShuffleIcon,
 } from "lucide-react";
-import { IconButton } from "../features/icon-button";
+import { IconButton } from "../../features/icon-button";
 import { useActions } from "@/entities/album/queries";
-import ErrorMessage from "../features/error-message";
-import { Skeleton } from "../ui/skeleton";
+import ErrorMessage from "../../features/error-message";
+import { Skeleton } from "../../ui/skeleton";
 
 export const AlbumActions = ({
   albumSlug,

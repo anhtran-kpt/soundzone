@@ -1,7 +1,7 @@
-import { AlbumActions } from "@/components/sections/album-actions";
-import { AlbumBanner } from "@/components/sections/album-banner";
-import { AlbumDiscography } from "@/components/sections/album-discography";
-import { AlbumTracks } from "@/components/sections/album-tracks";
+import { AlbumActions } from "@/components/sections/album-detail/album-actions";
+import { AlbumBanner } from "@/components/sections/album-detail/album-banner";
+import { AlbumDiscography } from "@/components/sections/album-detail/album-discography";
+import { AlbumTracks } from "@/components/sections/album-detail/album-tracks";
 
 export default async function AlbumDetailPage({
   params,

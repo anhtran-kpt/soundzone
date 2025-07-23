@@ -1,10 +1,10 @@
 "use client";
 
 import { useBanner } from "@/entities/artist/queries";
-import ErrorMessage from "../features/error-message";
+import ErrorMessage from "../../features/error-message";
 import { BadgeCheckIcon } from "lucide-react";
 import { CldImage } from "next-cloudinary";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import { useImageGradient } from "@/hooks/use-image-gradient";
 import { useState } from "react";
 

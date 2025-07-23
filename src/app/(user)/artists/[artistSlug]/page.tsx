@@ -1,8 +1,8 @@
-import { ArtistActions } from "@/components/sections/artist-actions";
-import { ArtistBanner } from "@/components/sections/artist-banner";
-import { ArtistPopularTracks } from "@/components/sections/artist-popular-tracks";
-import { ArtistDiscography } from "@/components/sections/artist-discography";
-import { ArtistAbout } from "@/components/sections/artist-about";
+import { ArtistActions } from "@/components/sections/artist-detail/artist-actions";
+import { ArtistBanner } from "@/components/sections/artist-detail/artist-banner";
+import { ArtistPopularTracks } from "@/components/sections/artist-detail/artist-popular-tracks";
+import { ArtistDiscography } from "@/components/sections/artist-detail/artist-discography";
+import { ArtistAbout } from "@/components/sections/artist-detail/artist-about";
 
 export default async function ArtistDetailPage({
   params,

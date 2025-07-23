@@ -1,11 +1,11 @@
 "use client";
 
 import { EllipsisIcon, PlayIcon, ShuffleIcon } from "lucide-react";
-import { IconButton } from "../features/icon-button";
+import { IconButton } from "../../features/icon-button";
 import { useActions } from "@/entities/artist/queries";
-import ErrorMessage from "../features/error-message";
-import { FollowButton } from "../features/follow-button";
-import { Skeleton } from "../ui/skeleton";
+import ErrorMessage from "../../features/error-message";
+import { FollowButton } from "../../features/follow-button";
+import { Skeleton } from "../../ui/skeleton";
 
 export const ArtistActions = ({ artistSlug }: { artistSlug: string }) => {
   const { data: artist, status, error } = useActions(artistSlug);

@@ -8,8 +8,8 @@ import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBanner } from "@/entities/album/queries";
 import { TAlbumSlugs } from "@/entities/album/album-types";
-import ErrorMessage from "../features/error-message";
-import { NavLink } from "../features/nav-link";
+import ErrorMessage from "../../features/error-message";
+import { NavLink } from "../../features/nav-link";
 import { useImageGradient } from "@/hooks/use-image-gradient";
 
 export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
