@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { endpoints } from "@/lib/api/endpoints";
+import { artistEndpoints } from "@/entities/artist/artist-endpoints";
+import { artistKeys } from "@/entities/artist/artist-keys";
+import { TIsFollowing } from "@/entities/artist/artist-types";
+import { userKeys } from "@/entities/user/user-keys";
 import fetcher from "@/lib/api/fetcher";
 import { poster } from "@/lib/api/poster";
-import { artistKeys, userKeys } from "@/lib/tanstack-query/query-keys";
-import { FollowArtistReturn, IsFollowing } from "@/types/artist";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -25,7 +26,7 @@ export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
 
   const { data: isFollowing, isLoading } = useQuery({
     queryKey: artistKeys.isFollowing(artistSlug),
-    queryFn: fetcher<IsFollowing>(endpoints.artist.isFollowing(artistSlug)),
+    queryFn: fetcher<TIsFollowing>(artistEndpoints.isFollowing(artistSlug)),
   });
 
   const queryClient = useQueryClient();
@@ -33,13 +34,9 @@ export const FollowButton = ({ artistSlug }: FollowButtonProps) => {
   const toggleFollowMutation = useMutation({
     mutationFn: async ({ artistSlug, isFollowing }: ToggleFollowParams) => {
       if (isFollowing) {
-        return poster<string, FollowArtistReturn>(
-          endpoints.artist.unfollow(artistSlug)
-        );
+        return poster<string, void>(artistEndpoints.unfollow(artistSlug));
       } else {
-        return poster<string, FollowArtistReturn>(
-          endpoints.artist.follow(artistSlug)
-        );
+        return poster<string, void>(artistEndpoints.follow(artistSlug));
       }
     },
 

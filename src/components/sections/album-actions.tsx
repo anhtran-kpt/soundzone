@@ -10,6 +10,7 @@ import {
 import { IconButton } from "../features/icon-button";
 import { useActions } from "@/entities/album/queries";
 import ErrorMessage from "../features/error-message";
+import { Skeleton } from "../ui/skeleton";
 
 export const AlbumActions = ({
   albumSlug,
@@ -84,16 +85,11 @@ export const AlbumActions = ({
 export const AlbumActionsSkeleton = () => {
   return (
     <section className="flex items-center gap-5">
-      <IconButton
-        icon={PlayIcon}
-        size="xl"
-        className="bg-primary p-4"
-        iconClassName="stroke-0 fill-foreground"
-      />
-      <IconButton icon={ShuffleIcon} size="xl" />
-      <IconButton icon={PlusCircle} size="xl" />
-      <IconButton icon={DownloadIcon} size="xl" />
-      <IconButton icon={EllipsisIcon} size="xl" />
+      <Skeleton className="rounded-full size-14" />
+      <Skeleton className="rounded-full size-9" />
+      <Skeleton className="rounded-full size-9" />
+      <Skeleton className="rounded-full size-9" />
+      <Skeleton className="rounded-full size-9" />
     </section>
   );
 };

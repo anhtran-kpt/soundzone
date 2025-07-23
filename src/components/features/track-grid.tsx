@@ -86,11 +86,11 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
               </div>
             )}
 
-            <div className="flex gap-1.5">
+            <div className="flex gap-1">
               {type === "popular" && (
                 <TrackCover alt={track.title} publicId={track.coverPublicId} />
               )}
-              <div className="flex flex-col gap-0.5 pl-2">
+              <div className="flex flex-col gap-0.5 pl-2 justify-center">
                 <Title title={trackTitle} isActive={isActive} />
                 <div className="flex gap-1.5 items-center">
                   {track.isExplicit && <ExplicitIcon />}

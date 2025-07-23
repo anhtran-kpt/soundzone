@@ -7,4 +7,8 @@ export const artistEndpoints = {
   banner: (artistSlug: string) => `/artists/${artistSlug}/banner`,
   popularTracks: (artistSlug: string) =>
     `/artists/${artistSlug}/popular-tracks`,
+  actions: (artistSlug: string) => `/artists/${artistSlug}/actions`,
+  isFollowing: (artistSlug: string) => `/artists/${artistSlug}/is-following`,
+  follow: (artistSlug: string) => `/artists/${artistSlug}/follow`,
+  unfollow: (artistSlug: string) => `/artists/${artistSlug}/unfollow`,
 };
