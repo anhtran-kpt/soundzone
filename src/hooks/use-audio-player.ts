@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAudioStore } from "@/stores/audio-store";
-import type { PlaylistDetail } from "@/features/playlist";
-import type { TrackDetail } from "@/features/track";
+import { TTrack, TPlaylist } from "@/entities/shared/shared-types";
 import { useShallow } from "zustand/react/shallow";
 
 export const useCurrentTrack = () =>
@@ -145,17 +144,15 @@ export const useAudioPlayer = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
-  const playTrack = useCallback(
-    async (track: TrackDetail, playlist?: PlaylistDetail) => {
-      const { setCurrentTrack, play } = useAudioStore.getState();
-      setCurrentTrack(track, playlist);
-      await play();
-    },
-    []
-  );
+  const playTrack = useCallback(async (track: TTrack, playlist?: TPlaylist) => {
+    const { setCurrentTrack, play } = useAudioStore.getState();
+    console.log(track);
+    setCurrentTrack(track, playlist);
+    await play();
+  }, []);
 
   const playPlaylist = useCallback(
-    async (playlist: PlaylistDetail, startIndex = 0) => {
+    async (playlist: TPlaylist, startIndex = 0) => {
       const { loadPlaylist, play } = useAudioStore.getState();
       loadPlaylist(playlist, startIndex);
       await play();

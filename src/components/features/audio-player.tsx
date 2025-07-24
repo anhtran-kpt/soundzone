@@ -39,7 +39,7 @@ function AudioPlayer() {
         <div className="flex items-center">
           <div className="flex items-center gap-3 grow min-w-0">
             <TrackCover
-              publicId={player.currentTrack.album.coverPublicId}
+              publicId={player.currentTrack.coverPublicId}
               alt={player.currentTrack.title}
             />
             <div className="flex flex-col gap-0.5 w-full overflow-hidden">

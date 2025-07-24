@@ -18,6 +18,8 @@ export const getTracks = withErrorHandler(async (albumSlug: string) => {
         select: {
           title: true,
           duration: true,
+          audioPublicId: true,
+          trackNumber: true,
           artists: {
             select: {
               artist: {

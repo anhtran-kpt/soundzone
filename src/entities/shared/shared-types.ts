@@ -28,3 +28,30 @@ declare module "next-auth/jwt" {
     slug: string;
   }
 }
+
+export type TTrack = {
+  title: string;
+  duration: number;
+  slug: string;
+  id: string;
+  trackNumber: number;
+  isExplicit: boolean;
+  audioPublicId: string;
+  coverPublicId: string;
+  album: {
+    title: string;
+    id: string;
+    slug: string;
+    artist: {
+      name: string;
+    };
+  };
+  artists: [{ id: string; slug: string; name: string }];
+};
+
+export type TPlaylist = {
+  title: string;
+  id: string;
+  slug: string;
+  tracks: TTrack[];
+};
