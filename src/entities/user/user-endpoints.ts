@@ -4,7 +4,7 @@ export const userEndpoints = {
   info: (userSlug: string) => `/users/${userSlug}/info`,
   detail: (userSlug: string) => `/users/${userSlug}/detail`,
   playlists: (userSlug: string) => `/users/${userSlug}/playlists`,
-  playlistDetail: ({
+  playlist: ({
     userSlug,
     playlistSlug,
   }: {
@@ -13,4 +13,11 @@ export const userEndpoints = {
   }) => `/users/${userSlug}/playlists/${playlistSlug}`,
   followingArtists: (userSlug: string) =>
     `/users/${userSlug}/following-artists`,
+  playlistBanner: ({
+    userSlug,
+    playlistSlug,
+  }: {
+    userSlug: string;
+    playlistSlug: string;
+  }) => `/users/${userSlug}/playlists/${playlistSlug}/banner`,
 };

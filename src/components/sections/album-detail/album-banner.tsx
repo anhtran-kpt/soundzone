@@ -40,7 +40,7 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
           }
         />
         <div className="flex gap-5 absolute left-0 bottom-6 items-end">
-          <div className="relative size-48 rounded-md">
+          <div className="relative size-48 rounded-md overflow-hidden">
             <CldImage
               src={album.coverPublicId}
               alt={album.title}
@@ -52,10 +52,10 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-medium">
+            <p className="font-medium">
               {album.releaseType === "SINGLE" ? "Single" : "Album"}
-            </span>
-            <span className="font-bold text-5xl mt-2 mb-4">{album.title}</span>
+            </p>
+            <p className="font-bold text-5xl mt-2 mb-4">{album.title}</p>
             <div className="inline-flex items-center gap-2">
               <div className="relative size-6 rounded-full">
                 <CldImage

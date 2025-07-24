@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -5,11 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  Button,
-  Label,
-  Input,
-  Textarea,
-} from "@/components/ui";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Music4Icon, PenBoxIcon } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 

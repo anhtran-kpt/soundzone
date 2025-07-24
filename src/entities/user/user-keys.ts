@@ -7,4 +7,18 @@ export const userKeys = {
     [...userKeys.user(userSlug), "following-artists"] as const,
   playlists: (userSlug: string) =>
     [...userKeys.user(userSlug), "playlists"] as const,
+  playlist: ({
+    userSlug,
+    playlistSlug,
+  }: {
+    userSlug: string;
+    playlistSlug: string;
+  }) => [...userKeys.playlists(userSlug), playlistSlug] as const,
+  playlistBanner: ({
+    userSlug,
+    playlistSlug,
+  }: {
+    userSlug: string;
+    playlistSlug: string;
+  }) => [...userKeys.playlist({ userSlug, playlistSlug }), "banner"] as const,
 };

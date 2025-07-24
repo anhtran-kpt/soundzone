@@ -1,6 +1,9 @@
+type TEndpointParams = {
+  artistSlug?: string;
+  albumSlug?: string;
+};
+
 export const artistEndpoints = {
-  all: "/artists",
-  artist: (artistSlug: string) => `/artists/${artistSlug}`,
   info: (artistSlug: string) => `/artists/${artistSlug}/info`,
   detail: (artistSlug: string) => `/artists/${artistSlug}/detail`,
   discography: (artistSlug: string) => `/artists/${artistSlug}/discography`,
@@ -13,4 +16,7 @@ export const artistEndpoints = {
   unfollow: (artistSlug: string) => `/artists/${artistSlug}/unfollow`,
   about: (artistSlug: string) => `/artists/${artistSlug}/about`,
   others: (artistSlug: string) => `/artists/${artistSlug}/others`,
+  albums: (artistSlug: string) => `/artists/${artistSlug}/albums`,
+  albumDetail: ({ artistSlug, albumSlug }: TEndpointParams) =>
+    `/artists/${artistSlug}albums/${albumSlug}`,
 };

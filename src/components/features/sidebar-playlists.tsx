@@ -37,7 +37,7 @@ export const SidebarPlaylists = ({ userSlug }: { userSlug: string }) => {
         <SidebarMenuItem key={playlist.id}>
           <SidebarMenuButton asChild size="lg">
             <Link
-              href={`/playlists/${playlist.slug}`}
+              href={`/users/${userSlug}/playlists/${playlist.slug}`}
               className="flex items-center gap-3"
             >
               <div className="relative size-10 shrink-0 rounded-sm overflow-hidden">
