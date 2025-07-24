@@ -11,6 +11,7 @@ import { TAlbumSlugs } from "@/entities/album/album-types";
 import ErrorMessage from "../../features/error-message";
 import { NavLink } from "../../features/nav-link";
 import { useImageGradient } from "@/hooks/use-image-gradient";
+import pluralize from "pluralize";
 
 export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
   const { data: album, status, error } = useBanner({ artistSlug, albumSlug });
@@ -71,12 +72,18 @@ export const AlbumBanner = ({ artistSlug, albumSlug }: TAlbumSlugs) => {
               </NavLink>
               <Dot />
               <span className="">{formatDate(album.releaseDate, "PP")}</span>
-              <Dot />
-              <span className="">
-                {album.tracks.length > 1
-                  ? `${album.tracks.length} songs`
-                  : `1 song`}
-                , {pretterMs(album.totalDuration * 1000)}
+              <span>
+                {album.tracks.length > 0 && (
+                  <>
+                    <Dot />
+                    <span>
+                      {`${album.tracks.length} ${pluralize(
+                        "song",
+                        album.tracks.length
+                      )}, ${pretterMs(album.totalDuration * 1000)}`}
+                    </span>
+                  </>
+                )}
               </span>
             </div>
           </div>

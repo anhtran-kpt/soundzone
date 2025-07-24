@@ -11,6 +11,13 @@ export const userEndpoints = {
     userSlug: string;
     playlistSlug: string;
   }) => `/users/${userSlug}/playlists/${playlistSlug}`,
+  updatePlaylist: ({
+    userSlug,
+    playlistSlug,
+  }: {
+    userSlug: string;
+    playlistSlug: string;
+  }) => `/users/${userSlug}/playlists/${playlistSlug}`,
   followingArtists: (userSlug: string) =>
     `/users/${userSlug}/following-artists`,
   playlistBanner: ({

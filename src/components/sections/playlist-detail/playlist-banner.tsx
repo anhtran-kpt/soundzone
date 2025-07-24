@@ -10,8 +10,9 @@ import { useState } from "react";
 import pretterMs from "pretty-ms";
 import { formatName } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { PlaylistDialog } from "@/components/pages/playlist-detail/playlist-dialog";
+import { PlaylistDialog } from "@/components/features/playlist-dialog";
 import { FALLBACK_IMAGE } from "@/lib/constants";
+import pluralize from "pluralize";
 
 export const PlaylistBanner = ({
   userSlug,
@@ -91,12 +92,18 @@ export const PlaylistBanner = ({
             <NavLink href={`/users/${userSlug}`} className="text-sm">
               {playlist.user?.name}
             </NavLink>
-            <Dot />
-            <span className="">
-              {playlist.tracks.length > 1
-                ? `${playlist.tracks.length} songs`
-                : `1 song`}
-              , {pretterMs(playlist.totalDuration * 1000)}
+            <span>
+              {playlist.tracks.length > 0 && (
+                <>
+                  <Dot />
+                  <span>
+                    {`${playlist.tracks.length} ${pluralize(
+                      "song",
+                      playlist.tracks.length
+                    )}, ${pretterMs(playlist.totalDuration * 1000)}`}
+                  </span>
+                </>
+              )}
             </span>
           </div>
         </div>

@@ -39,9 +39,9 @@ export const SidebarFollowingArtists = ({ userSlug }: { userSlug: string }) => {
               className="flex items-center gap-3"
             >
               <ArtistImage
-                imagePublicId={artist.imagePublicId}
-                name={artist.name}
-                size="small"
+                publicId={artist.imagePublicId}
+                alt={artist.name}
+                size="sm"
               />
               <div className="space-y-0.5">
                 <Title title={artist.name} />
