@@ -39,21 +39,23 @@ function AudioPlayer() {
         <div className="flex items-center">
           <div className="flex items-center gap-3 grow min-w-0">
             <TrackCover
-              publicId={player.currentTrack.coverPublicId}
+              publicId={player.currentTrack.album.coverPublicId}
               alt={player.currentTrack.title}
             />
             <div className="flex flex-col gap-0.5 w-full overflow-hidden">
-              <Title title={player.currentTrack.title} isActive={true} />
+              <Title title={player.currentTrack.title} />
               <div className="flex items-center text-sm gap-x-1 text-muted-foreground truncate">
                 {player.currentTrack.isExplicit && <ExplicitIcon />}
-                {player.currentTrack.artists.map((artist, index) => (
-                  <span key={artist.slug}>
-                    <NavLink href={`/artists/${artist.slug}`}>
-                      {artist.name}
-                    </NavLink>
-                    {index < player.currentTrack.artists.length - 1 && ", "}
-                  </span>
-                ))}
+                {player.currentTrack.artists.map(
+                  (artist, index, originalArr) => (
+                    <span key={artist.slug}>
+                      <NavLink href={`/artists/${artist.slug}`}>
+                        {artist.name}
+                      </NavLink>
+                      {index < originalArr.length - 1 && ", "}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </div>

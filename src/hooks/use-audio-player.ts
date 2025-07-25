@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAudioStore } from "@/stores/audio-store";
-import { TTrack, TPlaylist } from "@/entities/shared/shared-types";
+import { TFullTrack, TPlaylist } from "@/entities/shared/shared-types";
 import { useShallow } from "zustand/react/shallow";
 
 export const useCurrentTrack = () =>
@@ -144,12 +144,14 @@ export const useAudioPlayer = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
-  const playTrack = useCallback(async (track: TTrack, playlist?: TPlaylist) => {
-    const { setCurrentTrack, play } = useAudioStore.getState();
-    console.log(track);
-    setCurrentTrack(track, playlist);
-    await play();
-  }, []);
+  const playTrack = useCallback(
+    async (track: TFullTrack, playlist?: TPlaylist) => {
+      const { setCurrentTrack, play } = useAudioStore.getState();
+      setCurrentTrack(track, playlist);
+      await play();
+    },
+    []
+  );
 
   const playPlaylist = useCallback(
     async (playlist: TPlaylist, startIndex = 0) => {
@@ -242,7 +244,7 @@ export const useMediaSession = () => {
     if ("mediaSession" in navigator && currentTrack) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentTrack.title,
-        artist: currentTrack.album.artist.name,
+        artist: currentTrack.mainArtist.name,
         album: currentTrack.album.title,
       });
 

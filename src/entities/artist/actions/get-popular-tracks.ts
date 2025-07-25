@@ -1,7 +1,7 @@
 "use server";
 
 import { isEntityExists } from "@/entities/shared/is-entity-exists";
-import { PaginationParams } from "@/entities/shared/shared-types";
+import { PaginationParams, TArtist } from "@/entities/shared/shared-types";
 import { withErrorHandler } from "@/entities/shared/with-error-handler";
 import { flattenRelation } from "@/lib/helpers";
 import db from "@/lib/prisma/db";
@@ -26,12 +26,12 @@ export const getPopularTracks = withErrorHandler(
       },
       include: {
         album: {
-          select: { slug: true, coverPublicId: true },
+          select: { id: true, slug: true, title: true, coverPublicId: true },
         },
         artists: {
           select: {
             artist: {
-              select: { slug: true, name: true },
+              select: { id: true, slug: true, name: true },
             },
           },
         },
@@ -50,13 +50,31 @@ export const getPopularTracks = withErrorHandler(
       skip,
     });
 
-    return tracks.map((track) => ({
-      ...track,
-      coverPublicId: track.album.coverPublicId,
-      artists: flattenRelation(track.artists, "artist").filter(
-        (artist) => artist.slug !== artistSlug
-      ),
-      plays: track._count.playHistory,
-    }));
+    return tracks.map((track) => {
+      const allArtists = flattenRelation(track.artists, "artist");
+
+      const [mainArtists, collaborators] = allArtists.reduce<
+        [TArtist[], TArtist[]]
+      >(
+        ([main, others], artist) => {
+          if (artist.slug === artistSlug) {
+            main.push(artist);
+          } else {
+            others.push(artist);
+          }
+          return [main, others];
+        },
+        [[], []]
+      );
+
+      return {
+        ...track,
+        coverPublicId: track.album.coverPublicId,
+        mainArtist: mainArtists[0],
+        artists: allArtists,
+        collaborators,
+        plays: track._count.playHistory,
+      };
+    });
   }
 );

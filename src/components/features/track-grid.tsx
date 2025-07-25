@@ -1,6 +1,5 @@
 "use client";
 
-import { TGetAlbumTracks } from "@/entities/album/album-types";
 import { cn, formatDuration } from "@/lib/utils";
 import ExplicitIcon from "../ui/explicit-icon";
 import { NavLink } from "./nav-link";
@@ -16,10 +15,11 @@ import { TrackCover } from "../ui/track-cover";
 import { useAudioPlayer, useIsPlaying } from "@/hooks";
 import { WaveformIcon } from "../ui/wave-form";
 import { Skeleton } from "../ui/skeleton";
+import { TArtist, TFullTrack } from "@/entities/shared/shared-types";
 
 interface TrackGridProps {
   type: "album" | "popular" | "playlist";
-  tracks: TGetAlbumTracks;
+  tracks: (TFullTrack & { collaborators: TArtist[] })[];
 }
 
 export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
@@ -50,10 +50,10 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
       )}
       {tracks.map((track, trackIndex) => {
         const isActive = currentTrack?.id === track.id;
-        const length = track.artists.length;
+        const length = track.collaborators.length;
         const trackTitle =
           type === "popular" && length > 0
-            ? `${track.title} (feat. ${track.artists.reduce(
+            ? `${track.title} (feat. ${track.collaborators?.reduce(
                 (acc, artist, index) => {
                   if (index < length - 1) {
                     return acc + artist.name + ", ";
@@ -89,7 +89,10 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
 
             <div className="flex gap-3">
               {type === "popular" && (
-                <TrackCover alt={track.title} publicId={track.coverPublicId} />
+                <TrackCover
+                  alt={track.title}
+                  publicId={track.album.coverPublicId}
+                />
               )}
               <div className="flex flex-col gap-0.5 justify-center">
                 <Title title={trackTitle} isActive={isActive} />

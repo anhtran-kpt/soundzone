@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
-import { TTrack, TPlaylist } from "@/entities/shared/shared-types";
+import { TFullTrack, TPlaylist } from "@/entities/shared/shared-types";
 import { getAudioUrl } from "@/lib/utils";
 
 export type RepeatMode = "off" | "one" | "all";
 
 interface AudioState {
   // Current playback state
-  currentTrack: TTrack | null;
+  currentTrack: TFullTrack | null;
   currentPlaylist: TPlaylist | null;
   currentTrackIndex: number;
 
@@ -27,8 +27,8 @@ interface AudioState {
   playlists: TPlaylist[];
 
   // Queue management
-  queue: TTrack[];
-  originalQueue: TTrack[]; // Backup for shuffle
+  queue: TFullTrack[];
+  originalQueue: TFullTrack[]; // Backup for shuffle
   queueIndex: number;
 
   // Error handling
@@ -61,9 +61,9 @@ interface AudioActions {
   toggleRepeat: () => void;
 
   // Track/Playlist management
-  setCurrentTrack: (track: TTrack, playlist?: TPlaylist) => void;
+  setCurrentTrack: (track: TFullTrack, playlist?: TPlaylist) => void;
   loadPlaylist: (playlist: TPlaylist, startIndex?: number) => void;
-  addToQueue: (track: TTrack) => void;
+  addToQueue: (track: TFullTrack) => void;
   removeFromQueue: (index: number) => void;
   clearQueue: () => void;
 
