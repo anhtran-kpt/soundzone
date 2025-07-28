@@ -3,12 +3,11 @@
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
-  EllipsisIcon,
-  HeartIcon,
   SquarePlayIcon,
   MicVocalIcon,
   ListMusicIcon,
   CastIcon,
+  PlusCircleIcon,
 } from "lucide-react";
 import {
   useAudioKeyboardShortcuts,
@@ -22,6 +21,7 @@ import { TrackCover } from "../ui/track-cover";
 import { Title } from "../ui/title";
 import ExplicitIcon from "../ui/explicit-icon";
 import { NavLink } from "./nav-link";
+import { IconButton } from "./icon-button";
 
 function AudioPlayer() {
   const player = useAudioPlayer();
@@ -59,14 +59,15 @@ function AudioPlayer() {
               </div>
             </div>
           </div>
-          <div className="ml-6 space-x-2">
-            <Button variant="ghost" size="icon" className="">
-              <HeartIcon className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="">
-              <EllipsisIcon className="size-4" />
-            </Button>
-          </div>
+          <IconButton
+            className="ml-6"
+            icon={PlusCircleIcon}
+            tooltipContent={
+              <>
+                Add to <strong>Liked Songs</strong>
+              </>
+            }
+          />
         </div>
         <div className="flex flex-col space-y-4 items-center grow">
           <PlayerControls
@@ -106,7 +107,6 @@ function AudioPlayer() {
               isMuted={player.volume.isMuted}
               onVolumeChange={player.volume.setVolume}
               onToggleMute={player.volume.toggleMute}
-              className="min-w-0 flex-shrink-0"
             />
             <Separator orientation="vertical" className="w-1 h-full" />
             <Button variant="ghost" size="icon" className="">

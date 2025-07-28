@@ -116,6 +116,7 @@ export const useAudioPlayer = () => {
         audioRef.current.pause();
         audioRef.current.src = "";
         setAudioElement(null);
+        audioRef.current = null;
       }
     };
   }, [setAudioElement]);
@@ -148,6 +149,7 @@ export const useAudioPlayer = () => {
     async (track: TFullTrack, playlist?: TPlaylist) => {
       const { setCurrentTrack, play } = useAudioStore.getState();
       setCurrentTrack(track, playlist);
+
       await play();
     },
     []

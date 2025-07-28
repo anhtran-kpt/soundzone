@@ -12,6 +12,7 @@ import {
   CirclePauseIcon,
   RepeatIcon,
 } from "lucide-react";
+import { IconButton } from "./icon-button";
 
 interface PlayerControlsProps {
   isPlaying: boolean;
@@ -49,15 +50,13 @@ export default function PlayerControls({
       >
         <ShuffleIcon className="size-4" />
       </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className=""
+      <IconButton
+        icon={SkipBackIcon}
         onClick={onPrevious}
         disabled={!hasPrev}
-      >
-        <SkipBackIcon className="size-4" />
-      </Button>
+        iconClassName="fill-current"
+        tooltipContent="Previous"
+      />
       <Button
         variant="ghost"
         size="icon"
@@ -73,15 +72,13 @@ export default function PlayerControls({
           <CirclePlayIcon className="size-9 stroke-1" />
         )}
       </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className=""
+      <IconButton
+        icon={SkipForwardIcon}
         onClick={onNext}
         disabled={!hasNext}
-      >
-        <SkipForwardIcon className="size-4" />
-      </Button>
+        iconClassName="fill-current"
+        tooltipContent="Next"
+      />
       <Button
         variant={repeatMode !== "off" ? "default" : "ghost"}
         size="sm"

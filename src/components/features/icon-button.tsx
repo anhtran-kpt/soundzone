@@ -3,66 +3,59 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { ReactNode } from "react";
+import { forwardRef, ReactNode, ButtonHTMLAttributes } from "react";
 
-interface IconButtonProps {
+interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: LucideIcon;
-  onClick?: () => void;
-  className?: string;
   iconClassName?: string;
   size?: "sm" | "md" | "lg" | "xl";
   tooltipContent?: ReactNode;
 }
 
-export const IconButton = ({
-  icon: Icon,
-  onClick,
-  className,
-  iconClassName,
-  size = "md",
-  tooltipContent,
-}: IconButtonProps) => {
-  let iconSize;
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+  (
+    {
+      icon: Icon,
+      size = "md",
+      tooltipContent,
+      className,
+      iconClassName,
+      ...buttonProps
+    },
+    ref
+  ) => {
+    const iconSizeMap = { sm: 16, md: 20, lg: 24, xl: 28 };
+    const iconSize = iconSizeMap[size];
 
-  switch (size) {
-    case "sm":
-      iconSize = 16;
-      break;
+    const btn = (
+      <button
+        {...buttonProps}
+        ref={ref}
+        type={buttonProps.type ?? "button"}
+        className={cn(
+          "rounded-full text-muted-foreground hover:text-foreground hover:scale-105 transition-transform cursor-pointer p-1",
+          className
+        )}
+      >
+        <Icon
+          width={iconSize}
+          height={iconSize}
+          className={cn(iconClassName)}
+        />
+      </button>
+    );
 
-    case "lg":
-      iconSize = 24;
-      break;
+    if (!tooltipContent) return btn;
 
-    case "xl":
-      iconSize = 28;
-      break;
-
-    default:
-      iconSize = 20;
-      break;
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{btn}</TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltipContent}</p>
+        </TooltipContent>
+      </Tooltip>
+    );
   }
+);
 
-  const button = (
-    <button
-      onClick={onClick}
-      type="button"
-      className={cn(
-        "rounded-full text-muted-foreground hover:text-foreground hover:scale-105 transition-transform cursor-pointer p-1",
-        className
-      )}
-    >
-      <Icon width={iconSize} height={iconSize} className={cn(iconClassName)} />
-    </button>
-  );
-
-  if (!tooltipContent) return button;
-
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent>
-        <p>{tooltipContent}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+IconButton.displayName = "IconButton";

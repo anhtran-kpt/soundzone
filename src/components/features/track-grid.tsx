@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Title } from "../ui/title";
 import { TrackCover } from "../ui/track-cover";
-import { useAudioPlayer, useIsPlaying } from "@/hooks";
+import { useAudioPlayer, useIsPlaying } from "@/hooks/use-audio-player";
 import { WaveformIcon } from "../ui/wave-form";
 import { Skeleton } from "../ui/skeleton";
 import { TArtist, TFullTrack } from "@/entities/shared/shared-types";
@@ -72,20 +72,22 @@ export const TrackGrid = ({ type, tracks }: TrackGridProps) => {
               "py-2 pr-6 items-center group hover:bg-muted rounded-sm text-muted-foreground hover:text-foreground"
             )}
           >
-            {isPlaying && isActive ? (
-              <WaveformIcon />
-            ) : (
-              <div className="flex justify-center items-center text-base font-semibold">
-                <span className="group-hover:hidden">{trackIndex + 1}</span>
-                <IconButton
-                  icon={PlayIcon}
-                  size="sm"
-                  onClick={() => playTrack(track)}
-                  iconClassName="fill-foreground stroke-0"
-                  className="hidden group-hover:block"
-                />
-              </div>
-            )}
+            <div className="flex justify-center items-center text-base font-semibold">
+              {isPlaying && isActive ? (
+                <WaveformIcon />
+              ) : (
+                <>
+                  <span className="group-hover:hidden">{trackIndex + 1}</span>
+                  <IconButton
+                    icon={PlayIcon}
+                    size="sm"
+                    onClick={() => playTrack(track)}
+                    iconClassName="fill-foreground stroke-0"
+                    className="hidden group-hover:block"
+                  />
+                </>
+              )}
+            </div>
 
             <div className="flex gap-3">
               {type === "popular" && (

@@ -40,7 +40,6 @@ export default function ProgressBar({
         step={0.1}
         className="flex-1"
       />
-
       <span className="text-xs text-right">{formatTime(duration)}</span>
     </div>
   );

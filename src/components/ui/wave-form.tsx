@@ -1,11 +1,12 @@
 export const WaveformIcon = () => {
   return (
     <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      viewBox="0 0 20 20"
+      preserveAspectRatio="xMidYMid meet"
       fill="currentColor"
-      className="pointer-events-none"
+      className="pointer-events-none fill-primary"
     >
       {[0, 1, 2, 3].map((i) => {
         const delay = (Math.random() * 0.5).toFixed(2);
@@ -17,7 +18,7 @@ export const WaveformIcon = () => {
           <rect
             key={i}
             x={i * 5}
-            y={24 - maxHeight}
+            y={20 - maxHeight}
             width="3"
             height={maxHeight}
             rx="1.5"
@@ -31,7 +32,7 @@ export const WaveformIcon = () => {
             />
             <animate
               attributeName="y"
-              values={`${24 - minHeight};${24 - maxHeight};${24 - minHeight}`}
+              values={`${20 - minHeight};${20 - maxHeight};${20 - minHeight}`}
               dur={`${dur}s`}
               begin={`${delay}s`}
               repeatCount="indefinite"
